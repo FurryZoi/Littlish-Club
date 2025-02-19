@@ -2,11 +2,11 @@ import { MOD_FULL_NAME, MOD_NAME, MOD_VERSION, REPO_URL } from "@/constants";
 import bcModSdk, { PatchHook, ModSDKModInfo, GetDotedPathType } from "bondage-club-mod-sdk";
 
 export enum HookPriority {
-    Observe = 0,
-    AddBehavior = 1,
-    ModifyBehavior = 5,
-    OverrideBehavior = 10,
-    Top = 100
+    OBSERVE = 0,
+    ADD_BEHAVIOR = 1,
+    MODIFY_BEHAVIOR = 5,
+    OVERRIDE_BEHAVIOR = 10,
+    TOP = 100
 }
 
 const modSdk = bcModSdk.registerMod({

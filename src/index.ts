@@ -2,28 +2,22 @@ import { chatSendLocal } from "@/utils/chat";
 import { hookFunction, HookPriority } from "./modules/bcModSdk";
 import milkBottle from "@/images/milk-bottle.png";
 import { MOD_NAME } from "./constants";
+import { loadUI } from "./modules/ui";
+import styles from "./styles.css";
+
 
 const init = () => {
-    chatSendLocal("Littlish Club loaded!");
-    
-    hookFunction("InformationSheetRun", HookPriority.Observe, (args, next) => {
-        if (
-            InformationSheetSelection.IsPlayer() &&
-            !(window.bcx?.inBcxSubscreen && window.bcx.inBcxSubscreen()) &&
-            !window.LSCG_REMOTE_WINDOW_OPEN
-        ) {
-            DrawButton(
-                1705, 75, 90, 90, "",
-                "White", milkBottle,
-                MOD_NAME
-            );
-        }
-        next(args);
-    });
+    const style = document.createElement("style");
+    style.innerHTML = styles;
+    document.head.append(style);
+    console.log(`${MOD_NAME} loaded`);
+    // @ts-ignore
+    window.LITTLISH_CLUB = {};
+    loadUI();
 };
 
 if (CurrentScreen == null || CurrentScreen === "Login") {
-    hookFunction("LoginResponse", HookPriority.Observe, (args, next) => {
+    hookFunction("LoginResponse", HookPriority.OBSERVE, (args, next) => {
         next(args);
         const response = args[0];
         if (

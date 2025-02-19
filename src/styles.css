@@ -1,0 +1,13 @@
+.lcButton {
+    cursor: pointer;
+    background: white;
+    color: black;
+    border: 1px solid black;
+    border-radius: 6px;
+}
+
+.lcButton:hover {
+    background: #ebf7fe;
+    border-color: #7dd3fc;
+    color: #015a8c;
+}
