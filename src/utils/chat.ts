@@ -19,8 +19,8 @@ export function chatSendChangelog(): void {
 	chatSendLocal("Changelog");
 }
 
-export function chatSendCustomAction(message: string): void {
-	if (!ServerPlayerIsInChatRoom()) return;
+export function chatSendActionMessage(msg: string, target: undefined | number = undefined, dictionary: ChatMessageDictionaryEntry[] = []) {
+	if (!msg || !ServerPlayerIsInChatRoom()) return;
 
 	const isFemale = CharacterPronounDescription(Player) === "She/Her";
 	const capPossessive = isFemale ? "Her" : "His";
@@ -28,7 +28,7 @@ export function chatSendCustomAction(message: string): void {
 	const capSelfIntensive = isFemale ? "Herself" : "Himself";
 	const capPronoun = isFemale ? "She" : "He";
 
-	message = message
+	msg = msg
 		.replaceAll("<Possessive>", capPossessive)
 		.replaceAll("<possessive>", capPossessive.toLocaleLowerCase())
 		.replaceAll("<Intensive>", capIntensive)
@@ -37,22 +37,15 @@ export function chatSendCustomAction(message: string): void {
 		.replaceAll("<selfIntensive>", capSelfIntensive.toLocaleLowerCase())
 		.replaceAll("<Pronoun>", capPronoun)
 		.replaceAll("<pronoun>", capPronoun.toLocaleLowerCase());
-        
-	ServerSend("ChatRoomChat", {
-		Content: "Beep", 
-		Type: "Action",
-		Dictionary: [
-			// EN
-			{ Tag: "Beep", Text: "msg" },
-			// CN
-			{ Tag: "发送私聊", Text: "msg" },
-			// DE
-			{ Tag: "Biep", Text: "msg" },
-			// FR
-			{ Tag: "Sonner", Text: "msg" },
-			// Message itself
-			{ Tag: "msg", Text: message }
-		]
+
+	ServerSend('ChatRoomChat', {
+	  Content: 'LittlishClub_CUSTOM_ACTION',
+	  Type: 'Action',
+	  Target: target ?? undefined,
+	  Dictionary: [
+		{ Tag: 'MISSING TEXT IN "Interface.csv": LittlishClub_CUSTOM_ACTION', Text: msg },
+		...dictionary,
+	  ],
 	});
 }
 

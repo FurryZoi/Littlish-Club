@@ -14,5 +14,8 @@
     "bc-stubs": "^113.0.0",
     "esbuild": "^0.25.0",
     "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "bondage-club-mod-sdk": "^1.2.0"
   }
 }
