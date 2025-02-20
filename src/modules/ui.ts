@@ -1,7 +1,7 @@
 import { hookFunction, HookPriority } from "@/modules/bcModSdk";
 import milkBottle from "@/images/milk-bottle.png";
 import { MOD_BUTTON_POSITION, MOD_NAME } from "@/constants";
-import { currentSubscreen, setSubscreen } from "@/subscreens/baseSubscreen";
+import { currentSubscreen, setPreviousSubscreen, setSubscreen } from "@/subscreens/baseSubscreen";
 import { MainMenu } from "@/subscreens/mainMenu";
 
 
@@ -21,6 +21,7 @@ export function loadUI(): void {
             );
         }
         if (window.LITTLISH_CLUB.inModSubscreen()) {
+            DrawButton(1815, 75, 90, 90, "", "White", "Icons/Exit.png");
             return currentSubscreen.run();
         }
         next(args);
@@ -37,7 +38,9 @@ export function loadUI(): void {
             setSubscreen(new MainMenu());
         }
         if (window.LITTLISH_CLUB.inModSubscreen()) {
-            currentSubscreen.click();
+            if (MouseIn(1815, 75, 90, 90)) currentSubscreen.exit();
+            else currentSubscreen.click();
+            return;
         }
         next(args);
     });

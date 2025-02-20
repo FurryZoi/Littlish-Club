@@ -13,6 +13,13 @@ export async function waitFor(func: () => boolean, cancelFunc = () => false): Pr
 	return true;
 }
 
+export function getRandomNumber(min: number, max: number): number {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
 export function isVersionNewer(version1: string, version2: string): boolean {
 	const v1Parts = version1.split('.');
 	const v2Parts = version2.split('.');

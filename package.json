@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "watch": "esbuild src/index.ts --bundle --sourcemap --watch --outfile=dist/bundle.js --loader:.ts=ts --loader:.css=text --loader:.png=dataurl",
+    "dev": "esbuild src/index.ts --bundle --sourcemap --watch --outfile=dist/bundle.js --loader:.ts=ts --loader:.css=text --loader:.png=dataurl --loader:.ttf=file",
     "build": "esbuild src/index.ts --bundle --sourcemap --outfile=dist/bundle.js --loader:.ts=ts --loader:.css=text --loader:.png=dataurl"
   },
   "keywords": [],

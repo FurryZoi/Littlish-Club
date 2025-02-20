@@ -12,3 +12,9 @@ export function getPlayer(value: string | number): Character {
 export function getNickname(target: Character): string {
 	return CharacterNickname(target);
 }
+
+export function serverAppearanceBundleToAppearance(assetFamily: IAssetFamily, serverAppearanceBundle: AppearanceBundle): Item[] {
+	return serverAppearanceBundle.map((t) => {
+		return ServerBundledItemToAppearanceItem(assetFamily, t);
+	});
+}

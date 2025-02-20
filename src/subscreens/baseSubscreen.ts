@@ -1,3 +1,40 @@
+interface CreateButtonArgs {
+    text?: string
+    x: number
+    y: number
+    fontSize?: number | "auto"
+    width: number
+    height?: number
+    padding?: number
+    style?: "default" | "green"
+    anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+}
+
+interface CreateTextArgs {
+    text?: string
+    color?: "string"
+    x: number
+    y: number
+    fontSize?: number | "auto"
+    width?: number
+    height?: number
+    padding?: number
+    anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+}
+
+interface CreateInputArgs {
+    value?: string
+    placeholder?: string
+    x: number
+    y: number
+    width: number
+    height?: number
+    textArea?: boolean
+    fontSize?: number | "auto"
+    anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+    padding?: number
+}
+
 function getRelativeHeight(height: number) {
     return height * (MainCanvas.canvas.clientHeight / 1000);
 }
@@ -54,28 +91,42 @@ function setFontSize(element: HTMLElement, targetFontSize: number) {
     const fontSize = targetFontSize * scaleFactor;
 
     Object.assign(element.style, {
-        fontSize: fontSize + 'px',
-        fontFamily: CommonGetFontName()
+        fontSize: fontSize + 'px'
     });
-};
+}
+
+function setPadding(element: HTMLElement, targetPadding: number) {
+    const canvasWidth = MainCanvas.canvas.clientWidth;
+    const canvasHeight = MainCanvas.canvas.clientHeight;
+
+    const scaleFactor = Math.min(canvasWidth, canvasHeight) / 100;
+
+    const paddingValue = targetPadding * scaleFactor;
+
+    Object.assign(element.style, {
+        padding: paddingValue + 'px',
+    });
+}
 
 function autosetFontSize(element: HTMLElement) {
     const Font = MainCanvas.canvas.clientWidth <= MainCanvas.canvas.clientHeight * 2 ? MainCanvas.canvas.clientWidth / 50 : MainCanvas.canvas.clientHeight / 25;
 
     Object.assign(element.style, {
-        fontSize: Font + 'px',
-        fontFamily: CommonGetFontName()
+        fontSize: Font + 'px'
     });
-};
+}
 
 export function setPreviousSubscreen(): void {
     setSubscreen(previousSubscreen);
 }
 
 export function setSubscreen(subscreen: BaseSubscreen | null): void {
+    console.log(subscreen);
     previousSubscreen = currentSubscreen;
     currentSubscreen = subscreen;
-    currentSubscreen.load();
+    console.log(previousSubscreen, currentSubscreen);
+    if (currentSubscreen) currentSubscreen.load();
+    if (previousSubscreen) previousSubscreen.unload();
 }
 
 export let currentSubscreen: BaseSubscreen | null;
@@ -83,6 +134,9 @@ export let previousSubscreen: BaseSubscreen | null = null;
 
 
 export abstract class BaseSubscreen {
+    private htmlElements: HTMLElement[] = [];
+    private resizeEventListeners: EventListener[] = [];
+
     get currentSubscreen(): BaseSubscreen | null {
         return currentSubscreen;
     }
@@ -95,6 +149,14 @@ export abstract class BaseSubscreen {
 
     }
     load?() { }
+    unload?() {
+        this.htmlElements.forEach((e) => {
+            e.remove();
+        });
+        this.resizeEventListeners.forEach((e) => {
+            removeEventListener("resize", e);
+        });
+    }
     click?() { }
     exit?() {
         setPreviousSubscreen();
@@ -105,22 +167,76 @@ export abstract class BaseSubscreen {
     setSubscreen(subscreen: BaseSubscreen | null) {
         setSubscreen(subscreen);
     }
-    createButton(
-        text, x, y, w, h, fontSize,
-        anchor: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' = "top-left"
-    ): HTMLButtonElement {
+    createButton({
+        text, x, y, width, height, fontSize = "auto",
+        anchor = "top-left", padding, style = "default"
+    }: CreateButtonArgs): HTMLButtonElement {
         const btn = document.createElement("button");
         btn.textContent = text;
         btn.classList.add("lcButton");
-        setPosition(btn, x, y, anchor);
-        setSize(btn, w, h);
-        autosetFontSize(btn);
-        window.addEventListener("resize", () => {
+        btn.setAttribute("data-lc-style", style);
+
+        const setProperties = () => {
             setPosition(btn, x, y, anchor);
-            setSize(btn, w, h);
-            autosetFontSize(btn);
-        });
+            setSize(btn, width, height);
+            if (padding) setPadding(btn, padding);
+            if (fontSize === "auto") autosetFontSize(btn);
+            else setFontSize(btn, fontSize);
+        }
+
+        setProperties();
+        window.addEventListener("resize", setProperties);
         document.body.append(btn);
+        this.resizeEventListeners.push(setProperties);
+        this.htmlElements.push(btn);
         return btn;
+    }
+    createText({
+        text, color, x, y, width, height,
+        fontSize = "auto", anchor = "top-left", padding
+    }: CreateTextArgs): HTMLParagraphElement {
+        const p = document.createElement("p");
+        p.textContent = text;
+        p.style.color = color ?? "var(--tmd-text, black)";
+        p.style.fontFamily = "Emilys Candy";
+
+        const setProperties = () => {
+            setPosition(p, x, y, anchor);
+            setSize(p, width, height);
+            if (padding) setPadding(p, padding);
+            if (fontSize === "auto") autosetFontSize(p);
+            else setFontSize(p, fontSize);
+        }
+
+        setProperties();
+        window.addEventListener("resize", setProperties);
+        document.body.append(p);
+        this.resizeEventListeners.push(setProperties);
+        this.htmlElements.push(p);
+        return p;
+    }
+    createInput({
+        value, placeholder, x, y, width, height, textArea = false,
+        fontSize = "auto", anchor = "top-left", padding
+    }: CreateInputArgs): HTMLInputElement {
+        const input = document.createElement(textArea ? "textarea" : "input");
+        input.classList.add("lcInput");
+        if (placeholder) input.placeholder = placeholder;
+        if (value) input.value = value;
+
+        const setProperties = () => {
+            setPosition(input, x, y, anchor);
+            setSize(input, width, height);
+            if (padding) setPadding(input, padding);
+            if (fontSize === "auto") autosetFontSize(input);
+            else setFontSize(input, fontSize);
+        }
+
+        setProperties();
+        window.addEventListener("resize", setProperties);
+        document.body.append(input);
+        this.resizeEventListeners.push(setProperties);
+        this.htmlElements.push(input);
+        return input;
     }
 }
