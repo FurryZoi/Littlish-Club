@@ -4,6 +4,7 @@ import milkBottle from "@/images/milk-bottle.png";
 import { MOD_NAME } from "./constants";
 import { loadUI } from "./modules/ui";
 import styles from "./styles.css";
+import { initStorage } from "./modules/storage";
 
 
 const init = () => {
@@ -13,6 +14,7 @@ const init = () => {
     console.log(`${MOD_NAME} loaded`);
     // @ts-ignore
     window.LITTLISH_CLUB = {};
+    initStorage();
     loadUI();
 };
 
