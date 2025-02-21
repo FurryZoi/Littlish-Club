@@ -1,13 +1,13 @@
 import { BaseSubscreen } from "./baseSubscreen";
 
 export class FamilyMenu extends BaseSubscreen {
-    get buttonText() {
+    get name() {
         return "Family";
     }
 
     load() {
         this.createText({
-            text: "Family",
+            text: this.name,
             x: 100,
             y: 60,
             fontSize: 10

@@ -1,13 +1,13 @@
 import { BaseSubscreen } from "./baseSubscreen";
 
 export class GeneralMenu extends BaseSubscreen {
-    get buttonText() {
+    get name() {
         return "General";
     }
 
     load() {
         this.createText({
-            text: "General",
+            text: this.name,
             x: 100,
             y: 60,
             fontSize: 10

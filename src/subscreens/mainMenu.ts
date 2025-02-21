@@ -38,6 +38,7 @@ export class MainMenu extends BaseSubscreen {
         });
         cloudBtn.innerHTML = cloudHtml;
         cloudBtn.style.pointerEvents = "none";
+        cloudBtn.style.borderRadius = "8px";
 
         this.createText({
             text: MOD_NAME,
@@ -47,7 +48,7 @@ export class MainMenu extends BaseSubscreen {
         });
         [new GeneralMenu(), new FamilyMenu(), new RulesMenu()].forEach((m, i) => {
             const btn = this.createButton({
-                text: m.buttonText,
+                text: m.name,
                 x: 150,
                 y: 200 + 150 * i,
                 width: 600,
