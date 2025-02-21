@@ -12,7 +12,7 @@
 .lcButton {
     cursor: pointer;
     background: var(--tmd-element, white);
-    font-family: Emilys Candy;
+    font-family: "Emilys Candy";
     color: var(--tmd-text, black);
     border: 2px solid var(--tmd-accent, black);
     border-radius: 4px;
@@ -33,6 +33,16 @@
 .lcButton[data-lc-style="green"]:hover {
     background: rgb(89, 189, 89);
     color: black;
+}
+
+.lcButton[data-lc-style="inverted"] {
+    background: var(--tmd-accent, #303030);
+    border: none;
+    color: var(--tmd-text, white);
+}
+
+.lcButton[data-lc-style="inverted"]:hover {
+    background: var(--tmd-accent-hover, #474747);
 }
 
 .lcInput {

@@ -5,6 +5,8 @@ import { FamilyMenu } from "./familyMenu";
 import { RulesMenu } from "./rulesMenu";
 import { serverAppearanceBundleToAppearance } from "@/utils/characters";
 import { getRandomNumber } from "@/utils/main";
+import { DiaperMenu } from "./diaperMenu";
+import { NotesMenu } from "./notesMenu";
 
 export class MainMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -38,19 +40,52 @@ export class MainMenu extends BaseSubscreen {
         });
         cloudBtn.innerHTML = cloudHtml;
         cloudBtn.style.pointerEvents = "none";
-        cloudBtn.style.borderRadius = "8px";
+        cloudBtn.style.borderRadius = "4vw";
 
+        const addBabyBtn = this.createButton({
+            text: "Add baby",
+            x: 1000,
+            y: 820,
+            width: 550,
+            padding: 3,
+            style: "inverted"
+        });
+        addBabyBtn.style.fontWeight = "bold";
+
+        // this.createText({
+        //     text: MOD_NAME,
+        //     x: 1075,
+        //     y: 120,
+        //     fontSize: 10
+        // });
+
+        const hasMommy = false;
         this.createText({
-            text: MOD_NAME,
-            x: 1075,
+            text: MOD_NAME + " (BETA)",
+            x: 850,
             y: 120,
             fontSize: 10
         });
-        [new GeneralMenu(), new FamilyMenu(), new RulesMenu()].forEach((m, i) => {
+
+        if (!hasMommy) {
+            this.createText({
+                text: "Your are currently in Exploring mode!",
+                x: 150,
+                y: 90,
+                width: 600,
+                padding: 1,
+                withBackground: true
+            }).style.textAlign = "center";
+        }
+
+        [
+            new GeneralMenu(), new FamilyMenu(), new RulesMenu(),
+            new DiaperMenu(), new NotesMenu()
+        ].forEach((m, i) => {
             const btn = this.createButton({
                 text: m.name,
                 x: 150,
-                y: 200 + 150 * i,
+                y: (hasMommy ? 150 : 250) + 140 * i,
                 width: 600,
                 padding: 3,
             });

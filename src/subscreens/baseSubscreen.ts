@@ -6,7 +6,7 @@ interface CreateButtonArgs {
     width: number
     height?: number
     padding?: number
-    style?: "default" | "green"
+    style?: "default" | "green" | "inverted"
     anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 }
 
@@ -40,6 +40,7 @@ interface CreateCheckboxArgs {
     isChecked: boolean
     x: number
     y: number
+    width?: number,
     text: string
     anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 }
@@ -207,7 +208,7 @@ export abstract class BaseSubscreen {
         const p = document.createElement("p");
         p.textContent = text;
         p.style.color = color ?? "var(--tmd-text, black)";
-        if (withBackground) p.style.background = "var(--tmd-element, #e9e9e9)";
+        if (withBackground) p.style.background = "var(--tmd-element,rgb(239, 239, 239))";
         p.style.fontFamily = "Emilys Candy";
 
         const setProperties = () => {
@@ -250,7 +251,7 @@ export abstract class BaseSubscreen {
         return input;
     }
     createCheckbox({
-        text, x, y, isChecked,
+        text, x, y, isChecked, width,
         anchor = "top-left"
     }: CreateCheckboxArgs): HTMLInputElement | HTMLTextAreaElement {
         const checkbox = document.createElement("input");
@@ -267,6 +268,7 @@ export abstract class BaseSubscreen {
             setPosition(checkbox, x, y, anchor);
             setPosition(p, x + 100, y, anchor);
             setSize(checkbox, 65, 65);
+            if (width) setSize(p, width, null);
             setFontSize(p, 5);
         }
 
