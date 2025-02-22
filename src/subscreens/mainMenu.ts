@@ -15,6 +15,11 @@ export class MainMenu extends BaseSubscreen {
         DrawCircle(1650, 575, 6, 2, "Black");
         DrawCircle(1625, 550, 8, 2, "Black");
         DrawCircle(1600, 525, 10, 2, "Black");
+        
+        DrawImageResize(
+            "Icons/Notifications.png",
+            70, 105, 80, 80
+        );
     }
     load() {
         this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
@@ -69,7 +74,7 @@ export class MainMenu extends BaseSubscreen {
 
         if (!hasMommy) {
             this.createText({
-                text: "Your are currently in Exploring mode!",
+                text: "You are currently in Exploring mode!",
                 x: 150,
                 y: 90,
                 width: 600,

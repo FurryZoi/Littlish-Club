@@ -1,13 +1,14 @@
 interface CreateButtonArgs {
     text?: string
-    x: number
-    y: number
+    x?: number
+    y?: number
     fontSize?: number | "auto"
-    width: number
+    width?: number
     height?: number
     padding?: number
     style?: "default" | "green" | "inverted"
     anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+    place?: boolean
 }
 
 interface CreateTextArgs {
@@ -42,6 +43,15 @@ interface CreateCheckboxArgs {
     y: number
     width?: number,
     text: string
+    anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+}
+
+interface CreateScrollViewArgs {
+    scroll: "x" | "y" | "all"
+    x: number
+    y: number
+    width: number,
+    height?: number
     anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 }
 
@@ -131,10 +141,8 @@ export function setPreviousSubscreen(): void {
 }
 
 export function setSubscreen(subscreen: BaseSubscreen | null): void {
-    console.log(subscreen);
     previousSubscreen = currentSubscreen;
     currentSubscreen = subscreen;
-    console.log(previousSubscreen, currentSubscreen);
     if (currentSubscreen) currentSubscreen.load();
     if (previousSubscreen) previousSubscreen.unload();
 }
@@ -179,7 +187,7 @@ export abstract class BaseSubscreen {
     }
     createButton({
         text, x, y, width, height, fontSize = "auto",
-        anchor = "top-left", padding, style = "default"
+        anchor = "top-left", padding, style = "default", place = true
     }: CreateButtonArgs): HTMLButtonElement {
         const btn = document.createElement("button");
         btn.textContent = text;
@@ -187,7 +195,7 @@ export abstract class BaseSubscreen {
         btn.setAttribute("data-lc-style", style);
 
         const setProperties = () => {
-            setPosition(btn, x, y, anchor);
+            if (x && y) setPosition(btn, x, y, anchor);
             setSize(btn, width, height);
             if (padding) setPadding(btn, padding);
             if (fontSize === "auto") autosetFontSize(btn);
@@ -196,7 +204,7 @@ export abstract class BaseSubscreen {
 
         setProperties();
         window.addEventListener("resize", setProperties);
-        document.body.append(btn);
+        if (place) document.body.append(btn);
         this.resizeEventListeners.push(setProperties);
         this.htmlElements.push(btn);
         return btn;
@@ -278,5 +286,26 @@ export abstract class BaseSubscreen {
         this.resizeEventListeners.push(setProperties);
         this.htmlElements.push(checkbox, p);
         return checkbox;
+    }
+    createScrollView({
+        scroll, x, y, width, height,
+        anchor = "top-left"
+    }: CreateScrollViewArgs): HTMLDivElement {
+        const div = document.createElement("div");
+        if (scroll === "all") div.style.overflow = "scroll";
+        if (scroll === "x") div.style.overflowX = "scroll";
+        if (scroll === "y") div.style.overflowY = "scroll";
+
+        const setProperties = () => {
+            setPosition(div, x, y, anchor);
+            setSize(div, width, height);
+        }
+
+        setProperties();
+        window.addEventListener("resize", setProperties);
+        document.body.append(div);
+        this.resizeEventListeners.push(setProperties);
+        this.htmlElements.push(div);
+        return div;
     }
 }

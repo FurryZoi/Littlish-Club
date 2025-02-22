@@ -3,7 +3,7 @@ import { chatSendModMessage } from "@/utils/chat";
 import { hookFunction, HookPriority } from "./bcModSdk";
 import { getPlayer } from "@/utils/characters";
 
-interface Note {
+export interface Note {
     text: string
     author: {
         name: string
@@ -32,8 +32,8 @@ export function initStorage(): void {
         version: MOD_VERSION,
     };
 
-    if (typeof Player.ExtensionSettings.DOGS === "string") {
-        modStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.DOGS)) ?? data;
+    if (typeof Player.ExtensionSettings.LITTLISH_CLUB === "string") {
+        modStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.LITTLISH_CLUB)) ?? data;
     } else modStorage = data
 
     Object.keys(data).forEach((key) => {
@@ -76,7 +76,7 @@ export function initStorage(): void {
 
 function migrateModStorage(): void {}
 
-function syncStorage(): void {
+export function syncStorage(): void {
     if (typeof modStorage !== "object") return;
     Player.ExtensionSettings.LITTLISH_CLUB = LZString.compressToBase64(JSON.stringify(modStorage));
     ServerPlayerExtensionSettingsSync("LITTLISH_CLUB");
