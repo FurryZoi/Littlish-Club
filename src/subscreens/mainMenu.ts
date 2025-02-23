@@ -1,12 +1,13 @@
 import { CANVAS_BABIES_APPEARANCES, MOD_NAME, MOD_VERSION } from "@/constants";
 import { BaseSubscreen } from "./baseSubscreen";
-import { GeneralMenu } from "./generalMenu";
+import { GlobalMenu } from "./generalMenu";
 import { FamilyMenu } from "./familyMenu";
 import { RulesMenu } from "./rulesMenu";
 import { serverAppearanceBundleToAppearance } from "@/utils/characters";
 import { getRandomNumber } from "@/utils/main";
 import { DiaperMenu } from "./diaperMenu";
 import { NotesMenu } from "./notesMenu";
+import { AddBabyMenu } from "./addBabyMenu";
 
 export class MainMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -15,7 +16,7 @@ export class MainMenu extends BaseSubscreen {
         DrawCircle(1650, 575, 6, 2, "Black");
         DrawCircle(1625, 550, 8, 2, "Black");
         DrawCircle(1600, 525, 10, 2, "Black");
-        
+
         DrawImageResize(
             "Icons/Notifications.png",
             70, 105, 80, 80
@@ -56,6 +57,9 @@ export class MainMenu extends BaseSubscreen {
             style: "inverted"
         });
         addBabyBtn.style.fontWeight = "bold";
+        addBabyBtn.addEventListener("click", () => {
+            this.setSubscreen(new AddBabyMenu());
+        });
 
         // this.createText({
         //     text: MOD_NAME,
@@ -84,7 +88,7 @@ export class MainMenu extends BaseSubscreen {
         }
 
         [
-            new GeneralMenu(), new FamilyMenu(), new RulesMenu(),
+            new GlobalMenu(), new FamilyMenu(), new RulesMenu(),
             new DiaperMenu(), new NotesMenu()
         ].forEach((m, i) => {
             const btn = this.createButton({

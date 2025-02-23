@@ -1,3 +1,4 @@
+import { modStorage, syncStorage } from "@/modules/storage";
 import { BaseSubscreen } from "./baseSubscreen";
 
 export class FamilyMenu extends BaseSubscreen {
@@ -17,13 +18,24 @@ export class FamilyMenu extends BaseSubscreen {
             fontSize: 10
         });
 
-        this.createInput({
+        const caregiversInput = this.createInput({
             placeholder: "Caregivers member numbers",
             x: 1000,
             y: 200,
             width: 850,
             height: 600,
             textArea: true
+        });
+        caregiversInput.value = modStorage.caregivers?.list?.join(", ") ?? "";
+
+        if (!modStorage.caregivers?.canChangeList) caregiversInput.classList.add("lcDisabled");
+        caregiversInput.addEventListener("change", () => {
+            if (!modStorage.caregivers?.canChangeList) return caregiversInput.classList.add("lcDisabled");
+            if (!modStorage.caregivers) modStorage.caregivers = {};
+            modStorage.caregivers.list = caregiversInput.value
+                .split(",")
+                .map((c) => parseInt(c.trim()))
+                .filter((c) => typeof c === "number");
         });
 
         this.createButton({
@@ -40,12 +52,22 @@ export class FamilyMenu extends BaseSubscreen {
             y: 300
         }).style.fontWeight = "bold";
 
-        this.createCheckbox({
+        const checkBox = this.createCheckbox({
             text: "Prevent baby from changing caregivers list",
             x: 150,
             y: 400,
             width: 600,
-            isChecked: false
+            isChecked: !modStorage.caregivers?.canChangeList
         });
+        checkBox.addEventListener("change", () => {
+            if (!modStorage.caregivers) modStorage.caregivers = {};
+            modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
+            caregiversInput.classList.toggle("lcDisabled");
+        });
+    }
+
+    exit() {
+        syncStorage();
+        this.setPreviousSubscreen();
     }
 }

@@ -1,6 +1,6 @@
 import { BaseSubscreen } from "./baseSubscreen";
 
-export class GeneralMenu extends BaseSubscreen {
+export class GlobalMenu extends BaseSubscreen {
     get name() {
         return "Global";
     }

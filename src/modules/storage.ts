@@ -17,6 +17,10 @@ export interface ModStorage {
         name: string
         id: number
     }
+    caregivers?: {
+        list?: number[]
+        canChangeList?: boolean
+    }
     rules?: {}
     notes?: {
         list?: Note[],
