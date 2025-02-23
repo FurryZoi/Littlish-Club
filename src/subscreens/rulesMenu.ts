@@ -9,6 +9,10 @@ export class RulesMenu extends BaseSubscreen {
         return "Rules";
     }
 
+    get icon(): string {
+        return `https://www.bondageprojects.elementfx.com/${GameVersion}/BondageClub/Icons/Notifications.png`
+    }
+
     load() {
         this.createText({
             text: this.name,

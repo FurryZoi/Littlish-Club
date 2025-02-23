@@ -93,6 +93,7 @@ export class MainMenu extends BaseSubscreen {
                 y: (hasMommy ? 150 : 250) + 140 * i,
                 width: 600,
                 padding: 3,
+                icon: m.icon ? m.icon : null
             });
             btn.style.fontWeight = "bold";
             btn.addEventListener("click", () => {

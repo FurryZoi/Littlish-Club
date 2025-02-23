@@ -9,6 +9,7 @@ interface CreateButtonArgs {
     style?: "default" | "green" | "inverted"
     anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
     place?: boolean
+    icon?: string
 }
 
 interface CreateTextArgs {
@@ -187,12 +188,30 @@ export abstract class BaseSubscreen {
     }
     createButton({
         text, x, y, width, height, fontSize = "auto",
-        anchor = "top-left", padding, style = "default", place = true
+        anchor = "top-left", padding, style = "default",
+        place = true, icon
     }: CreateButtonArgs): HTMLButtonElement {
         const btn = document.createElement("button");
         btn.textContent = text;
         btn.classList.add("lcButton");
         btn.setAttribute("data-lc-style", style);
+
+        
+        if (icon) {
+            const div = document.createElement("div");
+            div.style.position = "absolute";
+            div.style.width = "100%";
+            div.style.height = "100%";
+            div.style.left = "0";
+            div.style.top = "0";
+            div.style.display = "flex";
+            div.style.alignItems = "center"
+            const img = document.createElement("img");
+            img.src = icon;
+            img.style.cssText = `aspect-ratio: 1/1; height: 80%; position: absolute; left: 1vw;`;
+            div.append(img);
+            btn.append(div);
+        }
 
         const setProperties = () => {
             if (x && y) setPosition(btn, x, y, anchor);

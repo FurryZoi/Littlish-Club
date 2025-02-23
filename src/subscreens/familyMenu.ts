@@ -5,6 +5,10 @@ export class FamilyMenu extends BaseSubscreen {
         return "Family";
     }
 
+    get icon(): string {
+        return `https://www.bondageprojects.elementfx.com/${GameVersion}/BondageClub/Assets/Female3DCG/Emoticon/Hearts/Icon.png`
+    }
+
     load() {
         this.createText({
             text: this.name,
@@ -15,18 +19,18 @@ export class FamilyMenu extends BaseSubscreen {
 
         this.createInput({
             placeholder: "Caregivers member numbers",
-            x: 1150,
+            x: 1000,
             y: 200,
-            width: 700,
+            width: 850,
             height: 600,
             textArea: true
         });
 
         this.createButton({
             text: "Caregivers permissions",
-            x: 1150,
+            x: 1000,
             y: 825,
-            width: 700,
+            width: 850,
             padding: 2
         });
 

@@ -18,6 +18,10 @@ export class NotesMenu extends BaseSubscreen {
         return "Notes";
     }
 
+    get icon(): string {
+        return `https://www.bondageprojects.elementfx.com/${GameVersion}/BondageClub/Icons/WinkNone.png`
+    }
+
     load() {
         this.createText({
             text: this.name,
