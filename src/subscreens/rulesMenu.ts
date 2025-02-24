@@ -1,6 +1,6 @@
 import { MOD_NAME } from "@/constants";
 import { BaseSubscreen } from "./baseSubscreen";
-import { isRuleActive, rulesList } from "@/modules/rules";
+import { isRuleActive, isRuleEnabled, rulesList } from "@/modules/rules";
 import { RuleSettingsMenu } from "./ruleSettingsMenu";
 import { MainMenu } from "./mainMenu";
 
@@ -10,7 +10,7 @@ export class RulesMenu extends BaseSubscreen {
     }
 
     get icon(): string {
-        return `https://www.bondageprojects.elementfx.com/${GameVersion}/BondageClub/Icons/Notifications.png`
+        return `Icons/Management.png`;
     }
 
     load() {
@@ -28,7 +28,7 @@ export class RulesMenu extends BaseSubscreen {
                 y: i > 4 ? 300 + ((i - 5) * 115) : 300 + (i * 115),
                 width: 800,
                 padding: 2,
-                style: isRuleActive(rule.id) ? "default" : "green",
+                style: isRuleEnabled(rule.id) ? "green" : "default",
             });
             ruleBtn.style.fontWeight = "bold";
             ruleBtn.addEventListener("click", () => {

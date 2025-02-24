@@ -1,6 +1,6 @@
 import { CANVAS_BABIES_APPEARANCES, MOD_NAME, MOD_VERSION } from "@/constants";
 import { BaseSubscreen } from "./baseSubscreen";
-import { GlobalMenu } from "./generalMenu";
+import { GlobalMenu } from "./globalMenu";
 import { FamilyMenu } from "./familyMenu";
 import { RulesMenu } from "./rulesMenu";
 import { serverAppearanceBundleToAppearance } from "@/utils/characters";
@@ -16,11 +16,6 @@ export class MainMenu extends BaseSubscreen {
         DrawCircle(1650, 575, 6, 2, "Black");
         DrawCircle(1625, 550, 8, 2, "Black");
         DrawCircle(1600, 525, 10, 2, "Black");
-
-        DrawImageResize(
-            "Icons/Notifications.png",
-            70, 105, 80, 80
-        );
     }
     load() {
         this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
@@ -85,6 +80,16 @@ export class MainMenu extends BaseSubscreen {
                 padding: 1,
                 withBackground: true
             }).style.textAlign = "center";
+
+            this.createButton({
+                icon: "Icons/Notifications.png",
+                padding: 1,
+                fontSize: 2,
+                x: 160,
+                y: 150,
+                width: 80,
+                height: 50
+            })
         }
 
         [

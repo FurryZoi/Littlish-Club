@@ -7,7 +7,7 @@ export class DiaperMenu extends BaseSubscreen {
     }
 
     get icon(): string {
-        return `https://www.bondageprojects.elementfx.com/${GameVersion}/BondageClub/Icons/Diaper.png`
+        return `Icons/Diaper.png`
     }
 
     load() {

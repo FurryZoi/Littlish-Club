@@ -1,10 +1,9 @@
-import { chatSendLocal } from "@/utils/chat";
 import { hookFunction, HookPriority } from "./modules/bcModSdk";
-import milkBottle from "@/images/milk-bottle.png";
 import { MOD_NAME } from "./constants";
 import { loadUI } from "./modules/ui";
 import styles from "./styles.css";
 import { initStorage } from "./modules/storage";
+import { loadRules } from "./modules/rules";
 
 
 const init = () => {
@@ -16,6 +15,7 @@ const init = () => {
     window.LITTLISH_CLUB = {};
     initStorage();
     loadUI();
+    loadRules();
 };
 
 if (CurrentScreen == null || CurrentScreen === "Login") {

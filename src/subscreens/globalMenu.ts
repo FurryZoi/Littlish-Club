@@ -6,7 +6,7 @@ export class GlobalMenu extends BaseSubscreen {
     }
 
     get icon(): string {
-        return `https://www.bondageprojects.elementfx.com/${GameVersion}/BondageClub/Icons/General.png`;
+        return `Icons/General.png`;
     }
 
     load() {
@@ -15,6 +15,15 @@ export class GlobalMenu extends BaseSubscreen {
             x: 100,
             y: 60,
             fontSize: 10
+        });
+
+        this.createText({
+            text: `Mod Data Size: ${
+                Math.round(new TextEncoder().encode(Player.ExtensionSettings?.LITTLISH_CLUB ?? "").byteLength / 100) / 10
+            }KB`,
+            x: 150,
+            y: 240,
+            fontSize: 6
         });
     }
 }

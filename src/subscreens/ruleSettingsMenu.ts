@@ -1,9 +1,12 @@
-import { isRuleActive, Rule } from "@/modules/rules";
+import { isRuleActive, isRuleEnabled, isRuleStrict, Rule, StorageRule } from "@/modules/rules";
 import { BaseSubscreen } from "./baseSubscreen";
+import { modStorage, syncStorage } from "@/modules/storage";
+
 
 export class RuleSettingsMenu extends BaseSubscreen {
     private rule: Rule;
-    
+    private storageRule: StorageRule;
+
     get name() {
         return `Rules > ${this.rule.name}`
     }
@@ -11,6 +14,15 @@ export class RuleSettingsMenu extends BaseSubscreen {
     constructor(rule: Rule) {
         super();
         this.rule = rule;
+        this.storageRule = modStorage.rules?.list?.find((r) => r.id === rule.id) ?? {
+            id: rule.id,
+            state: false,
+            strict: false,
+            addedBy: Player.MemberNumber,
+            changedBy: Player.MemberNumber,
+            ts: Date.now()
+        }
+        this.storageRule = JSON.parse(JSON.stringify(this.storageRule));
     }
 
     load() {
@@ -32,20 +44,28 @@ export class RuleSettingsMenu extends BaseSubscreen {
         });
         description.style.textAlign = "center";
 
-        this.createButton({
-            text: "State: Enabled",
+        const turnStateBtn = this.createButton({
+            text: isRuleEnabled(this.rule.id) ? "State: Enabled" : "State: Disabled",
             x: 150,
             y: 250,
             width: 600,
             padding: 2
         });
+        turnStateBtn.addEventListener("click", () => {
+            this.storageRule.state = !this.storageRule.state;
+            turnStateBtn.textContent = this.storageRule.state ? "State: Enabled" : "State: Disabled";
+        });
 
-        this.createButton({
-            text: "Type: Strict",
+        const turnStrictBtn = this.createButton({
+            text: `Strict: ${isRuleStrict(this.rule.id) ? "Yes" : "No"}`,
             x: 150,
             y: 365,
             width: 600,
             padding: 2
+        });
+        turnStrictBtn.addEventListener("click", () => {
+            this.storageRule.strict = !this.storageRule.strict;
+            turnStrictBtn.textContent = this.storageRule.strict ? "Strict: Yes" : "Strict: No";
         });
 
         this.createButton({
@@ -128,5 +148,18 @@ export class RuleSettingsMenu extends BaseSubscreen {
             style: "green"
         });
         saveChangesBtn.style.fontWeight = "bold";
+        saveChangesBtn.addEventListener("click", () => {
+            if (!modStorage.rules) modStorage.rules = {};
+            if (!modStorage.rules.list) modStorage.rules.list = [];
+            let r = modStorage.rules.list.find((d) => d.id === this.rule.id);
+            if (r) {
+                for (let i in r) delete r[i];
+                for (let i in this.storageRule) r[i] = this.storageRule[i];
+            } else {
+                modStorage.rules.list.push(this.storageRule);
+            }
+            syncStorage();
+            this.exit();
+        });
     }
 }

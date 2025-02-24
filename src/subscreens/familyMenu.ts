@@ -1,5 +1,7 @@
 import { modStorage, syncStorage } from "@/modules/storage";
 import { BaseSubscreen } from "./baseSubscreen";
+import { CaregiversPermissionsMenu } from "./caregiversPermissionsMenu";
+import { MainMenu } from "./mainMenu";
 
 export class FamilyMenu extends BaseSubscreen {
     get name() {
@@ -7,7 +9,7 @@ export class FamilyMenu extends BaseSubscreen {
     }
 
     get icon(): string {
-        return `https://www.bondageprojects.elementfx.com/${GameVersion}/BondageClub/Assets/Female3DCG/Emoticon/Hearts/Icon.png`
+        return `Assets/Female3DCG/Emoticon/Hearts/Icon.png`
     }
 
     load() {
@@ -38,12 +40,15 @@ export class FamilyMenu extends BaseSubscreen {
                 .filter((c) => typeof c === "number");
         });
 
-        this.createButton({
+        const caregiversPermissionsBtn = this.createButton({
             text: "Caregivers permissions",
             x: 1000,
             y: 825,
             width: 850,
             padding: 2
+        });
+        caregiversPermissionsBtn.addEventListener("click", () => {
+            this.setSubscreen(new CaregiversPermissionsMenu());
         });
 
         this.createText({
@@ -68,6 +73,6 @@ export class FamilyMenu extends BaseSubscreen {
 
     exit() {
         syncStorage();
-        this.setPreviousSubscreen();
+        this.setSubscreen(new MainMenu());
     }
 }

@@ -2,6 +2,7 @@ import { MOD_VERSION } from "@/constants";
 import { chatSendModMessage } from "@/utils/chat";
 import { hookFunction, HookPriority } from "./bcModSdk";
 import { getPlayer } from "@/utils/characters";
+import { StorageRule } from "./rules";
 
 export interface Note {
     text: string
@@ -21,7 +22,9 @@ export interface ModStorage {
         list?: number[]
         canChangeList?: boolean
     }
-    rules?: {}
+    rules?: {
+        list?: StorageRule[]
+    }
     notes?: {
         list?: Note[],
         visibility?: 0 | 1 | 2

@@ -19,7 +19,7 @@ export class NotesMenu extends BaseSubscreen {
     }
 
     get icon(): string {
-        return `https://www.bondageprojects.elementfx.com/${GameVersion}/BondageClub/Icons/WinkNone.png`
+        return `Icons/WinkNone.png`
     }
 
     load() {
