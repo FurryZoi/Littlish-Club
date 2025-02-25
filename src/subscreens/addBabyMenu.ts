@@ -1,5 +1,7 @@
 import { modStorage, Note, syncStorage } from "@/modules/storage";
 import { BaseSubscreen } from "./baseSubscreen";
+import { chatSendModMessage } from "@/utils/chat";
+import { hasMommy } from "@/modules/access";
 
 
 export class AddBabyMenu extends BaseSubscreen {
@@ -34,7 +36,11 @@ export class AddBabyMenu extends BaseSubscreen {
             });
             btn.style.wordBreak = "break-all";
             btn.style.width = "90%";
-            if (!C.LITTLISH_CLUB || C.IsPlayer()) btn.classList.add("lcDisabled");
+            btn.addEventListener("click", () => {
+                if (!C.LITTLISH_CLUB || C.IsPlayer() || hasMommy(C)) return;
+                chatSendModMessage("addBaby", null, C.MemberNumber);
+            });
+            if (!C.LITTLISH_CLUB || C.IsPlayer() || hasMommy(C)) btn.classList.add("lcDisabled");
             scrollView.append(btn);
         });
     }

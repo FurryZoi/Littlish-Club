@@ -2,7 +2,7 @@ import { modStorage, Note, syncStorage } from "@/modules/storage";
 import { BaseSubscreen } from "./baseSubscreen";
 
 
-function addNote(note: Note, subscreen: NotesMenu, scrollView: HTMLDivElement): void {
+function addNote(note: Note, subscreen: NoteSettingsMenu, scrollView: HTMLDivElement): void {
     const btn = subscreen.createButton({
         text: `${note.author.name} (${note.author.id}) noted: ${note.text}`,
         place: false,

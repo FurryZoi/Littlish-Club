@@ -1,7 +1,7 @@
 import { modStorage } from "./storage";
 
 export function isExploringModeEnabled(): boolean {
-    return hasMommy(Player);
+    return !hasMommy(Player);
 }
 
 export function hasMommy(C: Character): boolean {

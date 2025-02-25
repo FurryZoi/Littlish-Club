@@ -2,6 +2,7 @@ import { modStorage, syncStorage } from "@/modules/storage";
 import { BaseSubscreen } from "./baseSubscreen";
 import { CaregiversPermissionsMenu } from "./caregiversPermissionsMenu";
 import { MainMenu } from "./mainMenu";
+import { getMommy, hasMommy } from "@/modules/access";
 
 export class FamilyMenu extends BaseSubscreen {
     get name() {
@@ -9,7 +10,7 @@ export class FamilyMenu extends BaseSubscreen {
     }
 
     get icon(): string {
-        return `Assets/Female3DCG/Emoticon/Hearts/Icon.png`
+        return `Assets/Female3DCG/Emoticon/Hearts/Icon.png`;
     }
 
     load() {
@@ -52,7 +53,7 @@ export class FamilyMenu extends BaseSubscreen {
         });
 
         this.createText({
-            text: `Mommy: -`,
+            text: `Mommy: ${hasMommy(Player) ? `${getMommy(Player).name} (${getMommy(Player).id})`  : "-"}`,
             x: 150,
             y: 300
         }).style.fontWeight = "bold";

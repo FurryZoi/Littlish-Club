@@ -10,6 +10,7 @@ import { NotesMenu } from "./notesMenu";
 import { AddBabyMenu } from "./addBabyMenu";
 import { WardrobeMenu } from "./wardrobeMenu";
 import { ExploringModeMenu } from "./exploringModeMenu";
+import { isExploringModeEnabled } from "@/modules/access";
 
 export class MainMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -76,7 +77,6 @@ export class MainMenu extends BaseSubscreen {
         //     fontSize: 10
         // });
 
-        const hasMommy = false;
         this.createText({
             text: MOD_NAME + " (BETA)",
             x: 850,
@@ -84,7 +84,7 @@ export class MainMenu extends BaseSubscreen {
             fontSize: 10
         });
 
-        if (!hasMommy) {
+        if (isExploringModeEnabled()) {
             this.createText({
                 text: "You are currently in Exploring mode!",
                 x: 150,
@@ -115,7 +115,7 @@ export class MainMenu extends BaseSubscreen {
             const btn = this.createButton({
                 text: m.name,
                 x: 150,
-                y: (hasMommy ? 150 : 250) + 140 * i,
+                y: (isExploringModeEnabled() ? 250 : 150) + 140 * i,
                 width: 600,
                 padding: 3,
                 icon: m.icon ?? null

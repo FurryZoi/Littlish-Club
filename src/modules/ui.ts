@@ -3,6 +3,8 @@ import milkBottle from "@/images/milk-bottle.png";
 import { MOD_BUTTON_POSITION, MOD_NAME } from "@/constants";
 import { currentSubscreen, setPreviousSubscreen, setSubscreen } from "@/subscreens/baseSubscreen";
 import { MainMenu } from "@/subscreens/mainMenu";
+import { modStorage } from "./storage";
+import { AcceptRequestMenu } from "@/subscreens/acceptRequestMenu";
 
 
 export function loadUI(): void {
@@ -35,7 +37,8 @@ export function loadUI(): void {
             !window.LITTLISH_CLUB.inModSubscreen() &&
             MouseIn(...MOD_BUTTON_POSITION)
         ) {
-            setSubscreen(new MainMenu());
+            if (typeof modStorage.requestReciviedFrom?.id === "number") setSubscreen(new AcceptRequestMenu());
+            else setSubscreen(new MainMenu());
         }
         if (window.LITTLISH_CLUB.inModSubscreen()) {
             if (MouseIn(1815, 75, 90, 90)) currentSubscreen.exit();

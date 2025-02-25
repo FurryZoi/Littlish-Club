@@ -3,6 +3,7 @@ import { chatSendModMessage } from "@/utils/chat";
 import { hookFunction, HookPriority } from "./bcModSdk";
 import { getPlayer } from "@/utils/characters";
 import { StorageRule } from "./rules";
+import { hasMommy } from "./access";
 
 export interface Note {
     text: string
@@ -15,6 +16,10 @@ export interface Note {
 
 export interface ModStorage {
     mommy?: {
+        name: string
+        id: number
+    }
+    requestReciviedFrom?: {
         name: string
         id: number
     }
@@ -59,7 +64,7 @@ export function initStorage(): void {
         const message = args[0];
         const sender = getPlayer(message.Sender);
         if (!sender) return next(args);
-        if (message.Content === "littlishClubMsg" && !sender.IsPlayer()) {
+        if (message.Content === "lcClubMsg" && !sender.IsPlayer()) {
             const msg = message.Dictionary.msg;
             const data = message.Dictionary.data;
             if (msg === "syncStorage") {
@@ -69,6 +74,9 @@ export function initStorage(): void {
                     }, sender.MemberNumber);
                 }
                 sender.LITTLISH_CLUB = data.storage;
+            }
+            if (msg === "addBaby") {
+                if (!hasMommy(Player)) modStorage.requestReciviedFrom = {name: CharacterNickname(sender), id: sender.MemberNumber};
             }
         }
         next(args);

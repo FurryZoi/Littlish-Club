@@ -51,7 +51,7 @@ export function chatSendActionMessage(msg: string, target: undefined | number = 
 
 export function chatSendModMessage(msg: string, _data = null, targetNumber = null): void {
 	const data: ServerChatRoomMessage = {
-		Content: "litlishClubMsg",
+		Content: "lcClubMsg",
 		Dictionary: {
 			// @ts-ignore
 			msg
