@@ -9,6 +9,7 @@ import { DiaperMenu } from "./diaperMenu";
 import { NotesMenu } from "./notesMenu";
 import { AddBabyMenu } from "./addBabyMenu";
 import { WardrobeMenu } from "./wardrobeMenu";
+import { ExploringModeMenu } from "./exploringModeMenu";
 
 export class MainMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -93,7 +94,7 @@ export class MainMenu extends BaseSubscreen {
                 withBackground: true
             }).style.textAlign = "center";
 
-            this.createButton({
+            const exploringModeBtn = this.createButton({
                 icon: "Icons/Notifications.png",
                 padding: 1,
                 fontSize: 2,
@@ -101,6 +102,9 @@ export class MainMenu extends BaseSubscreen {
                 y: 150,
                 width: 50,
                 height: 50
+            });
+            exploringModeBtn.addEventListener("click", () => {
+                this.setSubscreen(new ExploringModeMenu());
             });
         }
 

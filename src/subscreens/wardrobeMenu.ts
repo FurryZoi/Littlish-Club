@@ -52,7 +52,7 @@ export class WardrobeMenu extends BaseSubscreen {
         scrollView.style.alignItems = "center";
         scrollView.style.rowGap = "1vw";
 
-        CANVAS_BABIES_APPEARANCES.forEach((a, i) => {
+        CANVAS_BABIES_APPEARANCES.forEach((a) => {
             const btn = this.createButton({
                 text: a.name,
                 padding: 2,
