@@ -1,8 +1,10 @@
 import { modStorage, Note, syncStorage } from "@/modules/storage";
 import { BaseSubscreen } from "./baseSubscreen";
+import { NoteSettingsMenu } from "./noteSettingsMenu";
+import { MainMenu } from "./mainMenu";
 
 
-function addNote(note: Note, subscreen: NotesMenu, scrollView: HTMLDivElement): void {
+function addNote(note: Note, subscreen: NotesMenu, scrollView: HTMLDivElement, key: number): void {
     const btn = subscreen.createButton({
         text: `${note.author.name} (${note.author.id}) noted: ${note.text}`,
         place: false,
@@ -10,6 +12,9 @@ function addNote(note: Note, subscreen: NotesMenu, scrollView: HTMLDivElement): 
     });
     btn.style.wordBreak = "break-all";
     btn.style.width = "90%";
+    btn.addEventListener("click", () => {
+        subscreen.setSubscreen(new NoteSettingsMenu(note, key));
+    });
     scrollView.append(btn);
 }
 
@@ -19,7 +24,7 @@ export class NotesMenu extends BaseSubscreen {
     }
 
     get icon(): string {
-        return `Icons/WinkNone.png`
+        return `Icons/WinkNone.png`;
     }
 
     load() {
@@ -42,7 +47,7 @@ export class NotesMenu extends BaseSubscreen {
         scrollView.style.rowGap = "1vw";
 
         modStorage.notes?.list?.forEach((note, i) => {
-            addNote(note, this, scrollView);
+            addNote(note, this, scrollView, i + 1);
         });
 
         const noteInput = this.createInput({
@@ -73,13 +78,13 @@ export class NotesMenu extends BaseSubscreen {
                 ts: Date.now()
             };
             modStorage.notes.list.push(note);
-            addNote(note, this, scrollView);
+            addNote(note, this, scrollView, modStorage.notes.list.length);
             noteInput.value = "";
         });
     }
 
     exit() {
         syncStorage();
-        this.setPreviousSubscreen();
+        this.setSubscreen(new MainMenu());
     }
 }

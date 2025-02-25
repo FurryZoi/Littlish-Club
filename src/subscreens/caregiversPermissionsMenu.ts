@@ -1,3 +1,4 @@
+import { caregiverAccessRightsList, isCaregiverAccessRightEnabled, turnCaregiverAccessRight } from "@/modules/access";
 import { BaseSubscreen } from "./baseSubscreen";
 
 export class CaregiversPermissionsMenu extends BaseSubscreen {
@@ -13,13 +14,18 @@ export class CaregiversPermissionsMenu extends BaseSubscreen {
             fontSize: 10
         });
 
-        ["Manage diaper", "Manage rules", "Delete notes"].forEach((p, i) => {
-            this.createButton({
-                text: p,
+        caregiverAccessRightsList.forEach((p, i) => {
+            const btn = this.createButton({
+                text: p.name,
                 width: 1200,
                 x: 400,
                 y: 250 + 110 * i,
-                padding: 2
+                padding: 2,
+                style: isCaregiverAccessRightEnabled(Player, p.id) ? "green" : "default"
+            });
+            btn.addEventListener("click", () => {
+                turnCaregiverAccessRight(p.id);
+                btn.setAttribute("data-lc-style", isCaregiverAccessRightEnabled(Player, p.id) ? "green" : "default");
             });
         });
     }

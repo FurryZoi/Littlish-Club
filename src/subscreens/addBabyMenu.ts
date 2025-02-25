@@ -26,7 +26,7 @@ export class AddBabyMenu extends BaseSubscreen {
         scrollView.style.flexDirection = "column";
         scrollView.style.rowGap = "1vw";
 
-        ChatRoomCharacter?.forEach((C, i) => {
+        ChatRoomCharacter?.forEach((C) => {
             const btn = this.createButton({
                 text: `${CharacterNickname(C)} (${C.MemberNumber})`,
                 place: false,
