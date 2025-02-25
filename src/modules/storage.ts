@@ -20,6 +20,7 @@ export interface ModStorage {
     }
     caregivers?: {
         list?: number[]
+        accessRights?
         canChangeList?: boolean
     }
     rules?: {

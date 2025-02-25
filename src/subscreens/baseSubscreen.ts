@@ -196,7 +196,6 @@ export abstract class BaseSubscreen {
         btn.classList.add("lcButton");
         btn.setAttribute("data-lc-style", style);
 
-        
         if (icon) {
             const div = document.createElement("div");
             div.style.position = "absolute";
@@ -208,7 +207,14 @@ export abstract class BaseSubscreen {
             div.style.alignItems = "center"
             const img = document.createElement("img");
             img.src = icon;
-            img.style.cssText = `aspect-ratio: 1/1; height: 80%; position: absolute; left: 1vw;`;
+            // img.style.aspectRatio = "1/1";
+            img.style.height = "80%";
+            if (text) {
+                img.style.position = "absolute";
+                img.style.left = "1vw";
+            } else {
+                div.style.justifyContent = "center";
+            }
             div.append(img);
             btn.append(div);
         }

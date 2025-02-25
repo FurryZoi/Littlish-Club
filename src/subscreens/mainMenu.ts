@@ -8,6 +8,7 @@ import { getRandomNumber } from "@/utils/main";
 import { DiaperMenu } from "./diaperMenu";
 import { NotesMenu } from "./notesMenu";
 import { AddBabyMenu } from "./addBabyMenu";
+import { WardrobeMenu } from "./wardrobeMenu";
 
 export class MainMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -21,7 +22,7 @@ export class MainMenu extends BaseSubscreen {
         this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
         const appearance = JSON.parse(
             LZString.decompressFromBase64(
-                CANVAS_BABIES_APPEARANCES[getRandomNumber(0, CANVAS_BABIES_APPEARANCES.length - 1)]
+                CANVAS_BABIES_APPEARANCES[getRandomNumber(0, CANVAS_BABIES_APPEARANCES.length - 1)].bundle
             )
         );
         this.canvasCharacter.Appearance = serverAppearanceBundleToAppearance(
@@ -56,6 +57,17 @@ export class MainMenu extends BaseSubscreen {
             this.setSubscreen(new AddBabyMenu());
         });
 
+        const openWardrobeBtn = this.createButton({
+            icon: "Icons/Rectangle/Dress.png",
+            width: 90,
+            height: 90,
+            x: 1815,
+            y: 340
+        });
+        openWardrobeBtn.addEventListener("click", () => {
+            this.setSubscreen(new WardrobeMenu());
+        });
+
         // this.createText({
         //     text: MOD_NAME,
         //     x: 1075,
@@ -87,9 +99,9 @@ export class MainMenu extends BaseSubscreen {
                 fontSize: 2,
                 x: 160,
                 y: 150,
-                width: 80,
+                width: 50,
                 height: 50
-            })
+            });
         }
 
         [
@@ -102,7 +114,7 @@ export class MainMenu extends BaseSubscreen {
                 y: (hasMommy ? 150 : 250) + 140 * i,
                 width: 600,
                 padding: 3,
-                icon: m.icon ? m.icon : null
+                icon: m.icon ?? null
             });
             btn.style.fontWeight = "bold";
             btn.addEventListener("click", () => {
