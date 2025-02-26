@@ -25,7 +25,7 @@ export class AcceptRequestMenu extends BaseSubscreen {
 
         const acceptBtn = this.createButton({
             text: "Accept",
-            x: 1000,
+            x: 600,
             y: 800,
             width: 400,
             padding: 2
@@ -41,7 +41,7 @@ export class AcceptRequestMenu extends BaseSubscreen {
 
         const rejectBtn = this.createButton({
             text: "Reject",
-            x: 1600,
+            x: 1200,
             y: 800,
             width: 400,
             padding: 2

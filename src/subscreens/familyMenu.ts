@@ -2,7 +2,7 @@ import { modStorage, syncStorage } from "@/modules/storage";
 import { BaseSubscreen } from "./baseSubscreen";
 import { CaregiversPermissionsMenu } from "./caregiversPermissionsMenu";
 import { MainMenu } from "./mainMenu";
-import { getMommy, hasMommy } from "@/modules/access";
+import { AccessRight, getMommy, hasAccessRightTo, hasMommy } from "@/modules/access";
 
 export class FamilyMenu extends BaseSubscreen {
     get name() {
@@ -30,10 +30,13 @@ export class FamilyMenu extends BaseSubscreen {
             textArea: true
         });
         caregiversInput.value = modStorage.caregivers?.list?.join(", ") ?? "";
-
-        if (!modStorage.caregivers?.canChangeList) caregiversInput.classList.add("lcDisabled");
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)) {
+            caregiversInput.classList.add("lcDisabled");
+        }
         caregiversInput.addEventListener("change", () => {
-            if (!modStorage.caregivers?.canChangeList) return caregiversInput.classList.add("lcDisabled");
+            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)) {
+                caregiversInput.classList.add("lcDisabled");
+            }
             if (!modStorage.caregivers) modStorage.caregivers = {};
             modStorage.caregivers.list = caregiversInput.value
                 .split(",")
@@ -65,10 +68,19 @@ export class FamilyMenu extends BaseSubscreen {
             width: 600,
             isChecked: !modStorage.caregivers?.canChangeList
         });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST)) {
+            checkBox.classList.add("lcDisabled");
+        }
         checkBox.addEventListener("change", () => {
+            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST)) {
+                checkBox.classList.add("lcDisabled");
+            }
             if (!modStorage.caregivers) modStorage.caregivers = {};
             modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
-            caregiversInput.classList.toggle("lcDisabled");
+            caregiversInput.classList.toggle(
+                "lcDisabled",
+                !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)
+            );
         });
     }
 

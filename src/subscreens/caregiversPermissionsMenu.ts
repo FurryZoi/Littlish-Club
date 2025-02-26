@@ -1,4 +1,4 @@
-import { caregiverAccessRightsList, isCaregiverAccessRightEnabled, turnCaregiverAccessRight } from "@/modules/access";
+import { AccessRight, caregiverAccessRightsList, hasAccessRightTo, isCaregiverAccessRightEnabled, turnCaregiverAccessRight } from "@/modules/access";
 import { BaseSubscreen } from "./baseSubscreen";
 
 export class CaregiversPermissionsMenu extends BaseSubscreen {
@@ -23,7 +23,13 @@ export class CaregiversPermissionsMenu extends BaseSubscreen {
                 padding: 2,
                 style: isCaregiverAccessRightEnabled(Player, p.id) ? "green" : "default"
             });
+            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_CAREGIVERS_ACCESS_RIGHTS)) {
+                btn.classList.add("lcDisabled");
+            }
             btn.addEventListener("click", () => {
+                if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_CAREGIVERS_ACCESS_RIGHTS)) {
+                    btn.classList.add("lcDisabled");
+                }
                 turnCaregiverAccessRight(p.id);
                 btn.setAttribute("data-lc-style", isCaregiverAccessRightEnabled(Player, p.id) ? "green" : "default");
             });

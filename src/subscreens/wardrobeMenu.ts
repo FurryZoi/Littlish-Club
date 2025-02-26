@@ -2,6 +2,7 @@ import { serverAppearanceBundleToAppearance } from "@/utils/characters";
 import { BaseSubscreen } from "./baseSubscreen";
 import { CANVAS_BABIES_APPEARANCES } from "@/constants";
 import { getRandomNumber } from "@/utils/main";
+import { AccessRight, hasAccessRightTo } from "@/modules/access";
 
 export class WardrobeMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -76,7 +77,7 @@ export class WardrobeMenu extends BaseSubscreen {
             scrollView.append(btn);
         });
 
-        this.createButton({
+        const applyBtn = this.createButton({
             text: "Apply",
             x: 160,
             y: 800,
@@ -84,5 +85,8 @@ export class WardrobeMenu extends BaseSubscreen {
             padding: 2,
             style: "inverted"
         });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_APPEARANCE)) {
+            applyBtn.classList.add("lcDisabled");
+        }
     }
 }

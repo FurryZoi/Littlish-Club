@@ -1,17 +1,8 @@
 import { modStorage, Note, syncStorage } from "@/modules/storage";
 import { BaseSubscreen } from "./baseSubscreen";
+import { AccessRight, hasAccessRightTo } from "@/modules/access";
 
 
-function addNote(note: Note, subscreen: NoteSettingsMenu, scrollView: HTMLDivElement): void {
-    const btn = subscreen.createButton({
-        text: `${note.author.name} (${note.author.id}) noted: ${note.text}`,
-        place: false,
-        padding: 2
-    });
-    btn.style.wordBreak = "break-all";
-    btn.style.width = "90%";
-    scrollView.append(btn);
-}
 
 export class NoteSettingsMenu extends BaseSubscreen {
     private note: Note;
@@ -57,7 +48,13 @@ export class NoteSettingsMenu extends BaseSubscreen {
             width: 360,
             padding: 2
         });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_NOTES)) {
+            deleteBtn.classList.add("lcDisabled");
+        }
         deleteBtn.addEventListener("click", () => {
+            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_NOTES)) {
+                deleteBtn.classList.add("lcDisabled");
+            }
             modStorage.notes.list.splice(this.key - 1, 1);
             this.exit();
         });

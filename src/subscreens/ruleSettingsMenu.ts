@@ -1,6 +1,7 @@
 import { isRuleActive, isRuleEnabled, isRuleStrict, Rule, StorageRule } from "@/modules/rules";
 import { BaseSubscreen } from "./baseSubscreen";
 import { modStorage, syncStorage } from "@/modules/storage";
+import { AccessRight, hasAccessRightTo } from "@/modules/access";
 
 
 export class RuleSettingsMenu extends BaseSubscreen {
@@ -51,7 +52,13 @@ export class RuleSettingsMenu extends BaseSubscreen {
             width: 600,
             padding: 2
         });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+            turnStateBtn.classList.add("lcDisabled");
+        }
         turnStateBtn.addEventListener("click", () => {
+            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+                turnStateBtn.classList.add("lcDisabled");
+            }
             this.storageRule.state = !this.storageRule.state;
             turnStateBtn.textContent = this.storageRule.state ? "State: Enabled" : "State: Disabled";
         });
@@ -63,27 +70,39 @@ export class RuleSettingsMenu extends BaseSubscreen {
             width: 600,
             padding: 2
         });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.TURN_RULE_STRICT_MODE)) {
+            turnStrictBtn.classList.add("lcDisabled");
+        }
         turnStrictBtn.addEventListener("click", () => {
+            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.TURN_RULE_STRICT_MODE)) {
+                turnStrictBtn.classList.add("lcDisabled");
+            }
             this.storageRule.strict = !this.storageRule.strict;
             turnStrictBtn.textContent = this.storageRule.strict ? "Strict: Yes" : "Strict: No";
         });
 
-        this.createButton({
+        const triggerConditionsBtn = this.createButton({
             text: "Trigger Conditions: Any",
             x: 150,
             y: 525,
             width: 600,
             padding: 2
         });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+            triggerConditionsBtn.classList.add("lcDisabled");
+        }
 
-        this.createCheckbox({
+        const whenInCheckbox = this.createCheckbox({
             text: "When in",
             x: 150,
             y: 640,
             isChecked: false
         });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+            whenInCheckbox.classList.add("lcDisabled");
+        }
 
-        this.createButton({
+        const publicBtn = this.createButton({
             text: "public",
             x: 450,
             y: 640,
@@ -91,6 +110,9 @@ export class RuleSettingsMenu extends BaseSubscreen {
             height: 65,
             fontSize: 3
         });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+            publicBtn.classList.add("lcDisabled");
+        }
 
         this.createText({
             text: "rooms",
@@ -100,14 +122,17 @@ export class RuleSettingsMenu extends BaseSubscreen {
         });
 
 
-        this.createCheckbox({
+        const whenCheckbox = this.createCheckbox({
             text: "When",
             x: 150,
             y: 740,
             isChecked: false
         });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+            whenCheckbox.classList.add("lcDisabled");
+        }
 
-        this.createButton({
+        const inRoomBtn = this.createButton({
             text: "in room",
             x: 395,
             y: 740,
@@ -115,6 +140,9 @@ export class RuleSettingsMenu extends BaseSubscreen {
             height: 65,
             fontSize: 3
         });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+            inRoomBtn.classList.add("lcDisabled");
+        }
 
         this.createText({
             text: "with role",
@@ -123,14 +151,17 @@ export class RuleSettingsMenu extends BaseSubscreen {
             fontSize: 5
         });
 
-        this.createButton({
-            text: "caretaker",
+        const caregiverBtn = this.createButton({
+            text: "caregiver",
             x: 805,
             y: 740,
             width: 180,
             height: 65,
             fontSize: 3
         });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+            caregiverBtn.classList.add("lcDisabled");
+        }
 
         this.createText({
             text: "and higher",
