@@ -30,16 +30,17 @@ export class WardrobeMenu extends BaseSubscreen {
                 this.currentAppearance.bundle
             )
         );
-        this.canvasCharacter.Appearance = serverAppearanceBundleToAppearance(
-            this.canvasCharacter.AssetFamily, appearanceBundle
-        );
+        this.canvasCharacter.Appearance = InformationSheetSelection.Appearance;
+        ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, appearanceBundle, Player.MemberNumber);
         CharacterRefresh(this.canvasCharacter);
 
         const createrName = this.createText({
             text: `By ${this.currentAppearance.creator}`,
-            x: 1600,
-            y: 240
+            x: 1500,
+            y: 240,
+            width: 400
         });
+        createrName.style.textAlign = "center";
 
         const scrollView = this.createScrollView({
             scroll: "y",
@@ -63,14 +64,13 @@ export class WardrobeMenu extends BaseSubscreen {
             btn.style.width = "95%";
             btn.style.position = "relative";
             btn.addEventListener("click", () => {
+                this.currentAppearance = a;
                 const appearanceBundle = JSON.parse(
                     LZString.decompressFromBase64(
                         a.bundle
                     )
                 );
-                this.canvasCharacter.Appearance = serverAppearanceBundleToAppearance(
-                    this.canvasCharacter.AssetFamily, appearanceBundle
-                );
+                ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, appearanceBundle, Player.MemberNumber);
                 CharacterRefresh(this.canvasCharacter);
                 createrName.textContent = `By ${a.creator}`;
             });
@@ -88,5 +88,11 @@ export class WardrobeMenu extends BaseSubscreen {
         if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_APPEARANCE)) {
             applyBtn.classList.add("lcDisabled");
         }
+        applyBtn.addEventListener("click", () => {
+            const appearanceBundle = ServerAppearanceBundle(this.canvasCharacter.Appearance);
+            ServerAppearanceLoadFromBundle(InformationSheetSelection, this.canvasCharacter.AssetFamily, appearanceBundle, Player.MemberNumber);
+            ChatRoomCharacterUpdate(InformationSheetSelection);
+            this.exit();
+        });
     }
 }

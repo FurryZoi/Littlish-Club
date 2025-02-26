@@ -3,6 +3,7 @@ import { BaseSubscreen } from "./baseSubscreen";
 import { CaregiversPermissionsMenu } from "./caregiversPermissionsMenu";
 import { MainMenu } from "./mainMenu";
 import { AccessRight, getMommy, hasAccessRightTo, hasMommy } from "@/modules/access";
+import { chatSendModMessage } from "@/utils/chat";
 
 export class FamilyMenu extends BaseSubscreen {
     get name() {
@@ -29,19 +30,28 @@ export class FamilyMenu extends BaseSubscreen {
             height: 600,
             textArea: true
         });
-        caregiversInput.value = modStorage.caregivers?.list?.join(", ") ?? "";
+        caregiversInput.value = InformationSheetSelection.IsPlayer() ?
+            modStorage.caregivers?.list?.join(", ") ?? ""
+            : InformationSheetSelection.LITTLISH_CLUB?.caregivers?.list?.join(", ") ?? "";
         if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)) {
             caregiversInput.classList.add("lcDisabled");
         }
         caregiversInput.addEventListener("change", () => {
             if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)) {
-                caregiversInput.classList.add("lcDisabled");
+                return caregiversInput.classList.add("lcDisabled");
             }
-            if (!modStorage.caregivers) modStorage.caregivers = {};
-            modStorage.caregivers.list = caregiversInput.value
+            const list = caregiversInput.value
                 .split(",")
                 .map((c) => parseInt(c.trim()))
-                .filter((c) => typeof c === "number");
+                .filter((c) => typeof c === "number" && !Number.isNaN(c));
+            if (InformationSheetSelection.IsPlayer()) {
+                if (!modStorage.caregivers) modStorage.caregivers = {};
+                modStorage.caregivers.list = list;
+            } else {
+                chatSendModMessage("changeCaregiversList", {
+                    list
+                }, InformationSheetSelection.MemberNumber);
+            }
         });
 
         const caregiversPermissionsBtn = this.createButton({
@@ -56,7 +66,7 @@ export class FamilyMenu extends BaseSubscreen {
         });
 
         this.createText({
-            text: `Mommy: ${hasMommy(Player) ? `${getMommy(Player).name} (${getMommy(Player).id})`  : "-"}`,
+            text: `Mommy: ${hasMommy(InformationSheetSelection) ? `${getMommy(InformationSheetSelection).name} (${getMommy(InformationSheetSelection).id})` : "-"}`,
             x: 150,
             y: 300
         }).style.fontWeight = "bold";
@@ -66,21 +76,27 @@ export class FamilyMenu extends BaseSubscreen {
             x: 150,
             y: 400,
             width: 600,
-            isChecked: !modStorage.caregivers?.canChangeList
+            isChecked: InformationSheetSelection.IsPlayer() ?
+                !modStorage.caregivers?.canChangeList
+                : !InformationSheetSelection.LITTLISH_CLUB?.caregivers?.canChangeList
         });
         if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST)) {
             checkBox.classList.add("lcDisabled");
         }
         checkBox.addEventListener("change", () => {
             if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST)) {
-                checkBox.classList.add("lcDisabled");
+                return checkBox.classList.add("lcDisabled");
             }
-            if (!modStorage.caregivers) modStorage.caregivers = {};
-            modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
-            caregiversInput.classList.toggle(
-                "lcDisabled",
-                !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)
-            );
+            if (InformationSheetSelection.IsPlayer()) {
+                if (!modStorage.caregivers) modStorage.caregivers = {};
+                modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
+            } else {
+                chatSendModMessage("turnCanChangeCaregiversList", null, InformationSheetSelection.MemberNumber);
+            }
+            // caregiversInput.classList.toggle(
+            //     "lcDisabled",
+            //     !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)
+            // );
         });
     }
 

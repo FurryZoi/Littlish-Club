@@ -11,7 +11,10 @@ export function loadUI(): void {
     window.LITTLISH_CLUB.inModSubscreen = () => !!currentSubscreen;
     hookFunction("InformationSheetRun", HookPriority.TOP, (args, next) => {
         if (
-            InformationSheetSelection.IsPlayer() &&
+            (
+                InformationSheetSelection.IsPlayer() ||
+                InformationSheetSelection.LITTLISH_CLUB
+            ) &&
             !(window.bcx?.inBcxSubscreen && window.bcx.inBcxSubscreen()) &&
             !window.LSCG_REMOTE_WINDOW_OPEN &&
             !window.LITTLISH_CLUB.inModSubscreen()
@@ -31,7 +34,10 @@ export function loadUI(): void {
 
     hookFunction("InformationSheetClick", HookPriority.OBSERVE, (args, next) => {
         if (
-            InformationSheetSelection.IsPlayer() &&
+            (
+                InformationSheetSelection.IsPlayer() ||
+                InformationSheetSelection.LITTLISH_CLUB
+            ) &&
             !(window.bcx?.inBcxSubscreen && window.bcx.inBcxSubscreen()) &&
             !window.LSCG_REMOTE_WINDOW_OPEN &&
             !window.LITTLISH_CLUB.inModSubscreen() &&

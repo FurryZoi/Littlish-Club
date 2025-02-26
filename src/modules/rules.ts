@@ -65,42 +65,47 @@ export interface StorageRule {
     id: number
     state: boolean
     strict: boolean
-    addedBy: number
     changedBy: number
     ts: number
 }
 
-export function isRuleActive(ruleId: RuleId): boolean {
-    return isRuleEnabled(ruleId);
+export function isRuleActive(C: Character, ruleId: RuleId): boolean {
+    return isRuleEnabled(C, ruleId);
 }
 
-export function isRuleEnabled(ruleId: number): boolean {
-    return modStorage.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
+export function isRuleEnabled(C: Character, ruleId: number): boolean {
+    if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
+    return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
 }
 
 export function isRuleStrict(ruleId: number): boolean {
     return modStorage.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
 }
 
+export function isSleeping(C: Character): boolean {
+    if (C.IsPlayer()) return modStorage.sleepState ?? false;
+    return C.LITTLISH_CLUB?.sleepState ?? false;
+}
+
 export function loadRules(): void {
     hookFunction("Player.CanChangeToPose", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
-        if (isRuleActive(RuleId.WALK_LIKE_BABY)) return false;
+        if (isRuleActive(Player, RuleId.WALK_LIKE_BABY) || isSleeping(Player)) return false;
         return next(args);
     });
 
     hookFunction("PoseCanChangeUnaidedStatus", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
         if (!args[0].IsPlayer()) return next(args);
-        if (isRuleActive(RuleId.WALK_LIKE_BABY)) return PoseChangeStatus.NEVER;
+        if (isRuleActive(Player, RuleId.WALK_LIKE_BABY) || isSleeping(Player)) return PoseChangeStatus.NEVER;
         return next(args);
     });
 
     hookFunction("ChatRoomCanAttemptStand", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
-        if (isRuleActive(RuleId.WALK_LIKE_BABY)) return false;
+        if (isRuleActive(Player, RuleId.WALK_LIKE_BABY) || isSleeping(Player)) return false;
         return next(args);
     });
 
     hookFunction("ChatAdminCanEdit", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
-        if (isRuleActive(RuleId.PREVENT_USING_ADMIN_POWERS) && CurrentScreen === "ChatAdmin" && next(args) === true) {
+        if (isRuleActive(Player, RuleId.PREVENT_USING_ADMIN_POWERS) && CurrentScreen === "ChatAdmin" && next(args) === true) {
             return ChatAdminMode === "create";
         }
         return next(args);
@@ -112,9 +117,11 @@ export function loadRules(): void {
         if (
             message === "ChatRoomChat" &&
             ["Chat", "Whisper"].includes(params.Type) &&
-            params.Content[0] !== "(" &&
-            isRuleActive(RuleId.SPEAK_LIKE_BABY)
-        ) params.Content = SpeechTransformBabyTalk(params.Content);
+            params.Content[0] !== "("
+        ) {
+            if (isSleeping(Player)) return false;
+            if (isRuleActive(Player, RuleId.SPEAK_LIKE_BABY)) params.Content = SpeechTransformBabyTalk(params.Content);
+        }
         return next(args);
     });
 
@@ -125,14 +132,14 @@ export function loadRules(): void {
         if (DialogMenuMode !== "permissions") {
             if (
                 !asset.Category?.includes("ABDL") &&
-                isRuleActive(RuleId.ABDL_INVENTORY)
+                isRuleActive(Player, RuleId.ABDL_INVENTORY)
             ) return;
         }
         next(args);
     });
 
     hookFunction("ShopLoad", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
-        if (!isRuleActive(RuleId.CANT_GO_SHOP_ALONE)) return next(args);
+        if (!isRuleActive(Player, RuleId.CANT_GO_SHOP_ALONE)) return next(args);
         // @ts-ignore
         window.ShopLCLeave = () => {
             CommonSetScreen("Room", "MainHall");
@@ -150,7 +157,7 @@ export function loadRules(): void {
     });
 
     hookFunction("ShopRun", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
-        if (!isRuleActive(RuleId.CANT_GO_SHOP_ALONE)) return next(args);
+        if (!isRuleActive(Player, RuleId.CANT_GO_SHOP_ALONE)) return next(args);
         DrawCharacter(Player, 0, 0, 1);
         DrawCharacter(ShopVendor, 500, 0, 1);
         DrawButton(1885, 25, 90, 90, "", "White", "Icons/Exit.png");
@@ -159,7 +166,7 @@ export function loadRules(): void {
 
     hookFunction("CharacterBuildDialog", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
         const C = args[0];
-        if (C.CharacterID === "NPC_Shop_Vendor" && isRuleActive(RuleId.CANT_GO_SHOP_ALONE)) {
+        if (C.CharacterID === "NPC_Shop_Vendor" && isRuleActive(Player, RuleId.CANT_GO_SHOP_ALONE)) {
             const stage1 = "LC_BabyCantShopAlone1";
             const stage2 = "LC_BabyCantShopAlone2";
             const stage3 = "LC_BabyCantShopAlone3";
@@ -198,4 +205,67 @@ export function loadRules(): void {
         return next(args);
     });
 
+    hookFunction("Player.CanChangeOwnClothes", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (isSleeping(Player)) return false;
+        return next(args);
+    });
+
+    hookFunction("Player.IsDeaf", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (isSleeping(Player)) return true;
+        return next(args);
+    });
+
+    hookFunction("Player.IsBlind", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (isSleeping(Player)) return true;
+        return next(args);
+    });
+
+    hookFunction("Player.GetDeafLevel", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (isSleeping(Player)) return 4;
+        return next(args);
+    });
+
+    hookFunction("Player.GetBlindLevel", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (isSleeping(Player)) return 3;
+        return next(args);
+    });
+
+    hookFunction("Player.CanInteract", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (isSleeping(Player)) return false;
+        return next(args);
+    });
+
+    hookFunction("InventoryGroupIsBlockedForCharacter", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (isSleeping(Player)) return true;
+        return next(args);
+    });
+
+    hookFunction("DialogClickExpressionMenu", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (isSleeping(Player)) return false;
+        return next(args);
+    });
+
+    hookFunction("CharacterAppearanceSetItem", HookPriority.OBSERVE, (args, next) => {
+        const [C, Group, ItemAsset] = args as [Character, AssetGroupName, Asset | null];
+        if (
+            C.IsPlayer() &&
+            ["ItemMouth", "ItemMouth2", "itemMouth3"].includes(Group) &&
+            ItemAsset.Name === "MilkBottle" &&
+            isRuleActive(Player, RuleId.FALL_SLEEP_AFTER_MILK_BOTTLE)
+        ) {
+            
+            CharacterSetFacialExpression(Player, "Blush", "High");
+            ChatRoomCharacterUpdate(Player);
+
+            setTimeout(() => {
+                    CharacterSetFacialExpression(Player, "Eyes", "Dazed");
+                    CharacterSetFacialExpression(Player, "Eyebrows", null);
+                    ChatRoomCharacterUpdate(Player);
+                    setTimeout(() => {
+                        modStorage.sleepState = true;
+                    }, 6000);
+            }, 6000);
+        }
+        return next(args);
+    });
 }

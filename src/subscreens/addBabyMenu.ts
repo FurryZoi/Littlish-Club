@@ -1,7 +1,7 @@
 import { modStorage, Note, syncStorage } from "@/modules/storage";
 import { BaseSubscreen } from "./baseSubscreen";
 import { chatSendModMessage } from "@/utils/chat";
-import { hasMommy } from "@/modules/access";
+import { hasMommy, isRequestedByPlayer } from "@/modules/access";
 
 
 export class AddBabyMenu extends BaseSubscreen {
@@ -30,7 +30,7 @@ export class AddBabyMenu extends BaseSubscreen {
 
         ChatRoomCharacter?.forEach((C) => {
             const btn = this.createButton({
-                text: `${CharacterNickname(C)} (${C.MemberNumber})`,
+                text: isRequestedByPlayer(C) ? `${CharacterNickname(C)} (${C.MemberNumber}) [ Pending... ]` : `${CharacterNickname(C)} (${C.MemberNumber})`,
                 place: false,
                 padding: 2
             });
@@ -39,8 +39,9 @@ export class AddBabyMenu extends BaseSubscreen {
             btn.addEventListener("click", () => {
                 if (!C.LITTLISH_CLUB || C.IsPlayer() || hasMommy(C)) return;
                 chatSendModMessage("addBaby", null, C.MemberNumber);
+                this.exit();
             });
-            if (!C.LITTLISH_CLUB || C.IsPlayer() || hasMommy(C)) btn.classList.add("lcDisabled");
+            if (!C.LITTLISH_CLUB || C.IsPlayer() || hasMommy(C) || isRequestedByPlayer(C)) btn.classList.add("lcDisabled");
             scrollView.append(btn);
         });
     }

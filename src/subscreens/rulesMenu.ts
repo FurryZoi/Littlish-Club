@@ -28,7 +28,7 @@ export class RulesMenu extends BaseSubscreen {
                 y: i > 4 ? 300 + ((i - 5) * 115) : 300 + (i * 115),
                 width: 800,
                 padding: 2,
-                style: isRuleEnabled(rule.id) ? "green" : "default",
+                style: isRuleEnabled(InformationSheetSelection, rule.id) ? "green" : "default",
             });
             ruleBtn.style.fontWeight = "bold";
             ruleBtn.addEventListener("click", () => {

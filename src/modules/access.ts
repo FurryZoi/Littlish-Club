@@ -25,6 +25,11 @@ export function isCaregiverOf(C1: Character, C2: Character): boolean {
     return C2?.LITTLISH_CLUB?.caregivers?.list?.includes(C1.MemberNumber);
 }
 
+export function isRequestedByPlayer(C: Character): boolean {
+    if (C?.IsPlayer()) return false;
+    return C?.LITTLISH_CLUB?.requestReciviedFrom?.id === Player.MemberNumber;
+}
+
 export enum CaregiverAccessRightId {
     MANAGE_DIAPER = 1000,
     MANAGE_RULES = 1001,

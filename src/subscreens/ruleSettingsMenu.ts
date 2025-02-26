@@ -2,11 +2,12 @@ import { isRuleActive, isRuleEnabled, isRuleStrict, Rule, StorageRule } from "@/
 import { BaseSubscreen } from "./baseSubscreen";
 import { modStorage, syncStorage } from "@/modules/storage";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
+import { chatSendModMessage } from "@/utils/chat";
 
 
 export class RuleSettingsMenu extends BaseSubscreen {
     private rule: Rule;
-    private storageRule: StorageRule;
+    private ruleSettings: StorageRule;
 
     get name() {
         return `Rules > ${this.rule.name}`
@@ -15,15 +16,6 @@ export class RuleSettingsMenu extends BaseSubscreen {
     constructor(rule: Rule) {
         super();
         this.rule = rule;
-        this.storageRule = modStorage.rules?.list?.find((r) => r.id === rule.id) ?? {
-            id: rule.id,
-            state: false,
-            strict: false,
-            addedBy: Player.MemberNumber,
-            changedBy: Player.MemberNumber,
-            ts: Date.now()
-        }
-        this.storageRule = JSON.parse(JSON.stringify(this.storageRule));
     }
 
     load() {
@@ -33,6 +25,16 @@ export class RuleSettingsMenu extends BaseSubscreen {
             y: 60,
             fontSize: 10
         });
+
+        const storage = InformationSheetSelection.IsPlayer() ? modStorage : InformationSheetSelection.LITTLISH_CLUB;
+        this.ruleSettings = storage.rules?.list?.find((r) => r.id === this.rule.id) ?? {
+            id: this.rule.id,
+            state: false,
+            strict: false,
+            changedBy: Player.MemberNumber,
+            ts: Date.now()
+        }
+        this.ruleSettings = JSON.parse(JSON.stringify(this.ruleSettings));
 
         const description = this.createText({
             text: `${this.rule.description}`,
@@ -46,7 +48,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
         description.style.textAlign = "center";
 
         const turnStateBtn = this.createButton({
-            text: isRuleEnabled(this.rule.id) ? "State: Enabled" : "State: Disabled",
+            text: isRuleEnabled(InformationSheetSelection, this.rule.id) ? "State: Enabled" : "State: Disabled",
             x: 150,
             y: 250,
             width: 600,
@@ -59,8 +61,8 @@ export class RuleSettingsMenu extends BaseSubscreen {
             if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
                 turnStateBtn.classList.add("lcDisabled");
             }
-            this.storageRule.state = !this.storageRule.state;
-            turnStateBtn.textContent = this.storageRule.state ? "State: Enabled" : "State: Disabled";
+            this.ruleSettings.state = !this.ruleSettings.state;
+            turnStateBtn.textContent = this.ruleSettings.state ? "State: Enabled" : "State: Disabled";
         });
 
         const turnStrictBtn = this.createButton({
@@ -77,8 +79,8 @@ export class RuleSettingsMenu extends BaseSubscreen {
             if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.TURN_RULE_STRICT_MODE)) {
                 turnStrictBtn.classList.add("lcDisabled");
             }
-            this.storageRule.strict = !this.storageRule.strict;
-            turnStrictBtn.textContent = this.storageRule.strict ? "Strict: Yes" : "Strict: No";
+            this.ruleSettings.strict = !this.ruleSettings.strict;
+            turnStrictBtn.textContent = this.ruleSettings.strict ? "Strict: Yes" : "Strict: No";
         });
 
         const triggerConditionsBtn = this.createButton({
@@ -179,17 +181,31 @@ export class RuleSettingsMenu extends BaseSubscreen {
             style: "green"
         });
         saveChangesBtn.style.fontWeight = "bold";
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+            saveChangesBtn.classList.add("lcDisabled");
+        }
         saveChangesBtn.addEventListener("click", () => {
-            if (!modStorage.rules) modStorage.rules = {};
-            if (!modStorage.rules.list) modStorage.rules.list = [];
-            let r = modStorage.rules.list.find((d) => d.id === this.rule.id);
-            if (r) {
-                for (let i in r) delete r[i];
-                for (let i in this.storageRule) r[i] = this.storageRule[i];
+            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) return;
+            if (InformationSheetSelection.IsPlayer()) {
+                if (!modStorage.rules) modStorage.rules = {};
+                if (!modStorage.rules.list) modStorage.rules.list = [];
+                let r = modStorage.rules.list.find((d) => d.id === this.rule.id);
+                if (r) {
+                    for (let i in r) delete r[i];
+                    for (let i in this.ruleSettings) r[i] = this.ruleSettings[i];
+                } else {
+                    modStorage.rules.list.push(this.ruleSettings);
+                }
+                syncStorage();
             } else {
-                modStorage.rules.list.push(this.storageRule);
+                chatSendModMessage("changeRuleSettings", {
+                    id: this.ruleSettings.id,
+                    state: this.ruleSettings.state,
+                    strict: this.ruleSettings.strict,
+                    // changedBy: Player.MemberNumber,
+                    // ts: Date.now()
+                }, InformationSheetSelection.MemberNumber)
             }
-            syncStorage();
             this.exit();
         });
     }

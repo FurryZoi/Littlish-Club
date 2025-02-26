@@ -17,13 +17,15 @@ export class GlobalMenu extends BaseSubscreen {
             fontSize: 10
         });
 
-        this.createText({
-            text: `Mod Data Size: ${
-                Math.round(new TextEncoder().encode(Player.ExtensionSettings?.LITTLISH_CLUB ?? "").byteLength / 100) / 10
-            }KB`,
-            x: 150,
-            y: 240,
-            fontSize: 6
-        });
+        if (InformationSheetSelection.IsPlayer()) {
+            this.createText({
+                text: `Mod Data Size: ${
+                    Math.round(new TextEncoder().encode(Player.ExtensionSettings?.LITTLISH_CLUB ?? "").byteLength / 100) / 10
+                }KB`,
+                x: 150,
+                y: 240,
+                fontSize: 6
+            });
+        }
     }
 }

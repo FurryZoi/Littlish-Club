@@ -2,6 +2,7 @@ import { modStorage, Note, syncStorage } from "@/modules/storage";
 import { BaseSubscreen } from "./baseSubscreen";
 import { NoteSettingsMenu } from "./noteSettingsMenu";
 import { MainMenu } from "./mainMenu";
+import { chatSendModMessage } from "@/utils/chat";
 
 
 function addNote(note: Note, subscreen: NotesMenu, scrollView: HTMLDivElement, key: number): void {
@@ -46,12 +47,16 @@ export class NotesMenu extends BaseSubscreen {
         scrollView.style.flexDirection = "column";
         scrollView.style.rowGap = "1vw";
 
-        modStorage.notes?.list?.forEach((note, i) => {
+        (
+            InformationSheetSelection.IsPlayer() ?
+                modStorage
+                : InformationSheetSelection.LITTLISH_CLUB
+        ).notes?.list?.forEach((note, i) => {
             addNote(note, this, scrollView, i + 1);
         });
 
         const noteInput = this.createInput({
-            placeholder: "Paste note here",
+            placeholder: "Type note here",
             x: 150,
             y: 840,
             width: 1400,
@@ -59,16 +64,14 @@ export class NotesMenu extends BaseSubscreen {
         });
 
         const placeNoteBtn = this.createButton({
-            text: "Place note",
-            x: 1600,
+            text: "Add note",
+            x: 1575,
             y: 840,
-            width: 250,
+            width: 275,
             padding: 2
         });
         placeNoteBtn.addEventListener("click", () => {
             if (noteInput.value.trim() === "") return;
-            if (!modStorage.notes) modStorage.notes = {};
-            if (!modStorage.notes.list) modStorage.notes.list = [];
             const note: Note = {
                 text: noteInput.value,
                 author: {
@@ -77,8 +80,16 @@ export class NotesMenu extends BaseSubscreen {
                 },
                 ts: Date.now()
             };
-            modStorage.notes.list.push(note);
-            addNote(note, this, scrollView, modStorage.notes.list.length);
+            if (InformationSheetSelection.IsPlayer()) {
+                if (!modStorage.notes) modStorage.notes = {};
+                if (!modStorage.notes.list) modStorage.notes.list = [];
+                modStorage.notes.list.push(note);
+            } else {
+                chatSendModMessage("addNote", {
+                    text: noteInput.value
+                }, InformationSheetSelection.MemberNumber);
+            }
+            addNote(note, this, scrollView, (InformationSheetSelection.LITTLISH_CLUB ?? modStorage)?.notes?.list?.length ?? 0);
             noteInput.value = "";
         });
     }

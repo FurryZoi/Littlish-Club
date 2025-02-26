@@ -46,18 +46,20 @@ export class MainMenu extends BaseSubscreen {
         cloudBtn.style.pointerEvents = "none";
         cloudBtn.style.borderRadius = "4vw";
 
-        const addBabyBtn = this.createButton({
-            text: "Add baby",
-            x: 1000,
-            y: 820,
-            width: 550,
-            padding: 3,
-            style: "inverted"
-        });
-        addBabyBtn.style.fontWeight = "bold";
-        addBabyBtn.addEventListener("click", () => {
-            this.setSubscreen(new AddBabyMenu());
-        });
+        if (InformationSheetSelection.IsPlayer()) {
+            const addBabyBtn = this.createButton({
+                text: "Add baby",
+                x: 1000,
+                y: 820,
+                width: 550,
+                padding: 3,
+                style: "inverted"
+            });
+            addBabyBtn.style.fontWeight = "bold";
+            addBabyBtn.addEventListener("click", () => {
+                this.setSubscreen(new AddBabyMenu());
+            });
+        }
 
         const openWardrobeBtn = this.createButton({
             icon: "Icons/Rectangle/Dress.png",
@@ -84,7 +86,7 @@ export class MainMenu extends BaseSubscreen {
             fontSize: 10
         });
 
-        if (isExploringModeEnabled()) {
+        if (InformationSheetSelection.IsPlayer() && isExploringModeEnabled()) {
             this.createText({
                 text: "You are currently in Exploring mode!",
                 x: 150,
@@ -115,7 +117,7 @@ export class MainMenu extends BaseSubscreen {
             const btn = this.createButton({
                 text: m.name,
                 x: 150,
-                y: (isExploringModeEnabled() ? 250 : 150) + 140 * i,
+                y: ((InformationSheetSelection.IsPlayer() && isExploringModeEnabled()) ? 250 : 150) + 140 * i,
                 width: 600,
                 padding: 3,
                 icon: m.icon ?? null
