@@ -193,7 +193,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var MOD_NAME = "Littlish Club";
   var MOD_FULL_NAME = MOD_NAME;
   var REPO_URL = "https://github.com/FurryZoi/Littlish-Club";
-  var MOD_BUTTON_POSITION = [1705, 765, 90, 90];
+  var MOD_BUTTON_POSITION = [1705, 800, 90, 90];
   var CANVAS_BABIES_APPEARANCES = [
     {
       name: "Little Baby",
