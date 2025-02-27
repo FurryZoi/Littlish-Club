@@ -1,4 +1,4 @@
-import { isRuleActive, isRuleEnabled, isRuleStrict, Rule, StorageRule } from "@/modules/rules";
+import { getRuleParameter, isRuleActive, isRuleEnabled, isRuleStrict, Rule, StorageRule } from "@/modules/rules";
 import { BaseSubscreen } from "./baseSubscreen";
 import { modStorage, syncStorage } from "@/modules/storage";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
@@ -6,7 +6,7 @@ import { chatSendModMessage } from "@/utils/chat";
 
 
 export class RuleSettingsMenu extends BaseSubscreen {
-    private rule: Rule;
+    private rule: Readonly<Rule>;
     private ruleSettings: StorageRule;
 
     get name() {
@@ -33,7 +33,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
             strict: false,
             changedBy: Player.MemberNumber,
             ts: Date.now()
-        }
+        };
         this.ruleSettings = JSON.parse(JSON.stringify(this.ruleSettings));
 
         const description = this.createText({
@@ -46,6 +46,43 @@ export class RuleSettingsMenu extends BaseSubscreen {
             padding: 2
         });
         description.style.textAlign = "center";
+
+        this.rule.data?.forEach((param, i) => {
+            this.createText({
+                text: param.text + ":",
+                x: 1000,
+                y: 420 + i * 140,
+                width: 400,
+                fontSize: 5
+            });
+
+            if (param.type === "number") {
+                const input = this.createInput({
+                    value: getRuleParameter(InformationSheetSelection, this.rule.id, param.name)?.toString() ?? "",
+                    placeholder: param.type,
+                    x: 1350,
+                    y: 420,
+                    width: 500,
+                    height: 80
+                });
+                input.setAttribute("type", param.type);
+                if (param.min) input.setAttribute("min", param.min);
+                if (param.max) input.setAttribute("max", param.max);
+                if (param.step) input.setAttribute("step", param.step);
+                if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+                    input.classList.add("lcDisabled");
+                }
+                input.addEventListener("change", () => {
+                    if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+                        return input.classList.add("lcDisabled");
+                    }
+                    if (param.min && parseFloat(input.value) < param.min) return;
+                    if (param.max && parseFloat(input.value) > param.max) return;
+                    if (!this.ruleSettings.data) this.ruleSettings.data = {};
+                    this.ruleSettings.data[param.name] = (param.type === "number") ? parseFloat(input.value) : input.value;
+                });
+            }
+        });
 
         const turnStateBtn = this.createButton({
             text: isRuleEnabled(InformationSheetSelection, this.rule.id) ? "State: Enabled" : "State: Disabled",
@@ -66,7 +103,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
         });
 
         const turnStrictBtn = this.createButton({
-            text: `Strict: ${isRuleStrict(this.rule.id) ? "Yes" : "No"}`,
+            text: `Strict: ${this.ruleSettings.strict ? "Yes" : "No"}`,
             x: 150,
             y: 365,
             width: 600,
@@ -84,7 +121,9 @@ export class RuleSettingsMenu extends BaseSubscreen {
         });
 
         const triggerConditionsBtn = this.createButton({
-            text: "Trigger Conditions: Any",
+            text: (this.ruleSettings.conditions?.type ?? "any") === "any" ?
+                "Trigger Conditions: Any"
+                : "Trigger Conditions All",
             x: 150,
             y: 525,
             width: 600,
@@ -93,51 +132,32 @@ export class RuleSettingsMenu extends BaseSubscreen {
         if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
             triggerConditionsBtn.classList.add("lcDisabled");
         }
+        triggerConditionsBtn.addEventListener("click", () => {
+            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+                return triggerConditionsBtn.classList.add("lcDisabled");
+            }
+            if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
+            this.ruleSettings.conditions.type = (this.ruleSettings.conditions?.type ?? "any") === "any" ? "all" : "any";
+            triggerConditionsBtn.textContent = (this.ruleSettings.conditions?.type ?? "any") === "any" ?
+                "Trigger Conditions: Any"
+                : "Trigger Conditions All";
 
-        const whenInCheckbox = this.createCheckbox({
-            text: "When in",
-            x: 150,
-            y: 640,
-            isChecked: false
         });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
-            whenInCheckbox.classList.add("lcDisabled");
-        }
-
-        const publicBtn = this.createButton({
-            text: "public",
-            x: 450,
-            y: 640,
-            width: 120,
-            height: 65,
-            fontSize: 3
-        });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
-            publicBtn.classList.add("lcDisabled");
-        }
-
-        this.createText({
-            text: "rooms",
-            x: 580,
-            y: 640,
-            fontSize: 5
-        });
-
 
         const whenCheckbox = this.createCheckbox({
             text: "When",
             x: 150,
-            y: 740,
-            isChecked: false
+            y: 650,
+            isChecked: !!this.ruleSettings.conditions?.whenInRoomWithRole
         });
         if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
             whenCheckbox.classList.add("lcDisabled");
         }
 
         const inRoomBtn = this.createButton({
-            text: "in room",
+            text: (this.ruleSettings.conditions?.whenInRoomWithRole?.inRoom ?? true) ? "in room" : "not in room",
             x: 395,
-            y: 740,
+            y: 650,
             width: 180,
             height: 65,
             fontSize: 3
@@ -145,18 +165,28 @@ export class RuleSettingsMenu extends BaseSubscreen {
         if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
             inRoomBtn.classList.add("lcDisabled");
         }
+        inRoomBtn.addEventListener("click", () => {
+            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+                inRoomBtn.classList.add("lcDisabled");
+            }
+            if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
+            // @ts-ignore
+            if (!this.ruleSettings.conditions.whenInRoomWithRole) this.ruleSettings.conditions.whenInRoomWithRole = {};
+            this.ruleSettings.conditions.whenInRoomWithRole.inRoom = !(this.ruleSettings.conditions.whenInRoomWithRole.inRoom ?? true);
+            inRoomBtn.textContent = (this.ruleSettings.conditions?.whenInRoomWithRole?.inRoom ?? true) ? "in room" : "not in room";
+        });
 
         this.createText({
             text: "with role",
             x: 600,
-            y: 740,
+            y: 650,
             fontSize: 5
         });
 
         const caregiverBtn = this.createButton({
-            text: "caregiver",
+            text: this.ruleSettings.conditions?.whenInRoomWithRole?.role ?? "caregiver",
             x: 805,
-            y: 740,
+            y: 650,
             width: 180,
             height: 65,
             fontSize: 3
@@ -164,11 +194,23 @@ export class RuleSettingsMenu extends BaseSubscreen {
         if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
             caregiverBtn.classList.add("lcDisabled");
         }
+        caregiverBtn.addEventListener("click", () => {
+            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+                caregiverBtn.classList.add("lcDisabled");
+            }
+            if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
+            // @ts-ignore
+            if (!this.ruleSettings.conditions.whenInRoomWithRole) this.ruleSettings.conditions.whenInRoomWithRole = {};
+            this.ruleSettings.conditions.whenInRoomWithRole.role = (this.ruleSettings.conditions.whenInRoomWithRole.role ?? "caregiver") === "caregiver" ?
+                "mommy"
+                : "caregiver";
+            caregiverBtn.textContent = this.ruleSettings.conditions?.whenInRoomWithRole?.role ?? "caregiver";
+        });
 
         this.createText({
             text: "and higher",
             x: 1000,
-            y: 740,
+            y: 650,
             fontSize: 5
         });
 
@@ -186,6 +228,17 @@ export class RuleSettingsMenu extends BaseSubscreen {
         }
         saveChangesBtn.addEventListener("click", () => {
             if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) return;
+            if (whenCheckbox.checked) {
+                if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
+                // @ts-ignore
+                if (!this.ruleSettings.conditions.whenInRoomWithRole) this.ruleSettings.conditions.whenInRoomWithRole = {};
+                if (typeof this.ruleSettings.conditions.whenInRoomWithRole.inRoom !== "boolean") {
+                    this.ruleSettings.conditions.whenInRoomWithRole.inRoom = true;
+                }
+                if (typeof this.ruleSettings.conditions.whenInRoomWithRole.role !== "string") {
+                    this.ruleSettings.conditions.whenInRoomWithRole.role = "caregiver";
+                }
+            } else delete this.ruleSettings.conditions?.whenInRoomWithRole;
             if (InformationSheetSelection.IsPlayer()) {
                 if (!modStorage.rules) modStorage.rules = {};
                 if (!modStorage.rules.list) modStorage.rules.list = [];
@@ -198,13 +251,14 @@ export class RuleSettingsMenu extends BaseSubscreen {
                 }
                 syncStorage();
             } else {
-                chatSendModMessage("changeRuleSettings", {
+                let dataToSend: Partial<StorageRule> = {
                     id: this.ruleSettings.id,
                     state: this.ruleSettings.state,
                     strict: this.ruleSettings.strict,
-                    // changedBy: Player.MemberNumber,
-                    // ts: Date.now()
-                }, InformationSheetSelection.MemberNumber)
+                };
+                if (this.ruleSettings.data) dataToSend.data = this.ruleSettings.data;
+                if (this.ruleSettings.conditions) dataToSend.conditions = this.ruleSettings.conditions;
+                chatSendModMessage("changeRuleSettings", dataToSend, InformationSheetSelection.MemberNumber);
             }
             this.exit();
         });

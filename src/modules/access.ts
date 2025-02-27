@@ -126,7 +126,7 @@ export function hasAccessRightTo(C1: Character, C2: Character, accessRight: Acce
                 )
             );
         case AccessRight.TURN_RULE_STRICT_MODE:
-            return false;
+            return isMommyOf(C1, C2);
         case AccessRight.MANAGE_DIAPER:
             return (
                 isMommyOf(C1, C2) ||
@@ -144,5 +144,13 @@ export function hasAccessRightTo(C1: Character, C2: Character, accessRight: Acce
                     isCaregiverAccessRightEnabled(C2, CaregiverAccessRightId.MANAGE_APPEARANCE)
                 )
             );
+        case AccessRight.DELETE_NOTES:
+            return (
+                isMommyOf(C1, C2) ||
+                (
+                    isCaregiverOf(C1, C2) &&
+                    isCaregiverAccessRightEnabled(C2, CaregiverAccessRightId.DELETE_NOTES)
+                )
+            )
     }
 }

@@ -1,5 +1,13 @@
+import { chatSendActionMessage } from "@/utils/chat";
 import { hookFunction, HookPriority } from "./bcModSdk";
-import { modStorage } from "./storage";
+import { ModStorage, modStorage } from "./storage";
+import { MOD_NAME } from "@/constants";
+
+
+const dialogMenuButtonClickHooks = new Map();
+const buttonLabels = new Map();
+const imageRedirects = new Map();
+
 
 export const rulesList: Rule[] = [
     {
@@ -37,10 +45,25 @@ export const rulesList: Rule[] = [
         name: "Can't go in the shop alone",
         description: "Prevents baby from going to the club shop"
     },
+    // {
+    //     id: 1007,
+    //     name: "Fall asleep after milk bottle",
+    //     description: "Baby will fall asleep after drinking the milk (if it doesn't have another effect)"
+    // },
     {
-        id: 1007,
-        name: "Fall asleep after milk bottle",
-        description: "Baby will fall asleep after drinking the milk (if it doesn't have another effect)"
+        id: 1008,
+        name: "Decrease size",
+        description: "Decreases baby's size",
+        data: [
+            {
+                name: "multiplier",
+                text: "Size Multiplier",
+                type: "number",
+                min: 0.25,
+                max: 1,
+                step: 0.01
+            }
+        ]
     }
 ];
 
@@ -52,13 +75,22 @@ export enum RuleId {
     SPEAK_LIKE_BABY = 1004,
     WALK_LIKE_BABY = 1005,
     CANT_GO_SHOP_ALONE = 1006,
-    FALL_SLEEP_AFTER_MILK_BOTTLE = 1007
+    FALL_SLEEP_AFTER_MILK_BOTTLE = 1007,
+    DECREASE_SIZE = 1008
 }
 
 export interface Rule {
     id: number
     name: string
     description: string
+    data?: {
+        name: string
+        text: string
+        type: "text" | "number"
+        min?: number
+        max?: number
+        step?: number
+    }[]
 }
 
 export interface StorageRule {
@@ -67,10 +99,35 @@ export interface StorageRule {
     strict: boolean
     changedBy: number
     ts: number
+    data?: Record<string, string | number>
+    conditions?: {
+        type?: "all" | "any"
+        whenInRoomWithRole?: {
+            inRoom: boolean
+            role: "caregiver" | "mommy"
+        }
+    }
 }
 
 export function isRuleActive(C: Character, ruleId: RuleId): boolean {
-    return isRuleEnabled(C, ruleId);
+    if (!isRuleEnabled(C, ruleId)) return false;
+    const conditions = getRuleConditions(C, ruleId);
+    if (!conditions?.whenInRoomWithRole) return true
+    let whenInRoomWithRoleCondition = false;
+    if ((conditions?.whenInRoomWithRole?.role ?? "caregiver") === "caregiver") {
+        if (conditions?.whenInRoomWithRole?.inRoom ?? true) {
+            whenInRoomWithRoleCondition = inRoomWithCaregiver(C);
+        } else {
+            whenInRoomWithRoleCondition = !inRoomWithCaregiver(C);
+        }
+    } else {
+        if (conditions?.whenInRoomWithRole?.inRoom ?? true) {
+            whenInRoomWithRoleCondition = inRoomWithMommy(C);
+        } else {
+            whenInRoomWithRoleCondition = !inRoomWithMommy(C);
+        }
+    }
+    return whenInRoomWithRoleCondition;
 }
 
 export function isRuleEnabled(C: Character, ruleId: number): boolean {
@@ -82,12 +139,99 @@ export function isRuleStrict(ruleId: number): boolean {
     return modStorage.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
 }
 
+export function getRuleParameter(C: Character, ruleId: number, parameter: string): string | number | null {
+    if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.data?.[parameter] ?? null;
+    return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.data?.[parameter] ?? null;
+}
+
+export function getRuleConditions(C: Character, ruleId: number) {
+    if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.conditions ?? null;
+    return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.conditions ?? null;
+}
+
 export function isSleeping(C: Character): boolean {
     if (C.IsPlayer()) return modStorage.sleepState ?? false;
     return C.LITTLISH_CLUB?.sleepState ?? false;
 }
 
+export function inRoomWithCaregiver(C: Character): boolean {
+    let storage: ModStorage;
+    if (C.IsPlayer()) storage = modStorage;
+    else storage = C.LITTLISH_CLUB;
+    for (const c of ChatRoomCharacter) {
+        if (storage?.caregivers?.list?.includes(c.MemberNumber)) return true;
+    }
+    return false;
+}
+
+export function inRoomWithMommy(C: Character): boolean {
+    let storage: ModStorage;
+    if (C.IsPlayer()) storage = modStorage;
+    else storage = C.LITTLISH_CLUB;
+    for (const c of ChatRoomCharacter) {
+        if (storage?.mommy?.id === c.MemberNumber) return true;
+    }
+    return false;
+}
+
+function registerButton(name, label, icon, fn): void {
+    imageRedirects.set(`Icons/${name}.png`, icon);
+    buttonLabels.set(name, label);
+
+    let hooks = dialogMenuButtonClickHooks.get(name);
+    if (!hooks) {
+        hooks = [];
+        dialogMenuButtonClickHooks.set(name, hooks);
+    }
+    if (!hooks.includes(fn)) {
+        hooks.push(fn);
+    }
+}
+
 export function loadRules(): void {
+    const attempt = () => {
+        const item = InventoryGet(Player, Player.FocusGroup?.Name);
+        if (!item) return;
+        const itemName = item.Craft ? item.Craft.Name : item.Asset.Description;
+        if (
+            item?.Asset?.Category?.includes("ABDL") &&
+            isRuleActive(Player, RuleId.PREVENT_TAKING_ABDL_ITEMS_OFF)
+        ) {
+            chatSendActionMessage(
+                `Baby ${CharacterNickname(
+                    Player
+                )} tried to remove ${itemName} without mommy's permission`
+            );
+        }
+    }
+
+
+    registerButton(
+        "LC_Remove",
+        `Blocked by ${MOD_NAME}`,
+        `Icons/Remove.png`,
+        attempt
+    );
+    registerButton(
+        "LC_Escape",
+        `Blocked by ${MOD_NAME}`,
+        `Icons/Escape.png`,
+        attempt
+    );
+    registerButton(
+        "LC_Struggle",
+        `Blocked by ${MOD_NAME}`,
+        `Icons/Struggle.png`,
+        attempt
+    );
+    registerButton(
+        "LC_Dismount",
+        `Blocked by ${MOD_NAME}`,
+        `Icons/Dismount.png`,
+        attempt
+    );
+
+
     hookFunction("Player.CanChangeToPose", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
         if (isRuleActive(Player, RuleId.WALK_LIKE_BABY) || isSleeping(Player)) return false;
         return next(args);
@@ -245,27 +389,136 @@ export function loadRules(): void {
         return next(args);
     });
 
-    hookFunction("CharacterAppearanceSetItem", HookPriority.OBSERVE, (args, next) => {
-        const [C, Group, ItemAsset] = args as [Character, AssetGroupName, Asset | null];
-        if (
-            C.IsPlayer() &&
-            ["ItemMouth", "ItemMouth2", "itemMouth3"].includes(Group) &&
-            ItemAsset.Name === "MilkBottle" &&
-            isRuleActive(Player, RuleId.FALL_SLEEP_AFTER_MILK_BOTTLE)
-        ) {
-            
-            CharacterSetFacialExpression(Player, "Blush", "High");
-            ChatRoomCharacterUpdate(Player);
+    // hookFunction("CharacterAppearanceSetItem", HookPriority.OBSERVE, (args, next) => {
+    //     const [C, Group, ItemAsset] = args as [Character, AssetGroupName, Asset | null];
+    //     if (
+    //         C.IsPlayer() &&
+    //         ["ItemMouth", "ItemMouth2", "itemMouth3"].includes(Group) &&
+    //         ItemAsset.Name === "MilkBottle" &&
+    //         isRuleActive(Player, RuleId.FALL_SLEEP_AFTER_MILK_BOTTLE)
+    //     ) {
 
-            setTimeout(() => {
-                    CharacterSetFacialExpression(Player, "Eyes", "Dazed");
-                    CharacterSetFacialExpression(Player, "Eyebrows", null);
-                    ChatRoomCharacterUpdate(Player);
-                    setTimeout(() => {
-                        modStorage.sleepState = true;
-                    }, 6000);
-            }, 6000);
+    //         CharacterSetFacialExpression(Player, "Blush", "High");
+    //         ChatRoomCharacterUpdate(Player);
+
+    //         setTimeout(() => {
+    //                 CharacterSetFacialExpression(Player, "Eyes", "Dazed");
+    //                 CharacterSetFacialExpression(Player, "Eyebrows", null);
+    //                 ChatRoomCharacterUpdate(Player);
+    //                 setTimeout(() => {
+    //                     modStorage.sleepState = true;
+    //                 }, 6000);
+    //         }, 6000);
+    //     }
+    //     return next(args);
+    // });
+
+    hookFunction("CharacterAppearanceGetCurrentValue", HookPriority.ADD_BEHAVIOR, (args, next) => {
+        const [C, Group, Type] = args as [Character, AssetGroupName, string];
+        if (
+            !C || !(C.LITTLISH_CLUB || C.IsPlayer()) ||
+            Group !== "Height" || Type !== "Zoom" || (Player.VisualSettings?.ForceFullHeight ?? false)
+        ) return next(args);
+        const sizeMultiplier = (getRuleParameter(C, RuleId.DECREASE_SIZE, "multiplier") ?? 1) as number;
+        if (sizeMultiplier > 1 || sizeMultiplier < 0.25) return next(args);
+        if (isRuleActive(C, RuleId.DECREASE_SIZE)) {
+            return next(args) * sizeMultiplier;
         }
         return next(args);
     });
+
+    hookFunction("CommonDrawAppearanceBuild", HookPriority.ADD_BEHAVIOR, (args, next) => {
+        args[0].HeightRatio = CharacterAppearanceGetCurrentValue(args[0], "Height", "Zoom");
+        return next(args);
+    });
+
+    hookFunction("DrawCharacter", HookPriority.ADD_BEHAVIOR, (args, next) => {
+        args[0].HeightRatio = CharacterAppearanceGetCurrentValue(args[0], "Height", "Zoom");
+        return next(args);
+    });
+
+    hookFunction("DialogMenuButtonBuild", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        next(args);
+        const C: Character = args[0];
+        const item = InventoryGet(C, C?.FocusGroup?.Name);
+        if (
+            C.IsPlayer() &&
+            item &&
+            item?.Asset?.Category?.includes("ABDL") &&
+            isRuleActive(Player, RuleId.PREVENT_TAKING_ABDL_ITEMS_OFF)
+        ) {
+            {
+                const removeIndex = DialogMenuButton.indexOf("Remove");
+                const struggleIndex = DialogMenuButton.indexOf("Struggle");
+                const dismountIndex = DialogMenuButton.indexOf("Dismount");
+                const escapeIndex = DialogMenuButton.indexOf("Escape");
+
+                if (removeIndex >= 0) {
+                    // @ts-ignore
+                    DialogMenuButton[removeIndex] = "LC_Remove";
+                }
+                if (struggleIndex >= 0) {
+                    // @ts-ignore
+                    DialogMenuButton[struggleIndex] = "LC_Struggle";
+                }
+                if (dismountIndex >= 0) {
+                    // @ts-ignore
+                    DialogMenuButton[dismountIndex] = "LC_Dismount";
+                }
+                if (escapeIndex >= 0) {
+                    // @ts-ignore
+                    DialogMenuButton[escapeIndex] = "LC_Escape";
+                }
+            }
+        }
+    });
+
+    hookFunction("DialogItemClick", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        const C = CharacterGetCurrent();
+        const focusGroup = C?.FocusGroup;
+        const item = InventoryGet(C, focusGroup?.Name);
+        const clickedItem = args[0];
+        if (DialogMenuMode !== "items") return next(args);
+        if (!item) return next(args);
+
+        if (
+            C.IsPlayer() &&
+            item &&
+            item?.Asset?.Category?.includes("ABDL") &&
+            isRuleActive(Player, RuleId.PREVENT_TAKING_ABDL_ITEMS_OFF)
+        ) return;
+
+        return next(args);
+    });
+
+    hookFunction("InterfaceTextGet", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        const label = buttonLabels.get(args[0]?.replace("DialogMenu", ""));
+        if (label) return label;
+        return next(args);
+    });
+
+    hookFunction("DrawGetImage", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        const redirect = imageRedirects.get(args[0]);
+        if (redirect) {
+            args[0] = redirect;
+        }
+        return next(args);
+    });
+
+    hookFunction("DialogIsMenuButtonDisabled", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (args[0]?.startsWith("LC_")) return true;
+        return next(args);
+    });
+
+    hookFunction("DialogMenuButtonClick", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        const C = CharacterGetCurrent();
+        for (let I = 0; I < DialogMenuButton.length; I++) {
+            if (MouseIn(1885 - I * 110, 15, 90, 90) && C) {
+                const hooks = dialogMenuButtonClickHooks.get(DialogMenuButton[I]);
+                if (hooks?.some((hook) => hook(C))) return true;
+            }
+        }
+        return next(args);
+    });
+
 }

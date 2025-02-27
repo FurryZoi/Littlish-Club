@@ -286,7 +286,7 @@ export abstract class BaseSubscreen {
     createCheckbox({
         text, x, y, isChecked, width,
         anchor = "top-left"
-    }: CreateCheckboxArgs): HTMLInputElement | HTMLTextAreaElement {
+    }: CreateCheckboxArgs): HTMLInputElement {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox"
         checkbox.checked = isChecked;

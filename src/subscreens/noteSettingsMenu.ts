@@ -1,6 +1,7 @@
 import { modStorage, Note, syncStorage } from "@/modules/storage";
 import { BaseSubscreen } from "./baseSubscreen";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
+import { chatSendModMessage } from "@/utils/chat";
 
 
 
@@ -48,14 +49,25 @@ export class NoteSettingsMenu extends BaseSubscreen {
             width: 360,
             padding: 2
         });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_NOTES)) {
+        if (
+            !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_NOTES) &&
+            this.note.author.id !== Player.MemberNumber
+        ) {
             deleteBtn.classList.add("lcDisabled");
         }
         deleteBtn.addEventListener("click", () => {
-            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_NOTES)) {
+            if (
+                !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_NOTES) &&
+                this.note.author.id !== Player.MemberNumber
+            ) {
                 deleteBtn.classList.add("lcDisabled");
             }
-            modStorage.notes.list.splice(this.key - 1, 1);
+            if (InformationSheetSelection.IsPlayer()) modStorage.notes.list.splice(this.key - 1, 1);
+            else {
+                chatSendModMessage("deleteNote", {
+                    key: this.key
+                }, InformationSheetSelection.MemberNumber);
+            }
             this.exit();
         });
     }

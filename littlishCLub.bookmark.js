@@ -1,0 +1,1 @@
+javascript:(function(){let n=document.createElement("script");n.setAttribute("language","JavaScript");n.setAttribute("crossorigin","anonymous");n.setAttribute("src","https://furryzoi.github.io/Littlish-Club/bundle.js");n.onload=()=>n.remove();document.head.appendChild(n);})();

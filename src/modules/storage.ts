@@ -118,18 +118,24 @@ export function initStorage(): void {
                 let r = modStorage.rules.list.find((d) => d.id === data.id);
                 if (r) {
                     if (typeof data.state === "boolean") r.state = data.state;
-                    if (typeof data.strict === "boolean") r.strict = data.strict;
+                    if (typeof data.strict === "boolean" && hasAccessRightTo(sender, Player, AccessRight.TURN_RULE_STRICT_MODE)) {
+                        r.strict = data.strict;
+                    }
+                    validateRuleData(r, data);
+                    validateRuleConditions(r, data);
                     r.changedBy = sender.MemberNumber;
                     r.ts = Date.now();
-                    console.log(r, modStorage);
                 } else {
-                    modStorage.rules.list.push({
+                    let d = {
                         id: data.id,
                         state: typeof data.state === "boolean" ? data.state : false,
-                        strict: typeof data.strict === "boolean" ? data.strict : false,
+                        strict: typeof data.strict === "boolean" && hasAccessRightTo(sender, Player, AccessRight.TURN_RULE_STRICT_MODE) ? data.strict : false,
                         changedBy: sender.MemberNumber,
                         ts: Date.now()
-                    });
+                    };
+                    validateRuleData(d, data);
+                    validateRuleConditions(d, data);
+                    modStorage.rules.list.push(d);
                 }
                 syncStorage();
             }
@@ -150,6 +156,14 @@ export function initStorage(): void {
                 modStorage.notes.list.push(note);
                 syncStorage();
             }
+            if (msg === "deleteNote") {
+                if (typeof data?.key !== "number") return;
+                const note = modStorage.notes?.list?.find((n, i) => i === data.key - 1);
+                if (!note) return;
+                if (note.author.id !== sender.MemberNumber && !hasAccessRightTo(sender, Player, AccessRight.DELETE_NOTES)) return;
+                modStorage.notes.list.splice(data.key - 1, 1);
+                syncStorage();
+            }
         }
         next(args);
     });
@@ -160,6 +174,37 @@ export function initStorage(): void {
             storage: modStorage,
         });
     });
+}
+
+function validateRuleConditions(r: StorageRule, data: Partial<StorageRule>): void {
+    console.log(r, data);
+    if (data.conditions) {
+        if (!r.conditions) r.conditions = {};
+        if (["any", "all"].includes(data.conditions.type)) r.conditions.type = data.conditions.type;
+        else r.conditions.type = "any";
+        if (data.conditions.whenInRoomWithRole) {
+            // @ts-ignore
+            if (!r.conditions.whenInRoomWithRole) r.conditions.whenInRoomWithRole = {};
+            if (typeof data.conditions.whenInRoomWithRole?.inRoom === "boolean") {
+                r.conditions.whenInRoomWithRole.inRoom = data.conditions.whenInRoomWithRole.inRoom;
+            }
+            if (["mommy", "caregiver"].includes(data.conditions.whenInRoomWithRole?.role)) {
+                r.conditions.whenInRoomWithRole.role = data.conditions.whenInRoomWithRole.role;
+            }
+        } else delete r.conditions.whenInRoomWithRole;
+    }
+    console.log(r, data);
+}
+
+function validateRuleData(r: StorageRule, data: Partial<StorageRule>): void {
+    const ruleParams = rulesList.find((g) => g.id === r.id).data ?? [];
+    for (const param of ruleParams) {
+        const p = data.data?.[param.name];
+        if (param.type === "number" && typeof p !== "number") continue;
+        if (param.type === "text" && typeof p !== "string") continue;
+        if (!r.data) r.data = {};
+        r.data[param.name] = p;
+    }
 }
 
 function migrateModStorage(): void { }
