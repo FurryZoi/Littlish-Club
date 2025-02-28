@@ -27,20 +27,23 @@ export class NoteSettingsMenu extends BaseSubscreen {
             fontSize: 10
         });
 
-        this.createText({
+        const text = this.createText({
             text: this.note.text,
             x: 200,
             y: 260,
             width: 1600
-        }).style.textAlign = "center";
+        });
+        text.style.textAlign = "center";
+        text.style.wordBreak = "break-all";
 
-        this.createText({
+        const date = this.createText({
             text: new Date(this.note.ts).toUTCString(),
-            x: 1550,
-            y: 260,
+            x: 90,
+            y: 835,
             width: 360,
             withBackground: true,
-        }).style.textAlign = "center";
+        });
+        date.style.textAlign = "center";
 
         const deleteBtn = this.createButton({
             text: "Delete",
@@ -62,13 +65,15 @@ export class NoteSettingsMenu extends BaseSubscreen {
             ) {
                 deleteBtn.classList.add("lcDisabled");
             }
-            if (InformationSheetSelection.IsPlayer()) modStorage.notes.list.splice(this.key - 1, 1);
-            else {
+            if (InformationSheetSelection.IsPlayer()) {
+                modStorage.notes.list.splice(this.key - 1, 1);
+                this.exit();
+            } else {
                 chatSendModMessage("deleteNote", {
                     key: this.key
                 }, InformationSheetSelection.MemberNumber);
+                this.setPreviousSubscreen();
             }
-            this.exit();
         });
     }
 

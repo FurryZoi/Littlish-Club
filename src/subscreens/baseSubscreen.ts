@@ -180,6 +180,7 @@ export abstract class BaseSubscreen {
     exit?() {
         setPreviousSubscreen();
     }
+    update?() {}
     setPreviousSubscreen() {
         setPreviousSubscreen();
     }

@@ -4,6 +4,7 @@ import { hookFunction, HookPriority } from "./bcModSdk";
 import { getPlayer } from "@/utils/characters";
 import { rulesList, StorageRule } from "./rules";
 import { AccessRight, CaregiverAccessRightId, caregiverAccessRightsList, hasAccessRightTo, hasMommy, turnCaregiverAccessRight } from "./access";
+import { currentSubscreen } from "@/subscreens/baseSubscreen";
 
 export interface Note {
     text: string
@@ -75,6 +76,9 @@ export function initStorage(): void {
                     }, sender.MemberNumber);
                 }
                 sender.LITTLISH_CLUB = data.storage;
+                if (InformationSheetSelection && InformationSheetSelection.MemberNumber === sender.MemberNumber) {
+                    currentSubscreen.update();
+                }
             }
             if (msg === "addBaby" && !hasMommy(Player) && modStorage.requestReciviedFrom?.id !== sender.MemberNumber) {
                 modStorage.requestReciviedFrom = {

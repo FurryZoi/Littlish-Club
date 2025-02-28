@@ -37,6 +37,11 @@ export class RulesMenu extends BaseSubscreen {
         });
     }
 
+    update() {
+        this.unload();
+        this.load();
+    }
+
     exit() {
         this.setSubscreen(new MainMenu());
     }
