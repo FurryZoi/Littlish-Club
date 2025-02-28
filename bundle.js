@@ -367,6 +367,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
     exit() {
       setPreviousSubscreen();
     }
+    update() {
+    }
     setPreviousSubscreen() {
       setPreviousSubscreen();
     }
@@ -1106,6 +1108,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
             }, sender.MemberNumber);
           }
           sender.LITTLISH_CLUB = data2.storage;
+          if (InformationSheetSelection && InformationSheetSelection.MemberNumber === sender.MemberNumber) {
+            currentSubscreen.update();
+          }
         }
         if (msg === "addBaby" && !hasMommy(Player) && modStorage.requestReciviedFrom?.id !== sender.MemberNumber) {
           modStorage.requestReciviedFrom = {
@@ -1620,6 +1625,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
         });
       });
     }
+    update() {
+      this.unload();
+      this.load();
+    }
     exit() {
       this.setSubscreen(new MainMenu());
     }
@@ -1676,19 +1685,22 @@ One of mods you are using is using an old version of SDK. It will work for now b
         y: 60,
         fontSize: 10
       });
-      this.createText({
+      const text = this.createText({
         text: this.note.text,
         x: 200,
         y: 260,
         width: 1600
-      }).style.textAlign = "center";
-      this.createText({
+      });
+      text.style.textAlign = "center";
+      text.style.wordBreak = "break-all";
+      const date = this.createText({
         text: new Date(this.note.ts).toUTCString(),
-        x: 1550,
-        y: 260,
+        x: 90,
+        y: 835,
         width: 360,
         withBackground: true
-      }).style.textAlign = "center";
+      });
+      date.style.textAlign = "center";
       const deleteBtn = this.createButton({
         text: "Delete",
         x: 1550,
@@ -1703,13 +1715,15 @@ One of mods you are using is using an old version of SDK. It will work for now b
         if (!hasAccessRightTo(Player, InformationSheetSelection, "DELETE_NOTES" /* DELETE_NOTES */) && this.note.author.id !== Player.MemberNumber) {
           deleteBtn.classList.add("lcDisabled");
         }
-        if (InformationSheetSelection.IsPlayer()) modStorage.notes.list.splice(this.key - 1, 1);
-        else {
+        if (InformationSheetSelection.IsPlayer()) {
+          modStorage.notes.list.splice(this.key - 1, 1);
+          this.exit();
+        } else {
           chatSendModMessage("deleteNote", {
             key: this.key
           }, InformationSheetSelection.MemberNumber);
+          this.setPreviousSubscreen();
         }
-        this.exit();
       });
     }
     exit() {
@@ -1719,7 +1733,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
   };
 
   // src/subscreens/notesMenu.ts
-  function addNote(note, subscreen, scrollView, key) {
+  function addNote(note, subscreen, scrollView, key, pending = false) {
+    console.log(key);
     const btn = subscreen.createButton({
       text: `${note.author.name} (${note.author.id}) noted: ${note.text}`,
       place: false,
@@ -1727,12 +1742,15 @@ One of mods you are using is using an old version of SDK. It will work for now b
     });
     btn.style.wordBreak = "break-all";
     btn.style.width = "90%";
+    if (pending) btn.classList.add("lcDisabled");
     btn.addEventListener("click", () => {
       subscreen.setSubscreen(new NoteSettingsMenu(note, key));
     });
     scrollView.append(btn);
+    scrollView.scrollTo(0, scrollView.scrollHeight);
   }
   var NotesMenu = class extends BaseSubscreen {
+    scrollView;
     get name() {
       return "Notes";
     }
@@ -1740,6 +1758,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       return `Icons/WinkNone.png`;
     }
     load() {
+      const notesList = InformationSheetSelection.IsPlayer() ? modStorage.notes?.list ?? [] : InformationSheetSelection.LITTLISH_CLUB?.notes?.list ?? [];
       this.createText({
         text: this.name,
         x: 100,
@@ -1756,7 +1775,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
       scrollView.style.display = "flex";
       scrollView.style.flexDirection = "column";
       scrollView.style.rowGap = "1vw";
-      (InformationSheetSelection.IsPlayer() ? modStorage : InformationSheetSelection.LITTLISH_CLUB).notes?.list?.forEach((note, i) => {
+      this.scrollView = scrollView;
+      notesList.forEach((note, i) => {
         addNote(note, this, scrollView, i + 1);
       });
       const noteInput = this.createInput({
@@ -1792,8 +1812,15 @@ One of mods you are using is using an old version of SDK. It will work for now b
             text: noteInput.value
           }, InformationSheetSelection.MemberNumber);
         }
-        addNote(note, this, scrollView, (InformationSheetSelection.LITTLISH_CLUB ?? modStorage)?.notes?.list?.length ?? 0);
+        addNote(note, this, scrollView, scrollView.children.length, !InformationSheetSelection.IsPlayer());
         noteInput.value = "";
+      });
+    }
+    update() {
+      this.scrollView.innerHTML = "";
+      const notesList = InformationSheetSelection.IsPlayer() ? modStorage.notes?.list ?? [] : InformationSheetSelection.LITTLISH_CLUB?.notes?.list ?? [];
+      notesList.forEach((note, i) => {
+        addNote(note, this, this.scrollView, i + 1);
       });
     }
     exit() {
