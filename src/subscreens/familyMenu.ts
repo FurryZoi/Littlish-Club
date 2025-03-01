@@ -2,7 +2,7 @@ import { modStorage, syncStorage } from "@/modules/storage";
 import { BaseSubscreen } from "./baseSubscreen";
 import { CaregiversPermissionsMenu } from "./caregiversPermissionsMenu";
 import { MainMenu } from "./mainMenu";
-import { AccessRight, getMommy, hasAccessRightTo, hasMommy } from "@/modules/access";
+import { AccessRight, getCaregiversOf, getMommyOf, hasAccessRightTo, hasMommy } from "@/modules/access";
 import { chatSendModMessage } from "@/utils/chat";
 
 export class FamilyMenu extends BaseSubscreen {
@@ -24,15 +24,13 @@ export class FamilyMenu extends BaseSubscreen {
 
         const caregiversInput = this.createInput({
             placeholder: "Caregivers member numbers",
+            value: getCaregiversOf(InformationSheetSelection).join(", "),
             x: 1000,
             y: 200,
             width: 850,
             height: 600,
             textArea: true
         });
-        caregiversInput.value = InformationSheetSelection.IsPlayer() ?
-            modStorage.caregivers?.list?.join(", ") ?? ""
-            : InformationSheetSelection.LITTLISH_CLUB?.caregivers?.list?.join(", ") ?? "";
         if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)) {
             caregiversInput.classList.add("lcDisabled");
         }
@@ -66,7 +64,7 @@ export class FamilyMenu extends BaseSubscreen {
         });
 
         this.createText({
-            text: `Mommy: ${hasMommy(InformationSheetSelection) ? `${getMommy(InformationSheetSelection).name} (${getMommy(InformationSheetSelection).id})` : "-"}`,
+            text: `Mommy: ${hasMommy(InformationSheetSelection) ? `${getMommyOf(InformationSheetSelection).name} (${getMommyOf(InformationSheetSelection).id})` : "-"}`,
             x: 150,
             y: 300
         }).style.fontWeight = "bold";

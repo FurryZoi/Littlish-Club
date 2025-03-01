@@ -1,5 +1,5 @@
 import { currentSubscreen } from "@/subscreens/baseSubscreen";
-import { getCaregiversOf, getMommy } from "./access";
+import { getCaregiversOf, getMommyOf, hasAccessRightTo } from "./access";
 
 
 
@@ -7,6 +7,7 @@ export function createApi(): void {
     window.LITTLISH_CLUB = {
         inModSubscreen: () => !!currentSubscreen,
         getCaregiversOf,
-        getMommyOf: (C) => getMommy(C)
+        getMommyOf,
+        hasAccessRightTo
     }
 }

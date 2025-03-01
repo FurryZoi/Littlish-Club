@@ -10,9 +10,9 @@ export function hasMommy(C: Character): boolean {
     return typeof C?.LITTLISH_CLUB?.mommy?.id === "number";
 }
 
-export function getMommy(C: Character) {
-    if (C?.IsPlayer?.()) return modStorage.mommy;
-    return C?.LITTLISH_CLUB?.mommy;
+export function getMommyOf(C: Character) {
+    if (C?.IsPlayer?.()) return modStorage.mommy ?? null;
+    return C?.LITTLISH_CLUB?.mommy ?? null;
 }
 
 export function getCaregiversOf(C: Character) {
@@ -26,8 +26,7 @@ export function isMommyOf(C1: Character, C2: Character): boolean {
 }
 
 export function isCaregiverOf(C1: Character, C2: Character): boolean {
-    if (C2?.IsPlayer?.()) return modStorage.caregivers?.list?.includes(C1.MemberNumber);
-    return C2?.LITTLISH_CLUB?.caregivers?.list?.includes(C1.MemberNumber);
+    return getCaregiversOf(C2)?.includes(C1.MemberNumber);
 }
 
 export function isRequestedByPlayer(C: Character): boolean {
