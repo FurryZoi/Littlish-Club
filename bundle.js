@@ -1000,6 +1000,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
     if (C?.IsPlayer?.()) return modStorage.mommy;
     return C?.LITTLISH_CLUB?.mommy;
   }
+  function getCaregiversOf(C) {
+    if (C?.IsPlayer?.()) return modStorage.caregivers?.list ?? [];
+    return C?.LITTLISH_CLUB?.caregivers?.list ?? [];
+  }
   function isMommyOf(C1, C2) {
     if (C2?.IsPlayer?.()) return modStorage.mommy?.id === C1.MemberNumber;
     return C2?.LITTLISH_CLUB?.mommy?.id === C1.MemberNumber;
@@ -1058,7 +1062,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
     switch (accessRight) {
       case "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */:
-        return isMommyOf(C1, C2) || C1.MemberNumber === C2.MemberNumber && c1ModStorage.caregivers.canChangeList;
+        return isMommyOf(C1, C2) || C1.MemberNumber === C2.MemberNumber && c1ModStorage.caregivers?.canChangeList;
       case "TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST" /* TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST */:
         return isMommyOf(C1, C2);
       case "MANAGE_CAREGIVERS_ACCESS_RIGHTS" /* MANAGE_CAREGIVERS_ACCESS_RIGHTS */:
@@ -2144,7 +2148,6 @@ Thanks for installing the mod!`;
 
   // src/modules/ui.ts
   function loadUI() {
-    window.LITTLISH_CLUB.inModSubscreen = () => !!currentSubscreen;
     hookFunction("InformationSheetRun", 100 /* TOP */, (args, next) => {
       if ((InformationSheetSelection.IsPlayer() || InformationSheetSelection.LITTLISH_CLUB) && !(window.bcx?.inBcxSubscreen && window.bcx.inBcxSubscreen()) && !window.LSCG_REMOTE_WINDOW_OPEN && !window.LITTLISH_CLUB.inModSubscreen()) {
         DrawButton(
@@ -2241,14 +2244,23 @@ Thanks for installing the mod!`;
     opacity: 0.6;
 }`;
 
+  // src/modules/api.ts
+  function createApi() {
+    window.LITTLISH_CLUB = {
+      inModSubscreen: () => !!currentSubscreen,
+      getCaregiversOf,
+      getMommyOf: (C) => getMommy(C)
+    };
+  }
+
   // src/index.ts
   var init = () => {
     const style = document.createElement("style");
     style.innerHTML = styles_default;
     document.head.append(style);
     console.log(`${MOD_NAME} loaded`);
-    window.LITTLISH_CLUB = {};
     initStorage();
+    createApi();
     loadUI();
     loadRules();
   };
