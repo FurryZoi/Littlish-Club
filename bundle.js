@@ -996,9 +996,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
     if (C?.IsPlayer?.()) return typeof modStorage.mommy?.id === "number";
     return typeof C?.LITTLISH_CLUB?.mommy?.id === "number";
   }
-  function getMommy(C) {
-    if (C?.IsPlayer?.()) return modStorage.mommy;
-    return C?.LITTLISH_CLUB?.mommy;
+  function getMommyOf(C) {
+    if (C?.IsPlayer?.()) return modStorage.mommy ?? null;
+    return C?.LITTLISH_CLUB?.mommy ?? null;
   }
   function getCaregiversOf(C) {
     if (C?.IsPlayer?.()) return modStorage.caregivers?.list ?? [];
@@ -1009,8 +1009,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     return C2?.LITTLISH_CLUB?.mommy?.id === C1.MemberNumber;
   }
   function isCaregiverOf(C1, C2) {
-    if (C2?.IsPlayer?.()) return modStorage.caregivers?.list?.includes(C1.MemberNumber);
-    return C2?.LITTLISH_CLUB?.caregivers?.list?.includes(C1.MemberNumber);
+    return getCaregiversOf(C2)?.includes(C1.MemberNumber);
   }
   function isRequestedByPlayer(C) {
     if (C?.IsPlayer()) return false;
@@ -1297,13 +1296,13 @@ One of mods you are using is using an old version of SDK. It will work for now b
       });
       const caregiversInput = this.createInput({
         placeholder: "Caregivers member numbers",
+        value: getCaregiversOf(InformationSheetSelection).join(", "),
         x: 1e3,
         y: 200,
         width: 850,
         height: 600,
         textArea: true
       });
-      caregiversInput.value = InformationSheetSelection.IsPlayer() ? modStorage.caregivers?.list?.join(", ") ?? "" : InformationSheetSelection.LITTLISH_CLUB?.caregivers?.list?.join(", ") ?? "";
       if (!hasAccessRightTo(Player, InformationSheetSelection, "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */)) {
         caregiversInput.classList.add("lcDisabled");
       }
@@ -1332,7 +1331,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         this.setSubscreen(new CaregiversPermissionsMenu());
       });
       this.createText({
-        text: `Mommy: ${hasMommy(InformationSheetSelection) ? `${getMommy(InformationSheetSelection).name} (${getMommy(InformationSheetSelection).id})` : "-"}`,
+        text: `Mommy: ${hasMommy(InformationSheetSelection) ? `${getMommyOf(InformationSheetSelection).name} (${getMommyOf(InformationSheetSelection).id})` : "-"}`,
         x: 150,
         y: 300
       }).style.fontWeight = "bold";
@@ -2249,7 +2248,8 @@ Thanks for installing the mod!`;
     window.LITTLISH_CLUB = {
       inModSubscreen: () => !!currentSubscreen,
       getCaregiversOf,
-      getMommyOf: (C) => getMommy(C)
+      getMommyOf,
+      hasAccessRightTo
     };
   }
 
