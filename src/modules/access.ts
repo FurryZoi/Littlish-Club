@@ -15,6 +15,11 @@ export function getMommy(C: Character) {
     return C?.LITTLISH_CLUB?.mommy;
 }
 
+export function getCaregiversOf(C: Character) {
+    if (C?.IsPlayer?.()) return modStorage.caregivers?.list ?? [];
+    return C?.LITTLISH_CLUB?.caregivers?.list ?? [];
+}
+
 export function isMommyOf(C1: Character, C2: Character): boolean {
     if (C2?.IsPlayer?.()) return modStorage.mommy?.id === C1.MemberNumber;
     return C2?.LITTLISH_CLUB?.mommy?.id === C1.MemberNumber;
@@ -110,7 +115,7 @@ export function hasAccessRightTo(C1: Character, C2: Character, accessRight: Acce
                 isMommyOf(C1, C2) ||
                 (
                     C1.MemberNumber === C2.MemberNumber &&
-                    c1ModStorage.caregivers.canChangeList
+                    c1ModStorage.caregivers?.canChangeList
                 )
             );
         case AccessRight.TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST:

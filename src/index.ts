@@ -4,6 +4,7 @@ import { loadUI } from "./modules/ui";
 import styles from "./styles.css";
 import { initStorage } from "./modules/storage";
 import { loadRules } from "./modules/rules";
+import { createApi } from "./modules/api";
 
 
 const init = () => {
@@ -11,9 +12,8 @@ const init = () => {
     style.innerHTML = styles;
     document.head.append(style);
     console.log(`${MOD_NAME} loaded`);
-    // @ts-ignore
-    window.LITTLISH_CLUB = {};
     initStorage();
+    createApi();
     loadUI();
     loadRules();
 };

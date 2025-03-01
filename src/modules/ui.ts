@@ -8,7 +8,6 @@ import { AcceptRequestMenu } from "@/subscreens/acceptRequestMenu";
 
 
 export function loadUI(): void {
-    window.LITTLISH_CLUB.inModSubscreen = () => !!currentSubscreen;
     hookFunction("InformationSheetRun", HookPriority.TOP, (args, next) => {
         if (
             (
