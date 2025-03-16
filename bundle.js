@@ -1269,14 +1269,14 @@ One of mods you are using is using an old version of SDK. It will work for now b
       if (!modStorage.notes) modStorage.notes = {};
       if (!modStorage.notes.list) modStorage.notes.list = [];
       for (const note of oldAbdlData.notes.list) {
-        if (typeof note.text !== "string" || typeof note.author?.name !== "string" || typeof note.author?.id !== "number" || typeof note.ts !== "number") continue;
+        if (typeof note.text !== "string" || typeof note.author?.name !== "string" || typeof note.author?.id !== "number" || typeof note.time !== "number") continue;
         modStorage.notes.list.push({
           text: note.text,
           author: {
             name: note.author?.name,
             id: note.author?.id
           },
-          ts: note.ts
+          ts: note.time
         });
       }
     }
