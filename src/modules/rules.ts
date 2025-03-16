@@ -64,6 +64,11 @@ export const rulesList: Rule[] = [
                 step: 0.01
             }
         ]
+    },
+    {
+        id: 1009,
+        name: "Disable reset settings button",
+        description: "Disables button to reset mod settings"
     }
 ];
 
@@ -76,7 +81,8 @@ export enum RuleId {
     WALK_LIKE_BABY = 1005,
     CANT_GO_SHOP_ALONE = 1006,
     FALL_SLEEP_AFTER_MILK_BOTTLE = 1007,
-    DECREASE_SIZE = 1008
+    DECREASE_SIZE = 1008,
+    DISABLE_RESET_SETTINGS_BUTTON = 1009
 }
 
 export interface Rule {
@@ -105,6 +111,9 @@ export interface StorageRule {
         whenInRoomWithRole?: {
             inRoom: boolean
             role: "caregiver" | "mommy"
+        }
+        whenInRoomWithAbdlCategory?: {
+            blocked: boolean
         }
     }
 }
@@ -174,7 +183,7 @@ export function inRoomWithMommy(C: Character): boolean {
     return false;
 }
 
-function registerButton(name, label, icon, fn): void {
+function registerButton(name: string, label: string, icon: string, fn: () => void): void {
     imageRedirects.set(`Icons/${name}.png`, icon);
     buttonLabels.set(name, label);
 

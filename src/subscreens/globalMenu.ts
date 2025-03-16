@@ -1,4 +1,6 @@
+import { isRuleActive, RuleId } from "@/modules/rules";
 import { BaseSubscreen } from "./baseSubscreen";
+import { resetStorage } from "@/modules/storage";
 
 export class GlobalMenu extends BaseSubscreen {
     get name() {
@@ -25,6 +27,21 @@ export class GlobalMenu extends BaseSubscreen {
                 x: 150,
                 y: 240,
                 fontSize: 6
+            });
+
+            const resetBtn = this.createButton({
+                text: "Reset settings",
+                x: 100,
+                y: 825,
+                width: 500,
+                padding: 2,
+                icon: "Icons/ServiceBell.png"
+            });
+            if (isRuleActive(Player, RuleId.DISABLE_RESET_SETTINGS_BUTTON)) resetBtn.classList.add("lcDisabled");
+            resetBtn.addEventListener("click", () => {
+                if (isRuleActive(Player, RuleId.DISABLE_RESET_SETTINGS_BUTTON)) return;
+                resetStorage();
+                this.exit();
             });
         }
     }

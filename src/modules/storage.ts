@@ -224,7 +224,8 @@ function validateRuleData(r: StorageRule, data: Partial<StorageRule>): void {
 function migrateModStorage(): void { }
 
 function bccAbdlPartSync(oldAbdlData: Record<string, any>): void {
-    if (!hasMommy(Player) && oldAbdlData?.mommy?.id) {
+    console.log(oldAbdlData);
+    if (!hasMommy(Player) && typeof oldAbdlData?.mommy?.id === "number") {
         modStorage.mommy = {
             name: oldAbdlData.mommy.name ?? "?",
             id: oldAbdlData.mommy.id
@@ -274,4 +275,11 @@ export function syncStorage(): void {
     chatSendModMessage("syncStorage", {
         storage: modStorage,
     });
+}
+
+export function resetStorage(): void {
+    modStorage = {
+        version: MOD_VERSION
+    };
+    syncStorage();
 }
