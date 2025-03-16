@@ -1,9 +1,9 @@
 import { MOD_VERSION } from "@/constants";
-import { chatSendModMessage } from "@/utils/chat";
-import { hookFunction, HookPriority } from "./bcModSdk";
+import { chatSendLocal, chatSendModMessage } from "@/utils/chat";
+import { findModByName, hookFunction, HookPriority } from "./bcModSdk";
 import { getPlayer } from "@/utils/characters";
 import { rulesList, StorageRule } from "./rules";
-import { AccessRight, CaregiverAccessRightId, caregiverAccessRightsList, hasAccessRightTo, hasMommy, turnCaregiverAccessRight } from "./access";
+import { AccessRight, caregiverAccessRightsList, getCaregiversOf, hasAccessRightTo, hasMommy, isCaregiverOf, turnCaregiverAccessRight } from "./access";
 import { currentSubscreen } from "@/subscreens/baseSubscreen";
 
 export interface Note {
@@ -58,6 +58,16 @@ export function initStorage(): void {
     });
 
     migrateModStorage();
+
+    try {
+        const bccStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.BCC));
+        if (
+            (
+                bccStorage?.abdl?.mommy || bccStorage?.abdl?.caretakers || bccStorage?.abdl?.notes?.list
+            ) && !findModByName("BCC")
+        ) bccAbdlPartSync(bccStorage.abdl);
+    } catch (e) { }
+
     chatSendModMessage("syncStorage", {
         storage: modStorage,
     });
@@ -212,6 +222,50 @@ function validateRuleData(r: StorageRule, data: Partial<StorageRule>): void {
 }
 
 function migrateModStorage(): void { }
+
+function bccAbdlPartSync(oldAbdlData: Record<string, any>): void {
+    if (!hasMommy(Player) && oldAbdlData?.mommy?.id) {
+        modStorage.mommy = {
+            name: oldAbdlData.mommy.name ?? "?",
+            id: oldAbdlData.mommy.id
+        }
+    }
+
+    if (Array.isArray(oldAbdlData?.caretakers?.list)) {
+        const caregiversList = getCaregiversOf(Player);
+        for (const memberNumber of oldAbdlData.caretakers.list) {
+            if (!caregiversList.includes(memberNumber)) caregiversList.push(memberNumber);
+        }
+        if (!modStorage.caregivers) modStorage.caregivers = {};
+        modStorage.caregivers.list = caregiversList;
+    }
+
+    if (Array.isArray(oldAbdlData?.notes?.list) && oldAbdlData.notes.list.length > 0) {
+        if (!modStorage.notes) modStorage.notes = {};
+        if (!modStorage.notes.list) modStorage.notes.list = [];
+        for (const note of oldAbdlData.notes.list) {
+            if (
+                typeof note.text !== "string" || typeof note.author?.name !== "string" ||
+                typeof note.author?.id !== "number" || typeof note.ts !== "number"
+            ) continue;
+            modStorage.notes.list.push({
+                text: note.text,
+                author: {
+                    name: note.author?.name,
+                    id: note.author?.id
+                },
+                ts: note.ts
+            });
+        }
+    }
+
+    let bccStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.BCC))
+    delete bccStorage.abdl;
+    Player.ExtensionSettings.BCC = LZString.compressToBase64(JSON.stringify(bccStorage));
+    ServerPlayerExtensionSettingsSync("BCC");
+    syncStorage();
+    chatSendLocal("Littlish Club was synced with BCC's ABDL module");
+}
 
 export function syncStorage(): void {
     if (typeof modStorage !== "object") return;
