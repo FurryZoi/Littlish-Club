@@ -268,6 +268,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
   function hookFunction(functionName, priority, hook) {
     return modSdk.hookFunction(functionName, priority, hook);
   }
+  function findModByName(name) {
+    return !!import_bondage_club_mod_sdk.default.getModsInfo().find((m) => m.name === name);
+  }
 
   // src/images/milk-bottle.png
   var milk_bottle_default = "data:image/png;base64,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";
@@ -570,6 +573,19 @@ One of mods you are using is using an old version of SDK. It will work for now b
   };
 
   // src/utils/chat.ts
+  function chatSendLocal(message) {
+    if (!ServerPlayerIsInChatRoom()) return;
+    const div = document.createElement("div");
+    div.setAttribute("class", "ChatMessage ChatMessageLocalMessage");
+    div.setAttribute("data-time", ChatRoomCurrentTime());
+    div.setAttribute("data-sender", `${Player.MemberNumber}`);
+    div.style.background = "#55edc095";
+    div.style.margin = "0.15em 0";
+    if (typeof message === "string") div.textContent = message;
+    else div.appendChild(message);
+    document.querySelector("#TextAreaChatLog").appendChild(div);
+    ElementScrollToEnd("TextAreaChatLog");
+  }
   function chatSendActionMessage(msg, target = void 0, dictionary = []) {
     if (!msg || !ServerPlayerIsInChatRoom()) return;
     const isFemale = CharacterPronounDescription(Player) === "She/Her";
@@ -1094,6 +1110,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
       }
     });
     migrateModStorage();
+    try {
+      const bccStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.BCC));
+      if ((bccStorage?.abdl?.mommy || bccStorage?.abdl?.caretakers || bccStorage?.abdl?.notes?.list) && !findModByName("BCC")) bccAbdlPartSync(bccStorage.abdl);
+    } catch (e) {
+    }
     chatSendModMessage("syncStorage", {
       storage: modStorage
     });
@@ -1228,6 +1249,43 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   }
   function migrateModStorage() {
+  }
+  function bccAbdlPartSync(oldAbdlData) {
+    if (!hasMommy(Player) && oldAbdlData?.mommy?.id) {
+      modStorage.mommy = {
+        name: oldAbdlData.mommy.name ?? "?",
+        id: oldAbdlData.mommy.id
+      };
+    }
+    if (Array.isArray(oldAbdlData?.caretakers?.list)) {
+      const caregiversList = getCaregiversOf(Player);
+      for (const memberNumber of oldAbdlData.caretakers.list) {
+        if (!caregiversList.includes(memberNumber)) caregiversList.push(memberNumber);
+      }
+      if (!modStorage.caregivers) modStorage.caregivers = {};
+      modStorage.caregivers.list = caregiversList;
+    }
+    if (Array.isArray(oldAbdlData?.notes?.list) && oldAbdlData.notes.list.length > 0) {
+      if (!modStorage.notes) modStorage.notes = {};
+      if (!modStorage.notes.list) modStorage.notes.list = [];
+      for (const note of oldAbdlData.notes.list) {
+        if (typeof note.text !== "string" || typeof note.author?.name !== "string" || typeof note.author?.id !== "number" || typeof note.ts !== "number") continue;
+        modStorage.notes.list.push({
+          text: note.text,
+          author: {
+            name: note.author?.name,
+            id: note.author?.id
+          },
+          ts: note.ts
+        });
+      }
+    }
+    let bccStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.BCC));
+    delete bccStorage.abdl;
+    Player.ExtensionSettings.BCC = LZString.compressToBase64(JSON.stringify(bccStorage));
+    ServerPlayerExtensionSettingsSync("BCC");
+    syncStorage();
+    chatSendLocal("Littlish Club was synced with BCC's ABDL module");
   }
   function syncStorage() {
     if (typeof modStorage !== "object") return;
