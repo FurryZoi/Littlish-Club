@@ -246,7 +246,7 @@ function bccAbdlPartSync(oldAbdlData: Record<string, any>): void {
         for (const note of oldAbdlData.notes.list) {
             if (
                 typeof note.text !== "string" || typeof note.author?.name !== "string" ||
-                typeof note.author?.id !== "number" || typeof note.ts !== "number"
+                typeof note.author?.id !== "number" || typeof note.time !== "number"
             ) continue;
             modStorage.notes.list.push({
                 text: note.text,
@@ -254,7 +254,7 @@ function bccAbdlPartSync(oldAbdlData: Record<string, any>): void {
                     name: note.author?.name,
                     id: note.author?.id
                 },
-                ts: note.ts
+                ts: note.time
             });
         }
     }
