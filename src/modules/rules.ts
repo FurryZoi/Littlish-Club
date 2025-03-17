@@ -121,7 +121,7 @@ export interface StorageRule {
 export function isRuleActive(C: Character, ruleId: RuleId): boolean {
     if (!isRuleEnabled(C, ruleId)) return false;
     const conditions = getRuleConditions(C, ruleId);
-    if (!conditions?.whenInRoomWithRole && !conditions.whenInRoomWhereAbdl) return true
+    if (!conditions?.whenInRoomWithRole && !conditions?.whenInRoomWhereAbdl) return true
     let whenInRoomWithRoleCondition = false;
     let whenInRoomWhereAbdlCondition = false;
     if (conditions.whenInRoomWithRole) {
