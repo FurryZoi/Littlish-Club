@@ -1255,7 +1255,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     ChatRoomRegisterMessageHandler({
       Priority: 10,
       Callback: (data, sender) => {
-        if (!sender) return true;
+        if (!sender) return false;
         if (data.Type === "Activity" && !!data.Dictionary?.find) {
           const activityName = data.Dictionary.find((e) => {
             return !!e.ActivityName;
@@ -1273,7 +1273,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
             syncStorage();
           }
         }
-        return true;
+        return false;
       }
     });
     hookFunction("CharacterAppearanceGetCurrentValue", 1 /* ADD_BEHAVIOR */, (args, next) => {
