@@ -48,13 +48,15 @@ export class RuleSettingsMenu extends BaseSubscreen {
         description.style.textAlign = "center";
 
         this.rule.data?.forEach((param, i) => {
-            this.createText({
-                text: param.text + ":",
-                x: 1000,
-                y: 420 + i * 140,
-                width: 400,
-                fontSize: 5
-            });
+            if (param.type !== "checkbox") {
+                this.createText({
+                    text: param.text + ":",
+                    x: 1000,
+                    y: 420 + i * 140,
+                    width: 400,
+                    fontSize: 5
+                });
+            }
 
             if (param.type === "number") {
                 const input = this.createInput({
@@ -80,6 +82,24 @@ export class RuleSettingsMenu extends BaseSubscreen {
                     if (param.max && parseFloat(input.value) > param.max) return;
                     if (!this.ruleSettings.data) this.ruleSettings.data = {};
                     this.ruleSettings.data[param.name] = (param.type === "number") ? parseFloat(input.value) : input.value;
+                });
+            } else if (param.type === "checkbox") {
+                const checkbox = this.createCheckbox({
+                    x: 1000,
+                    y: 440,
+                    width: 800,
+                    isChecked: !!getRuleParameter(InformationSheetSelection, this.rule.id, param.name),
+                    text: param.text
+                });
+                if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+                    checkbox.classList.add("lcDisabled");
+                }
+                checkbox.addEventListener("change", () => {
+                    if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+                        return checkbox.classList.add("lcDisabled");
+                    }
+                    if (!this.ruleSettings.data) this.ruleSettings.data = {};
+                    this.ruleSettings.data[param.name] = checkbox.checked;
                 });
             }
         });

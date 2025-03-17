@@ -35,7 +35,14 @@ export const rulesList: Rule[] = [
     {
         id: 1004,
         name: "Speak like baby",
-        description: "Force baby to speak like little baby"
+        description: "Force baby to speak like little baby",
+        data: [
+            {
+                name: "altSpeech",
+                text: "Alternative baby speech algorithm",
+                type: "checkbox"
+            }
+        ]
     },
     {
         id: 1005,
@@ -94,7 +101,7 @@ export interface Rule {
     data?: {
         name: string
         text: string
-        type: "text" | "number"
+        type: "text" | "number" | "checkbox"
         min?: number
         max?: number
         step?: number
@@ -107,7 +114,7 @@ export interface StorageRule {
     strict: boolean
     changedBy: number
     ts: number
-    data?: Record<string, string | number>
+    data?: Record<string, string | number | boolean>
     conditions?: {
         type?: "all" | "any"
         whenInRoomWithRole?: {
@@ -160,9 +167,9 @@ export function isRuleStrict(ruleId: number): boolean {
     return modStorage.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
 }
 
-export function getRuleParameter(C: Character, ruleId: number, parameter: string): string | number | null {
-    if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.data?.[parameter] ?? null;
-    return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.data?.[parameter] ?? null;
+export function getRuleParameter<T>(C: Character, ruleId: number, parameter: string): T | null {
+    if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.data?.[parameter] as T ?? null;
+    return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.data?.[parameter] as T ?? null;
 }
 
 export function getRuleConditions(C: Character, ruleId: number) {
@@ -211,6 +218,22 @@ function registerButton(name: string, label: string, icon: string, fn: () => voi
     if (!hooks.includes(fn)) {
         hooks.push(fn);
     }
+}
+
+function alternativeBabyTalk(text: String): String {
+    text = text.toLowerCase();
+
+    text = text.replaceAll("is", "ith");
+    text = text.replaceAll("are", "aw");
+    text = text.replaceAll("am", "amm");
+    text = text.replaceAll("no", "ni");
+    text = text.replaceAll("s", "th");
+    text = text.replaceAll("h", "hh");
+
+    const babyWords = ['ba-bye', 'da-da', 'ma-ma', 'goo-goo', 'wee', 'ooh', 'gu', 'ga', 'agu', 'guga'];
+    text = text.replace(/(\w+)\b/g, (word) => word + (getRandomNumber(1, text.split(" ").length) === 1 ? " " + babyWords[Math.floor(Math.random() * babyWords.length)] : ""));
+
+    return text.trim();
 }
 
 export function loadRules(): void {
@@ -289,7 +312,13 @@ export function loadRules(): void {
             params.Content[0] !== "("
         ) {
             if (isSleeping(Player)) return chatSendLocal("You are asleep, use OOC to speak");
-            if (isRuleActive(Player, RuleId.SPEAK_LIKE_BABY)) params.Content = SpeechTransformBabyTalk(params.Content);
+            if (isRuleActive(Player, RuleId.SPEAK_LIKE_BABY)) {
+                if (getRuleParameter<boolean>(Player, RuleId.SPEAK_LIKE_BABY, "altSpeech")) {
+                    params.Content = alternativeBabyTalk(params.Content);
+                } else {
+                    params.Content = SpeechTransformBabyTalk(params.Content);
+                }
+            }
         }
         return next(args);
     });
