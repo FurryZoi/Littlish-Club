@@ -860,6 +860,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       const p = data.data?.[param.name];
       if (param.type === "number" && typeof p !== "number") continue;
       if (param.type === "text" && typeof p !== "string") continue;
+      if (param.type === "checkbox" && typeof p !== "boolean") continue;
       if (!r.data) r.data = {};
       r.data[param.name] = p;
     }
