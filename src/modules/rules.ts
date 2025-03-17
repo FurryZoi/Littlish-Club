@@ -450,7 +450,7 @@ export function loadRules(): void {
     ChatRoomRegisterMessageHandler({
         Priority: 10,
         Callback: (data, sender) => {
-            if (!sender) return true;
+            if (!sender) return false;
             if (data.Type === "Activity" && !!data.Dictionary?.find) {
                 const activityName = data.Dictionary.find((e) => {
                     // @ts-ignore
@@ -472,7 +472,7 @@ export function loadRules(): void {
                     syncStorage();
                 }
             }
-            return true;
+            return false;
         }
     });
 
