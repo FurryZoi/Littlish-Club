@@ -954,7 +954,14 @@ One of mods you are using is using an old version of SDK. It will work for now b
     {
       id: 1004,
       name: "Speak like baby",
-      description: "Force baby to speak like little baby"
+      description: "Force baby to speak like little baby",
+      data: [
+        {
+          name: "altSpeech",
+          text: "Alternative baby speech algorithm",
+          type: "checkbox"
+        }
+      ]
     },
     {
       id: 1005,
@@ -1062,6 +1069,18 @@ One of mods you are using is using an old version of SDK. It will work for now b
       hooks.push(fn);
     }
   }
+  function alternativeBabyTalk(text) {
+    text = text.toLowerCase();
+    text = text.replaceAll("is", "ith");
+    text = text.replaceAll("are", "aw");
+    text = text.replaceAll("am", "amm");
+    text = text.replaceAll("no", "ni");
+    text = text.replaceAll("s", "th");
+    text = text.replaceAll("h", "hh");
+    const babyWords = ["ba-bye", "da-da", "ma-ma", "goo-goo", "wee", "ooh", "gu", "ga", "agu", "guga"];
+    text = text.replace(/(\w+)\b/g, (word) => word + (getRandomNumber(1, text.split(" ").length) === 1 ? " " + babyWords[Math.floor(Math.random() * babyWords.length)] : ""));
+    return text.trim();
+  }
   function loadRules() {
     const attempt = () => {
       const item = InventoryGet(Player, Player.FocusGroup?.Name);
@@ -1123,7 +1142,13 @@ One of mods you are using is using an old version of SDK. It will work for now b
       const params = args[1];
       if (message === "ChatRoomChat" && ["Chat", "Whisper"].includes(params.Type) && params.Content[0] !== "(") {
         if (isSleeping(Player)) return chatSendLocal("You are asleep, use OOC to speak");
-        if (isRuleActive(Player, 1004 /* SPEAK_LIKE_BABY */)) params.Content = SpeechTransformBabyTalk(params.Content);
+        if (isRuleActive(Player, 1004 /* SPEAK_LIKE_BABY */)) {
+          if (getRuleParameter(Player, 1004 /* SPEAK_LIKE_BABY */, "altSpeech")) {
+            params.Content = alternativeBabyTalk(params.Content);
+          } else {
+            params.Content = SpeechTransformBabyTalk(params.Content);
+          }
+        }
       }
       return next(args);
     });
@@ -1560,13 +1585,15 @@ One of mods you are using is using an old version of SDK. It will work for now b
       });
       description.style.textAlign = "center";
       this.rule.data?.forEach((param, i) => {
-        this.createText({
-          text: param.text + ":",
-          x: 1e3,
-          y: 420 + i * 140,
-          width: 400,
-          fontSize: 5
-        });
+        if (param.type !== "checkbox") {
+          this.createText({
+            text: param.text + ":",
+            x: 1e3,
+            y: 420 + i * 140,
+            width: 400,
+            fontSize: 5
+          });
+        }
         if (param.type === "number") {
           const input = this.createInput({
             value: getRuleParameter(InformationSheetSelection, this.rule.id, param.name)?.toString() ?? "",
@@ -1591,6 +1618,24 @@ One of mods you are using is using an old version of SDK. It will work for now b
             if (param.max && parseFloat(input.value) > param.max) return;
             if (!this.ruleSettings.data) this.ruleSettings.data = {};
             this.ruleSettings.data[param.name] = param.type === "number" ? parseFloat(input.value) : input.value;
+          });
+        } else if (param.type === "checkbox") {
+          const checkbox = this.createCheckbox({
+            x: 1e3,
+            y: 440,
+            width: 800,
+            isChecked: !!getRuleParameter(InformationSheetSelection, this.rule.id, param.name),
+            text: param.text
+          });
+          if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+            checkbox.classList.add("lcDisabled");
+          }
+          checkbox.addEventListener("change", () => {
+            if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+              return checkbox.classList.add("lcDisabled");
+            }
+            if (!this.ruleSettings.data) this.ruleSettings.data = {};
+            this.ruleSettings.data[param.name] = checkbox.checked;
           });
         }
       });
