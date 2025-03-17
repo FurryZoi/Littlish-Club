@@ -1,9 +1,9 @@
 import { MOD_VERSION } from "@/constants";
 import { chatSendLocal, chatSendModMessage } from "@/utils/chat";
 import { findModByName, hookFunction, HookPriority } from "./bcModSdk";
-import { getPlayer } from "@/utils/characters";
+import { getNickname, getPlayer } from "@/utils/characters";
 import { rulesList, StorageRule } from "./rules";
-import { AccessRight, caregiverAccessRightsList, getCaregiversOf, hasAccessRightTo, hasMommy, isCaregiverOf, turnCaregiverAccessRight } from "./access";
+import { AccessRight, caregiverAccessRightsList, getCaregiversOf, hasAccessRightTo, hasMommy, isCaregiverAccessRightEnabled, isCaregiverOf, turnCaregiverAccessRight } from "./access";
 import { currentSubscreen } from "@/subscreens/baseSubscreen";
 
 export interface Note {
@@ -96,6 +96,7 @@ export function initStorage(): void {
                     id: sender.MemberNumber
                 };
                 syncStorage();
+                chatSendLocal(`${getNickname(sender)} wants to become your mommy, open Littlish Club menu`);
             }
             if (
                 msg === "turnCanChangeCaregiversList" &&
@@ -113,6 +114,7 @@ export function initStorage(): void {
                 if (!modStorage.caregivers) modStorage.caregivers = {};
                 modStorage.caregivers.list = data.list;
                 syncStorage();
+                chatSendLocal(`${getNickname(sender)} changed your caregivers list`);
             }
             if (
                 msg === "turnCaregiversAccessRight" &&
@@ -121,6 +123,7 @@ export function initStorage(): void {
                 if (!caregiverAccessRightsList.find((r) => r.id === data?.accessRightId)) return;
                 turnCaregiverAccessRight(data.accessRightId);
                 syncStorage();
+                chatSendLocal(`${getNickname(sender)} turned ${isCaregiverAccessRightEnabled(Player, data.accessRightId) ? "on" : "off"} caregiver access right "${caregiverAccessRightsList.find((r) => r.id === data.accessRightId).name}"`);
             }
             if (
                 msg === "changeRuleSettings" &&
@@ -152,6 +155,7 @@ export function initStorage(): void {
                     modStorage.rules.list.push(d);
                 }
                 syncStorage();
+                chatSendLocal(`${getNickname(sender)} changed settings of "${rulesList.find((r) => r.id === data?.id).name}" rule`);
             }
             if (
                 msg === "addNote"
@@ -169,6 +173,7 @@ export function initStorage(): void {
                 };
                 modStorage.notes.list.push(note);
                 syncStorage();
+                chatSendLocal(`${getNickname(sender)} added note: ${data.text}`);
             }
             if (msg === "deleteNote") {
                 if (typeof data?.key !== "number") return;
@@ -177,6 +182,7 @@ export function initStorage(): void {
                 if (note.author.id !== sender.MemberNumber && !hasAccessRightTo(sender, Player, AccessRight.DELETE_NOTES)) return;
                 modStorage.notes.list.splice(data.key - 1, 1);
                 syncStorage();
+                chatSendLocal(`${getNickname(sender)} deleted note: ${note.text}`);
             }
         }
         next(args);

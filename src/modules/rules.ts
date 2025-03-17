@@ -469,6 +469,7 @@ export function loadRules(): void {
                     CharacterSetFacialExpression(Player, "Eyes", "Open");
                     ChatRoomCharacterUpdate(Player);
                     modStorage.sleepState = false;
+                    syncStorage();
                 }
             }
             return true;
