@@ -599,6 +599,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
       return Character.MemberNumber == value || Character.Name.toLowerCase() === value || Character.Nickname?.toLowerCase() === value;
     });
   }
+  function getNickname(target) {
+    return CharacterNickname(target);
+  }
   function serverAppearanceBundleToAppearance(assetFamily, serverAppearanceBundle) {
     return serverAppearanceBundle.map((t) => {
       return ServerBundledItemToAppearanceItem(assetFamily, t);
@@ -743,6 +746,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
             id: sender.MemberNumber
           };
           syncStorage();
+          chatSendLocal(`${getNickname(sender)} wants to become your mommy, open Littlish Club menu`);
         }
         if (msg === "turnCanChangeCaregiversList" && hasAccessRightTo(sender, Player, "TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST" /* TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST */)) {
           if (!modStorage.caregivers) modStorage.caregivers = {};
@@ -754,11 +758,13 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if (!modStorage.caregivers) modStorage.caregivers = {};
           modStorage.caregivers.list = data2.list;
           syncStorage();
+          chatSendLocal(`${getNickname(sender)} changed your caregivers list`);
         }
         if (msg === "turnCaregiversAccessRight" && hasAccessRightTo(sender, Player, "MANAGE_CAREGIVERS_ACCESS_RIGHTS" /* MANAGE_CAREGIVERS_ACCESS_RIGHTS */)) {
           if (!caregiverAccessRightsList.find((r) => r.id === data2?.accessRightId)) return;
           turnCaregiverAccessRight(data2.accessRightId);
           syncStorage();
+          chatSendLocal(`${getNickname(sender)} turned ${isCaregiverAccessRightEnabled(Player, data2.accessRightId) ? "on" : "off"} caregiver access right "${caregiverAccessRightsList.find((r) => r.id === data2.accessRightId).name}"`);
         }
         if (msg === "changeRuleSettings" && hasAccessRightTo(sender, Player, "MANAGE_RULES" /* MANAGE_RULES */)) {
           if (!rulesList.find((r2) => r2.id === data2?.id)) return;
@@ -787,6 +793,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
             modStorage.rules.list.push(d);
           }
           syncStorage();
+          chatSendLocal(`${getNickname(sender)} changed settings of "${rulesList.find((r2) => r2.id === data2?.id).name}" rule`);
         }
         if (msg === "addNote") {
           if (typeof data2?.text !== "string" || data2.text.trim() === "") return;
@@ -802,6 +809,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
           };
           modStorage.notes.list.push(note);
           syncStorage();
+          chatSendLocal(`${getNickname(sender)} added note: ${data2.text}`);
         }
         if (msg === "deleteNote") {
           if (typeof data2?.key !== "number") return;
@@ -810,6 +818,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if (note.author.id !== sender.MemberNumber && !hasAccessRightTo(sender, Player, "DELETE_NOTES" /* DELETE_NOTES */)) return;
           modStorage.notes.list.splice(data2.key - 1, 1);
           syncStorage();
+          chatSendLocal(`${getNickname(sender)} deleted note: ${note.text}`);
         }
       }
       next(args);
@@ -910,6 +919,13 @@ One of mods you are using is using an old version of SDK. It will work for now b
     syncStorage();
   }
 
+  // src/utils/main.ts
+  function getRandomNumber(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
   // src/modules/rules.ts
   var dialogMenuButtonClickHooks = /* @__PURE__ */ new Map();
   var buttonLabels = /* @__PURE__ */ new Map();
@@ -950,11 +966,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
       name: "Can't go in the shop alone",
       description: "Prevents baby from going to the club shop"
     },
-    // {
-    //     id: 1007,
-    //     name: "Fall asleep after milk bottle",
-    //     description: "Baby will fall asleep after drinking the milk (if it doesn't have another effect)"
-    // },
+    {
+      id: 1007,
+      name: "Fall asleep after milk bottle",
+      description: "Baby will fall asleep after drinking the milk (if it doesn't have another effect)"
+    },
     {
       id: 1008,
       name: "Decrease size",
@@ -1106,7 +1122,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       const message = args[0];
       const params = args[1];
       if (message === "ChatRoomChat" && ["Chat", "Whisper"].includes(params.Type) && params.Content[0] !== "(") {
-        if (isSleeping(Player)) return false;
+        if (isSleeping(Player)) return chatSendLocal("You are asleep, use OOC to speak");
         if (isRuleActive(Player, 1004 /* SPEAK_LIKE_BABY */)) params.Content = SpeechTransformBabyTalk(params.Content);
       }
       return next(args);
@@ -1210,6 +1226,55 @@ One of mods you are using is using an old version of SDK. It will work for now b
     hookFunction("DialogClickExpressionMenu", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
       if (isSleeping(Player)) return false;
       return next(args);
+    });
+    hookFunction("CharacterAppearanceSetItem", 0 /* OBSERVE */, (args, next) => {
+      next(args);
+      const [C, Group, ItemAsset] = args;
+      if (C.IsPlayer() && ["ItemMouth", "ItemMouth2", "itemMouth3"].includes(Group) && ItemAsset.Name === "MilkBottle" && isRuleActive(Player, 1007 /* FALL_SLEEP_AFTER_MILK_BOTTLE */)) {
+        CharacterSetFacialExpression(Player, "Blush", "High");
+        ChatRoomCharacterUpdate(Player);
+        setTimeout(() => {
+          document.body.style.filter = "blur(4px)";
+          CharacterSetFacialExpression(Player, "Eyes", "Dazed");
+          CharacterSetFacialExpression(Player, "Eyebrows", null);
+          ChatRoomCharacterUpdate(Player);
+          setTimeout(() => {
+            document.body.style.filter = null;
+            PoseSetActive(Player, "Kneel");
+            CharacterSetFacialExpression(Player, "Emoticon", "Sleep");
+            CharacterSetFacialExpression(Player, "Eyes", "Closed");
+            ChatRoomCharacterUpdate(Player);
+            modStorage.sleepState = true;
+            syncStorage();
+            chatSendLocal("You fall asleep");
+            chatSendActionMessage(`${getNickname(Player)} fell asleep, only spank or french kiss can wake <intensive> up`);
+          }, getRandomNumber(6e3, 8e3));
+        }, getRandomNumber(6e3, 1e4));
+      }
+    });
+    ChatRoomRegisterMessageHandler({
+      Priority: 10,
+      Callback: (data, sender) => {
+        if (!sender) return true;
+        if (data.Type === "Activity" && !!data.Dictionary?.find) {
+          const activityName = data.Dictionary.find((e) => {
+            return !!e.ActivityName;
+          })?.ActivityName;
+          const target = getPlayer(
+            data.Dictionary.find((e) => {
+              return !!e.TargetCharacter;
+            })?.TargetCharacter
+          );
+          if (target.IsPlayer() && ["Spank", "FrenchKiss"].includes(activityName) && isSleeping(Player)) {
+            CharacterSetFacialExpression(Player, "Emoticon", null);
+            CharacterSetFacialExpression(Player, "Eyes", "Open");
+            ChatRoomCharacterUpdate(Player);
+            modStorage.sleepState = false;
+            syncStorage();
+          }
+        }
+        return true;
+      }
     });
     hookFunction("CharacterAppearanceGetCurrentValue", 1 /* ADD_BEHAVIOR */, (args, next) => {
       const [C, Group, Type] = args;
@@ -1766,13 +1831,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
       this.setSubscreen(new MainMenu());
     }
   };
-
-  // src/utils/main.ts
-  function getRandomNumber(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
 
   // src/subscreens/diaperMenu.ts
   var DiaperMenu = class extends BaseSubscreen {
