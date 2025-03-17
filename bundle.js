@@ -979,7 +979,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   function isRuleActive(C, ruleId) {
     if (!isRuleEnabled(C, ruleId)) return false;
     const conditions = getRuleConditions(C, ruleId);
-    if (!conditions?.whenInRoomWithRole && !conditions.whenInRoomWhereAbdl) return true;
+    if (!conditions?.whenInRoomWithRole && !conditions?.whenInRoomWhereAbdl) return true;
     let whenInRoomWithRoleCondition = false;
     let whenInRoomWhereAbdlCondition = false;
     if (conditions.whenInRoomWithRole) {
