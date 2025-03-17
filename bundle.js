@@ -836,6 +836,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
           r.conditions.whenInRoomWithRole.role = data.conditions.whenInRoomWithRole.role;
         }
       } else delete r.conditions.whenInRoomWithRole;
+      if (data.conditions.whenInRoomWhereAbdl) {
+        if (!r.conditions.whenInRoomWhereAbdl) r.conditions.whenInRoomWhereAbdl = {};
+        if (typeof data.conditions.whenInRoomWhereAbdl?.blocked === "boolean") {
+          r.conditions.whenInRoomWhereAbdl.blocked = data.conditions.whenInRoomWhereAbdl.blocked;
+        }
+      } else delete r.conditions.whenInRoomWhereAbdl;
     }
     console.log(r, data);
   }
@@ -973,22 +979,23 @@ One of mods you are using is using an old version of SDK. It will work for now b
   function isRuleActive(C, ruleId) {
     if (!isRuleEnabled(C, ruleId)) return false;
     const conditions = getRuleConditions(C, ruleId);
-    if (!conditions?.whenInRoomWithRole) return true;
+    if (!conditions?.whenInRoomWithRole && !conditions.whenInRoomWhereAbdl) return true;
     let whenInRoomWithRoleCondition = false;
-    if ((conditions?.whenInRoomWithRole?.role ?? "caregiver") === "caregiver") {
-      if (conditions?.whenInRoomWithRole?.inRoom ?? true) {
-        whenInRoomWithRoleCondition = inRoomWithCaregiver(C);
+    let whenInRoomWhereAbdlCondition = false;
+    if (conditions.whenInRoomWithRole) {
+      if ((conditions?.whenInRoomWithRole?.role ?? "caregiver") === "caregiver") {
+        whenInRoomWithRoleCondition = conditions?.whenInRoomWithRole?.inRoom ?? true ? inRoomWithCaregiver(C) : !inRoomWithCaregiver(C);
       } else {
-        whenInRoomWithRoleCondition = !inRoomWithCaregiver(C);
-      }
-    } else {
-      if (conditions?.whenInRoomWithRole?.inRoom ?? true) {
-        whenInRoomWithRoleCondition = inRoomWithMommy(C);
-      } else {
-        whenInRoomWithRoleCondition = !inRoomWithMommy(C);
+        whenInRoomWithRoleCondition = conditions?.whenInRoomWithRole?.inRoom ?? true ? inRoomWithMommy(C) : !inRoomWithMommy(C);
       }
     }
-    return whenInRoomWithRoleCondition;
+    if (conditions.whenInRoomWhereAbdl) {
+      whenInRoomWhereAbdlCondition = conditions?.whenInRoomWhereAbdl?.blocked ?? true ? inRoomWhereAbdlIsBlocked() : !inRoomWhereAbdlIsBlocked();
+    }
+    const conditionsValues = [];
+    if (conditions?.whenInRoomWithRole) conditionsValues.push(whenInRoomWithRoleCondition);
+    if (conditions?.whenInRoomWhereAbdl) conditionsValues.push(whenInRoomWhereAbdlCondition);
+    return (conditions?.type ?? "any") === "all" ? conditionsValues.every((b) => b) : conditionsValues.some((b) => b);
   }
   function isRuleEnabled(C, ruleId) {
     if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
@@ -1023,6 +1030,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
       if (storage?.mommy?.id === c.MemberNumber) return true;
     }
     return false;
+  }
+  function inRoomWhereAbdlIsBlocked() {
+    return ChatRoomData?.BlockCategory?.includes("ABDL");
   }
   function registerButton(name, label, icon, fn) {
     imageRedirects.set(`Icons/${name}.png`, icon);
@@ -1632,6 +1642,35 @@ One of mods you are using is using an old version of SDK. It will work for now b
         y: 650,
         fontSize: 5
       });
+      const whenCheckbox2 = this.createCheckbox({
+        text: "When in room where ABDL is",
+        x: 150,
+        y: 750,
+        isChecked: !!this.ruleSettings.conditions?.whenInRoomWhereAbdl
+      });
+      if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+        whenCheckbox2.classList.add("lcDisabled");
+      }
+      const isBlockedBtn = this.createButton({
+        text: this.ruleSettings.conditions?.whenInRoomWhereAbdl?.blocked ?? true ? "blocked" : "not blocked",
+        x: 930,
+        y: 750,
+        width: 200,
+        height: 65,
+        fontSize: 3
+      });
+      if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+        isBlockedBtn.classList.add("lcDisabled");
+      }
+      isBlockedBtn.addEventListener("click", () => {
+        if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+          isBlockedBtn.classList.add("lcDisabled");
+        }
+        if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
+        if (!this.ruleSettings.conditions.whenInRoomWhereAbdl) this.ruleSettings.conditions.whenInRoomWhereAbdl = {};
+        this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked = !(this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked ?? true);
+        isBlockedBtn.textContent = this.ruleSettings.conditions?.whenInRoomWhereAbdl?.blocked ?? true ? "blocked" : "not blocked";
+      });
       const saveChangesBtn = this.createButton({
         text: "Save Changes",
         x: 1520,
@@ -1656,6 +1695,13 @@ One of mods you are using is using an old version of SDK. It will work for now b
             this.ruleSettings.conditions.whenInRoomWithRole.role = "caregiver";
           }
         } else delete this.ruleSettings.conditions?.whenInRoomWithRole;
+        if (whenCheckbox2.checked) {
+          if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
+          if (!this.ruleSettings.conditions.whenInRoomWhereAbdl) this.ruleSettings.conditions.whenInRoomWhereAbdl = {};
+          if (typeof this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked !== "boolean") {
+            this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked = true;
+          }
+        } else delete this.ruleSettings.conditions?.whenInRoomWhereAbdl;
         if (InformationSheetSelection.IsPlayer()) {
           if (!modStorage.rules) modStorage.rules = {};
           if (!modStorage.rules.list) modStorage.rules.list = [];
