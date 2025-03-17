@@ -188,6 +188,8 @@ export function initStorage(): void {
             storage: modStorage,
         });
     });
+
+    // window.modStorage = modStorage;
 }
 
 function validateRuleConditions(r: StorageRule, data: Partial<StorageRule>): void {

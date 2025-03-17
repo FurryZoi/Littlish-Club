@@ -1,7 +1,9 @@
-import { chatSendActionMessage } from "@/utils/chat";
+import { chatSendActionMessage, chatSendLocal } from "@/utils/chat";
 import { hookFunction, HookPriority } from "./bcModSdk";
-import { ModStorage, modStorage } from "./storage";
+import { ModStorage, modStorage, syncStorage } from "./storage";
 import { MOD_NAME } from "@/constants";
+import { getRandomNumber } from "@/utils/main";
+import { getNickname, getPlayer } from "@/utils/characters";
 
 
 const dialogMenuButtonClickHooks = new Map();
@@ -45,11 +47,11 @@ export const rulesList: Rule[] = [
         name: "Can't go in the shop alone",
         description: "Prevents baby from going to the club shop"
     },
-    // {
-    //     id: 1007,
-    //     name: "Fall asleep after milk bottle",
-    //     description: "Baby will fall asleep after drinking the milk (if it doesn't have another effect)"
-    // },
+    {
+        id: 1007,
+        name: "Fall asleep after milk bottle",
+        description: "Baby will fall asleep after drinking the milk (if it doesn't have another effect)"
+    },
     {
         id: 1008,
         name: "Decrease size",
@@ -286,7 +288,7 @@ export function loadRules(): void {
             ["Chat", "Whisper"].includes(params.Type) &&
             params.Content[0] !== "("
         ) {
-            if (isSleeping(Player)) return false;
+            if (isSleeping(Player)) return chatSendLocal("You are asleep, use OOC to speak");
             if (isRuleActive(Player, RuleId.SPEAK_LIKE_BABY)) params.Content = SpeechTransformBabyTalk(params.Content);
         }
         return next(args);
@@ -412,29 +414,66 @@ export function loadRules(): void {
         return next(args);
     });
 
-    // hookFunction("CharacterAppearanceSetItem", HookPriority.OBSERVE, (args, next) => {
-    //     const [C, Group, ItemAsset] = args as [Character, AssetGroupName, Asset | null];
-    //     if (
-    //         C.IsPlayer() &&
-    //         ["ItemMouth", "ItemMouth2", "itemMouth3"].includes(Group) &&
-    //         ItemAsset.Name === "MilkBottle" &&
-    //         isRuleActive(Player, RuleId.FALL_SLEEP_AFTER_MILK_BOTTLE)
-    //     ) {
+    hookFunction("CharacterAppearanceSetItem", HookPriority.OBSERVE, (args, next) => {
+        next(args);
+        const [C, Group, ItemAsset] = args as [Character, AssetGroupName, Asset | null];
+        if (
+            C.IsPlayer() &&
+            ["ItemMouth", "ItemMouth2", "itemMouth3"].includes(Group) &&
+            ItemAsset.Name === "MilkBottle" &&
+            isRuleActive(Player, RuleId.FALL_SLEEP_AFTER_MILK_BOTTLE)
+        ) {
 
-    //         CharacterSetFacialExpression(Player, "Blush", "High");
-    //         ChatRoomCharacterUpdate(Player);
+            CharacterSetFacialExpression(Player, "Blush", "High");
+            ChatRoomCharacterUpdate(Player);
 
-    //         setTimeout(() => {
-    //                 CharacterSetFacialExpression(Player, "Eyes", "Dazed");
-    //                 CharacterSetFacialExpression(Player, "Eyebrows", null);
-    //                 ChatRoomCharacterUpdate(Player);
-    //                 setTimeout(() => {
-    //                     modStorage.sleepState = true;
-    //                 }, 6000);
-    //         }, 6000);
-    //     }
-    //     return next(args);
-    // });
+            setTimeout(() => {
+                document.body.style.filter = "blur(4px)";
+                CharacterSetFacialExpression(Player, "Eyes", "Dazed");
+                CharacterSetFacialExpression(Player, "Eyebrows", null);
+                ChatRoomCharacterUpdate(Player);
+                setTimeout(() => {
+                    document.body.style.filter = null;
+                    PoseSetActive(Player, "Kneel");
+                    CharacterSetFacialExpression(Player, "Emoticon", "Sleep");
+                    CharacterSetFacialExpression(Player, "Eyes", "Closed");
+                    ChatRoomCharacterUpdate(Player);
+                    modStorage.sleepState = true;
+                    syncStorage();
+                    chatSendLocal("You fall asleep");
+                    chatSendActionMessage(`${getNickname(Player)} fell asleep, only spank or french kiss can wake <intensive> up`);
+                }, getRandomNumber(6000, 8000));
+            }, getRandomNumber(6000, 10000));
+        }
+    });
+
+    ChatRoomRegisterMessageHandler({
+        Priority: 10,
+        Callback: (data, sender) => {
+            if (!sender) return true;
+            if (data.Type === "Activity" && !!data.Dictionary?.find) {
+                const activityName = data.Dictionary.find((e) => {
+                    // @ts-ignore
+                    return !!e.ActivityName;
+                    // @ts-ignore
+                })?.ActivityName;
+                const target = getPlayer(
+                    data.Dictionary.find((e) => {
+                        // @ts-ignore
+                        return !!e.TargetCharacter;
+                        // @ts-ignore
+                    })?.TargetCharacter
+                );
+                if (target.IsPlayer() && ["Spank", "FrenchKiss"].includes(activityName) && isSleeping(Player)) {
+                    CharacterSetFacialExpression(Player, "Emoticon", null);
+                    CharacterSetFacialExpression(Player, "Eyes", "Open");
+                    ChatRoomCharacterUpdate(Player);
+                    modStorage.sleepState = false;
+                }
+            }
+            return true;
+        }
+    });
 
     hookFunction("CharacterAppearanceGetCurrentValue", HookPriority.ADD_BEHAVIOR, (args, next) => {
         const [C, Group, Type] = args as [Character, AssetGroupName, string];
