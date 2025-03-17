@@ -231,6 +231,7 @@ function validateRuleData(r: StorageRule, data: Partial<StorageRule>): void {
         const p = data.data?.[param.name];
         if (param.type === "number" && typeof p !== "number") continue;
         if (param.type === "text" && typeof p !== "string") continue;
+        if (param.type === "checkbox" && typeof p !== "boolean") continue;
         if (!r.data) r.data = {};
         r.data[param.name] = p;
     }
