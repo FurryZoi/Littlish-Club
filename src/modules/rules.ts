@@ -112,7 +112,7 @@ export interface StorageRule {
             inRoom: boolean
             role: "caregiver" | "mommy"
         }
-        whenInRoomWithAbdlCategory?: {
+        whenInRoomWhereAbdl?: {
             blocked: boolean
         }
     }
@@ -121,22 +121,32 @@ export interface StorageRule {
 export function isRuleActive(C: Character, ruleId: RuleId): boolean {
     if (!isRuleEnabled(C, ruleId)) return false;
     const conditions = getRuleConditions(C, ruleId);
-    if (!conditions?.whenInRoomWithRole) return true
+    if (!conditions?.whenInRoomWithRole && !conditions.whenInRoomWhereAbdl) return true
     let whenInRoomWithRoleCondition = false;
-    if ((conditions?.whenInRoomWithRole?.role ?? "caregiver") === "caregiver") {
-        if (conditions?.whenInRoomWithRole?.inRoom ?? true) {
-            whenInRoomWithRoleCondition = inRoomWithCaregiver(C);
+    let whenInRoomWhereAbdlCondition = false;
+    if (conditions.whenInRoomWithRole) {
+        if ((conditions?.whenInRoomWithRole?.role ?? "caregiver") === "caregiver") {
+            whenInRoomWithRoleCondition = (conditions?.whenInRoomWithRole?.inRoom ?? true) ?
+                inRoomWithCaregiver(C)
+                : !inRoomWithCaregiver(C);
         } else {
-            whenInRoomWithRoleCondition = !inRoomWithCaregiver(C);
-        }
-    } else {
-        if (conditions?.whenInRoomWithRole?.inRoom ?? true) {
-            whenInRoomWithRoleCondition = inRoomWithMommy(C);
-        } else {
-            whenInRoomWithRoleCondition = !inRoomWithMommy(C);
+            whenInRoomWithRoleCondition = (conditions?.whenInRoomWithRole?.inRoom ?? true) ?
+                inRoomWithMommy(C)
+                : !inRoomWithMommy(C);
         }
     }
-    return whenInRoomWithRoleCondition;
+    if (conditions.whenInRoomWhereAbdl) {
+        whenInRoomWhereAbdlCondition = (conditions?.whenInRoomWhereAbdl?.blocked ?? true) ?
+            inRoomWhereAbdlIsBlocked()
+            : !inRoomWhereAbdlIsBlocked();
+    }
+    const conditionsValues = [];
+    if (conditions?.whenInRoomWithRole) conditionsValues.push(whenInRoomWithRoleCondition);
+    if (conditions?.whenInRoomWhereAbdl) conditionsValues.push(whenInRoomWhereAbdlCondition);
+    return (conditions?.type ?? "any") === "all" ?
+        conditionsValues.every((b) => b)
+        : conditionsValues.some((b) => b);
+
 }
 
 export function isRuleEnabled(C: Character, ruleId: number): boolean {
@@ -181,6 +191,10 @@ export function inRoomWithMommy(C: Character): boolean {
         if (storage?.mommy?.id === c.MemberNumber) return true;
     }
     return false;
+}
+
+export function inRoomWhereAbdlIsBlocked(): boolean {
+    return ChatRoomData?.BlockCategory?.includes("ABDL");
 }
 
 function registerButton(name: string, label: string, icon: string, fn: () => void): void {

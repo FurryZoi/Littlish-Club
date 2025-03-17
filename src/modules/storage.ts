@@ -206,6 +206,13 @@ function validateRuleConditions(r: StorageRule, data: Partial<StorageRule>): voi
                 r.conditions.whenInRoomWithRole.role = data.conditions.whenInRoomWithRole.role;
             }
         } else delete r.conditions.whenInRoomWithRole;
+        if (data.conditions.whenInRoomWhereAbdl) {
+            // @ts-ignore
+            if (!r.conditions.whenInRoomWhereAbdl) r.conditions.whenInRoomWhereAbdl = {};
+            if (typeof data.conditions.whenInRoomWhereAbdl?.blocked === "boolean") {
+                r.conditions.whenInRoomWhereAbdl.blocked = data.conditions.whenInRoomWhereAbdl.blocked;
+            }
+        } else delete r.conditions.whenInRoomWhereAbdl;
     }
     console.log(r, data);
 }

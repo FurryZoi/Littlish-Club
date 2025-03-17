@@ -214,6 +214,38 @@ export class RuleSettingsMenu extends BaseSubscreen {
             fontSize: 5
         });
 
+        const whenCheckbox2 = this.createCheckbox({
+            text: "When in room where ABDL is",
+            x: 150,
+            y: 750,
+            isChecked: !!this.ruleSettings.conditions?.whenInRoomWhereAbdl
+        });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+            whenCheckbox2.classList.add("lcDisabled");
+        }
+
+        const isBlockedBtn = this.createButton({
+            text: (this.ruleSettings.conditions?.whenInRoomWhereAbdl?.blocked ?? true) ? "blocked" : "not blocked",
+            x: 930,
+            y: 750,
+            width: 200,
+            height: 65,
+            fontSize: 3
+        });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+            isBlockedBtn.classList.add("lcDisabled");
+        }
+        isBlockedBtn.addEventListener("click", () => {
+            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+                isBlockedBtn.classList.add("lcDisabled");
+            }
+            if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
+            // @ts-ignore
+            if (!this.ruleSettings.conditions.whenInRoomWhereAbdl) this.ruleSettings.conditions.whenInRoomWhereAbdl = {};
+            this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked = !(this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked ?? true);
+            isBlockedBtn.textContent = (this.ruleSettings.conditions?.whenInRoomWhereAbdl?.blocked ?? true) ? "blocked" : "not blocked";
+        });
+
         const saveChangesBtn = this.createButton({
             text: "Save Changes",
             x: 1520,
@@ -239,6 +271,14 @@ export class RuleSettingsMenu extends BaseSubscreen {
                     this.ruleSettings.conditions.whenInRoomWithRole.role = "caregiver";
                 }
             } else delete this.ruleSettings.conditions?.whenInRoomWithRole;
+            if (whenCheckbox2.checked) {
+                if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
+                // @ts-ignore
+                if (!this.ruleSettings.conditions.whenInRoomWhereAbdl) this.ruleSettings.conditions.whenInRoomWhereAbdl = {};
+                if (typeof this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked !== "boolean") {
+                    this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked = true;
+                }
+            } else delete this.ruleSettings.conditions?.whenInRoomWhereAbdl;
             if (InformationSheetSelection.IsPlayer()) {
                 if (!modStorage.rules) modStorage.rules = {};
                 if (!modStorage.rules.list) modStorage.rules.list = [];
