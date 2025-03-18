@@ -768,6 +768,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         }
         if (msg === "changeRuleSettings" && hasAccessRightTo(sender, Player, "MANAGE_RULES" /* MANAGE_RULES */)) {
           if (!rulesList.find((r2) => r2.id === data2?.id)) return;
+          if (isRuleStrict(Player, data2.id) && !isMommyOf(sender, Player)) return;
           if (!modStorage.rules) modStorage.rules = {};
           if (!modStorage.rules.list) modStorage.rules.list = [];
           let r = modStorage.rules.list.find((d) => d.id === data2.id);
@@ -1024,6 +1025,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
   function isRuleEnabled(C, ruleId) {
     if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
     return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
+  }
+  function isRuleStrict(C, ruleId) {
+    if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
+    return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
   }
   function getRuleParameter(C, ruleId, parameter) {
     if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.data?.[parameter] ?? null;
@@ -1553,20 +1558,13 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var RuleSettingsMenu = class extends BaseSubscreen {
     rule;
     ruleSettings;
+    canChangeSettings = () => hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */) && (!isRuleStrict(InformationSheetSelection, this.rule.id) || isMommyOf(Player, InformationSheetSelection) || InformationSheetSelection.IsPlayer() && isExploringModeEnabled());
     get name() {
       return `Rules > ${this.rule.name}`;
     }
     constructor(rule) {
       super();
       this.rule = rule;
-    }
-    load() {
-      this.createText({
-        text: this.name,
-        x: 100,
-        y: 60,
-        fontSize: 10
-      });
       const storage = InformationSheetSelection.IsPlayer() ? modStorage : InformationSheetSelection.LITTLISH_CLUB;
       this.ruleSettings = storage.rules?.list?.find((r) => r.id === this.rule.id) ?? {
         id: this.rule.id,
@@ -1576,6 +1574,14 @@ One of mods you are using is using an old version of SDK. It will work for now b
         ts: Date.now()
       };
       this.ruleSettings = JSON.parse(JSON.stringify(this.ruleSettings));
+    }
+    load() {
+      this.createText({
+        text: this.name,
+        x: 100,
+        y: 60,
+        fontSize: 10
+      });
       const description = this.createText({
         text: `${this.rule.description}`,
         x: 1e3,
@@ -1609,11 +1615,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if (param.min) input.setAttribute("min", param.min);
           if (param.max) input.setAttribute("max", param.max);
           if (param.step) input.setAttribute("step", param.step);
-          if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+          if (!this.canChangeSettings()) {
             input.classList.add("lcDisabled");
           }
           input.addEventListener("change", () => {
-            if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+            if (!this.canChangeSettings()) {
               return input.classList.add("lcDisabled");
             }
             if (param.min && parseFloat(input.value) < param.min) return;
@@ -1629,11 +1635,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
             isChecked: !!getRuleParameter(InformationSheetSelection, this.rule.id, param.name),
             text: param.text
           });
-          if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+          if (!this.canChangeSettings()) {
             checkbox.classList.add("lcDisabled");
           }
           checkbox.addEventListener("change", () => {
-            if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+            if (!this.canChangeSettings()) {
               return checkbox.classList.add("lcDisabled");
             }
             if (!this.ruleSettings.data) this.ruleSettings.data = {};
@@ -1648,12 +1654,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
         width: 600,
         padding: 2
       });
-      if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+      if (!this.canChangeSettings()) {
         turnStateBtn.classList.add("lcDisabled");
       }
       turnStateBtn.addEventListener("click", () => {
-        if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
-          turnStateBtn.classList.add("lcDisabled");
+        if (!this.canChangeSettings()) {
+          return turnStateBtn.classList.add("lcDisabled");
         }
         this.ruleSettings.state = !this.ruleSettings.state;
         turnStateBtn.textContent = this.ruleSettings.state ? "State: Enabled" : "State: Disabled";
@@ -1670,7 +1676,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       }
       turnStrictBtn.addEventListener("click", () => {
         if (!hasAccessRightTo(Player, InformationSheetSelection, "TURN_RULE_STRICT_MODE" /* TURN_RULE_STRICT_MODE */)) {
-          turnStrictBtn.classList.add("lcDisabled");
+          return turnStrictBtn.classList.add("lcDisabled");
         }
         this.ruleSettings.strict = !this.ruleSettings.strict;
         turnStrictBtn.textContent = this.ruleSettings.strict ? "Strict: Yes" : "Strict: No";
@@ -1682,11 +1688,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
         width: 600,
         padding: 2
       });
-      if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+      if (!this.canChangeSettings()) {
         triggerConditionsBtn.classList.add("lcDisabled");
       }
       triggerConditionsBtn.addEventListener("click", () => {
-        if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+        if (!this.canChangeSettings()) {
           return triggerConditionsBtn.classList.add("lcDisabled");
         }
         if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
@@ -1699,7 +1705,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         y: 650,
         isChecked: !!this.ruleSettings.conditions?.whenInRoomWithRole
       });
-      if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+      if (!this.canChangeSettings()) {
         whenCheckbox.classList.add("lcDisabled");
       }
       const inRoomBtn = this.createButton({
@@ -1710,12 +1716,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
         height: 65,
         fontSize: 3
       });
-      if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+      if (!this.canChangeSettings()) {
         inRoomBtn.classList.add("lcDisabled");
       }
       inRoomBtn.addEventListener("click", () => {
-        if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
-          inRoomBtn.classList.add("lcDisabled");
+        if (!this.canChangeSettings()) {
+          return inRoomBtn.classList.add("lcDisabled");
         }
         if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
         if (!this.ruleSettings.conditions.whenInRoomWithRole) this.ruleSettings.conditions.whenInRoomWithRole = {};
@@ -1736,11 +1742,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
         height: 65,
         fontSize: 3
       });
-      if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+      if (!this.canChangeSettings()) {
         caregiverBtn.classList.add("lcDisabled");
       }
       caregiverBtn.addEventListener("click", () => {
-        if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+        if (!this.canChangeSettings()) {
           caregiverBtn.classList.add("lcDisabled");
         }
         if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
@@ -1760,7 +1766,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         y: 750,
         isChecked: !!this.ruleSettings.conditions?.whenInRoomWhereAbdl
       });
-      if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+      if (!this.canChangeSettings()) {
         whenCheckbox2.classList.add("lcDisabled");
       }
       const isBlockedBtn = this.createButton({
@@ -1771,12 +1777,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
         height: 65,
         fontSize: 3
       });
-      if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+      if (!this.canChangeSettings()) {
         isBlockedBtn.classList.add("lcDisabled");
       }
       isBlockedBtn.addEventListener("click", () => {
-        if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
-          isBlockedBtn.classList.add("lcDisabled");
+        if (!this.canChangeSettings()) {
+          return isBlockedBtn.classList.add("lcDisabled");
         }
         if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
         if (!this.ruleSettings.conditions.whenInRoomWhereAbdl) this.ruleSettings.conditions.whenInRoomWhereAbdl = {};
@@ -1792,11 +1798,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
         style: "green"
       });
       saveChangesBtn.style.fontWeight = "bold";
-      if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) {
+      if (!this.canChangeSettings()) {
         saveChangesBtn.classList.add("lcDisabled");
       }
       saveChangesBtn.addEventListener("click", () => {
-        if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */)) return;
+        if (!this.canChangeSettings()) return saveChangesBtn.classList.add("lcDisabled");
         if (whenCheckbox.checked) {
           if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
           if (!this.ruleSettings.conditions.whenInRoomWithRole) this.ruleSettings.conditions.whenInRoomWithRole = {};
