@@ -444,15 +444,15 @@ export function loadRules(): void {
     });
 
     hookFunction("CharacterAppearanceSetItem", HookPriority.OBSERVE, (args, next) => {
-        next(args);
+        const createdItem: Item | null = next(args);
         const [C, Group, ItemAsset] = args as [Character, AssetGroupName, Asset | null];
         if (
             C.IsPlayer() &&
             ["ItemMouth", "ItemMouth2", "itemMouth3"].includes(Group) &&
             ItemAsset.Name === "MilkBottle" &&
-            isRuleActive(Player, RuleId.FALL_SLEEP_AFTER_MILK_BOTTLE)
+            isRuleActive(Player, RuleId.FALL_SLEEP_AFTER_MILK_BOTTLE) &&
+            !isSleeping(Player)
         ) {
-
             CharacterSetFacialExpression(Player, "Blush", "High");
             ChatRoomCharacterUpdate(Player);
 
@@ -474,6 +474,7 @@ export function loadRules(): void {
                 }, getRandomNumber(6000, 8000));
             }, getRandomNumber(6000, 10000));
         }
+        return createdItem;
     });
 
     ChatRoomRegisterMessageHandler({
