@@ -2,8 +2,8 @@ import { MOD_VERSION } from "@/constants";
 import { chatSendLocal, chatSendModMessage } from "@/utils/chat";
 import { findModByName, hookFunction, HookPriority } from "./bcModSdk";
 import { getNickname, getPlayer } from "@/utils/characters";
-import { rulesList, StorageRule } from "./rules";
-import { AccessRight, caregiverAccessRightsList, getCaregiversOf, hasAccessRightTo, hasMommy, isCaregiverAccessRightEnabled, isCaregiverOf, turnCaregiverAccessRight } from "./access";
+import { isRuleStrict, rulesList, StorageRule } from "./rules";
+import { AccessRight, caregiverAccessRightsList, getCaregiversOf, hasAccessRightTo, hasMommy, isCaregiverAccessRightEnabled, isCaregiverOf, isMommyOf, turnCaregiverAccessRight } from "./access";
 import { currentSubscreen } from "@/subscreens/baseSubscreen";
 
 export interface Note {
@@ -130,6 +130,10 @@ export function initStorage(): void {
                 hasAccessRightTo(sender, Player, AccessRight.MANAGE_RULES)
             ) {
                 if (!rulesList.find((r) => r.id === data?.id)) return;
+                if (
+                    isRuleStrict(Player, data.id) &&
+                    !isMommyOf(sender, Player)
+                ) return;
                 if (!modStorage.rules) modStorage.rules = {};
                 if (!modStorage.rules.list) modStorage.rules.list = [];
                 let r = modStorage.rules.list.find((d) => d.id === data.id);

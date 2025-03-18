@@ -163,8 +163,9 @@ export function isRuleEnabled(C: Character, ruleId: number): boolean {
     return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
 }
 
-export function isRuleStrict(ruleId: number): boolean {
-    return modStorage.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
+export function isRuleStrict(C: Character, ruleId: number): boolean {
+    if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
+    return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
 }
 
 export function getRuleParameter<T>(C: Character, ruleId: number, parameter: string): T | null {

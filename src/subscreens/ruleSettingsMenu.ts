@@ -1,13 +1,24 @@
 import { getRuleParameter, isRuleActive, isRuleEnabled, isRuleStrict, Rule, StorageRule } from "@/modules/rules";
 import { BaseSubscreen } from "./baseSubscreen";
 import { modStorage, syncStorage } from "@/modules/storage";
-import { AccessRight, hasAccessRightTo } from "@/modules/access";
+import { AccessRight, hasAccessRightTo, isExploringModeEnabled, isMommyOf } from "@/modules/access";
 import { chatSendModMessage } from "@/utils/chat";
 
 
 export class RuleSettingsMenu extends BaseSubscreen {
     private rule: Readonly<Rule>;
     private ruleSettings: StorageRule;
+    private canChangeSettings = () => (
+        hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)
+        && (
+            !isRuleStrict(InformationSheetSelection, this.rule.id) ||
+            isMommyOf(Player, InformationSheetSelection) ||
+            (
+                InformationSheetSelection.IsPlayer() &&
+                isExploringModeEnabled()
+            )
+        )
+    );
 
     get name() {
         return `Rules > ${this.rule.name}`
@@ -16,16 +27,6 @@ export class RuleSettingsMenu extends BaseSubscreen {
     constructor(rule: Rule) {
         super();
         this.rule = rule;
-    }
-
-    load() {
-        this.createText({
-            text: this.name,
-            x: 100,
-            y: 60,
-            fontSize: 10
-        });
-
         const storage = InformationSheetSelection.IsPlayer() ? modStorage : InformationSheetSelection.LITTLISH_CLUB;
         this.ruleSettings = storage.rules?.list?.find((r) => r.id === this.rule.id) ?? {
             id: this.rule.id,
@@ -35,6 +36,15 @@ export class RuleSettingsMenu extends BaseSubscreen {
             ts: Date.now()
         };
         this.ruleSettings = JSON.parse(JSON.stringify(this.ruleSettings));
+    }
+
+    load() {
+        this.createText({
+            text: this.name,
+            x: 100,
+            y: 60,
+            fontSize: 10
+        });
 
         const description = this.createText({
             text: `${this.rule.description}`,
@@ -71,11 +81,11 @@ export class RuleSettingsMenu extends BaseSubscreen {
                 if (param.min) input.setAttribute("min", param.min);
                 if (param.max) input.setAttribute("max", param.max);
                 if (param.step) input.setAttribute("step", param.step);
-                if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+                if (!this.canChangeSettings()) {
                     input.classList.add("lcDisabled");
                 }
                 input.addEventListener("change", () => {
-                    if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+                    if (!this.canChangeSettings()) {
                         return input.classList.add("lcDisabled");
                     }
                     if (param.min && parseFloat(input.value) < param.min) return;
@@ -91,11 +101,11 @@ export class RuleSettingsMenu extends BaseSubscreen {
                     isChecked: !!getRuleParameter(InformationSheetSelection, this.rule.id, param.name),
                     text: param.text
                 });
-                if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+                if (!this.canChangeSettings()) {
                     checkbox.classList.add("lcDisabled");
                 }
                 checkbox.addEventListener("change", () => {
-                    if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+                    if (!this.canChangeSettings()) {
                         return checkbox.classList.add("lcDisabled");
                     }
                     if (!this.ruleSettings.data) this.ruleSettings.data = {};
@@ -111,12 +121,12 @@ export class RuleSettingsMenu extends BaseSubscreen {
             width: 600,
             padding: 2
         });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+        if (!this.canChangeSettings()) {
             turnStateBtn.classList.add("lcDisabled");
         }
         turnStateBtn.addEventListener("click", () => {
-            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
-                turnStateBtn.classList.add("lcDisabled");
+            if (!this.canChangeSettings()) {
+                return turnStateBtn.classList.add("lcDisabled");
             }
             this.ruleSettings.state = !this.ruleSettings.state;
             turnStateBtn.textContent = this.ruleSettings.state ? "State: Enabled" : "State: Disabled";
@@ -134,7 +144,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
         }
         turnStrictBtn.addEventListener("click", () => {
             if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.TURN_RULE_STRICT_MODE)) {
-                turnStrictBtn.classList.add("lcDisabled");
+                return turnStrictBtn.classList.add("lcDisabled");
             }
             this.ruleSettings.strict = !this.ruleSettings.strict;
             turnStrictBtn.textContent = this.ruleSettings.strict ? "Strict: Yes" : "Strict: No";
@@ -149,11 +159,11 @@ export class RuleSettingsMenu extends BaseSubscreen {
             width: 600,
             padding: 2
         });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+        if (!this.canChangeSettings()) {
             triggerConditionsBtn.classList.add("lcDisabled");
         }
         triggerConditionsBtn.addEventListener("click", () => {
-            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+            if (!this.canChangeSettings()) {
                 return triggerConditionsBtn.classList.add("lcDisabled");
             }
             if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
@@ -170,7 +180,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
             y: 650,
             isChecked: !!this.ruleSettings.conditions?.whenInRoomWithRole
         });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+        if (!this.canChangeSettings()) {
             whenCheckbox.classList.add("lcDisabled");
         }
 
@@ -182,12 +192,12 @@ export class RuleSettingsMenu extends BaseSubscreen {
             height: 65,
             fontSize: 3
         });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+        if (!this.canChangeSettings()) {
             inRoomBtn.classList.add("lcDisabled");
         }
         inRoomBtn.addEventListener("click", () => {
-            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
-                inRoomBtn.classList.add("lcDisabled");
+            if (!this.canChangeSettings()) {
+                return inRoomBtn.classList.add("lcDisabled");
             }
             if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
             // @ts-ignore
@@ -211,11 +221,11 @@ export class RuleSettingsMenu extends BaseSubscreen {
             height: 65,
             fontSize: 3
         });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+        if (!this.canChangeSettings()) {
             caregiverBtn.classList.add("lcDisabled");
         }
         caregiverBtn.addEventListener("click", () => {
-            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+            if (!this.canChangeSettings()) {
                 caregiverBtn.classList.add("lcDisabled");
             }
             if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
@@ -240,7 +250,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
             y: 750,
             isChecked: !!this.ruleSettings.conditions?.whenInRoomWhereAbdl
         });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+        if (!this.canChangeSettings()) {
             whenCheckbox2.classList.add("lcDisabled");
         }
 
@@ -252,12 +262,12 @@ export class RuleSettingsMenu extends BaseSubscreen {
             height: 65,
             fontSize: 3
         });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+        if (!this.canChangeSettings()) {
             isBlockedBtn.classList.add("lcDisabled");
         }
         isBlockedBtn.addEventListener("click", () => {
-            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
-                isBlockedBtn.classList.add("lcDisabled");
+            if (!this.canChangeSettings()) {
+                return isBlockedBtn.classList.add("lcDisabled");
             }
             if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
             // @ts-ignore
@@ -275,11 +285,11 @@ export class RuleSettingsMenu extends BaseSubscreen {
             style: "green"
         });
         saveChangesBtn.style.fontWeight = "bold";
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) {
+        if (!this.canChangeSettings()) {
             saveChangesBtn.classList.add("lcDisabled");
         }
         saveChangesBtn.addEventListener("click", () => {
-            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)) return;
+            if (!this.canChangeSettings()) return saveChangesBtn.classList.add("lcDisabled");
             if (whenCheckbox.checked) {
                 if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
                 // @ts-ignore
