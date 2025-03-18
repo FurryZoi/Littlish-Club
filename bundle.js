@@ -1254,9 +1254,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
       return next(args);
     });
     hookFunction("CharacterAppearanceSetItem", 0 /* OBSERVE */, (args, next) => {
-      next(args);
+      const createdItem = next(args);
       const [C, Group, ItemAsset] = args;
-      if (C.IsPlayer() && ["ItemMouth", "ItemMouth2", "itemMouth3"].includes(Group) && ItemAsset.Name === "MilkBottle" && isRuleActive(Player, 1007 /* FALL_SLEEP_AFTER_MILK_BOTTLE */)) {
+      if (C.IsPlayer() && ["ItemMouth", "ItemMouth2", "itemMouth3"].includes(Group) && ItemAsset.Name === "MilkBottle" && isRuleActive(Player, 1007 /* FALL_SLEEP_AFTER_MILK_BOTTLE */) && !isSleeping(Player)) {
         CharacterSetFacialExpression(Player, "Blush", "High");
         ChatRoomCharacterUpdate(Player);
         setTimeout(() => {
@@ -1277,6 +1277,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
           }, getRandomNumber(6e3, 8e3));
         }, getRandomNumber(6e3, 1e4));
       }
+      return createdItem;
     });
     ChatRoomRegisterMessageHandler({
       Priority: 10,
