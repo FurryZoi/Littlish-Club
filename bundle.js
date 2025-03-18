@@ -2480,12 +2480,16 @@ Thanks for installing the mod!`;
 
   // src/modules/api.ts
   function createApi() {
-    window.LITTLISH_CLUB = {
+    window.LITTLISH_CLUB = Object.freeze({
       inModSubscreen: () => !!currentSubscreen,
       getCaregiversOf,
       getMommyOf,
-      hasAccessRightTo
-    };
+      isCaregiverOf,
+      isMommyOf,
+      hasAccessRightTo,
+      isRuleActive,
+      isSleeping
+    });
   }
 
   // src/index.ts
