@@ -7,6 +7,13 @@ import { modStorage } from "./storage";
 import { AcceptRequestMenu } from "@/subscreens/acceptRequestMenu";
 
 
+export function notify(message: string, time: number = 4000): void {
+    ServerBeep = {
+        Message: message,
+        Timer: Date.now() + time
+    };
+}
+
 export function loadUI(): void {
     hookFunction("InformationSheetRun", HookPriority.TOP, (args, next) => {
         if (
@@ -16,7 +23,8 @@ export function loadUI(): void {
             ) &&
             !(window.bcx?.inBcxSubscreen && window.bcx.inBcxSubscreen()) &&
             !window.LSCG_REMOTE_WINDOW_OPEN &&
-            !window.LITTLISH_CLUB.inModSubscreen()
+            !window.LITTLISH_CLUB.inModSubscreen() &&
+            !window.MPA?.menuLoaded
         ) {
             DrawButton(
                 ...MOD_BUTTON_POSITION, "",
@@ -40,6 +48,7 @@ export function loadUI(): void {
             !(window.bcx?.inBcxSubscreen && window.bcx.inBcxSubscreen()) &&
             !window.LSCG_REMOTE_WINDOW_OPEN &&
             !window.LITTLISH_CLUB.inModSubscreen() &&
+            !window.MPA?.menuLoaded &&
             MouseIn(...MOD_BUTTON_POSITION)
         ) {
             if (typeof modStorage.requestReciviedFrom?.id === "number") setSubscreen(new AcceptRequestMenu());

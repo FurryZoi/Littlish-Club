@@ -3,5 +3,9 @@ interface Window {
     bcx?: {
         inBcxSubscreen: () => boolean
     },
+    MPA?: {
+        version: string
+        menuLoaded: boolean
+    }
     LITTLISH_CLUB: LITTLISH_CLUB_API
 }

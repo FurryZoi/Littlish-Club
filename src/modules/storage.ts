@@ -5,6 +5,7 @@ import { getNickname, getPlayer } from "@/utils/characters";
 import { isRuleStrict, rulesList, StorageRule } from "./rules";
 import { AccessRight, caregiverAccessRightsList, getCaregiversOf, hasAccessRightTo, hasMommy, isCaregiverAccessRightEnabled, isCaregiverOf, isMommyOf, turnCaregiverAccessRight } from "./access";
 import { currentSubscreen } from "@/subscreens/baseSubscreen";
+import { CyberDiaperChangePermission, putCyberDiaperOn, StorageCyberDiaper, updateDiaperItem } from "./cyberDiaper";
 
 export interface Note {
     text: string
@@ -32,6 +33,7 @@ export interface ModStorage {
     rules?: {
         list?: StorageRule[]
     }
+    cyberDiaper?: StorageCyberDiaper
     notes?: {
         list?: Note[],
         visibility?: 0 | 1 | 2
@@ -187,6 +189,25 @@ export function initStorage(): void {
                 modStorage.notes.list.splice(data.key - 1, 1);
                 syncStorage();
                 chatSendLocal(`${getNickname(sender)} deleted note: ${note.text}`);
+            }
+            if (msg === "changeCyberDiaperSettings" && hasAccessRightTo(sender, Player, AccessRight.MANAGE_DIAPER)) {
+                const { name, description, model, locked, color, changePermission } = data as StorageCyberDiaper;
+                if (!modStorage.cyberDiaper) {
+                    // @ts-ignore
+                    modStorage.cyberDiaper = {};
+                    chatSendLocal(`${getNickname(sender)} bought cyber diaper for you`);
+                }
+                if (typeof name === "string") modStorage.cyberDiaper.name = name;
+                if (typeof description === "string") modStorage.cyberDiaper.description = description;
+                if (typeof model === "string") modStorage.cyberDiaper.model = model;
+                if (typeof locked === "boolean") modStorage.cyberDiaper.locked = locked;
+                if (Array.isArray(color)) modStorage.cyberDiaper.color = color;
+                if (
+                    Object.values(CyberDiaperChangePermission).includes(changePermission)
+                ) modStorage.cyberDiaper.changePermission = changePermission;
+                syncStorage();
+                updateDiaperItem();
+                chatSendLocal(`${getNickname(sender)} changed cyber diaper's settings`);
             }
         }
         next(args);

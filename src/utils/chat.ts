@@ -1,3 +1,5 @@
+import { MOD_NAME, MOD_VERSION } from "@/constants";
+
 export function chatSendLocal(message: string | Node): void {
 	if (!ServerPlayerIsInChatRoom()) return;
 
@@ -16,7 +18,7 @@ export function chatSendLocal(message: string | Node): void {
 }
 
 export function chatSendChangelog(): void {
-	chatSendLocal("Changelog");
+	chatSendLocal(`${MOD_NAME} v${MOD_VERSION}\n\nChangelog:\n• Cyber Diaper (BETA)\n • Fixed conflicts with MPA\n • Reset settings button\n • New rule condition\n • "Fall asleep after milk bottle" rule\n • Local notifications\n • Alternative baby speech algorithm\n • Rules strict mode\n • Fixed bugs\n\nThese are the changes in the last 4 days.`);
 }
 
 export function chatSendActionMessage(msg: string, target: undefined | number = undefined, dictionary: ChatMessageDictionaryEntry[] = []) {

@@ -11,11 +11,13 @@
   "license": "MIT",
   "description": "",
   "devDependencies": {
+    "@types/lodash-es": "^4.17.12",
     "bc-stubs": "^113.0.0",
     "esbuild": "^0.25.0",
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "bondage-club-mod-sdk": "^1.2.0"
+    "bondage-club-mod-sdk": "^1.2.0",
+    "lodash-es": "^4.17.21"
   }
 }

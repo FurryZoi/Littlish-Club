@@ -5,12 +5,14 @@ import { FamilyMenu } from "./familyMenu";
 import { RulesMenu } from "./rulesMenu";
 import { serverAppearanceBundleToAppearance } from "@/utils/characters";
 import { getRandomNumber } from "@/utils/main";
-import { DiaperMenu } from "./diaperMenu";
+import { CyberDiaperMenu } from "./cyberDiaperMenu";
 import { NotesMenu } from "./notesMenu";
 import { AddBabyMenu } from "./addBabyMenu";
 import { WardrobeMenu } from "./wardrobeMenu";
 import { ExploringModeMenu } from "./exploringModeMenu";
 import { isExploringModeEnabled } from "@/modules/access";
+import { modStorage } from "@/modules/storage";
+import { CyberDiaperSettingsMenu } from "./cyberDiaperSettingsMenu";
 
 export class MainMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -20,6 +22,7 @@ export class MainMenu extends BaseSubscreen {
         DrawCircle(1625, 550, 8, 2, "Black");
         DrawCircle(1600, 525, 10, 2, "Black");
     }
+    
     load() {
         this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
         const appearance = JSON.parse(
@@ -112,7 +115,7 @@ export class MainMenu extends BaseSubscreen {
 
         [
             new GlobalMenu(), new FamilyMenu(), new RulesMenu(),
-            new DiaperMenu(), new NotesMenu()
+            new CyberDiaperMenu(), new NotesMenu()
         ].forEach((m, i) => {
             const btn = this.createButton({
                 text: m.name,
@@ -124,7 +127,10 @@ export class MainMenu extends BaseSubscreen {
             });
             btn.style.fontWeight = "bold";
             btn.addEventListener("click", () => {
-                this.setSubscreen(m);
+                const storage = InformationSheetSelection.IsPlayer() ? modStorage : InformationSheetSelection.LITTLISH_CLUB;
+                if (m.name === "Cyber Diaper" && storage.cyberDiaper) {
+                    this.setSubscreen(new CyberDiaperSettingsMenu());
+                } else this.setSubscreen(m);
             });
         });
     }
