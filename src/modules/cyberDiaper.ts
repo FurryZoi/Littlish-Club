@@ -51,13 +51,15 @@ export function getCyberDiaperAssetName(model: CyberDiaperModel): string {
             return "BulkyDiaper";
         case CyberDiaperModel.POOFY_DIAPER:
             return "PoofyDiaper";
+        default:
+            return "BulkyDiaper";
     }
 }
 
 export function putCyberDiaperOn(): void {
     const cyberDiaper = modStorage.cyberDiaper;
-    const asset = AssetGet(Player.AssetFamily, "ItemPelvis", getCyberDiaperAssetName(cyberDiaper.model ?? CyberDiaperModel.BULKY_DIAPER));
-    InventoryWear(Player, getCyberDiaperAssetName(cyberDiaper.model ?? CyberDiaperModel.BULKY_DIAPER), "ItemPelvis", cyberDiaper.color, 10, 0, {
+    const asset = AssetGet(Player.AssetFamily, "ItemPelvis", getCyberDiaperAssetName(cyberDiaper.model));
+    InventoryWear(Player, getCyberDiaperAssetName(cyberDiaper.model), "ItemPelvis", cyberDiaper.color, 10, 0, {
         Name: cyberDiaper.name ?? "[No Name]",
         Description: cyberDiaper.description ?? "[No Description]",
         MemberName: "Littlish Club Production",
@@ -65,7 +67,7 @@ export function putCyberDiaperOn(): void {
         Property: "Comfy",
         Color: (cyberDiaper.color ?? asset.DefaultColor).join(","),
         Lock: "",
-        Item: getCyberDiaperAssetName(cyberDiaper.model ?? CyberDiaperModel.BULKY_DIAPER),
+        Item: getCyberDiaperAssetName(cyberDiaper.model),
         Private: true,
         ItemProperty: null
     });
