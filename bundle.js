@@ -773,12 +773,14 @@ These are the changes in the last 4 days.`);
         return "BulkyDiaper";
       case "POOFY_DIAPER" /* POOFY_DIAPER */:
         return "PoofyDiaper";
+      default:
+        return "BulkyDiaper";
     }
   }
   function putCyberDiaperOn() {
     const cyberDiaper = modStorage.cyberDiaper;
-    const asset = AssetGet(Player.AssetFamily, "ItemPelvis", getCyberDiaperAssetName(cyberDiaper.model ?? "BULKY_DIAPER" /* BULKY_DIAPER */));
-    InventoryWear(Player, getCyberDiaperAssetName(cyberDiaper.model ?? "BULKY_DIAPER" /* BULKY_DIAPER */), "ItemPelvis", cyberDiaper.color, 10, 0, {
+    const asset = AssetGet(Player.AssetFamily, "ItemPelvis", getCyberDiaperAssetName(cyberDiaper.model));
+    InventoryWear(Player, getCyberDiaperAssetName(cyberDiaper.model), "ItemPelvis", cyberDiaper.color, 10, 0, {
       Name: cyberDiaper.name ?? "[No Name]",
       Description: cyberDiaper.description ?? "[No Description]",
       MemberName: "Littlish Club Production",
@@ -786,7 +788,7 @@ These are the changes in the last 4 days.`);
       Property: "Comfy",
       Color: (cyberDiaper.color ?? asset.DefaultColor).join(","),
       Lock: "",
-      Item: getCyberDiaperAssetName(cyberDiaper.model ?? "BULKY_DIAPER" /* BULKY_DIAPER */),
+      Item: getCyberDiaperAssetName(cyberDiaper.model),
       Private: true,
       ItemProperty: null
     });
