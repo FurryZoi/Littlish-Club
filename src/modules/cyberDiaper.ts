@@ -65,7 +65,7 @@ export function putCyberDiaperOn(): void {
         Property: "Comfy",
         Color: (cyberDiaper.color ?? asset.DefaultColor).join(","),
         Lock: "",
-        Item: getCyberDiaperAssetName(cyberDiaper.model),
+        Item: getCyberDiaperAssetName(cyberDiaper.model ?? CyberDiaperModel.BULKY_DIAPER),
         Private: true,
         ItemProperty: null
     });
