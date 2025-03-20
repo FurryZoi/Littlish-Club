@@ -778,7 +778,7 @@ These are the changes in the last 4 days.`);
   function putCyberDiaperOn() {
     const cyberDiaper = modStorage.cyberDiaper;
     const asset = AssetGet(Player.AssetFamily, "ItemPelvis", getCyberDiaperAssetName(cyberDiaper.model ?? "BULKY_DIAPER" /* BULKY_DIAPER */));
-    InventoryWear(Player, getCyberDiaperAssetName(cyberDiaper.model), "ItemPelvis", cyberDiaper.color, 10, 0, {
+    InventoryWear(Player, getCyberDiaperAssetName(cyberDiaper.model ?? "BULKY_DIAPER" /* BULKY_DIAPER */), "ItemPelvis", cyberDiaper.color, 10, 0, {
       Name: cyberDiaper.name ?? "[No Name]",
       Description: cyberDiaper.description ?? "[No Description]",
       MemberName: "Littlish Club Production",
