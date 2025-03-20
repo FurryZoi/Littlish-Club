@@ -786,7 +786,7 @@ These are the changes in the last 4 days.`);
       Property: "Comfy",
       Color: (cyberDiaper.color ?? asset.DefaultColor).join(","),
       Lock: "",
-      Item: getCyberDiaperAssetName(cyberDiaper.model),
+      Item: getCyberDiaperAssetName(cyberDiaper.model ?? "BULKY_DIAPER" /* BULKY_DIAPER */),
       Private: true,
       ItemProperty: null
     });
