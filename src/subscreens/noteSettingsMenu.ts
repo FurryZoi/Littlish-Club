@@ -2,6 +2,8 @@ import { modStorage, Note, syncStorage } from "@/modules/storage";
 import { BaseSubscreen } from "./baseSubscreen";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
 import { chatSendModMessage } from "@/utils/chat";
+import { addLog } from "@/modules/logs";
+import { getNickname } from "@/utils/characters";
 
 
 
@@ -66,7 +68,8 @@ export class NoteSettingsMenu extends BaseSubscreen {
                 deleteBtn.classList.add("lcDisabled");
             }
             if (InformationSheetSelection.IsPlayer()) {
-                modStorage.notes.list.splice(this.key - 1, 1);
+                const [note] = modStorage.notes.list.splice(this.key - 1, 1);
+                addLog(`${getNickname(Player)} (${Player.MemberNumber}) deleted note: "${note.text}"`, false);
                 this.exit();
             } else {
                 chatSendModMessage("deleteNote", {

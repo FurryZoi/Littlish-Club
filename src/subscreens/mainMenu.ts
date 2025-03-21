@@ -1,4 +1,4 @@
-import { CANVAS_BABIES_APPEARANCES, MOD_NAME, MOD_VERSION } from "@/constants";
+import { CANVAS_BABIES_APPEARANCES, DISCORD_SERVER_INVITE_LINK, MOD_NAME, MOD_VERSION } from "@/constants";
 import { BaseSubscreen } from "./baseSubscreen";
 import { GlobalMenu } from "./globalMenu";
 import { FamilyMenu } from "./familyMenu";
@@ -13,6 +13,8 @@ import { ExploringModeMenu } from "./exploringModeMenu";
 import { isExploringModeEnabled } from "@/modules/access";
 import { modStorage } from "@/modules/storage";
 import { CyberDiaperSettingsMenu } from "./cyberDiaperSettingsMenu";
+import { LogsMenu } from "./logsMenu";
+import discordIcon from "@/images/discord.png";
 
 export class MainMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -63,6 +65,15 @@ export class MainMenu extends BaseSubscreen {
                 this.setSubscreen(new AddBabyMenu());
             });
         }
+
+        const joinDiscordBtn = this.createButton({
+            icon: discordIcon,
+            width: 90,
+            height: 90,
+            x: 1815,
+            y: 235
+        });
+        joinDiscordBtn.addEventListener("click", () => open(DISCORD_SERVER_INVITE_LINK));
 
         const openWardrobeBtn = this.createButton({
             icon: "Icons/Rectangle/Dress.png",
@@ -115,14 +126,14 @@ export class MainMenu extends BaseSubscreen {
 
         [
             new GlobalMenu(), new FamilyMenu(), new RulesMenu(),
-            new CyberDiaperMenu(), new NotesMenu()
+            new CyberDiaperMenu(), new NotesMenu(), new LogsMenu()
         ].forEach((m, i) => {
             const btn = this.createButton({
                 text: m.name,
                 x: 150,
-                y: ((InformationSheetSelection.IsPlayer() && isExploringModeEnabled()) ? 250 : 150) + 140 * i,
+                y: ((InformationSheetSelection.IsPlayer() && isExploringModeEnabled()) ? 225 : 150) + 115 * i,
                 width: 600,
-                padding: 3,
+                padding: 2,
                 icon: m.icon ?? null
             });
             btn.style.fontWeight = "bold";

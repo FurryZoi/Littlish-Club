@@ -1,11 +1,13 @@
 import { MOD_VERSION } from "@/constants";
-import { chatSendLocal, chatSendModMessage } from "@/utils/chat";
+import { chatSendLocal, chatSendModMessage, handleRequest, handleRequestResponse } from "@/utils/chat";
 import { findModByName, hookFunction, HookPriority } from "./bcModSdk";
 import { getNickname, getPlayer } from "@/utils/characters";
 import { isRuleStrict, rulesList, StorageRule } from "./rules";
 import { AccessRight, caregiverAccessRightsList, getCaregiversOf, hasAccessRightTo, hasMommy, isCaregiverAccessRightEnabled, isCaregiverOf, isMommyOf, turnCaregiverAccessRight } from "./access";
 import { currentSubscreen } from "@/subscreens/baseSubscreen";
 import { CyberDiaperChangePermission, putCyberDiaperOn, StorageCyberDiaper, updateDiaperItem } from "./cyberDiaper";
+import { addLog, Log } from "./logs";
+import { cloneDeep } from "lodash-es";
 
 export interface Note {
     text: string
@@ -37,6 +39,9 @@ export interface ModStorage {
     notes?: {
         list?: Note[],
         visibility?: 0 | 1 | 2
+    }
+    logs?: {
+        list?: Log[]
     }
     sleepState?: boolean
     version: string
@@ -81,6 +86,14 @@ export function initStorage(): void {
         if (message.Content === "lcClubMsg" && !sender.IsPlayer()) {
             const msg = message.Dictionary.msg;
             const data = message.Dictionary.data;
+            if (msg === "request") {
+                if (typeof data.requestId !== "number" || typeof data.message !== "string") return;
+                handleRequest(data.requestId, data.message, data.data, sender);
+            }
+            if (msg === "requestResponse") {
+                if (typeof data.requestId !== "number") return;
+                handleRequestResponse(data.requestId, data.data);
+            }
             if (msg === "syncStorage") {
                 if (!sender.LITTLISH_CLUB) {
                     chatSendModMessage("syncStorage", {
@@ -98,7 +111,7 @@ export function initStorage(): void {
                     id: sender.MemberNumber
                 };
                 syncStorage();
-                chatSendLocal(`${getNickname(sender)} wants to become your mommy, open Littlish Club menu`);
+                chatSendLocal(`${getNickname(sender)} (${sender.MemberNumber}) wants to become your mommy, open Littlish Club menu`);
             }
             if (
                 msg === "turnCanChangeCaregiversList" &&
@@ -106,6 +119,12 @@ export function initStorage(): void {
             ) {
                 if (!modStorage.caregivers) modStorage.caregivers = {};
                 modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
+                addLog(
+                    `${getNickname(sender)} (${sender.MemberNumber}) ${
+                        modStorage.caregivers.canChangeList ? "allowed" : "forbade"
+                    } ${getNickname(Player)} to change caregivers list`,
+                    false
+                );
                 syncStorage();
             }
             if (
@@ -115,8 +134,12 @@ export function initStorage(): void {
                 if (!Array.isArray(data?.list)) return;
                 if (!modStorage.caregivers) modStorage.caregivers = {};
                 modStorage.caregivers.list = data.list;
+                chatSendLocal(`${getNickname(sender)} (${sender.MemberNumber}) changed your caregivers list`);
+                addLog(
+                    `${getNickname(sender)} (${sender.MemberNumber}) changed caregivers list`,
+                    false
+                );
                 syncStorage();
-                chatSendLocal(`${getNickname(sender)} changed your caregivers list`);
             }
             if (
                 msg === "turnCaregiversAccessRight" &&
@@ -124,8 +147,15 @@ export function initStorage(): void {
             ) {
                 if (!caregiverAccessRightsList.find((r) => r.id === data?.accessRightId)) return;
                 turnCaregiverAccessRight(data.accessRightId);
+                const _message = `${getNickname(sender)} (${sender.MemberNumber}) turned ${
+                    isCaregiverAccessRightEnabled(Player, data.accessRightId) ? "on" : "off"
+                } caregiver access right "${caregiverAccessRightsList.find((r) => r.id === data.accessRightId).name}"`;
+                addLog(
+                    _message,
+                    false
+                );
                 syncStorage();
-                chatSendLocal(`${getNickname(sender)} turned ${isCaregiverAccessRightEnabled(Player, data.accessRightId) ? "on" : "off"} caregiver access right "${caregiverAccessRightsList.find((r) => r.id === data.accessRightId).name}"`);
+                chatSendLocal(_message);
             }
             if (
                 msg === "changeRuleSettings" &&
@@ -160,12 +190,15 @@ export function initStorage(): void {
                     validateRuleConditions(d, data);
                     modStorage.rules.list.push(d);
                 }
+                const _message = `${getNickname(sender)} (${sender.MemberNumber}) changed settings of "${rulesList.find((r) => r.id === data?.id).name}" rule`;
+                addLog(
+                    _message,
+                    false
+                );
                 syncStorage();
-                chatSendLocal(`${getNickname(sender)} changed settings of "${rulesList.find((r) => r.id === data?.id).name}" rule`);
+                chatSendLocal(_message);
             }
-            if (
-                msg === "addNote"
-            ) {
+            if (msg === "addNote") {
                 if (typeof data?.text !== "string" || data.text.trim() === "") return;
                 if (!modStorage.notes) modStorage.notes = {};
                 if (!modStorage.notes.list) modStorage.notes.list = [];
@@ -178,8 +211,10 @@ export function initStorage(): void {
                     ts: Date.now()
                 };
                 modStorage.notes.list.push(note);
+                const _message = `${getNickname(sender)} (${sender.MemberNumber}) added note: ${data.text}`;
+                addLog(_message, false);
                 syncStorage();
-                chatSendLocal(`${getNickname(sender)} added note: ${data.text}`);
+                chatSendLocal(_message);
             }
             if (msg === "deleteNote") {
                 if (typeof data?.key !== "number") return;
@@ -187,8 +222,10 @@ export function initStorage(): void {
                 if (!note) return;
                 if (note.author.id !== sender.MemberNumber && !hasAccessRightTo(sender, Player, AccessRight.DELETE_NOTES)) return;
                 modStorage.notes.list.splice(data.key - 1, 1);
+                const _message = `${getNickname(sender)} (${sender.MemberNumber}) deleted note: ${note.text}`;
+                addLog(_message, false);
                 syncStorage();
-                chatSendLocal(`${getNickname(sender)} deleted note: ${note.text}`);
+                chatSendLocal(_message);
             }
             if (msg === "changeCyberDiaperSettings" && hasAccessRightTo(sender, Player, AccessRight.MANAGE_DIAPER)) {
                 const { name, description, model, locked, color, changePermission } = data as StorageCyberDiaper;
@@ -205,9 +242,11 @@ export function initStorage(): void {
                 if (
                     Object.values(CyberDiaperChangePermission).includes(changePermission)
                 ) modStorage.cyberDiaper.changePermission = changePermission;
+                const _message = `${getNickname(sender)} (${sender.MemberNumber}) changed cyber diaper's settings`;
+                addLog(_message, false);
                 syncStorage();
                 updateDiaperItem();
-                chatSendLocal(`${getNickname(sender)} changed cyber diaper's settings`);
+                chatSendLocal(_message);
             }
         }
         next(args);
@@ -309,12 +348,18 @@ function bccAbdlPartSync(oldAbdlData: Record<string, any>): void {
     chatSendLocal("Littlish Club was synced with BCC's ABDL module");
 }
 
+function deleteProtectedProperties(data: ModStorage): ModStorage {
+    data = cloneDeep(data);
+    delete data.logs;
+    return data;
+}
+
 export function syncStorage(): void {
     if (typeof modStorage !== "object") return;
     Player.ExtensionSettings.LITTLISH_CLUB = LZString.compressToBase64(JSON.stringify(modStorage));
     ServerPlayerExtensionSettingsSync("LITTLISH_CLUB");
     chatSendModMessage("syncStorage", {
-        storage: modStorage,
+        storage: deleteProtectedProperties(modStorage),
     });
 }
 

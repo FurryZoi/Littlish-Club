@@ -8,6 +8,8 @@ import { CyberDiaperChangeColorMenu } from "./cyberDiaperChangeColorMenu";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
 import { chatSendModMessage } from "@/utils/chat";
 import { cloneDeep } from "lodash-es";
+import { addLog } from "@/modules/logs";
+import { getNickname } from "@/utils/characters";
 
 export class CyberDiaperSettingsMenu extends BaseSubscreen {
     private cyberDiaperSettings: StorageCyberDiaper;
@@ -128,7 +130,7 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             delete this.cyberDiaperSettings.color;
             modelBtn.textContent = "Model: " + getCyberDiaperModelName(this.cyberDiaperSettings.model);
         });
-        
+
         const permissionsTexts = {
             [CyberDiaperChangePermission.EVERYONE]: "Everyone",
             [CyberDiaperChangePermission.EVERYONE_EXCEPT_WEARER]: "Everyone except wearer",
@@ -136,9 +138,8 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             [CyberDiaperChangePermission.MOMMY]: "Mommy"
         };
         const changePermissionBtn = this.createButton({
-            text: `Change permission: ${
-                permissionsTexts[this.cyberDiaperSettings.changePermission ?? CyberDiaperChangePermission.EVERYONE]
-            }`,
+            text: `Change permission: ${permissionsTexts[this.cyberDiaperSettings.changePermission ?? CyberDiaperChangePermission.EVERYONE]
+                }`,
             x: 1200,
             y: 380,
             width: 700,
@@ -154,9 +155,8 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             this.cyberDiaperSettings.changePermission = getNextCyberDiaperChangePermission(
                 this.cyberDiaperSettings.changePermission ?? CyberDiaperChangePermission.EVERYONE
             );
-            changePermissionBtn.textContent = `Change permission: ${
-                permissionsTexts[this.cyberDiaperSettings.changePermission]
-            }`;
+            changePermissionBtn.textContent = `Change permission: ${permissionsTexts[this.cyberDiaperSettings.changePermission]
+                }`;
         });
 
         const saveChangesBtn = this.createButton({
@@ -178,6 +178,7 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             if (InformationSheetSelection.IsPlayer()) {
                 modStorage.cyberDiaper = this.cyberDiaperSettings;
                 updateDiaperItem();
+                addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed settings of cyber diaper`, false);
                 syncStorage();
             } else {
                 chatSendModMessage(

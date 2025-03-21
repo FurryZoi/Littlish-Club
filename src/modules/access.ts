@@ -38,7 +38,8 @@ export enum CaregiverAccessRightId {
     MANAGE_DIAPER = 1000,
     MANAGE_RULES = 1001,
     DELETE_NOTES = 1002,
-    MANAGE_APPEARANCE = 1003
+    MANAGE_APPEARANCE = 1003,
+    READ_LOGS = 1004
 }
 
 export interface CaregiverAccessRight {
@@ -55,7 +56,8 @@ export enum AccessRight {
     MANAGE_APPEARANCE = "MANAGE_APPEARANCE",
     MANAGE_CAREGIVERS_ACCESS_RIGHTS = "MANAGE_CAREGIVERS_ACCESS_RIGHTS",
     TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST = "TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST",
-    CHANGE_CAREGIVERS_LIST = "CHANGE_CAREGIVERS_LIST"
+    CHANGE_CAREGIVERS_LIST = "CHANGE_CAREGIVERS_LIST",
+    READ_LOGS = "READ_LOGS"
 }
 
 export const caregiverAccessRightsList: CaregiverAccessRight[] = [
@@ -77,6 +79,11 @@ export const caregiverAccessRightsList: CaregiverAccessRight[] = [
     {
         id: 1003,
         name: "Change Appearance",
+        description: ""
+    },
+    {
+        id: 1004,
+        name: "Read Logs",
         description: ""
     }
 ];
@@ -154,6 +161,14 @@ export function hasAccessRightTo(C1: Character, C2: Character, accessRight: Acce
                 (
                     isCaregiverOf(C1, C2) &&
                     isCaregiverAccessRightEnabled(C2, CaregiverAccessRightId.DELETE_NOTES)
+                )
+            )
+        case AccessRight.READ_LOGS:
+            return (
+                isMommyOf(C1, C2) ||
+                (
+                    isCaregiverOf(C1, C2) &&
+                    isCaregiverAccessRightEnabled(C2, CaregiverAccessRightId.READ_LOGS)
                 )
             )
     }

@@ -4,6 +4,8 @@ import { CaregiversPermissionsMenu } from "./caregiversPermissionsMenu";
 import { MainMenu } from "./mainMenu";
 import { AccessRight, getCaregiversOf, getMommyOf, hasAccessRightTo, hasMommy } from "@/modules/access";
 import { chatSendModMessage } from "@/utils/chat";
+import { addLog } from "@/modules/logs";
+import { getNickname } from "@/utils/characters";
 
 export class FamilyMenu extends BaseSubscreen {
     get name() {
@@ -45,6 +47,7 @@ export class FamilyMenu extends BaseSubscreen {
             if (InformationSheetSelection.IsPlayer()) {
                 if (!modStorage.caregivers) modStorage.caregivers = {};
                 modStorage.caregivers.list = list;
+                addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed caregivers list`, false);
             } else {
                 chatSendModMessage("changeCaregiversList", {
                     list
@@ -88,6 +91,12 @@ export class FamilyMenu extends BaseSubscreen {
             if (InformationSheetSelection.IsPlayer()) {
                 if (!modStorage.caregivers) modStorage.caregivers = {};
                 modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
+                addLog(
+                    `${getNickname(Player)} (${Player.MemberNumber}) ${
+                        modStorage.caregivers.canChangeList ? "allowed" : "forbade"
+                    } ${getNickname(Player)} to change caregivers list`,
+                    false
+                );
             } else {
                 chatSendModMessage("turnCanChangeCaregiversList", null, InformationSheetSelection.MemberNumber);
             }

@@ -1,6 +1,9 @@
 import { AccessRight, caregiverAccessRightsList, hasAccessRightTo, isCaregiverAccessRightEnabled, turnCaregiverAccessRight } from "@/modules/access";
 import { BaseSubscreen } from "./baseSubscreen";
 import { chatSendModMessage } from "@/utils/chat";
+import { addLog } from "@/modules/logs";
+import { getNickname } from "@/utils/characters";
+import { syncStorage } from "@/modules/storage";
 
 export class CaregiversPermissionsMenu extends BaseSubscreen {
     get name() {
@@ -33,6 +36,13 @@ export class CaregiversPermissionsMenu extends BaseSubscreen {
                 }
                 if (InformationSheetSelection.IsPlayer()) {
                     turnCaregiverAccessRight(p.id);
+                    addLog(
+                        `${getNickname(Player)} (${Player.MemberNumber}) turned ${
+                            isCaregiverAccessRightEnabled(Player, p.id) ? "on" : "off"
+                        } caregiver access right "${p.name}"`,
+                        false
+                    );
+                    syncStorage();
                 } else {
                     chatSendModMessage("turnCaregiversAccessRight", {
                         accessRightId: p.id

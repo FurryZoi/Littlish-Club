@@ -1,4 +1,22 @@
 import { MOD_NAME, MOD_VERSION } from "@/constants";
+import { modStorage } from "@/modules/storage";
+import { getRandomNumber } from "./main";
+import { AccessRight, hasAccessRightTo } from "@/modules/access";
+
+const pendingRequests: Map<number, PendingRequest> = new Map();
+
+interface PendingRequest {
+	message: string
+	data: any
+	target: number,
+	resolve: (data: any) => any,
+	reject: (data: any) => any
+}
+
+interface RequestResponse {
+	data?: any
+	isError: boolean
+}
 
 export function chatSendLocal(message: string | Node): void {
 	if (!ServerPlayerIsInChatRoom()) return;
@@ -18,7 +36,7 @@ export function chatSendLocal(message: string | Node): void {
 }
 
 export function chatSendChangelog(): void {
-	chatSendLocal(`${MOD_NAME} v${MOD_VERSION}\n\nChangelog:\n• Cyber Diaper (BETA)\n • Fixed conflicts with MPA\n • Reset settings button\n • New rule condition\n • "Fall asleep after milk bottle" rule\n • Local notifications\n • Alternative baby speech algorithm\n • Rules strict mode\n • Fixed bugs\n\nThese are the changes in the last 4 days.`);
+	chatSendLocal(`${MOD_NAME} v${MOD_VERSION}\n\nChangelog:\n• Fixed few minor bugs\n• Logs system\n• UI changes\n• A lot of "hidden" technical changes`);
 }
 
 export function chatSendActionMessage(msg: string, target: undefined | number = undefined, dictionary: ChatMessageDictionaryEntry[] = []) {
@@ -41,13 +59,13 @@ export function chatSendActionMessage(msg: string, target: undefined | number = 
 		.replaceAll("<pronoun>", capPronoun.toLocaleLowerCase());
 
 	ServerSend('ChatRoomChat', {
-	  Content: 'LittlishClub_CUSTOM_ACTION',
-	  Type: 'Action',
-	  Target: target ?? undefined,
-	  Dictionary: [
-		{ Tag: 'MISSING TEXT IN "Interface.csv": LittlishClub_CUSTOM_ACTION', Text: msg },
-		...dictionary,
-	  ],
+		Content: 'LittlishClub_CUSTOM_ACTION',
+		Type: 'Action',
+		Target: target ?? undefined,
+		Dictionary: [
+			{ Tag: 'MISSING TEXT IN "Interface.csv": LittlishClub_CUSTOM_ACTION', Text: msg },
+			...dictionary,
+		],
 	});
 }
 
@@ -78,4 +96,49 @@ export function chatSendBeep(data: any, targetId: number): void {
 	};
 
 	ServerSend("AccountBeep", beep);
+}
+
+export function sendRequest(message: string, data: any, target: number): Promise<RequestResponse> {
+	return new Promise((resolve, reject) => {
+		const requestId = parseInt(`${Date.now()}${getRandomNumber(1000, 10000)}`);
+		pendingRequests.set(requestId, {
+			message,
+			data,
+			target,
+			resolve,
+			reject
+		});
+		chatSendModMessage("request", {
+			requestId,
+			message,
+			data
+		}, target);
+		setTimeout(() => {
+			pendingRequests.delete(requestId);
+			resolve({
+				isError: true
+			});
+		}, 6000);
+	});
+}
+
+export function handleRequestResponse(requestId: number, data: any): void {
+	const request = pendingRequests.get(requestId);
+	if (!request) return;
+	request.resolve({
+		data
+	});
+}
+
+export function handleRequest(requestId: number, message: string, data: any, sender: Character): void {
+	switch (message) {
+		case "getLogs":
+			if (!hasAccessRightTo(sender, Player, AccessRight.READ_LOGS)) return;
+			chatSendModMessage("requestResponse", {
+				requestId,
+				message,
+				data: modStorage.logs?.list ?? []
+			}, sender.MemberNumber);
+			return;
+	}
 }

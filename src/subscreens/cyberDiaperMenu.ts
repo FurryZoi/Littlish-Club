@@ -4,6 +4,7 @@ import { notify } from "@/modules/ui";
 import { CyberDiaperSettingsMenu } from "./cyberDiaperSettingsMenu";
 import { modStorage, syncStorage } from "@/modules/storage";
 import { CyberDiaperModel } from "@/modules/cyberDiaper";
+import { AccessRight, hasAccessRightTo } from "@/modules/access";
 
 export class CyberDiaperMenu extends BaseSubscreen {
     get name() {
@@ -46,7 +47,13 @@ export class CyberDiaperMenu extends BaseSubscreen {
             padding: 2,
             fontSize: 8
         });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER)) {
+            buyBtn.classList.add("lcDisabled");
+        }
         buyBtn.addEventListener("click", () => {
+            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER)) {
+                return buyBtn.classList.add("lcDisabled");
+            }
             if (Player.Money < 499) return notify("Not enough money.");
             CharacterChangeMoney(Player, -499);
             notify("Successfully bought Cyber Diaper.");

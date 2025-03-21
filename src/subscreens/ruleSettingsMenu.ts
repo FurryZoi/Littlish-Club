@@ -3,6 +3,8 @@ import { BaseSubscreen } from "./baseSubscreen";
 import { modStorage, syncStorage } from "@/modules/storage";
 import { AccessRight, hasAccessRightTo, isExploringModeEnabled, isMommyOf } from "@/modules/access";
 import { chatSendModMessage } from "@/utils/chat";
+import { addLog } from "@/modules/logs";
+import { getNickname } from "@/utils/characters";
 
 
 export class RuleSettingsMenu extends BaseSubscreen {
@@ -319,6 +321,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
                 } else {
                     modStorage.rules.list.push(this.ruleSettings);
                 }
+                addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed settings of "${this.rule.name}" rule`, false);
                 syncStorage();
             } else {
                 let dataToSend: Partial<StorageRule> = {

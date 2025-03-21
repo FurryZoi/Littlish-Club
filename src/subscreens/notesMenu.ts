@@ -3,6 +3,8 @@ import { BaseSubscreen } from "./baseSubscreen";
 import { NoteSettingsMenu } from "./noteSettingsMenu";
 import { MainMenu } from "./mainMenu";
 import { chatSendModMessage } from "@/utils/chat";
+import { addLog } from "@/modules/logs";
+import { getNickname } from "@/utils/characters";
 
 
 function addNote(note: Note, subscreen: NotesMenu, scrollView: HTMLDivElement, key: number, pending = false): void {
@@ -90,6 +92,7 @@ export class NotesMenu extends BaseSubscreen {
                 if (!modStorage.notes) modStorage.notes = {};
                 if (!modStorage.notes.list) modStorage.notes.list = [];
                 modStorage.notes.list.push(note);
+                addLog(`${getNickname(Player)} (${Player.MemberNumber}) added note: "${note.text}"`, false);
             } else {
                 chatSendModMessage("addNote", {
                     text: noteInput.value
