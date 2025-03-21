@@ -189,10 +189,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
   });
 
   // src/constants.ts
-  var MOD_VERSION = "1.0.1";
+  var MOD_VERSION = "1.0.2";
   var MOD_NAME = "Littlish Club";
   var MOD_FULL_NAME = MOD_NAME;
   var REPO_URL = "https://github.com/FurryZoi/Littlish-Club";
+  var DISCORD_SERVER_INVITE_LINK = "https://discord.gg/aDUvte772D";
   var MOD_BUTTON_POSITION = [1705, 800 - 115, 90, 90];
   var CANVAS_BABIES_APPEARANCES = [
     {
@@ -546,68 +547,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // src/utils/chat.ts
-  function chatSendLocal(message) {
-    if (!ServerPlayerIsInChatRoom()) return;
-    const div = document.createElement("div");
-    div.setAttribute("class", "ChatMessage ChatMessageLocalMessage");
-    div.setAttribute("data-time", ChatRoomCurrentTime());
-    div.setAttribute("data-sender", `${Player.MemberNumber}`);
-    div.style.background = "#55edc095";
-    div.style.margin = "0.15em 0";
-    if (typeof message === "string") div.textContent = message;
-    else div.appendChild(message);
-    document.querySelector("#TextAreaChatLog").appendChild(div);
-    ElementScrollToEnd("TextAreaChatLog");
-  }
-  function chatSendChangelog() {
-    chatSendLocal(`${MOD_NAME} v${MOD_VERSION}
-
-Changelog:
-\u2022 Cyber Diaper (BETA)
- \u2022 Fixed conflicts with MPA
- \u2022 Reset settings button
- \u2022 New rule condition
- \u2022 "Fall asleep after milk bottle" rule
- \u2022 Local notifications
- \u2022 Alternative baby speech algorithm
- \u2022 Rules strict mode
- \u2022 Fixed bugs
-
-These are the changes in the last 4 days.`);
-  }
-  function chatSendActionMessage(msg, target = void 0, dictionary = []) {
-    if (!msg || !ServerPlayerIsInChatRoom()) return;
-    const isFemale = CharacterPronounDescription(Player) === "She/Her";
-    const capPossessive = isFemale ? "Her" : "His";
-    const capIntensive = isFemale ? "Her" : "Him";
-    const capSelfIntensive = isFemale ? "Herself" : "Himself";
-    const capPronoun = isFemale ? "She" : "He";
-    msg = msg.replaceAll("<Possessive>", capPossessive).replaceAll("<possessive>", capPossessive.toLocaleLowerCase()).replaceAll("<Intensive>", capIntensive).replaceAll("<intensive>", capIntensive.toLocaleLowerCase()).replaceAll("<SelfIntensive>", capSelfIntensive).replaceAll("<selfIntensive>", capSelfIntensive.toLocaleLowerCase()).replaceAll("<Pronoun>", capPronoun).replaceAll("<pronoun>", capPronoun.toLocaleLowerCase());
-    ServerSend("ChatRoomChat", {
-      Content: "LittlishClub_CUSTOM_ACTION",
-      Type: "Action",
-      Target: target ?? void 0,
-      Dictionary: [
-        { Tag: 'MISSING TEXT IN "Interface.csv": LittlishClub_CUSTOM_ACTION', Text: msg },
-        ...dictionary
-      ]
-    });
-  }
-  function chatSendModMessage(msg, _data = null, targetNumber = null) {
-    const data = {
-      Content: "lcClubMsg",
-      Dictionary: {
-        // @ts-ignore
-        msg
-      },
-      Type: "Hidden"
-    };
-    if (_data) data.Dictionary.data = _data;
-    if (targetNumber) data.Target = targetNumber;
-    ServerSend("ChatRoomChat", data);
-  }
-
   // src/utils/characters.ts
   function getPlayer(value) {
     if (!value) return;
@@ -671,6 +610,11 @@ These are the changes in the last 4 days.`);
       id: 1003,
       name: "Change Appearance",
       description: ""
+    },
+    {
+      id: 1004,
+      name: "Read Logs",
+      description: ""
     }
   ];
   function isCaregiverAccessRightEnabled(C, accessRightId) {
@@ -712,6 +656,8 @@ These are the changes in the last 4 days.`);
         return C1.MemberNumber === C2.MemberNumber || isMommyOf(C1, C2) || isCaregiverOf(C1, C2) && isCaregiverAccessRightEnabled(C2, 1003 /* MANAGE_APPEARANCE */);
       case "DELETE_NOTES" /* DELETE_NOTES */:
         return isMommyOf(C1, C2) || isCaregiverOf(C1, C2) && isCaregiverAccessRightEnabled(C2, 1002 /* DELETE_NOTES */);
+      case "READ_LOGS" /* READ_LOGS */:
+        return isMommyOf(C1, C2) || isCaregiverOf(C1, C2) && isCaregiverAccessRightEnabled(C2, 1004 /* READ_LOGS */);
     }
   }
 
@@ -826,1299 +772,16 @@ These are the changes in the last 4 days.`);
     });
   }
 
-  // src/modules/storage.ts
-  var modStorage;
-  function initStorage() {
-    const data = {
-      version: MOD_VERSION
-    };
-    if (typeof Player.ExtensionSettings.LITTLISH_CLUB === "string") {
-      modStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.LITTLISH_CLUB)) ?? data;
-    } else modStorage = data;
-    Object.keys(data).forEach((key) => {
-      if (modStorage[key] === void 0) {
-        modStorage[key] = data[key];
-      }
+  // src/modules/logs.ts
+  function addLog(message, push = true) {
+    if (!modStorage.logs) modStorage.logs = {};
+    if (!modStorage.logs.list) modStorage.logs.list = [];
+    modStorage.logs.list.push({
+      message,
+      ts: Date.now()
     });
-    migrateModStorage();
-    try {
-      const bccStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.BCC));
-      if ((bccStorage?.abdl?.mommy || bccStorage?.abdl?.caretakers || bccStorage?.abdl?.notes?.list) && !findModByName("BCC")) bccAbdlPartSync(bccStorage.abdl);
-    } catch (e) {
-    }
-    chatSendModMessage("syncStorage", {
-      storage: modStorage
-    });
-    hookFunction("ChatRoomMessage", 1 /* ADD_BEHAVIOR */, (args, next) => {
-      const message = args[0];
-      const sender = getPlayer(message.Sender);
-      if (!sender) return next(args);
-      if (message.Content === "lcClubMsg" && !sender.IsPlayer()) {
-        const msg = message.Dictionary.msg;
-        const data2 = message.Dictionary.data;
-        if (msg === "syncStorage") {
-          if (!sender.LITTLISH_CLUB) {
-            chatSendModMessage("syncStorage", {
-              storage: modStorage
-            }, sender.MemberNumber);
-          }
-          sender.LITTLISH_CLUB = data2.storage;
-          if (InformationSheetSelection && InformationSheetSelection.MemberNumber === sender.MemberNumber) {
-            currentSubscreen.update();
-          }
-        }
-        if (msg === "addBaby" && !hasMommy(Player) && modStorage.requestReciviedFrom?.id !== sender.MemberNumber) {
-          modStorage.requestReciviedFrom = {
-            name: CharacterNickname(sender),
-            id: sender.MemberNumber
-          };
-          syncStorage();
-          chatSendLocal(`${getNickname(sender)} wants to become your mommy, open Littlish Club menu`);
-        }
-        if (msg === "turnCanChangeCaregiversList" && hasAccessRightTo(sender, Player, "TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST" /* TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST */)) {
-          if (!modStorage.caregivers) modStorage.caregivers = {};
-          modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
-          syncStorage();
-        }
-        if (msg === "changeCaregiversList" && hasAccessRightTo(sender, Player, "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */)) {
-          if (!Array.isArray(data2?.list)) return;
-          if (!modStorage.caregivers) modStorage.caregivers = {};
-          modStorage.caregivers.list = data2.list;
-          syncStorage();
-          chatSendLocal(`${getNickname(sender)} changed your caregivers list`);
-        }
-        if (msg === "turnCaregiversAccessRight" && hasAccessRightTo(sender, Player, "MANAGE_CAREGIVERS_ACCESS_RIGHTS" /* MANAGE_CAREGIVERS_ACCESS_RIGHTS */)) {
-          if (!caregiverAccessRightsList.find((r) => r.id === data2?.accessRightId)) return;
-          turnCaregiverAccessRight(data2.accessRightId);
-          syncStorage();
-          chatSendLocal(`${getNickname(sender)} turned ${isCaregiverAccessRightEnabled(Player, data2.accessRightId) ? "on" : "off"} caregiver access right "${caregiverAccessRightsList.find((r) => r.id === data2.accessRightId).name}"`);
-        }
-        if (msg === "changeRuleSettings" && hasAccessRightTo(sender, Player, "MANAGE_RULES" /* MANAGE_RULES */)) {
-          if (!rulesList.find((r2) => r2.id === data2?.id)) return;
-          if (isRuleStrict(Player, data2.id) && !isMommyOf(sender, Player)) return;
-          if (!modStorage.rules) modStorage.rules = {};
-          if (!modStorage.rules.list) modStorage.rules.list = [];
-          let r = modStorage.rules.list.find((d) => d.id === data2.id);
-          if (r) {
-            if (typeof data2.state === "boolean") r.state = data2.state;
-            if (typeof data2.strict === "boolean" && hasAccessRightTo(sender, Player, "TURN_RULE_STRICT_MODE" /* TURN_RULE_STRICT_MODE */)) {
-              r.strict = data2.strict;
-            }
-            validateRuleData(r, data2);
-            validateRuleConditions(r, data2);
-            r.changedBy = sender.MemberNumber;
-            r.ts = Date.now();
-          } else {
-            let d = {
-              id: data2.id,
-              state: typeof data2.state === "boolean" ? data2.state : false,
-              strict: typeof data2.strict === "boolean" && hasAccessRightTo(sender, Player, "TURN_RULE_STRICT_MODE" /* TURN_RULE_STRICT_MODE */) ? data2.strict : false,
-              changedBy: sender.MemberNumber,
-              ts: Date.now()
-            };
-            validateRuleData(d, data2);
-            validateRuleConditions(d, data2);
-            modStorage.rules.list.push(d);
-          }
-          syncStorage();
-          chatSendLocal(`${getNickname(sender)} changed settings of "${rulesList.find((r2) => r2.id === data2?.id).name}" rule`);
-        }
-        if (msg === "addNote") {
-          if (typeof data2?.text !== "string" || data2.text.trim() === "") return;
-          if (!modStorage.notes) modStorage.notes = {};
-          if (!modStorage.notes.list) modStorage.notes.list = [];
-          const note = {
-            text: data2.text,
-            author: {
-              name: CharacterNickname(sender),
-              id: sender.MemberNumber
-            },
-            ts: Date.now()
-          };
-          modStorage.notes.list.push(note);
-          syncStorage();
-          chatSendLocal(`${getNickname(sender)} added note: ${data2.text}`);
-        }
-        if (msg === "deleteNote") {
-          if (typeof data2?.key !== "number") return;
-          const note = modStorage.notes?.list?.find((n, i) => i === data2.key - 1);
-          if (!note) return;
-          if (note.author.id !== sender.MemberNumber && !hasAccessRightTo(sender, Player, "DELETE_NOTES" /* DELETE_NOTES */)) return;
-          modStorage.notes.list.splice(data2.key - 1, 1);
-          syncStorage();
-          chatSendLocal(`${getNickname(sender)} deleted note: ${note.text}`);
-        }
-        if (msg === "changeCyberDiaperSettings" && hasAccessRightTo(sender, Player, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
-          const { name, description, model, locked, color, changePermission } = data2;
-          if (!modStorage.cyberDiaper) {
-            modStorage.cyberDiaper = {};
-            chatSendLocal(`${getNickname(sender)} bought cyber diaper for you`);
-          }
-          if (typeof name === "string") modStorage.cyberDiaper.name = name;
-          if (typeof description === "string") modStorage.cyberDiaper.description = description;
-          if (typeof model === "string") modStorage.cyberDiaper.model = model;
-          if (typeof locked === "boolean") modStorage.cyberDiaper.locked = locked;
-          if (Array.isArray(color)) modStorage.cyberDiaper.color = color;
-          if (Object.values(CyberDiaperChangePermission).includes(changePermission)) modStorage.cyberDiaper.changePermission = changePermission;
-          syncStorage();
-          updateDiaperItem();
-          chatSendLocal(`${getNickname(sender)} changed cyber diaper's settings`);
-        }
-      }
-      next(args);
-    });
-    hookFunction("ChatRoomSync", 1 /* ADD_BEHAVIOR */, (args, next) => {
-      next(args);
-      chatSendModMessage("syncStorage", {
-        storage: modStorage
-      });
-    });
+    if (push) syncStorage();
   }
-  function validateRuleConditions(r, data) {
-    console.log(r, data);
-    if (data.conditions) {
-      if (!r.conditions) r.conditions = {};
-      if (["any", "all"].includes(data.conditions.type)) r.conditions.type = data.conditions.type;
-      else r.conditions.type = "any";
-      if (data.conditions.whenInRoomWithRole) {
-        if (!r.conditions.whenInRoomWithRole) r.conditions.whenInRoomWithRole = {};
-        if (typeof data.conditions.whenInRoomWithRole?.inRoom === "boolean") {
-          r.conditions.whenInRoomWithRole.inRoom = data.conditions.whenInRoomWithRole.inRoom;
-        }
-        if (["mommy", "caregiver"].includes(data.conditions.whenInRoomWithRole?.role)) {
-          r.conditions.whenInRoomWithRole.role = data.conditions.whenInRoomWithRole.role;
-        }
-      } else delete r.conditions.whenInRoomWithRole;
-      if (data.conditions.whenInRoomWhereAbdl) {
-        if (!r.conditions.whenInRoomWhereAbdl) r.conditions.whenInRoomWhereAbdl = {};
-        if (typeof data.conditions.whenInRoomWhereAbdl?.blocked === "boolean") {
-          r.conditions.whenInRoomWhereAbdl.blocked = data.conditions.whenInRoomWhereAbdl.blocked;
-        }
-      } else delete r.conditions.whenInRoomWhereAbdl;
-    }
-    console.log(r, data);
-  }
-  function validateRuleData(r, data) {
-    const ruleParams = rulesList.find((g) => g.id === r.id).data ?? [];
-    for (const param of ruleParams) {
-      const p = data.data?.[param.name];
-      if (param.type === "number" && typeof p !== "number") continue;
-      if (param.type === "text" && typeof p !== "string") continue;
-      if (param.type === "checkbox" && typeof p !== "boolean") continue;
-      if (!r.data) r.data = {};
-      r.data[param.name] = p;
-    }
-  }
-  function migrateModStorage() {
-  }
-  function bccAbdlPartSync(oldAbdlData) {
-    console.log(oldAbdlData);
-    if (!hasMommy(Player) && typeof oldAbdlData?.mommy?.id === "number") {
-      modStorage.mommy = {
-        name: oldAbdlData.mommy.name ?? "?",
-        id: oldAbdlData.mommy.id
-      };
-    }
-    if (Array.isArray(oldAbdlData?.caretakers?.list)) {
-      const caregiversList = getCaregiversOf(Player);
-      for (const memberNumber of oldAbdlData.caretakers.list) {
-        if (!caregiversList.includes(memberNumber)) caregiversList.push(memberNumber);
-      }
-      if (!modStorage.caregivers) modStorage.caregivers = {};
-      modStorage.caregivers.list = caregiversList;
-    }
-    if (Array.isArray(oldAbdlData?.notes?.list) && oldAbdlData.notes.list.length > 0) {
-      if (!modStorage.notes) modStorage.notes = {};
-      if (!modStorage.notes.list) modStorage.notes.list = [];
-      for (const note of oldAbdlData.notes.list) {
-        if (typeof note.text !== "string" || typeof note.author?.name !== "string" || typeof note.author?.id !== "number" || typeof note.time !== "number") continue;
-        modStorage.notes.list.push({
-          text: note.text,
-          author: {
-            name: note.author?.name,
-            id: note.author?.id
-          },
-          ts: note.time
-        });
-      }
-    }
-    let bccStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.BCC));
-    delete bccStorage.abdl;
-    Player.ExtensionSettings.BCC = LZString.compressToBase64(JSON.stringify(bccStorage));
-    ServerPlayerExtensionSettingsSync("BCC");
-    syncStorage();
-    chatSendLocal("Littlish Club was synced with BCC's ABDL module");
-  }
-  function syncStorage() {
-    if (typeof modStorage !== "object") return;
-    Player.ExtensionSettings.LITTLISH_CLUB = LZString.compressToBase64(JSON.stringify(modStorage));
-    ServerPlayerExtensionSettingsSync("LITTLISH_CLUB");
-    chatSendModMessage("syncStorage", {
-      storage: modStorage
-    });
-  }
-  function resetStorage() {
-    modStorage = {
-      version: MOD_VERSION
-    };
-    syncStorage();
-  }
-
-  // src/modules/rules.ts
-  var dialogMenuButtonClickHooks = /* @__PURE__ */ new Map();
-  var buttonLabels = /* @__PURE__ */ new Map();
-  var imageRedirects = /* @__PURE__ */ new Map();
-  var rulesList = [
-    {
-      id: 1e3,
-      name: "Prevent taking ABDL items off",
-      description: "Prevents baby from taking ABDL items off"
-    },
-    {
-      id: 1001,
-      name: "Prevent using admin powers",
-      description: "Prevents baby from using room administration"
-    },
-    {
-      id: 1002,
-      name: "Prevent resisting urges",
-      description: "Prevents baby from resisting any urges"
-    },
-    {
-      id: 1003,
-      name: "ABDL inventory",
-      description: "Takes all the items from the baby except the ABDL"
-    },
-    {
-      id: 1004,
-      name: "Speak like baby",
-      description: "Force baby to speak like little baby",
-      data: [
-        {
-          name: "altSpeech",
-          text: "Alternative baby speech algorithm",
-          type: "checkbox"
-        }
-      ]
-    },
-    {
-      id: 1005,
-      name: "Walk like baby",
-      description: "Prevents baby from standing"
-    },
-    {
-      id: 1006,
-      name: "Can't go in the shop alone",
-      description: "Prevents baby from going to the club shop"
-    },
-    {
-      id: 1007,
-      name: "Fall asleep after milk bottle",
-      description: "Baby will fall asleep after drinking the milk (if it doesn't have another effect)"
-    },
-    {
-      id: 1008,
-      name: "Decrease size",
-      description: "Decreases baby's size",
-      data: [
-        {
-          name: "multiplier",
-          text: "Size Multiplier",
-          type: "number",
-          min: 0.25,
-          max: 1,
-          step: 0.01
-        }
-      ]
-    },
-    {
-      id: 1009,
-      name: "Disable reset settings button",
-      description: "Disables button to reset mod settings"
-    }
-  ];
-  function isRuleActive(C, ruleId) {
-    if (!isRuleEnabled(C, ruleId)) return false;
-    const conditions = getRuleConditions(C, ruleId);
-    if (!conditions?.whenInRoomWithRole && !conditions?.whenInRoomWhereAbdl) return true;
-    let whenInRoomWithRoleCondition = false;
-    let whenInRoomWhereAbdlCondition = false;
-    if (conditions.whenInRoomWithRole) {
-      if ((conditions?.whenInRoomWithRole?.role ?? "caregiver") === "caregiver") {
-        whenInRoomWithRoleCondition = conditions?.whenInRoomWithRole?.inRoom ?? true ? inRoomWithCaregiver(C) : !inRoomWithCaregiver(C);
-      } else {
-        whenInRoomWithRoleCondition = conditions?.whenInRoomWithRole?.inRoom ?? true ? inRoomWithMommy(C) : !inRoomWithMommy(C);
-      }
-    }
-    if (conditions.whenInRoomWhereAbdl) {
-      whenInRoomWhereAbdlCondition = conditions?.whenInRoomWhereAbdl?.blocked ?? true ? inRoomWhereAbdlIsBlocked() : !inRoomWhereAbdlIsBlocked();
-    }
-    const conditionsValues = [];
-    if (conditions?.whenInRoomWithRole) conditionsValues.push(whenInRoomWithRoleCondition);
-    if (conditions?.whenInRoomWhereAbdl) conditionsValues.push(whenInRoomWhereAbdlCondition);
-    return (conditions?.type ?? "any") === "all" ? conditionsValues.every((b) => b) : conditionsValues.some((b) => b);
-  }
-  function isRuleEnabled(C, ruleId) {
-    if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
-    return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
-  }
-  function isRuleStrict(C, ruleId) {
-    if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
-    return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
-  }
-  function getRuleParameter(C, ruleId, parameter) {
-    if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.data?.[parameter] ?? null;
-    return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.data?.[parameter] ?? null;
-  }
-  function getRuleConditions(C, ruleId) {
-    if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.conditions ?? null;
-    return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.conditions ?? null;
-  }
-  function isSleeping(C) {
-    if (C.IsPlayer()) return modStorage.sleepState ?? false;
-    return C.LITTLISH_CLUB?.sleepState ?? false;
-  }
-  function inRoomWithCaregiver(C) {
-    let storage;
-    if (C.IsPlayer()) storage = modStorage;
-    else storage = C.LITTLISH_CLUB;
-    for (const c of ChatRoomCharacter) {
-      if (storage?.caregivers?.list?.includes(c.MemberNumber)) return true;
-    }
-    return false;
-  }
-  function inRoomWithMommy(C) {
-    let storage;
-    if (C.IsPlayer()) storage = modStorage;
-    else storage = C.LITTLISH_CLUB;
-    for (const c of ChatRoomCharacter) {
-      if (storage?.mommy?.id === c.MemberNumber) return true;
-    }
-    return false;
-  }
-  function inRoomWhereAbdlIsBlocked() {
-    return ChatRoomData?.BlockCategory?.includes("ABDL");
-  }
-  function registerButton(name, label, icon, fn) {
-    imageRedirects.set(`Icons/${name}.png`, icon);
-    buttonLabels.set(name, label);
-    let hooks = dialogMenuButtonClickHooks.get(name);
-    if (!hooks) {
-      hooks = [];
-      dialogMenuButtonClickHooks.set(name, hooks);
-    }
-    if (!hooks.includes(fn)) {
-      hooks.push(fn);
-    }
-  }
-  function alternativeBabyTalk(text) {
-    text = text.toLowerCase();
-    text = text.replaceAll("is", "ith");
-    text = text.replaceAll("are", "aw");
-    text = text.replaceAll("am", "amm");
-    text = text.replaceAll("no", "ni");
-    text = text.replaceAll("s", "th");
-    text = text.replaceAll("h", "hh");
-    const babyWords = ["ba-bye", "da-da", "ma-ma", "goo-goo", "wee", "ooh", "gu", "ga", "agu", "guga"];
-    text = text.replace(/(\w+)\b/g, (word) => word + (getRandomNumber(1, text.split(" ").length) === 1 ? " " + babyWords[Math.floor(Math.random() * babyWords.length)] : ""));
-    return text.trim();
-  }
-  function loadRules() {
-    const attempt = () => {
-      const item = InventoryGet(Player, Player.FocusGroup?.Name);
-      if (!item) return;
-      const itemName = item.Craft ? item.Craft.Name : item.Asset.Description;
-      if (item?.Asset?.Category?.includes("ABDL") && isRuleActive(Player, 1e3 /* PREVENT_TAKING_ABDL_ITEMS_OFF */)) {
-        chatSendActionMessage(
-          `Baby ${CharacterNickname(
-            Player
-          )} tried to remove ${itemName} without mommy's permission`
-        );
-      }
-    };
-    registerButton(
-      "LC_Remove",
-      `Blocked by ${MOD_NAME}`,
-      `Icons/Remove.png`,
-      attempt
-    );
-    registerButton(
-      "LC_Escape",
-      `Blocked by ${MOD_NAME}`,
-      `Icons/Escape.png`,
-      attempt
-    );
-    registerButton(
-      "LC_Struggle",
-      `Blocked by ${MOD_NAME}`,
-      `Icons/Struggle.png`,
-      attempt
-    );
-    registerButton(
-      "LC_Dismount",
-      `Blocked by ${MOD_NAME}`,
-      `Icons/Dismount.png`,
-      attempt
-    );
-    hookFunction("Player.CanChangeToPose", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) || isSleeping(Player)) return false;
-      return next(args);
-    });
-    hookFunction("PoseCanChangeUnaidedStatus", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (!args[0].IsPlayer()) return next(args);
-      if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) || isSleeping(Player)) return PoseChangeStatus.NEVER;
-      return next(args);
-    });
-    hookFunction("ChatRoomCanAttemptStand", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) || isSleeping(Player)) return false;
-      return next(args);
-    });
-    hookFunction("ChatAdminCanEdit", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (isRuleActive(Player, 1001 /* PREVENT_USING_ADMIN_POWERS */) && CurrentScreen === "ChatAdmin" && next(args) === true) {
-        return ChatAdminMode === "create";
-      }
-      return next(args);
-    });
-    hookFunction("ServerSend", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      const message = args[0];
-      const params = args[1];
-      if (message === "ChatRoomChat" && ["Chat", "Whisper"].includes(params.Type) && params.Content[0] !== "(") {
-        if (isSleeping(Player)) return chatSendLocal("You are asleep, use OOC to speak");
-        if (isRuleActive(Player, 1004 /* SPEAK_LIKE_BABY */)) {
-          if (getRuleParameter(Player, 1004 /* SPEAK_LIKE_BABY */, "altSpeech")) {
-            params.Content = alternativeBabyTalk(params.Content);
-          } else {
-            params.Content = SpeechTransformBabyTalk(params.Content);
-          }
-        }
-      }
-      return next(args);
-    });
-    hookFunction("DialogInventoryAdd", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      const [C, item, isWorn, sortOrder] = args;
-      const asset = item.Asset;
-      if (DialogMenuMode !== "permissions") {
-        if (!asset.Category?.includes("ABDL") && isRuleActive(Player, 1003 /* ABDL_INVENTORY */)) return;
-      }
-      next(args);
-    });
-    hookFunction("ShopLoad", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (!isRuleActive(Player, 1006 /* CANT_GO_SHOP_ALONE */)) return next(args);
-      window.ShopLCLeave = () => {
-        CommonSetScreen("Room", "MainHall");
-        DialogLeave();
-        delete window.ShopLeave;
-      };
-      window.ShopVendor = CharacterLoadNPC("NPC_Shop_Vendor");
-      InventoryWear(ShopVendor, "H1000", "Height", "Default");
-      ShopVendor.Stage = "LC_BabyCantShopAlone1";
-      ShopVendor.CurrentDialog = "Oh? Cutie, aren't you lost? Where are your parents?";
-      CharacterSetCurrent(ShopVendor);
-      DialogChangeMode("dialog");
-    });
-    hookFunction("ShopRun", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (!isRuleActive(Player, 1006 /* CANT_GO_SHOP_ALONE */)) return next(args);
-      DrawCharacter(Player, 0, 0, 1);
-      DrawCharacter(ShopVendor, 500, 0, 1);
-      DrawButton(1885, 25, 90, 90, "", "White", "Icons/Exit.png");
-      DrawButton(1885, 145, 90, 90, "", "White", "Icons/Character.png");
-    });
-    hookFunction("CharacterBuildDialog", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      const C = args[0];
-      if (C.CharacterID === "NPC_Shop_Vendor" && isRuleActive(Player, 1006 /* CANT_GO_SHOP_ALONE */)) {
-        const stage1 = "LC_BabyCantShopAlone1";
-        const stage2 = "LC_BabyCantShopAlone2";
-        const stage3 = "LC_BabyCantShopAlone3";
-        C.Dialog.push(
-          {
-            Stage: stage1,
-            NextStage: stage2,
-            Option: "Huh? I am adult!",
-            Result: "(She starts laughing)"
-          },
-          {
-            Stage: stage1,
-            Option: "(Leave shop)",
-            Function: "LCLeave();"
-          },
-          {
-            Stage: stage2,
-            NextStage: stage3,
-            Option: "I'm old enough to go to the shop!",
-            Result: "Baby, please leave this shop, it's for adults only."
-          },
-          {
-            Stage: stage2,
-            Option: "(Leave shop)",
-            Function: "LCLeave();"
-          },
-          {
-            Stage: stage3,
-            Option: "(Leave shop)",
-            Function: "LCLeave();"
-          }
-        );
-        return;
-      }
-      return next(args);
-    });
-    hookFunction("Player.CanChangeOwnClothes", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (isSleeping(Player)) return false;
-      return next(args);
-    });
-    hookFunction("Player.IsDeaf", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (isSleeping(Player)) return true;
-      return next(args);
-    });
-    hookFunction("Player.IsBlind", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (isSleeping(Player)) return true;
-      return next(args);
-    });
-    hookFunction("Player.GetDeafLevel", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (isSleeping(Player)) return 4;
-      return next(args);
-    });
-    hookFunction("Player.GetBlindLevel", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (isSleeping(Player)) return 3;
-      return next(args);
-    });
-    hookFunction("Player.CanInteract", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (isSleeping(Player)) return false;
-      return next(args);
-    });
-    hookFunction("InventoryGroupIsBlockedForCharacter", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (isSleeping(Player)) return true;
-      return next(args);
-    });
-    hookFunction("DialogClickExpressionMenu", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (isSleeping(Player)) return false;
-      return next(args);
-    });
-    hookFunction("CharacterAppearanceSetItem", 0 /* OBSERVE */, (args, next) => {
-      const createdItem = next(args);
-      const [C, Group, ItemAsset] = args;
-      if (C.IsPlayer() && ["ItemMouth", "ItemMouth2", "itemMouth3"].includes(Group) && ItemAsset.Name === "MilkBottle" && isRuleActive(Player, 1007 /* FALL_SLEEP_AFTER_MILK_BOTTLE */) && !isSleeping(Player)) {
-        CharacterSetFacialExpression(Player, "Blush", "High");
-        ChatRoomCharacterUpdate(Player);
-        setTimeout(() => {
-          document.body.style.filter = "blur(4px)";
-          CharacterSetFacialExpression(Player, "Eyes", "Dazed");
-          CharacterSetFacialExpression(Player, "Eyebrows", null);
-          ChatRoomCharacterUpdate(Player);
-          setTimeout(() => {
-            document.body.style.filter = null;
-            PoseSetActive(Player, "Kneel");
-            CharacterSetFacialExpression(Player, "Emoticon", "Sleep");
-            CharacterSetFacialExpression(Player, "Eyes", "Closed");
-            ChatRoomCharacterUpdate(Player);
-            modStorage.sleepState = true;
-            syncStorage();
-            chatSendLocal("You fall asleep");
-            chatSendActionMessage(`${getNickname(Player)} fell asleep, only spank or french kiss can wake <intensive> up`);
-          }, getRandomNumber(6e3, 8e3));
-        }, getRandomNumber(6e3, 1e4));
-      }
-      return createdItem;
-    });
-    ChatRoomRegisterMessageHandler({
-      Priority: 10,
-      Callback: (data, sender) => {
-        if (!sender) return false;
-        if (data.Type === "Activity" && !!data.Dictionary?.find) {
-          const activityName = data.Dictionary.find((e) => {
-            return !!e.ActivityName;
-          })?.ActivityName;
-          const target = getPlayer(
-            data.Dictionary.find((e) => {
-              return !!e.TargetCharacter;
-            })?.TargetCharacter
-          );
-          if (target.IsPlayer() && ["Spank", "FrenchKiss"].includes(activityName) && isSleeping(Player)) {
-            CharacterSetFacialExpression(Player, "Emoticon", null);
-            CharacterSetFacialExpression(Player, "Eyes", "Open");
-            ChatRoomCharacterUpdate(Player);
-            modStorage.sleepState = false;
-            syncStorage();
-          }
-        }
-        return false;
-      }
-    });
-    hookFunction("CharacterAppearanceGetCurrentValue", 1 /* ADD_BEHAVIOR */, (args, next) => {
-      const [C, Group, Type] = args;
-      if (!C || !(C.LITTLISH_CLUB || C.IsPlayer()) || Group !== "Height" || Type !== "Zoom" || (Player.VisualSettings?.ForceFullHeight ?? false)) return next(args);
-      const sizeMultiplier = getRuleParameter(C, 1008 /* DECREASE_SIZE */, "multiplier") ?? 1;
-      if (sizeMultiplier > 1 || sizeMultiplier < 0.25) return next(args);
-      if (isRuleActive(C, 1008 /* DECREASE_SIZE */)) {
-        return next(args) * sizeMultiplier;
-      }
-      return next(args);
-    });
-    hookFunction("CommonDrawAppearanceBuild", 1 /* ADD_BEHAVIOR */, (args, next) => {
-      args[0].HeightRatio = CharacterAppearanceGetCurrentValue(args[0], "Height", "Zoom");
-      return next(args);
-    });
-    hookFunction("DrawCharacter", 1 /* ADD_BEHAVIOR */, (args, next) => {
-      args[0].HeightRatio = CharacterAppearanceGetCurrentValue(args[0], "Height", "Zoom");
-      return next(args);
-    });
-    hookFunction("DialogMenuButtonBuild", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      next(args);
-      const C = args[0];
-      const item = InventoryGet(C, C?.FocusGroup?.Name);
-      if (C.IsPlayer() && item && item?.Asset?.Category?.includes("ABDL") && isRuleActive(Player, 1e3 /* PREVENT_TAKING_ABDL_ITEMS_OFF */)) {
-        {
-          const removeIndex = DialogMenuButton.indexOf("Remove");
-          const struggleIndex = DialogMenuButton.indexOf("Struggle");
-          const dismountIndex = DialogMenuButton.indexOf("Dismount");
-          const escapeIndex = DialogMenuButton.indexOf("Escape");
-          if (removeIndex >= 0) {
-            DialogMenuButton[removeIndex] = "LC_Remove";
-          }
-          if (struggleIndex >= 0) {
-            DialogMenuButton[struggleIndex] = "LC_Struggle";
-          }
-          if (dismountIndex >= 0) {
-            DialogMenuButton[dismountIndex] = "LC_Dismount";
-          }
-          if (escapeIndex >= 0) {
-            DialogMenuButton[escapeIndex] = "LC_Escape";
-          }
-        }
-      }
-    });
-    hookFunction("DialogItemClick", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      const C = CharacterGetCurrent();
-      const focusGroup = C?.FocusGroup;
-      const item = InventoryGet(C, focusGroup?.Name);
-      const clickedItem = args[0];
-      if (DialogMenuMode !== "items") return next(args);
-      if (!item) return next(args);
-      if (C.IsPlayer() && item && item?.Asset?.Category?.includes("ABDL") && isRuleActive(Player, 1e3 /* PREVENT_TAKING_ABDL_ITEMS_OFF */)) return;
-      return next(args);
-    });
-    hookFunction("InterfaceTextGet", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      const label = buttonLabels.get(args[0]?.replace("DialogMenu", ""));
-      if (label) return label;
-      return next(args);
-    });
-    hookFunction("DrawGetImage", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      const redirect = imageRedirects.get(args[0]);
-      if (redirect) {
-        args[0] = redirect;
-      }
-      return next(args);
-    });
-    hookFunction("DialogIsMenuButtonDisabled", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (args[0]?.startsWith("LC_")) return true;
-      return next(args);
-    });
-    hookFunction("DialogMenuButtonClick", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      const C = CharacterGetCurrent();
-      for (let I = 0; I < DialogMenuButton.length; I++) {
-        if (MouseIn(1885 - I * 110, 15, 90, 90) && C) {
-          const hooks = dialogMenuButtonClickHooks.get(DialogMenuButton[I]);
-          if (hooks?.some((hook) => hook(C))) return true;
-        }
-      }
-      return next(args);
-    });
-  }
-
-  // src/subscreens/globalMenu.ts
-  var GlobalMenu = class extends BaseSubscreen {
-    get name() {
-      return "Global";
-    }
-    get icon() {
-      return `Icons/General.png`;
-    }
-    load() {
-      this.createText({
-        text: this.name,
-        x: 100,
-        y: 60,
-        fontSize: 10
-      });
-      if (InformationSheetSelection.IsPlayer()) {
-        this.createText({
-          text: `Mod Data Size: ${Math.round(new TextEncoder().encode(Player.ExtensionSettings?.LITTLISH_CLUB ?? "").byteLength / 100) / 10}KB`,
-          x: 150,
-          y: 240,
-          fontSize: 6
-        });
-        const resetBtn = this.createButton({
-          text: "Reset settings",
-          x: 100,
-          y: 825,
-          width: 500,
-          padding: 2,
-          icon: "Icons/ServiceBell.png"
-        });
-        if (isRuleActive(Player, 1009 /* DISABLE_RESET_SETTINGS_BUTTON */)) resetBtn.classList.add("lcDisabled");
-        resetBtn.addEventListener("click", () => {
-          if (isRuleActive(Player, 1009 /* DISABLE_RESET_SETTINGS_BUTTON */)) return;
-          resetStorage();
-          this.exit();
-        });
-      }
-    }
-  };
-
-  // src/subscreens/caregiversPermissionsMenu.ts
-  var CaregiversPermissionsMenu = class extends BaseSubscreen {
-    get name() {
-      return "Family > Caregivers permissions";
-    }
-    load() {
-      this.createText({
-        text: this.name,
-        x: 100,
-        y: 60,
-        fontSize: 10
-      });
-      caregiverAccessRightsList.forEach((p, i) => {
-        const btn = this.createButton({
-          text: p.name,
-          width: 1200,
-          x: 400,
-          y: 250 + 110 * i,
-          padding: 2,
-          style: isCaregiverAccessRightEnabled(InformationSheetSelection, p.id) ? "green" : "default"
-        });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_CAREGIVERS_ACCESS_RIGHTS" /* MANAGE_CAREGIVERS_ACCESS_RIGHTS */)) {
-          btn.classList.add("lcDisabled");
-        }
-        btn.addEventListener("click", () => {
-          if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_CAREGIVERS_ACCESS_RIGHTS" /* MANAGE_CAREGIVERS_ACCESS_RIGHTS */)) {
-            return btn.classList.add("lcDisabled");
-          }
-          if (InformationSheetSelection.IsPlayer()) {
-            turnCaregiverAccessRight(p.id);
-          } else {
-            chatSendModMessage("turnCaregiversAccessRight", {
-              accessRightId: p.id
-            }, InformationSheetSelection.MemberNumber);
-          }
-          btn.setAttribute("data-lc-style", btn.getAttribute("data-lc-style") === "default" ? "green" : "default");
-        });
-      });
-    }
-  };
-
-  // src/subscreens/familyMenu.ts
-  var FamilyMenu = class extends BaseSubscreen {
-    get name() {
-      return "Family";
-    }
-    get icon() {
-      return `Assets/Female3DCG/Emoticon/Hearts/Icon.png`;
-    }
-    load() {
-      this.createText({
-        text: this.name,
-        x: 100,
-        y: 60,
-        fontSize: 10
-      });
-      const caregiversInput = this.createInput({
-        placeholder: "Caregivers member numbers",
-        value: getCaregiversOf(InformationSheetSelection).join(", "),
-        x: 1e3,
-        y: 200,
-        width: 850,
-        height: 600,
-        textArea: true
-      });
-      if (!hasAccessRightTo(Player, InformationSheetSelection, "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */)) {
-        caregiversInput.classList.add("lcDisabled");
-      }
-      caregiversInput.addEventListener("change", () => {
-        if (!hasAccessRightTo(Player, InformationSheetSelection, "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */)) {
-          return caregiversInput.classList.add("lcDisabled");
-        }
-        const list = caregiversInput.value.split(",").map((c) => parseInt(c.trim())).filter((c) => typeof c === "number" && !Number.isNaN(c));
-        if (InformationSheetSelection.IsPlayer()) {
-          if (!modStorage.caregivers) modStorage.caregivers = {};
-          modStorage.caregivers.list = list;
-        } else {
-          chatSendModMessage("changeCaregiversList", {
-            list
-          }, InformationSheetSelection.MemberNumber);
-        }
-      });
-      const caregiversPermissionsBtn = this.createButton({
-        text: "Caregivers permissions",
-        x: 1e3,
-        y: 825,
-        width: 850,
-        padding: 2
-      });
-      caregiversPermissionsBtn.addEventListener("click", () => {
-        this.setSubscreen(new CaregiversPermissionsMenu());
-      });
-      this.createText({
-        text: `Mommy: ${hasMommy(InformationSheetSelection) ? `${getMommyOf(InformationSheetSelection).name} (${getMommyOf(InformationSheetSelection).id})` : "-"}`,
-        x: 150,
-        y: 300
-      }).style.fontWeight = "bold";
-      const checkBox = this.createCheckbox({
-        text: "Prevent baby from changing caregivers list",
-        x: 150,
-        y: 400,
-        width: 600,
-        isChecked: InformationSheetSelection.IsPlayer() ? !modStorage.caregivers?.canChangeList : !InformationSheetSelection.LITTLISH_CLUB?.caregivers?.canChangeList
-      });
-      if (!hasAccessRightTo(Player, InformationSheetSelection, "TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST" /* TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST */)) {
-        checkBox.classList.add("lcDisabled");
-      }
-      checkBox.addEventListener("change", () => {
-        if (!hasAccessRightTo(Player, InformationSheetSelection, "TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST" /* TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST */)) {
-          return checkBox.classList.add("lcDisabled");
-        }
-        if (InformationSheetSelection.IsPlayer()) {
-          if (!modStorage.caregivers) modStorage.caregivers = {};
-          modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
-        } else {
-          chatSendModMessage("turnCanChangeCaregiversList", null, InformationSheetSelection.MemberNumber);
-        }
-      });
-    }
-    exit() {
-      syncStorage();
-      this.setSubscreen(new MainMenu());
-    }
-  };
-
-  // src/subscreens/ruleSettingsMenu.ts
-  var RuleSettingsMenu = class extends BaseSubscreen {
-    rule;
-    ruleSettings;
-    canChangeSettings = () => hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */) && (!isRuleStrict(InformationSheetSelection, this.rule.id) || isMommyOf(Player, InformationSheetSelection) || InformationSheetSelection.IsPlayer() && isExploringModeEnabled());
-    get name() {
-      return `Rules > ${this.rule.name}`;
-    }
-    constructor(rule) {
-      super();
-      this.rule = rule;
-      const storage = InformationSheetSelection.IsPlayer() ? modStorage : InformationSheetSelection.LITTLISH_CLUB;
-      this.ruleSettings = storage.rules?.list?.find((r) => r.id === this.rule.id) ?? {
-        id: this.rule.id,
-        state: false,
-        strict: false,
-        changedBy: Player.MemberNumber,
-        ts: Date.now()
-      };
-      this.ruleSettings = JSON.parse(JSON.stringify(this.ruleSettings));
-    }
-    load() {
-      this.createText({
-        text: this.name,
-        x: 100,
-        y: 60,
-        fontSize: 10
-      });
-      const description = this.createText({
-        text: `${this.rule.description}`,
-        x: 1e3,
-        y: 250,
-        width: 800,
-        fontSize: 6,
-        withBackground: true,
-        padding: 2
-      });
-      description.style.textAlign = "center";
-      this.rule.data?.forEach((param, i) => {
-        if (param.type !== "checkbox") {
-          this.createText({
-            text: param.text + ":",
-            x: 1e3,
-            y: 420 + i * 140,
-            width: 400,
-            fontSize: 5
-          });
-        }
-        if (param.type === "number") {
-          const input = this.createInput({
-            value: getRuleParameter(InformationSheetSelection, this.rule.id, param.name)?.toString() ?? "",
-            placeholder: param.type,
-            x: 1350,
-            y: 420,
-            width: 500,
-            height: 80
-          });
-          input.setAttribute("type", param.type);
-          if (param.min) input.setAttribute("min", param.min);
-          if (param.max) input.setAttribute("max", param.max);
-          if (param.step) input.setAttribute("step", param.step);
-          if (!this.canChangeSettings()) {
-            input.classList.add("lcDisabled");
-          }
-          input.addEventListener("change", () => {
-            if (!this.canChangeSettings()) {
-              return input.classList.add("lcDisabled");
-            }
-            if (param.min && parseFloat(input.value) < param.min) return;
-            if (param.max && parseFloat(input.value) > param.max) return;
-            if (!this.ruleSettings.data) this.ruleSettings.data = {};
-            this.ruleSettings.data[param.name] = param.type === "number" ? parseFloat(input.value) : input.value;
-          });
-        } else if (param.type === "checkbox") {
-          const checkbox = this.createCheckbox({
-            x: 1e3,
-            y: 440,
-            width: 800,
-            isChecked: !!getRuleParameter(InformationSheetSelection, this.rule.id, param.name),
-            text: param.text
-          });
-          if (!this.canChangeSettings()) {
-            checkbox.classList.add("lcDisabled");
-          }
-          checkbox.addEventListener("change", () => {
-            if (!this.canChangeSettings()) {
-              return checkbox.classList.add("lcDisabled");
-            }
-            if (!this.ruleSettings.data) this.ruleSettings.data = {};
-            this.ruleSettings.data[param.name] = checkbox.checked;
-          });
-        }
-      });
-      const turnStateBtn = this.createButton({
-        text: isRuleEnabled(InformationSheetSelection, this.rule.id) ? "State: Enabled" : "State: Disabled",
-        x: 150,
-        y: 250,
-        width: 600,
-        padding: 2
-      });
-      if (!this.canChangeSettings()) {
-        turnStateBtn.classList.add("lcDisabled");
-      }
-      turnStateBtn.addEventListener("click", () => {
-        if (!this.canChangeSettings()) {
-          return turnStateBtn.classList.add("lcDisabled");
-        }
-        this.ruleSettings.state = !this.ruleSettings.state;
-        turnStateBtn.textContent = this.ruleSettings.state ? "State: Enabled" : "State: Disabled";
-      });
-      const turnStrictBtn = this.createButton({
-        text: `Strict: ${this.ruleSettings.strict ? "Yes" : "No"}`,
-        x: 150,
-        y: 365,
-        width: 600,
-        padding: 2
-      });
-      if (!hasAccessRightTo(Player, InformationSheetSelection, "TURN_RULE_STRICT_MODE" /* TURN_RULE_STRICT_MODE */)) {
-        turnStrictBtn.classList.add("lcDisabled");
-      }
-      turnStrictBtn.addEventListener("click", () => {
-        if (!hasAccessRightTo(Player, InformationSheetSelection, "TURN_RULE_STRICT_MODE" /* TURN_RULE_STRICT_MODE */)) {
-          return turnStrictBtn.classList.add("lcDisabled");
-        }
-        this.ruleSettings.strict = !this.ruleSettings.strict;
-        turnStrictBtn.textContent = this.ruleSettings.strict ? "Strict: Yes" : "Strict: No";
-      });
-      const triggerConditionsBtn = this.createButton({
-        text: (this.ruleSettings.conditions?.type ?? "any") === "any" ? "Trigger Conditions: Any" : "Trigger Conditions All",
-        x: 150,
-        y: 525,
-        width: 600,
-        padding: 2
-      });
-      if (!this.canChangeSettings()) {
-        triggerConditionsBtn.classList.add("lcDisabled");
-      }
-      triggerConditionsBtn.addEventListener("click", () => {
-        if (!this.canChangeSettings()) {
-          return triggerConditionsBtn.classList.add("lcDisabled");
-        }
-        if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
-        this.ruleSettings.conditions.type = (this.ruleSettings.conditions?.type ?? "any") === "any" ? "all" : "any";
-        triggerConditionsBtn.textContent = (this.ruleSettings.conditions?.type ?? "any") === "any" ? "Trigger Conditions: Any" : "Trigger Conditions All";
-      });
-      const whenCheckbox = this.createCheckbox({
-        text: "When",
-        x: 150,
-        y: 650,
-        isChecked: !!this.ruleSettings.conditions?.whenInRoomWithRole
-      });
-      if (!this.canChangeSettings()) {
-        whenCheckbox.classList.add("lcDisabled");
-      }
-      const inRoomBtn = this.createButton({
-        text: this.ruleSettings.conditions?.whenInRoomWithRole?.inRoom ?? true ? "in room" : "not in room",
-        x: 395,
-        y: 650,
-        width: 180,
-        height: 65,
-        fontSize: 3
-      });
-      if (!this.canChangeSettings()) {
-        inRoomBtn.classList.add("lcDisabled");
-      }
-      inRoomBtn.addEventListener("click", () => {
-        if (!this.canChangeSettings()) {
-          return inRoomBtn.classList.add("lcDisabled");
-        }
-        if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
-        if (!this.ruleSettings.conditions.whenInRoomWithRole) this.ruleSettings.conditions.whenInRoomWithRole = {};
-        this.ruleSettings.conditions.whenInRoomWithRole.inRoom = !(this.ruleSettings.conditions.whenInRoomWithRole.inRoom ?? true);
-        inRoomBtn.textContent = this.ruleSettings.conditions?.whenInRoomWithRole?.inRoom ?? true ? "in room" : "not in room";
-      });
-      this.createText({
-        text: "with role",
-        x: 600,
-        y: 650,
-        fontSize: 5
-      });
-      const caregiverBtn = this.createButton({
-        text: this.ruleSettings.conditions?.whenInRoomWithRole?.role ?? "caregiver",
-        x: 805,
-        y: 650,
-        width: 180,
-        height: 65,
-        fontSize: 3
-      });
-      if (!this.canChangeSettings()) {
-        caregiverBtn.classList.add("lcDisabled");
-      }
-      caregiverBtn.addEventListener("click", () => {
-        if (!this.canChangeSettings()) {
-          caregiverBtn.classList.add("lcDisabled");
-        }
-        if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
-        if (!this.ruleSettings.conditions.whenInRoomWithRole) this.ruleSettings.conditions.whenInRoomWithRole = {};
-        this.ruleSettings.conditions.whenInRoomWithRole.role = (this.ruleSettings.conditions.whenInRoomWithRole.role ?? "caregiver") === "caregiver" ? "mommy" : "caregiver";
-        caregiverBtn.textContent = this.ruleSettings.conditions?.whenInRoomWithRole?.role ?? "caregiver";
-      });
-      this.createText({
-        text: "and higher",
-        x: 1e3,
-        y: 650,
-        fontSize: 5
-      });
-      const whenCheckbox2 = this.createCheckbox({
-        text: "When in room where ABDL is",
-        x: 150,
-        y: 750,
-        isChecked: !!this.ruleSettings.conditions?.whenInRoomWhereAbdl
-      });
-      if (!this.canChangeSettings()) {
-        whenCheckbox2.classList.add("lcDisabled");
-      }
-      const isBlockedBtn = this.createButton({
-        text: this.ruleSettings.conditions?.whenInRoomWhereAbdl?.blocked ?? true ? "blocked" : "not blocked",
-        x: 930,
-        y: 750,
-        width: 200,
-        height: 65,
-        fontSize: 3
-      });
-      if (!this.canChangeSettings()) {
-        isBlockedBtn.classList.add("lcDisabled");
-      }
-      isBlockedBtn.addEventListener("click", () => {
-        if (!this.canChangeSettings()) {
-          return isBlockedBtn.classList.add("lcDisabled");
-        }
-        if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
-        if (!this.ruleSettings.conditions.whenInRoomWhereAbdl) this.ruleSettings.conditions.whenInRoomWhereAbdl = {};
-        this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked = !(this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked ?? true);
-        isBlockedBtn.textContent = this.ruleSettings.conditions?.whenInRoomWhereAbdl?.blocked ?? true ? "blocked" : "not blocked";
-      });
-      const saveChangesBtn = this.createButton({
-        text: "Save Changes",
-        x: 1520,
-        y: 790,
-        width: 400,
-        height: 150,
-        style: "green"
-      });
-      saveChangesBtn.style.fontWeight = "bold";
-      if (!this.canChangeSettings()) {
-        saveChangesBtn.classList.add("lcDisabled");
-      }
-      saveChangesBtn.addEventListener("click", () => {
-        if (!this.canChangeSettings()) return saveChangesBtn.classList.add("lcDisabled");
-        if (whenCheckbox.checked) {
-          if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
-          if (!this.ruleSettings.conditions.whenInRoomWithRole) this.ruleSettings.conditions.whenInRoomWithRole = {};
-          if (typeof this.ruleSettings.conditions.whenInRoomWithRole.inRoom !== "boolean") {
-            this.ruleSettings.conditions.whenInRoomWithRole.inRoom = true;
-          }
-          if (typeof this.ruleSettings.conditions.whenInRoomWithRole.role !== "string") {
-            this.ruleSettings.conditions.whenInRoomWithRole.role = "caregiver";
-          }
-        } else delete this.ruleSettings.conditions?.whenInRoomWithRole;
-        if (whenCheckbox2.checked) {
-          if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
-          if (!this.ruleSettings.conditions.whenInRoomWhereAbdl) this.ruleSettings.conditions.whenInRoomWhereAbdl = {};
-          if (typeof this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked !== "boolean") {
-            this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked = true;
-          }
-        } else delete this.ruleSettings.conditions?.whenInRoomWhereAbdl;
-        if (InformationSheetSelection.IsPlayer()) {
-          if (!modStorage.rules) modStorage.rules = {};
-          if (!modStorage.rules.list) modStorage.rules.list = [];
-          let r = modStorage.rules.list.find((d) => d.id === this.rule.id);
-          if (r) {
-            for (let i in r) delete r[i];
-            for (let i in this.ruleSettings) r[i] = this.ruleSettings[i];
-          } else {
-            modStorage.rules.list.push(this.ruleSettings);
-          }
-          syncStorage();
-        } else {
-          let dataToSend = {
-            id: this.ruleSettings.id,
-            state: this.ruleSettings.state,
-            strict: this.ruleSettings.strict
-          };
-          if (this.ruleSettings.data) dataToSend.data = this.ruleSettings.data;
-          if (this.ruleSettings.conditions) dataToSend.conditions = this.ruleSettings.conditions;
-          chatSendModMessage("changeRuleSettings", dataToSend, InformationSheetSelection.MemberNumber);
-        }
-        this.exit();
-      });
-    }
-  };
-
-  // src/subscreens/rulesMenu.ts
-  var RulesMenu = class extends BaseSubscreen {
-    get name() {
-      return "Rules";
-    }
-    get icon() {
-      return `Icons/Management.png`;
-    }
-    load() {
-      this.createText({
-        text: this.name,
-        x: 100,
-        y: 60,
-        fontSize: 10
-      });
-      rulesList.forEach((rule, i) => {
-        const ruleBtn = this.createButton({
-          text: rule.name,
-          x: i > 4 ? 150 + 800 + 100 : 150,
-          y: i > 4 ? 300 + (i - 5) * 115 : 300 + i * 115,
-          width: 800,
-          padding: 2,
-          style: isRuleEnabled(InformationSheetSelection, rule.id) ? "green" : "default"
-        });
-        ruleBtn.style.fontWeight = "bold";
-        ruleBtn.addEventListener("click", () => {
-          this.setSubscreen(new RuleSettingsMenu(rule));
-        });
-      });
-    }
-    update() {
-      this.unload();
-      this.load();
-    }
-    exit() {
-      this.setSubscreen(new MainMenu());
-    }
-  };
-
-  // src/subscreens/cyberDiaperChangeColorMenu.ts
-  var CyberDiaperChangeColorMenu = class extends BaseSubscreen {
-    canvasCharacter;
-    cyberDiaperSettings;
-    get name() {
-      return "Cyber Diaper > Settings > Change Color";
-    }
-    constructor(cyberDiaperSettings) {
-      super();
-      this.cyberDiaperSettings = cyberDiaperSettings;
-    }
-    run() {
-      if (this.canvasCharacter) DrawCharacter(this.canvasCharacter, 1200, 250, 0.7, false);
-    }
-    async load() {
-      const asset = AssetGet(
-        Player.AssetFamily,
-        "ItemPelvis",
-        getCyberDiaperAssetName(this.cyberDiaperSettings.model ?? "BULKY_DIAPER" /* BULKY_DIAPER */)
-      );
-      if (!ItemColorLayerNames) {
-        ItemColorLayerNames = new TextCache(`Assets/${Player.AssetFamily}/LayerNames.csv`);
-        const loadingText = this.createText({
-          text: "Loading LayerNames.csv...",
-          x: 400,
-          y: 400,
-          width: 1200,
-          fontSize: 6
-        });
-        loadingText.style.textAlign = "center";
-        await waitFor(() => ItemColorLayerNames.loaded);
-        loadingText.remove();
-      }
-      if (!this.cyberDiaperSettings.color) this.cyberDiaperSettings.color = JSON.parse(JSON.stringify(asset.DefaultColor));
-      this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter2");
-      this.canvasCharacter.Appearance = serverAppearanceBundleToAppearance(
-        this.canvasCharacter.AssetFamily,
-        ServerAppearanceBundle(InformationSheetSelection.Appearance)
-      );
-      InventoryWear(this.canvasCharacter, asset.Name, asset.Group.Name, this.cyberDiaperSettings.color);
-      CharacterRefresh(this.canvasCharacter);
-      this.createText({
-        text: this.name,
-        x: 100,
-        y: 60,
-        fontSize: 10
-      });
-      let layerN = 0;
-      asset.Layer.forEach((l) => {
-        if (!l.AllowColorize || !ItemColorLayerNames.cache[`${asset.Group.Name}${asset.Name}${l.Name}`]) return;
-        const n = layerN;
-        const layerName = this.createButton({
-          text: ItemColorLayerNames.cache[`${asset.Group.Name}${asset.Name}${l.Name}`],
-          x: 100,
-          y: 220 + 100 * layerN,
-          width: 500,
-          height: 80
-        });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
-          layerName.classList.add("lcDisabled");
-        }
-        layerName.addEventListener("click", () => {
-          if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
-            return layerName.classList.add("lcDisabled");
-          }
-          const defaultColor = JSON.parse(JSON.stringify(asset.DefaultColor[n]));
-          InventoryGet(this.canvasCharacter, asset.Group.Name).Color[n] = defaultColor;
-          CharacterRefresh(this.canvasCharacter);
-          this.cyberDiaperSettings.color[n] = defaultColor;
-          layerColor.value = asset.DefaultColor[n];
-        });
-        const layerColor = this.createInput({
-          value: this.cyberDiaperSettings.color[layerN],
-          x: 640,
-          y: 220 + 100 * layerN,
-          width: 200,
-          height: 80,
-          padding: 1
-        });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
-          layerColor.classList.add("lcDisabled");
-        }
-        layerColor.setAttribute("type", "color");
-        layerColor.addEventListener("change", () => {
-          if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
-            return layerColor.classList.add("lcDisabled");
-          }
-          InventoryGet(this.canvasCharacter, asset.Group.Name).Color[n] = layerColor.value;
-          CharacterRefresh(this.canvasCharacter);
-          this.cyberDiaperSettings.color[n] = layerColor.value;
-        });
-        layerN++;
-      });
-    }
-    exit() {
-      this.setSubscreen(new CyberDiaperSettingsMenu(this.cyberDiaperSettings));
-    }
-  };
 
   // node_modules/lodash-es/_freeGlobal.js
   var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
@@ -3298,6 +1961,1446 @@ These are the changes in the last 4 days.`);
   }
   var cloneDeep_default = cloneDeep;
 
+  // src/modules/storage.ts
+  var modStorage;
+  function initStorage() {
+    const data = {
+      version: MOD_VERSION
+    };
+    if (typeof Player.ExtensionSettings.LITTLISH_CLUB === "string") {
+      modStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.LITTLISH_CLUB)) ?? data;
+    } else modStorage = data;
+    Object.keys(data).forEach((key) => {
+      if (modStorage[key] === void 0) {
+        modStorage[key] = data[key];
+      }
+    });
+    migrateModStorage();
+    try {
+      const bccStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.BCC));
+      if ((bccStorage?.abdl?.mommy || bccStorage?.abdl?.caretakers || bccStorage?.abdl?.notes?.list) && !findModByName("BCC")) bccAbdlPartSync(bccStorage.abdl);
+    } catch (e) {
+    }
+    chatSendModMessage("syncStorage", {
+      storage: modStorage
+    });
+    hookFunction("ChatRoomMessage", 1 /* ADD_BEHAVIOR */, (args, next) => {
+      const message = args[0];
+      const sender = getPlayer(message.Sender);
+      if (!sender) return next(args);
+      if (message.Content === "lcClubMsg" && !sender.IsPlayer()) {
+        const msg = message.Dictionary.msg;
+        const data2 = message.Dictionary.data;
+        if (msg === "request") {
+          if (typeof data2.requestId !== "number" || typeof data2.message !== "string") return;
+          handleRequest(data2.requestId, data2.message, data2.data, sender);
+        }
+        if (msg === "requestResponse") {
+          if (typeof data2.requestId !== "number") return;
+          handleRequestResponse(data2.requestId, data2.data);
+        }
+        if (msg === "syncStorage") {
+          if (!sender.LITTLISH_CLUB) {
+            chatSendModMessage("syncStorage", {
+              storage: modStorage
+            }, sender.MemberNumber);
+          }
+          sender.LITTLISH_CLUB = data2.storage;
+          if (InformationSheetSelection && InformationSheetSelection.MemberNumber === sender.MemberNumber) {
+            currentSubscreen.update();
+          }
+        }
+        if (msg === "addBaby" && !hasMommy(Player) && modStorage.requestReciviedFrom?.id !== sender.MemberNumber) {
+          modStorage.requestReciviedFrom = {
+            name: CharacterNickname(sender),
+            id: sender.MemberNumber
+          };
+          syncStorage();
+          chatSendLocal(`${getNickname(sender)} (${sender.MemberNumber}) wants to become your mommy, open Littlish Club menu`);
+        }
+        if (msg === "turnCanChangeCaregiversList" && hasAccessRightTo(sender, Player, "TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST" /* TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST */)) {
+          if (!modStorage.caregivers) modStorage.caregivers = {};
+          modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
+          addLog(
+            `${getNickname(sender)} (${sender.MemberNumber}) ${modStorage.caregivers.canChangeList ? "allowed" : "forbade"} ${getNickname(Player)} to change caregivers list`,
+            false
+          );
+          syncStorage();
+        }
+        if (msg === "changeCaregiversList" && hasAccessRightTo(sender, Player, "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */)) {
+          if (!Array.isArray(data2?.list)) return;
+          if (!modStorage.caregivers) modStorage.caregivers = {};
+          modStorage.caregivers.list = data2.list;
+          chatSendLocal(`${getNickname(sender)} (${sender.MemberNumber}) changed your caregivers list`);
+          addLog(
+            `${getNickname(sender)} (${sender.MemberNumber}) changed caregivers list`,
+            false
+          );
+          syncStorage();
+        }
+        if (msg === "turnCaregiversAccessRight" && hasAccessRightTo(sender, Player, "MANAGE_CAREGIVERS_ACCESS_RIGHTS" /* MANAGE_CAREGIVERS_ACCESS_RIGHTS */)) {
+          if (!caregiverAccessRightsList.find((r) => r.id === data2?.accessRightId)) return;
+          turnCaregiverAccessRight(data2.accessRightId);
+          const _message = `${getNickname(sender)} (${sender.MemberNumber}) turned ${isCaregiverAccessRightEnabled(Player, data2.accessRightId) ? "on" : "off"} caregiver access right "${caregiverAccessRightsList.find((r) => r.id === data2.accessRightId).name}"`;
+          addLog(
+            _message,
+            false
+          );
+          syncStorage();
+          chatSendLocal(_message);
+        }
+        if (msg === "changeRuleSettings" && hasAccessRightTo(sender, Player, "MANAGE_RULES" /* MANAGE_RULES */)) {
+          if (!rulesList.find((r2) => r2.id === data2?.id)) return;
+          if (isRuleStrict(Player, data2.id) && !isMommyOf(sender, Player)) return;
+          if (!modStorage.rules) modStorage.rules = {};
+          if (!modStorage.rules.list) modStorage.rules.list = [];
+          let r = modStorage.rules.list.find((d) => d.id === data2.id);
+          if (r) {
+            if (typeof data2.state === "boolean") r.state = data2.state;
+            if (typeof data2.strict === "boolean" && hasAccessRightTo(sender, Player, "TURN_RULE_STRICT_MODE" /* TURN_RULE_STRICT_MODE */)) {
+              r.strict = data2.strict;
+            }
+            validateRuleData(r, data2);
+            validateRuleConditions(r, data2);
+            r.changedBy = sender.MemberNumber;
+            r.ts = Date.now();
+          } else {
+            let d = {
+              id: data2.id,
+              state: typeof data2.state === "boolean" ? data2.state : false,
+              strict: typeof data2.strict === "boolean" && hasAccessRightTo(sender, Player, "TURN_RULE_STRICT_MODE" /* TURN_RULE_STRICT_MODE */) ? data2.strict : false,
+              changedBy: sender.MemberNumber,
+              ts: Date.now()
+            };
+            validateRuleData(d, data2);
+            validateRuleConditions(d, data2);
+            modStorage.rules.list.push(d);
+          }
+          const _message = `${getNickname(sender)} (${sender.MemberNumber}) changed settings of "${rulesList.find((r2) => r2.id === data2?.id).name}" rule`;
+          addLog(
+            _message,
+            false
+          );
+          syncStorage();
+          chatSendLocal(_message);
+        }
+        if (msg === "addNote") {
+          if (typeof data2?.text !== "string" || data2.text.trim() === "") return;
+          if (!modStorage.notes) modStorage.notes = {};
+          if (!modStorage.notes.list) modStorage.notes.list = [];
+          const note = {
+            text: data2.text,
+            author: {
+              name: CharacterNickname(sender),
+              id: sender.MemberNumber
+            },
+            ts: Date.now()
+          };
+          modStorage.notes.list.push(note);
+          const _message = `${getNickname(sender)} (${sender.MemberNumber}) added note: ${data2.text}`;
+          addLog(_message, false);
+          syncStorage();
+          chatSendLocal(_message);
+        }
+        if (msg === "deleteNote") {
+          if (typeof data2?.key !== "number") return;
+          const note = modStorage.notes?.list?.find((n, i) => i === data2.key - 1);
+          if (!note) return;
+          if (note.author.id !== sender.MemberNumber && !hasAccessRightTo(sender, Player, "DELETE_NOTES" /* DELETE_NOTES */)) return;
+          modStorage.notes.list.splice(data2.key - 1, 1);
+          const _message = `${getNickname(sender)} (${sender.MemberNumber}) deleted note: ${note.text}`;
+          addLog(_message, false);
+          syncStorage();
+          chatSendLocal(_message);
+        }
+        if (msg === "changeCyberDiaperSettings" && hasAccessRightTo(sender, Player, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
+          const { name, description, model, locked, color, changePermission } = data2;
+          if (!modStorage.cyberDiaper) {
+            modStorage.cyberDiaper = {};
+            chatSendLocal(`${getNickname(sender)} bought cyber diaper for you`);
+          }
+          if (typeof name === "string") modStorage.cyberDiaper.name = name;
+          if (typeof description === "string") modStorage.cyberDiaper.description = description;
+          if (typeof model === "string") modStorage.cyberDiaper.model = model;
+          if (typeof locked === "boolean") modStorage.cyberDiaper.locked = locked;
+          if (Array.isArray(color)) modStorage.cyberDiaper.color = color;
+          if (Object.values(CyberDiaperChangePermission).includes(changePermission)) modStorage.cyberDiaper.changePermission = changePermission;
+          const _message = `${getNickname(sender)} (${sender.MemberNumber}) changed cyber diaper's settings`;
+          addLog(_message, false);
+          syncStorage();
+          updateDiaperItem();
+          chatSendLocal(_message);
+        }
+      }
+      next(args);
+    });
+    hookFunction("ChatRoomSync", 1 /* ADD_BEHAVIOR */, (args, next) => {
+      next(args);
+      chatSendModMessage("syncStorage", {
+        storage: modStorage
+      });
+    });
+  }
+  function validateRuleConditions(r, data) {
+    console.log(r, data);
+    if (data.conditions) {
+      if (!r.conditions) r.conditions = {};
+      if (["any", "all"].includes(data.conditions.type)) r.conditions.type = data.conditions.type;
+      else r.conditions.type = "any";
+      if (data.conditions.whenInRoomWithRole) {
+        if (!r.conditions.whenInRoomWithRole) r.conditions.whenInRoomWithRole = {};
+        if (typeof data.conditions.whenInRoomWithRole?.inRoom === "boolean") {
+          r.conditions.whenInRoomWithRole.inRoom = data.conditions.whenInRoomWithRole.inRoom;
+        }
+        if (["mommy", "caregiver"].includes(data.conditions.whenInRoomWithRole?.role)) {
+          r.conditions.whenInRoomWithRole.role = data.conditions.whenInRoomWithRole.role;
+        }
+      } else delete r.conditions.whenInRoomWithRole;
+      if (data.conditions.whenInRoomWhereAbdl) {
+        if (!r.conditions.whenInRoomWhereAbdl) r.conditions.whenInRoomWhereAbdl = {};
+        if (typeof data.conditions.whenInRoomWhereAbdl?.blocked === "boolean") {
+          r.conditions.whenInRoomWhereAbdl.blocked = data.conditions.whenInRoomWhereAbdl.blocked;
+        }
+      } else delete r.conditions.whenInRoomWhereAbdl;
+    }
+    console.log(r, data);
+  }
+  function validateRuleData(r, data) {
+    const ruleParams = rulesList.find((g) => g.id === r.id).data ?? [];
+    for (const param of ruleParams) {
+      const p = data.data?.[param.name];
+      if (param.type === "number" && typeof p !== "number") continue;
+      if (param.type === "text" && typeof p !== "string") continue;
+      if (param.type === "checkbox" && typeof p !== "boolean") continue;
+      if (!r.data) r.data = {};
+      r.data[param.name] = p;
+    }
+  }
+  function migrateModStorage() {
+  }
+  function bccAbdlPartSync(oldAbdlData) {
+    console.log(oldAbdlData);
+    if (!hasMommy(Player) && typeof oldAbdlData?.mommy?.id === "number") {
+      modStorage.mommy = {
+        name: oldAbdlData.mommy.name ?? "?",
+        id: oldAbdlData.mommy.id
+      };
+    }
+    if (Array.isArray(oldAbdlData?.caretakers?.list)) {
+      const caregiversList = getCaregiversOf(Player);
+      for (const memberNumber of oldAbdlData.caretakers.list) {
+        if (!caregiversList.includes(memberNumber)) caregiversList.push(memberNumber);
+      }
+      if (!modStorage.caregivers) modStorage.caregivers = {};
+      modStorage.caregivers.list = caregiversList;
+    }
+    if (Array.isArray(oldAbdlData?.notes?.list) && oldAbdlData.notes.list.length > 0) {
+      if (!modStorage.notes) modStorage.notes = {};
+      if (!modStorage.notes.list) modStorage.notes.list = [];
+      for (const note of oldAbdlData.notes.list) {
+        if (typeof note.text !== "string" || typeof note.author?.name !== "string" || typeof note.author?.id !== "number" || typeof note.time !== "number") continue;
+        modStorage.notes.list.push({
+          text: note.text,
+          author: {
+            name: note.author?.name,
+            id: note.author?.id
+          },
+          ts: note.time
+        });
+      }
+    }
+    let bccStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.BCC));
+    delete bccStorage.abdl;
+    Player.ExtensionSettings.BCC = LZString.compressToBase64(JSON.stringify(bccStorage));
+    ServerPlayerExtensionSettingsSync("BCC");
+    syncStorage();
+    chatSendLocal("Littlish Club was synced with BCC's ABDL module");
+  }
+  function deleteProtectedProperties(data) {
+    data = cloneDeep_default(data);
+    delete data.logs;
+    return data;
+  }
+  function syncStorage() {
+    if (typeof modStorage !== "object") return;
+    Player.ExtensionSettings.LITTLISH_CLUB = LZString.compressToBase64(JSON.stringify(modStorage));
+    ServerPlayerExtensionSettingsSync("LITTLISH_CLUB");
+    chatSendModMessage("syncStorage", {
+      storage: deleteProtectedProperties(modStorage)
+    });
+  }
+  function resetStorage() {
+    modStorage = {
+      version: MOD_VERSION
+    };
+    syncStorage();
+  }
+
+  // src/utils/chat.ts
+  var pendingRequests = /* @__PURE__ */ new Map();
+  function chatSendLocal(message) {
+    if (!ServerPlayerIsInChatRoom()) return;
+    const div = document.createElement("div");
+    div.setAttribute("class", "ChatMessage ChatMessageLocalMessage");
+    div.setAttribute("data-time", ChatRoomCurrentTime());
+    div.setAttribute("data-sender", `${Player.MemberNumber}`);
+    div.style.background = "#55edc095";
+    div.style.margin = "0.15em 0";
+    if (typeof message === "string") div.textContent = message;
+    else div.appendChild(message);
+    document.querySelector("#TextAreaChatLog").appendChild(div);
+    ElementScrollToEnd("TextAreaChatLog");
+  }
+  function chatSendChangelog() {
+    chatSendLocal(`${MOD_NAME} v${MOD_VERSION}
+
+Changelog:
+\u2022 Fixed few minor bugs
+\u2022 Logs system
+\u2022 UI changes
+\u2022 A lot of "hidden" technical changes`);
+  }
+  function chatSendActionMessage(msg, target = void 0, dictionary = []) {
+    if (!msg || !ServerPlayerIsInChatRoom()) return;
+    const isFemale = CharacterPronounDescription(Player) === "She/Her";
+    const capPossessive = isFemale ? "Her" : "His";
+    const capIntensive = isFemale ? "Her" : "Him";
+    const capSelfIntensive = isFemale ? "Herself" : "Himself";
+    const capPronoun = isFemale ? "She" : "He";
+    msg = msg.replaceAll("<Possessive>", capPossessive).replaceAll("<possessive>", capPossessive.toLocaleLowerCase()).replaceAll("<Intensive>", capIntensive).replaceAll("<intensive>", capIntensive.toLocaleLowerCase()).replaceAll("<SelfIntensive>", capSelfIntensive).replaceAll("<selfIntensive>", capSelfIntensive.toLocaleLowerCase()).replaceAll("<Pronoun>", capPronoun).replaceAll("<pronoun>", capPronoun.toLocaleLowerCase());
+    ServerSend("ChatRoomChat", {
+      Content: "LittlishClub_CUSTOM_ACTION",
+      Type: "Action",
+      Target: target ?? void 0,
+      Dictionary: [
+        { Tag: 'MISSING TEXT IN "Interface.csv": LittlishClub_CUSTOM_ACTION', Text: msg },
+        ...dictionary
+      ]
+    });
+  }
+  function chatSendModMessage(msg, _data = null, targetNumber = null) {
+    const data = {
+      Content: "lcClubMsg",
+      Dictionary: {
+        // @ts-ignore
+        msg
+      },
+      Type: "Hidden"
+    };
+    if (_data) data.Dictionary.data = _data;
+    if (targetNumber) data.Target = targetNumber;
+    ServerSend("ChatRoomChat", data);
+  }
+  function sendRequest(message, data, target) {
+    return new Promise((resolve, reject) => {
+      const requestId = parseInt(`${Date.now()}${getRandomNumber(1e3, 1e4)}`);
+      pendingRequests.set(requestId, {
+        message,
+        data,
+        target,
+        resolve,
+        reject
+      });
+      chatSendModMessage("request", {
+        requestId,
+        message,
+        data
+      }, target);
+      setTimeout(() => {
+        pendingRequests.delete(requestId);
+        resolve({
+          isError: true
+        });
+      }, 6e3);
+    });
+  }
+  function handleRequestResponse(requestId, data) {
+    const request = pendingRequests.get(requestId);
+    if (!request) return;
+    request.resolve({
+      data
+    });
+  }
+  function handleRequest(requestId, message, data, sender) {
+    switch (message) {
+      case "getLogs":
+        if (!hasAccessRightTo(sender, Player, "READ_LOGS" /* READ_LOGS */)) return;
+        chatSendModMessage("requestResponse", {
+          requestId,
+          message,
+          data: modStorage.logs?.list ?? []
+        }, sender.MemberNumber);
+        return;
+    }
+  }
+
+  // src/modules/rules.ts
+  var dialogMenuButtonClickHooks = /* @__PURE__ */ new Map();
+  var buttonLabels = /* @__PURE__ */ new Map();
+  var imageRedirects = /* @__PURE__ */ new Map();
+  var rulesList = [
+    {
+      id: 1e3,
+      name: "Prevent taking ABDL items off",
+      description: "Prevents baby from taking ABDL items off"
+    },
+    {
+      id: 1001,
+      name: "Prevent using admin powers",
+      description: "Prevents baby from using room administration"
+    },
+    {
+      id: 1002,
+      name: "Prevent resisting urges",
+      description: "Prevents baby from resisting any urges"
+    },
+    {
+      id: 1003,
+      name: "ABDL inventory",
+      description: "Takes all the items from the baby except the ABDL"
+    },
+    {
+      id: 1004,
+      name: "Speak like baby",
+      description: "Force baby to speak like little baby",
+      data: [
+        {
+          name: "altSpeech",
+          text: "Alternative baby speech algorithm",
+          type: "checkbox"
+        }
+      ]
+    },
+    {
+      id: 1005,
+      name: "Walk like baby",
+      description: "Prevents baby from standing"
+    },
+    {
+      id: 1006,
+      name: "Can't go in the shop alone",
+      description: "Prevents baby from going to the club shop"
+    },
+    {
+      id: 1007,
+      name: "Fall asleep after milk bottle",
+      description: "Baby will fall asleep after drinking the milk (if it doesn't have another effect)"
+    },
+    {
+      id: 1008,
+      name: "Decrease size",
+      description: "Decreases baby's size",
+      data: [
+        {
+          name: "multiplier",
+          text: "Size Multiplier",
+          type: "number",
+          min: 0.25,
+          max: 1,
+          step: 0.01
+        }
+      ]
+    },
+    {
+      id: 1009,
+      name: "Disable reset settings button",
+      description: "Disables button to reset mod settings"
+    }
+  ];
+  function isRuleActive(C, ruleId) {
+    if (!isRuleEnabled(C, ruleId)) return false;
+    const conditions = getRuleConditions(C, ruleId);
+    if (!conditions?.whenInRoomWithRole && !conditions?.whenInRoomWhereAbdl) return true;
+    let whenInRoomWithRoleCondition = false;
+    let whenInRoomWhereAbdlCondition = false;
+    if (conditions.whenInRoomWithRole) {
+      if ((conditions?.whenInRoomWithRole?.role ?? "caregiver") === "caregiver") {
+        whenInRoomWithRoleCondition = conditions?.whenInRoomWithRole?.inRoom ?? true ? inRoomWithCaregiver(C) : !inRoomWithCaregiver(C);
+      } else {
+        whenInRoomWithRoleCondition = conditions?.whenInRoomWithRole?.inRoom ?? true ? inRoomWithMommy(C) : !inRoomWithMommy(C);
+      }
+    }
+    if (conditions.whenInRoomWhereAbdl) {
+      whenInRoomWhereAbdlCondition = conditions?.whenInRoomWhereAbdl?.blocked ?? true ? inRoomWhereAbdlIsBlocked() : !inRoomWhereAbdlIsBlocked();
+    }
+    const conditionsValues = [];
+    if (conditions?.whenInRoomWithRole) conditionsValues.push(whenInRoomWithRoleCondition);
+    if (conditions?.whenInRoomWhereAbdl) conditionsValues.push(whenInRoomWhereAbdlCondition);
+    return (conditions?.type ?? "any") === "all" ? conditionsValues.every((b) => b) : conditionsValues.some((b) => b);
+  }
+  function isRuleEnabled(C, ruleId) {
+    if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
+    return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
+  }
+  function isRuleStrict(C, ruleId) {
+    if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
+    return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
+  }
+  function getRuleParameter(C, ruleId, parameter) {
+    if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.data?.[parameter] ?? null;
+    return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.data?.[parameter] ?? null;
+  }
+  function getRuleConditions(C, ruleId) {
+    if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.conditions ?? null;
+    return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.conditions ?? null;
+  }
+  function isSleeping(C) {
+    if (C.IsPlayer()) return modStorage.sleepState ?? false;
+    return C.LITTLISH_CLUB?.sleepState ?? false;
+  }
+  function inRoomWithCaregiver(C) {
+    let storage;
+    if (C.IsPlayer()) storage = modStorage;
+    else storage = C.LITTLISH_CLUB;
+    for (const c of ChatRoomCharacter) {
+      if (storage?.caregivers?.list?.includes(c.MemberNumber)) return true;
+    }
+    return false;
+  }
+  function inRoomWithMommy(C) {
+    let storage;
+    if (C.IsPlayer()) storage = modStorage;
+    else storage = C.LITTLISH_CLUB;
+    for (const c of ChatRoomCharacter) {
+      if (storage?.mommy?.id === c.MemberNumber) return true;
+    }
+    return false;
+  }
+  function inRoomWhereAbdlIsBlocked() {
+    return ChatRoomData?.BlockCategory?.includes("ABDL");
+  }
+  function registerButton(name, label, icon, fn) {
+    imageRedirects.set(`Icons/${name}.png`, icon);
+    buttonLabels.set(name, label);
+    let hooks = dialogMenuButtonClickHooks.get(name);
+    if (!hooks) {
+      hooks = [];
+      dialogMenuButtonClickHooks.set(name, hooks);
+    }
+    if (!hooks.includes(fn)) {
+      hooks.push(fn);
+    }
+  }
+  function alternativeBabyTalk(text) {
+    text = text.toLowerCase();
+    text = text.replaceAll("is", "ith");
+    text = text.replaceAll("are", "aw");
+    text = text.replaceAll("am", "amm");
+    text = text.replaceAll("no", "ni");
+    text = text.replaceAll("s", "th");
+    text = text.replaceAll("h", "hh");
+    const babyWords = ["ba-bye", "da-da", "ma-ma", "goo-goo", "wee", "ooh", "gu", "ga", "agu", "guga"];
+    text = text.replace(/(\w+)\b/g, (word) => word + (getRandomNumber(1, text.split(" ").length) === 1 ? " " + babyWords[Math.floor(Math.random() * babyWords.length)] : ""));
+    return text.trim();
+  }
+  function loadRules() {
+    const attempt = () => {
+      const item = InventoryGet(Player, Player.FocusGroup?.Name);
+      if (!item) return;
+      const itemName = item.Craft ? item.Craft.Name : item.Asset.Description;
+      if (item?.Asset?.Category?.includes("ABDL") && isRuleActive(Player, 1e3 /* PREVENT_TAKING_ABDL_ITEMS_OFF */)) {
+        chatSendActionMessage(
+          `Baby ${CharacterNickname(
+            Player
+          )} tried to remove ${itemName} without mommy's permission`
+        );
+      }
+    };
+    registerButton(
+      "LC_Remove",
+      `Blocked by ${MOD_NAME}`,
+      `Icons/Remove.png`,
+      attempt
+    );
+    registerButton(
+      "LC_Escape",
+      `Blocked by ${MOD_NAME}`,
+      `Icons/Escape.png`,
+      attempt
+    );
+    registerButton(
+      "LC_Struggle",
+      `Blocked by ${MOD_NAME}`,
+      `Icons/Struggle.png`,
+      attempt
+    );
+    registerButton(
+      "LC_Dismount",
+      `Blocked by ${MOD_NAME}`,
+      `Icons/Dismount.png`,
+      attempt
+    );
+    hookFunction("Player.CanChangeToPose", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) || isSleeping(Player)) return false;
+      return next(args);
+    });
+    hookFunction("PoseCanChangeUnaidedStatus", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (!args[0].IsPlayer()) return next(args);
+      if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) || isSleeping(Player)) return PoseChangeStatus.NEVER;
+      return next(args);
+    });
+    hookFunction("ChatRoomCanAttemptStand", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) || isSleeping(Player)) return false;
+      return next(args);
+    });
+    hookFunction("ChatAdminCanEdit", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (isRuleActive(Player, 1001 /* PREVENT_USING_ADMIN_POWERS */) && CurrentScreen === "ChatAdmin" && next(args) === true) {
+        return ChatAdminMode === "create";
+      }
+      return next(args);
+    });
+    hookFunction("ServerSend", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      const message = args[0];
+      const params = args[1];
+      if (message === "ChatRoomChat" && ["Chat", "Whisper"].includes(params.Type) && params.Content[0] !== "(") {
+        if (isSleeping(Player)) return chatSendLocal("You are asleep, use OOC to speak");
+        if (isRuleActive(Player, 1004 /* SPEAK_LIKE_BABY */)) {
+          if (getRuleParameter(Player, 1004 /* SPEAK_LIKE_BABY */, "altSpeech")) {
+            params.Content = alternativeBabyTalk(params.Content);
+          } else {
+            params.Content = SpeechTransformBabyTalk(params.Content);
+          }
+        }
+      }
+      return next(args);
+    });
+    hookFunction("DialogInventoryAdd", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      const [C, item, isWorn, sortOrder] = args;
+      const asset = item.Asset;
+      if (DialogMenuMode !== "permissions") {
+        if (!asset.Category?.includes("ABDL") && isRuleActive(Player, 1003 /* ABDL_INVENTORY */)) return;
+      }
+      next(args);
+    });
+    hookFunction("ShopLoad", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (!isRuleActive(Player, 1006 /* CANT_GO_SHOP_ALONE */)) return next(args);
+      window.ShopLCLeave = () => {
+        CommonSetScreen("Room", "MainHall");
+        DialogLeave();
+        delete window.ShopLeave;
+      };
+      window.ShopVendor = CharacterLoadNPC("NPC_Shop_Vendor");
+      InventoryWear(ShopVendor, "H1000", "Height", "Default");
+      ShopVendor.Stage = "LC_BabyCantShopAlone1";
+      ShopVendor.CurrentDialog = "Oh? Cutie, aren't you lost? Where are your parents?";
+      CharacterSetCurrent(ShopVendor);
+      DialogChangeMode("dialog");
+    });
+    hookFunction("ShopRun", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (!isRuleActive(Player, 1006 /* CANT_GO_SHOP_ALONE */)) return next(args);
+      DrawCharacter(Player, 0, 0, 1);
+      DrawCharacter(ShopVendor, 500, 0, 1);
+      DrawButton(1885, 25, 90, 90, "", "White", "Icons/Exit.png");
+      DrawButton(1885, 145, 90, 90, "", "White", "Icons/Character.png");
+    });
+    hookFunction("CharacterBuildDialog", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      const C = args[0];
+      if (C.CharacterID === "NPC_Shop_Vendor" && isRuleActive(Player, 1006 /* CANT_GO_SHOP_ALONE */)) {
+        const stage1 = "LC_BabyCantShopAlone1";
+        const stage2 = "LC_BabyCantShopAlone2";
+        const stage3 = "LC_BabyCantShopAlone3";
+        C.Dialog.push(
+          {
+            Stage: stage1,
+            NextStage: stage2,
+            Option: "Huh? I am adult!",
+            Result: "(She starts laughing)"
+          },
+          {
+            Stage: stage1,
+            Option: "(Leave shop)",
+            Function: "LCLeave();"
+          },
+          {
+            Stage: stage2,
+            NextStage: stage3,
+            Option: "I'm old enough to go to the shop!",
+            Result: "Baby, please leave this shop, it's for adults only."
+          },
+          {
+            Stage: stage2,
+            Option: "(Leave shop)",
+            Function: "LCLeave();"
+          },
+          {
+            Stage: stage3,
+            Option: "(Leave shop)",
+            Function: "LCLeave();"
+          }
+        );
+        return;
+      }
+      return next(args);
+    });
+    hookFunction("Player.CanChangeOwnClothes", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (isSleeping(Player)) return false;
+      return next(args);
+    });
+    hookFunction("Player.IsDeaf", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (isSleeping(Player)) return true;
+      return next(args);
+    });
+    hookFunction("Player.IsBlind", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (isSleeping(Player)) return true;
+      return next(args);
+    });
+    hookFunction("Player.GetDeafLevel", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (isSleeping(Player)) return 4;
+      return next(args);
+    });
+    hookFunction("Player.GetBlindLevel", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (isSleeping(Player)) return 3;
+      return next(args);
+    });
+    hookFunction("Player.CanInteract", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (isSleeping(Player)) return false;
+      return next(args);
+    });
+    hookFunction("InventoryGroupIsBlockedForCharacter", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (isSleeping(Player)) return true;
+      return next(args);
+    });
+    hookFunction("DialogClickExpressionMenu", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (isSleeping(Player)) return false;
+      return next(args);
+    });
+    hookFunction("CharacterAppearanceSetItem", 0 /* OBSERVE */, (args, next) => {
+      const createdItem = next(args);
+      const [C, Group, ItemAsset] = args;
+      if (C.IsPlayer() && ["ItemMouth", "ItemMouth2", "itemMouth3"].includes(Group) && ItemAsset.Name === "MilkBottle" && isRuleActive(Player, 1007 /* FALL_SLEEP_AFTER_MILK_BOTTLE */) && !isSleeping(Player)) {
+        CharacterSetFacialExpression(Player, "Blush", "High");
+        ChatRoomCharacterUpdate(Player);
+        setTimeout(() => {
+          document.body.style.filter = "blur(4px)";
+          CharacterSetFacialExpression(Player, "Eyes", "Dazed");
+          CharacterSetFacialExpression(Player, "Eyebrows", null);
+          ChatRoomCharacterUpdate(Player);
+          setTimeout(() => {
+            document.body.style.filter = null;
+            PoseSetActive(Player, "Kneel");
+            CharacterSetFacialExpression(Player, "Emoticon", "Sleep");
+            CharacterSetFacialExpression(Player, "Eyes", "Closed");
+            ChatRoomCharacterUpdate(Player);
+            modStorage.sleepState = true;
+            syncStorage();
+            chatSendLocal("You fall asleep");
+            chatSendActionMessage(`${getNickname(Player)} fell asleep, only spank or french kiss can wake <intensive> up`);
+          }, getRandomNumber(6e3, 8e3));
+        }, getRandomNumber(6e3, 1e4));
+      }
+      return createdItem;
+    });
+    ChatRoomRegisterMessageHandler({
+      Priority: 10,
+      Callback: (data, sender) => {
+        if (!sender) return false;
+        if (data.Type === "Activity" && !!data.Dictionary?.find) {
+          const activityName = data.Dictionary.find((e) => {
+            return !!e.ActivityName;
+          })?.ActivityName;
+          const target = getPlayer(
+            data.Dictionary.find((e) => {
+              return !!e.TargetCharacter;
+            })?.TargetCharacter
+          );
+          if (target.IsPlayer() && ["Spank", "FrenchKiss"].includes(activityName) && isSleeping(Player)) {
+            CharacterSetFacialExpression(Player, "Emoticon", null);
+            CharacterSetFacialExpression(Player, "Eyes", "Open");
+            ChatRoomCharacterUpdate(Player);
+            modStorage.sleepState = false;
+            syncStorage();
+          }
+        }
+        return false;
+      }
+    });
+    hookFunction("CharacterAppearanceGetCurrentValue", 1 /* ADD_BEHAVIOR */, (args, next) => {
+      const [C, Group, Type] = args;
+      if (!C || !(C.LITTLISH_CLUB || C.IsPlayer()) || Group !== "Height" || Type !== "Zoom" || (Player.VisualSettings?.ForceFullHeight ?? false)) return next(args);
+      const sizeMultiplier = getRuleParameter(C, 1008 /* DECREASE_SIZE */, "multiplier") ?? 1;
+      if (sizeMultiplier > 1 || sizeMultiplier < 0.25) return next(args);
+      if (isRuleActive(C, 1008 /* DECREASE_SIZE */)) {
+        return next(args) * sizeMultiplier;
+      }
+      return next(args);
+    });
+    hookFunction("CommonDrawAppearanceBuild", 1 /* ADD_BEHAVIOR */, (args, next) => {
+      args[0].HeightRatio = CharacterAppearanceGetCurrentValue(args[0], "Height", "Zoom");
+      return next(args);
+    });
+    hookFunction("DrawCharacter", 1 /* ADD_BEHAVIOR */, (args, next) => {
+      args[0].HeightRatio = CharacterAppearanceGetCurrentValue(args[0], "Height", "Zoom");
+      return next(args);
+    });
+    hookFunction("DialogMenuButtonBuild", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      next(args);
+      const C = args[0];
+      const item = InventoryGet(C, C?.FocusGroup?.Name);
+      if (C.IsPlayer() && item && item?.Asset?.Category?.includes("ABDL") && isRuleActive(Player, 1e3 /* PREVENT_TAKING_ABDL_ITEMS_OFF */)) {
+        {
+          const removeIndex = DialogMenuButton.indexOf("Remove");
+          const struggleIndex = DialogMenuButton.indexOf("Struggle");
+          const dismountIndex = DialogMenuButton.indexOf("Dismount");
+          const escapeIndex = DialogMenuButton.indexOf("Escape");
+          if (removeIndex >= 0) {
+            DialogMenuButton[removeIndex] = "LC_Remove";
+          }
+          if (struggleIndex >= 0) {
+            DialogMenuButton[struggleIndex] = "LC_Struggle";
+          }
+          if (dismountIndex >= 0) {
+            DialogMenuButton[dismountIndex] = "LC_Dismount";
+          }
+          if (escapeIndex >= 0) {
+            DialogMenuButton[escapeIndex] = "LC_Escape";
+          }
+        }
+      }
+    });
+    hookFunction("DialogItemClick", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      const C = CharacterGetCurrent();
+      const focusGroup = C?.FocusGroup;
+      const item = InventoryGet(C, focusGroup?.Name);
+      const clickedItem = args[0];
+      if (DialogMenuMode !== "items") return next(args);
+      if (!item) return next(args);
+      if (C.IsPlayer() && item && item?.Asset?.Category?.includes("ABDL") && isRuleActive(Player, 1e3 /* PREVENT_TAKING_ABDL_ITEMS_OFF */)) return;
+      return next(args);
+    });
+    hookFunction("InterfaceTextGet", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      const label = buttonLabels.get(args[0]?.replace("DialogMenu", ""));
+      if (label) return label;
+      return next(args);
+    });
+    hookFunction("DrawGetImage", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      const redirect = imageRedirects.get(args[0]);
+      if (redirect) {
+        args[0] = redirect;
+      }
+      return next(args);
+    });
+    hookFunction("DialogIsMenuButtonDisabled", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (args[0]?.startsWith("LC_")) return true;
+      return next(args);
+    });
+    hookFunction("DialogMenuButtonClick", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      const C = CharacterGetCurrent();
+      for (let I = 0; I < DialogMenuButton.length; I++) {
+        if (MouseIn(1885 - I * 110, 15, 90, 90) && C) {
+          const hooks = dialogMenuButtonClickHooks.get(DialogMenuButton[I]);
+          if (hooks?.some((hook) => hook(C))) return true;
+        }
+      }
+      return next(args);
+    });
+  }
+
+  // src/subscreens/globalMenu.ts
+  var GlobalMenu = class extends BaseSubscreen {
+    get name() {
+      return "Global";
+    }
+    get icon() {
+      return `Icons/General.png`;
+    }
+    load() {
+      this.createText({
+        text: this.name,
+        x: 100,
+        y: 60,
+        fontSize: 10
+      });
+      if (InformationSheetSelection.IsPlayer()) {
+        this.createText({
+          text: `Mod Data Size: ${Math.round(new TextEncoder().encode(Player.ExtensionSettings?.LITTLISH_CLUB ?? "").byteLength / 100) / 10}KB`,
+          x: 150,
+          y: 240,
+          fontSize: 6
+        });
+        const resetBtn = this.createButton({
+          text: "Reset settings",
+          x: 100,
+          y: 825,
+          width: 500,
+          padding: 2,
+          icon: "Icons/ServiceBell.png"
+        });
+        if (isRuleActive(Player, 1009 /* DISABLE_RESET_SETTINGS_BUTTON */)) resetBtn.classList.add("lcDisabled");
+        resetBtn.addEventListener("click", () => {
+          if (isRuleActive(Player, 1009 /* DISABLE_RESET_SETTINGS_BUTTON */)) return;
+          resetStorage();
+          this.exit();
+        });
+      }
+    }
+  };
+
+  // src/subscreens/caregiversPermissionsMenu.ts
+  var CaregiversPermissionsMenu = class extends BaseSubscreen {
+    get name() {
+      return "Family > Caregivers permissions";
+    }
+    load() {
+      this.createText({
+        text: this.name,
+        x: 100,
+        y: 60,
+        fontSize: 10
+      });
+      caregiverAccessRightsList.forEach((p, i) => {
+        const btn = this.createButton({
+          text: p.name,
+          width: 1200,
+          x: 400,
+          y: 250 + 110 * i,
+          padding: 2,
+          style: isCaregiverAccessRightEnabled(InformationSheetSelection, p.id) ? "green" : "default"
+        });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_CAREGIVERS_ACCESS_RIGHTS" /* MANAGE_CAREGIVERS_ACCESS_RIGHTS */)) {
+          btn.classList.add("lcDisabled");
+        }
+        btn.addEventListener("click", () => {
+          if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_CAREGIVERS_ACCESS_RIGHTS" /* MANAGE_CAREGIVERS_ACCESS_RIGHTS */)) {
+            return btn.classList.add("lcDisabled");
+          }
+          if (InformationSheetSelection.IsPlayer()) {
+            turnCaregiverAccessRight(p.id);
+            addLog(
+              `${getNickname(Player)} (${Player.MemberNumber}) turned ${isCaregiverAccessRightEnabled(Player, p.id) ? "on" : "off"} caregiver access right "${p.name}"`,
+              false
+            );
+            syncStorage();
+          } else {
+            chatSendModMessage("turnCaregiversAccessRight", {
+              accessRightId: p.id
+            }, InformationSheetSelection.MemberNumber);
+          }
+          btn.setAttribute("data-lc-style", btn.getAttribute("data-lc-style") === "default" ? "green" : "default");
+        });
+      });
+    }
+  };
+
+  // src/subscreens/familyMenu.ts
+  var FamilyMenu = class extends BaseSubscreen {
+    get name() {
+      return "Family";
+    }
+    get icon() {
+      return `Assets/Female3DCG/Emoticon/Hearts/Icon.png`;
+    }
+    load() {
+      this.createText({
+        text: this.name,
+        x: 100,
+        y: 60,
+        fontSize: 10
+      });
+      const caregiversInput = this.createInput({
+        placeholder: "Caregivers member numbers",
+        value: getCaregiversOf(InformationSheetSelection).join(", "),
+        x: 1e3,
+        y: 200,
+        width: 850,
+        height: 600,
+        textArea: true
+      });
+      if (!hasAccessRightTo(Player, InformationSheetSelection, "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */)) {
+        caregiversInput.classList.add("lcDisabled");
+      }
+      caregiversInput.addEventListener("change", () => {
+        if (!hasAccessRightTo(Player, InformationSheetSelection, "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */)) {
+          return caregiversInput.classList.add("lcDisabled");
+        }
+        const list = caregiversInput.value.split(",").map((c) => parseInt(c.trim())).filter((c) => typeof c === "number" && !Number.isNaN(c));
+        if (InformationSheetSelection.IsPlayer()) {
+          if (!modStorage.caregivers) modStorage.caregivers = {};
+          modStorage.caregivers.list = list;
+          addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed caregivers list`, false);
+        } else {
+          chatSendModMessage("changeCaregiversList", {
+            list
+          }, InformationSheetSelection.MemberNumber);
+        }
+      });
+      const caregiversPermissionsBtn = this.createButton({
+        text: "Caregivers permissions",
+        x: 1e3,
+        y: 825,
+        width: 850,
+        padding: 2
+      });
+      caregiversPermissionsBtn.addEventListener("click", () => {
+        this.setSubscreen(new CaregiversPermissionsMenu());
+      });
+      this.createText({
+        text: `Mommy: ${hasMommy(InformationSheetSelection) ? `${getMommyOf(InformationSheetSelection).name} (${getMommyOf(InformationSheetSelection).id})` : "-"}`,
+        x: 150,
+        y: 300
+      }).style.fontWeight = "bold";
+      const checkBox = this.createCheckbox({
+        text: "Prevent baby from changing caregivers list",
+        x: 150,
+        y: 400,
+        width: 600,
+        isChecked: InformationSheetSelection.IsPlayer() ? !modStorage.caregivers?.canChangeList : !InformationSheetSelection.LITTLISH_CLUB?.caregivers?.canChangeList
+      });
+      if (!hasAccessRightTo(Player, InformationSheetSelection, "TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST" /* TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST */)) {
+        checkBox.classList.add("lcDisabled");
+      }
+      checkBox.addEventListener("change", () => {
+        if (!hasAccessRightTo(Player, InformationSheetSelection, "TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST" /* TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST */)) {
+          return checkBox.classList.add("lcDisabled");
+        }
+        if (InformationSheetSelection.IsPlayer()) {
+          if (!modStorage.caregivers) modStorage.caregivers = {};
+          modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
+          addLog(
+            `${getNickname(Player)} (${Player.MemberNumber}) ${modStorage.caregivers.canChangeList ? "allowed" : "forbade"} ${getNickname(Player)} to change caregivers list`,
+            false
+          );
+        } else {
+          chatSendModMessage("turnCanChangeCaregiversList", null, InformationSheetSelection.MemberNumber);
+        }
+      });
+    }
+    exit() {
+      syncStorage();
+      this.setSubscreen(new MainMenu());
+    }
+  };
+
+  // src/subscreens/ruleSettingsMenu.ts
+  var RuleSettingsMenu = class extends BaseSubscreen {
+    rule;
+    ruleSettings;
+    canChangeSettings = () => hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */) && (!isRuleStrict(InformationSheetSelection, this.rule.id) || isMommyOf(Player, InformationSheetSelection) || InformationSheetSelection.IsPlayer() && isExploringModeEnabled());
+    get name() {
+      return `Rules > ${this.rule.name}`;
+    }
+    constructor(rule) {
+      super();
+      this.rule = rule;
+      const storage = InformationSheetSelection.IsPlayer() ? modStorage : InformationSheetSelection.LITTLISH_CLUB;
+      this.ruleSettings = storage.rules?.list?.find((r) => r.id === this.rule.id) ?? {
+        id: this.rule.id,
+        state: false,
+        strict: false,
+        changedBy: Player.MemberNumber,
+        ts: Date.now()
+      };
+      this.ruleSettings = JSON.parse(JSON.stringify(this.ruleSettings));
+    }
+    load() {
+      this.createText({
+        text: this.name,
+        x: 100,
+        y: 60,
+        fontSize: 10
+      });
+      const description = this.createText({
+        text: `${this.rule.description}`,
+        x: 1e3,
+        y: 250,
+        width: 800,
+        fontSize: 6,
+        withBackground: true,
+        padding: 2
+      });
+      description.style.textAlign = "center";
+      this.rule.data?.forEach((param, i) => {
+        if (param.type !== "checkbox") {
+          this.createText({
+            text: param.text + ":",
+            x: 1e3,
+            y: 420 + i * 140,
+            width: 400,
+            fontSize: 5
+          });
+        }
+        if (param.type === "number") {
+          const input = this.createInput({
+            value: getRuleParameter(InformationSheetSelection, this.rule.id, param.name)?.toString() ?? "",
+            placeholder: param.type,
+            x: 1350,
+            y: 420,
+            width: 500,
+            height: 80
+          });
+          input.setAttribute("type", param.type);
+          if (param.min) input.setAttribute("min", param.min);
+          if (param.max) input.setAttribute("max", param.max);
+          if (param.step) input.setAttribute("step", param.step);
+          if (!this.canChangeSettings()) {
+            input.classList.add("lcDisabled");
+          }
+          input.addEventListener("change", () => {
+            if (!this.canChangeSettings()) {
+              return input.classList.add("lcDisabled");
+            }
+            if (param.min && parseFloat(input.value) < param.min) return;
+            if (param.max && parseFloat(input.value) > param.max) return;
+            if (!this.ruleSettings.data) this.ruleSettings.data = {};
+            this.ruleSettings.data[param.name] = param.type === "number" ? parseFloat(input.value) : input.value;
+          });
+        } else if (param.type === "checkbox") {
+          const checkbox = this.createCheckbox({
+            x: 1e3,
+            y: 440,
+            width: 800,
+            isChecked: !!getRuleParameter(InformationSheetSelection, this.rule.id, param.name),
+            text: param.text
+          });
+          if (!this.canChangeSettings()) {
+            checkbox.classList.add("lcDisabled");
+          }
+          checkbox.addEventListener("change", () => {
+            if (!this.canChangeSettings()) {
+              return checkbox.classList.add("lcDisabled");
+            }
+            if (!this.ruleSettings.data) this.ruleSettings.data = {};
+            this.ruleSettings.data[param.name] = checkbox.checked;
+          });
+        }
+      });
+      const turnStateBtn = this.createButton({
+        text: isRuleEnabled(InformationSheetSelection, this.rule.id) ? "State: Enabled" : "State: Disabled",
+        x: 150,
+        y: 250,
+        width: 600,
+        padding: 2
+      });
+      if (!this.canChangeSettings()) {
+        turnStateBtn.classList.add("lcDisabled");
+      }
+      turnStateBtn.addEventListener("click", () => {
+        if (!this.canChangeSettings()) {
+          return turnStateBtn.classList.add("lcDisabled");
+        }
+        this.ruleSettings.state = !this.ruleSettings.state;
+        turnStateBtn.textContent = this.ruleSettings.state ? "State: Enabled" : "State: Disabled";
+      });
+      const turnStrictBtn = this.createButton({
+        text: `Strict: ${this.ruleSettings.strict ? "Yes" : "No"}`,
+        x: 150,
+        y: 365,
+        width: 600,
+        padding: 2
+      });
+      if (!hasAccessRightTo(Player, InformationSheetSelection, "TURN_RULE_STRICT_MODE" /* TURN_RULE_STRICT_MODE */)) {
+        turnStrictBtn.classList.add("lcDisabled");
+      }
+      turnStrictBtn.addEventListener("click", () => {
+        if (!hasAccessRightTo(Player, InformationSheetSelection, "TURN_RULE_STRICT_MODE" /* TURN_RULE_STRICT_MODE */)) {
+          return turnStrictBtn.classList.add("lcDisabled");
+        }
+        this.ruleSettings.strict = !this.ruleSettings.strict;
+        turnStrictBtn.textContent = this.ruleSettings.strict ? "Strict: Yes" : "Strict: No";
+      });
+      const triggerConditionsBtn = this.createButton({
+        text: (this.ruleSettings.conditions?.type ?? "any") === "any" ? "Trigger Conditions: Any" : "Trigger Conditions All",
+        x: 150,
+        y: 525,
+        width: 600,
+        padding: 2
+      });
+      if (!this.canChangeSettings()) {
+        triggerConditionsBtn.classList.add("lcDisabled");
+      }
+      triggerConditionsBtn.addEventListener("click", () => {
+        if (!this.canChangeSettings()) {
+          return triggerConditionsBtn.classList.add("lcDisabled");
+        }
+        if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
+        this.ruleSettings.conditions.type = (this.ruleSettings.conditions?.type ?? "any") === "any" ? "all" : "any";
+        triggerConditionsBtn.textContent = (this.ruleSettings.conditions?.type ?? "any") === "any" ? "Trigger Conditions: Any" : "Trigger Conditions All";
+      });
+      const whenCheckbox = this.createCheckbox({
+        text: "When",
+        x: 150,
+        y: 650,
+        isChecked: !!this.ruleSettings.conditions?.whenInRoomWithRole
+      });
+      if (!this.canChangeSettings()) {
+        whenCheckbox.classList.add("lcDisabled");
+      }
+      const inRoomBtn = this.createButton({
+        text: this.ruleSettings.conditions?.whenInRoomWithRole?.inRoom ?? true ? "in room" : "not in room",
+        x: 395,
+        y: 650,
+        width: 180,
+        height: 65,
+        fontSize: 3
+      });
+      if (!this.canChangeSettings()) {
+        inRoomBtn.classList.add("lcDisabled");
+      }
+      inRoomBtn.addEventListener("click", () => {
+        if (!this.canChangeSettings()) {
+          return inRoomBtn.classList.add("lcDisabled");
+        }
+        if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
+        if (!this.ruleSettings.conditions.whenInRoomWithRole) this.ruleSettings.conditions.whenInRoomWithRole = {};
+        this.ruleSettings.conditions.whenInRoomWithRole.inRoom = !(this.ruleSettings.conditions.whenInRoomWithRole.inRoom ?? true);
+        inRoomBtn.textContent = this.ruleSettings.conditions?.whenInRoomWithRole?.inRoom ?? true ? "in room" : "not in room";
+      });
+      this.createText({
+        text: "with role",
+        x: 600,
+        y: 650,
+        fontSize: 5
+      });
+      const caregiverBtn = this.createButton({
+        text: this.ruleSettings.conditions?.whenInRoomWithRole?.role ?? "caregiver",
+        x: 805,
+        y: 650,
+        width: 180,
+        height: 65,
+        fontSize: 3
+      });
+      if (!this.canChangeSettings()) {
+        caregiverBtn.classList.add("lcDisabled");
+      }
+      caregiverBtn.addEventListener("click", () => {
+        if (!this.canChangeSettings()) {
+          caregiverBtn.classList.add("lcDisabled");
+        }
+        if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
+        if (!this.ruleSettings.conditions.whenInRoomWithRole) this.ruleSettings.conditions.whenInRoomWithRole = {};
+        this.ruleSettings.conditions.whenInRoomWithRole.role = (this.ruleSettings.conditions.whenInRoomWithRole.role ?? "caregiver") === "caregiver" ? "mommy" : "caregiver";
+        caregiverBtn.textContent = this.ruleSettings.conditions?.whenInRoomWithRole?.role ?? "caregiver";
+      });
+      this.createText({
+        text: "and higher",
+        x: 1e3,
+        y: 650,
+        fontSize: 5
+      });
+      const whenCheckbox2 = this.createCheckbox({
+        text: "When in room where ABDL is",
+        x: 150,
+        y: 750,
+        isChecked: !!this.ruleSettings.conditions?.whenInRoomWhereAbdl
+      });
+      if (!this.canChangeSettings()) {
+        whenCheckbox2.classList.add("lcDisabled");
+      }
+      const isBlockedBtn = this.createButton({
+        text: this.ruleSettings.conditions?.whenInRoomWhereAbdl?.blocked ?? true ? "blocked" : "not blocked",
+        x: 930,
+        y: 750,
+        width: 200,
+        height: 65,
+        fontSize: 3
+      });
+      if (!this.canChangeSettings()) {
+        isBlockedBtn.classList.add("lcDisabled");
+      }
+      isBlockedBtn.addEventListener("click", () => {
+        if (!this.canChangeSettings()) {
+          return isBlockedBtn.classList.add("lcDisabled");
+        }
+        if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
+        if (!this.ruleSettings.conditions.whenInRoomWhereAbdl) this.ruleSettings.conditions.whenInRoomWhereAbdl = {};
+        this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked = !(this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked ?? true);
+        isBlockedBtn.textContent = this.ruleSettings.conditions?.whenInRoomWhereAbdl?.blocked ?? true ? "blocked" : "not blocked";
+      });
+      const saveChangesBtn = this.createButton({
+        text: "Save Changes",
+        x: 1520,
+        y: 790,
+        width: 400,
+        height: 150,
+        style: "green"
+      });
+      saveChangesBtn.style.fontWeight = "bold";
+      if (!this.canChangeSettings()) {
+        saveChangesBtn.classList.add("lcDisabled");
+      }
+      saveChangesBtn.addEventListener("click", () => {
+        if (!this.canChangeSettings()) return saveChangesBtn.classList.add("lcDisabled");
+        if (whenCheckbox.checked) {
+          if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
+          if (!this.ruleSettings.conditions.whenInRoomWithRole) this.ruleSettings.conditions.whenInRoomWithRole = {};
+          if (typeof this.ruleSettings.conditions.whenInRoomWithRole.inRoom !== "boolean") {
+            this.ruleSettings.conditions.whenInRoomWithRole.inRoom = true;
+          }
+          if (typeof this.ruleSettings.conditions.whenInRoomWithRole.role !== "string") {
+            this.ruleSettings.conditions.whenInRoomWithRole.role = "caregiver";
+          }
+        } else delete this.ruleSettings.conditions?.whenInRoomWithRole;
+        if (whenCheckbox2.checked) {
+          if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
+          if (!this.ruleSettings.conditions.whenInRoomWhereAbdl) this.ruleSettings.conditions.whenInRoomWhereAbdl = {};
+          if (typeof this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked !== "boolean") {
+            this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked = true;
+          }
+        } else delete this.ruleSettings.conditions?.whenInRoomWhereAbdl;
+        if (InformationSheetSelection.IsPlayer()) {
+          if (!modStorage.rules) modStorage.rules = {};
+          if (!modStorage.rules.list) modStorage.rules.list = [];
+          let r = modStorage.rules.list.find((d) => d.id === this.rule.id);
+          if (r) {
+            for (let i in r) delete r[i];
+            for (let i in this.ruleSettings) r[i] = this.ruleSettings[i];
+          } else {
+            modStorage.rules.list.push(this.ruleSettings);
+          }
+          addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed settings of "${this.rule.name}" rule`, false);
+          syncStorage();
+        } else {
+          let dataToSend = {
+            id: this.ruleSettings.id,
+            state: this.ruleSettings.state,
+            strict: this.ruleSettings.strict
+          };
+          if (this.ruleSettings.data) dataToSend.data = this.ruleSettings.data;
+          if (this.ruleSettings.conditions) dataToSend.conditions = this.ruleSettings.conditions;
+          chatSendModMessage("changeRuleSettings", dataToSend, InformationSheetSelection.MemberNumber);
+        }
+        this.exit();
+      });
+    }
+  };
+
+  // src/subscreens/rulesMenu.ts
+  var RulesMenu = class extends BaseSubscreen {
+    get name() {
+      return "Rules";
+    }
+    get icon() {
+      return `Icons/Management.png`;
+    }
+    load() {
+      this.createText({
+        text: this.name,
+        x: 100,
+        y: 60,
+        fontSize: 10
+      });
+      rulesList.forEach((rule, i) => {
+        const ruleBtn = this.createButton({
+          text: rule.name,
+          x: i > 4 ? 150 + 800 + 100 : 150,
+          y: i > 4 ? 300 + (i - 5) * 115 : 300 + i * 115,
+          width: 800,
+          padding: 2,
+          style: isRuleEnabled(InformationSheetSelection, rule.id) ? "green" : "default"
+        });
+        ruleBtn.style.fontWeight = "bold";
+        ruleBtn.addEventListener("click", () => {
+          this.setSubscreen(new RuleSettingsMenu(rule));
+        });
+      });
+    }
+    update() {
+      this.unload();
+      this.load();
+    }
+    exit() {
+      this.setSubscreen(new MainMenu());
+    }
+  };
+
+  // src/subscreens/cyberDiaperChangeColorMenu.ts
+  var CyberDiaperChangeColorMenu = class extends BaseSubscreen {
+    canvasCharacter;
+    cyberDiaperSettings;
+    get name() {
+      return "Cyber Diaper > Settings > Change Color";
+    }
+    constructor(cyberDiaperSettings) {
+      super();
+      this.cyberDiaperSettings = cyberDiaperSettings;
+    }
+    run() {
+      if (this.canvasCharacter) DrawCharacter(this.canvasCharacter, 1200, 250, 0.7, false);
+    }
+    async load() {
+      const asset = AssetGet(
+        Player.AssetFamily,
+        "ItemPelvis",
+        getCyberDiaperAssetName(this.cyberDiaperSettings.model ?? "BULKY_DIAPER" /* BULKY_DIAPER */)
+      );
+      if (!ItemColorLayerNames) {
+        ItemColorLayerNames = new TextCache(`Assets/${Player.AssetFamily}/LayerNames.csv`);
+        const loadingText = this.createText({
+          text: "Loading LayerNames.csv...",
+          x: 400,
+          y: 400,
+          width: 1200,
+          fontSize: 6
+        });
+        loadingText.style.textAlign = "center";
+        await waitFor(() => ItemColorLayerNames.loaded);
+        loadingText.remove();
+      }
+      if (!this.cyberDiaperSettings.color) this.cyberDiaperSettings.color = JSON.parse(JSON.stringify(asset.DefaultColor));
+      this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter2");
+      this.canvasCharacter.Appearance = serverAppearanceBundleToAppearance(
+        this.canvasCharacter.AssetFamily,
+        ServerAppearanceBundle(InformationSheetSelection.Appearance)
+      );
+      InventoryWear(this.canvasCharacter, asset.Name, asset.Group.Name, this.cyberDiaperSettings.color);
+      CharacterRefresh(this.canvasCharacter);
+      this.createText({
+        text: this.name,
+        x: 100,
+        y: 60,
+        fontSize: 10
+      });
+      let layerN = 0;
+      asset.Layer.forEach((l) => {
+        if (!l.AllowColorize || !ItemColorLayerNames.cache[`${asset.Group.Name}${asset.Name}${l.Name}`]) return;
+        const n = layerN;
+        const layerName = this.createButton({
+          text: ItemColorLayerNames.cache[`${asset.Group.Name}${asset.Name}${l.Name}`],
+          x: 100,
+          y: 220 + 100 * layerN,
+          width: 500,
+          height: 80
+        });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
+          layerName.classList.add("lcDisabled");
+        }
+        layerName.addEventListener("click", () => {
+          if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
+            return layerName.classList.add("lcDisabled");
+          }
+          const defaultColor = JSON.parse(JSON.stringify(asset.DefaultColor[n]));
+          InventoryGet(this.canvasCharacter, asset.Group.Name).Color[n] = defaultColor;
+          CharacterRefresh(this.canvasCharacter);
+          this.cyberDiaperSettings.color[n] = defaultColor;
+          layerColor.value = asset.DefaultColor[n];
+        });
+        const layerColor = this.createInput({
+          value: this.cyberDiaperSettings.color[layerN],
+          x: 640,
+          y: 220 + 100 * layerN,
+          width: 200,
+          height: 80,
+          padding: 1
+        });
+        if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
+          layerColor.classList.add("lcDisabled");
+        }
+        layerColor.setAttribute("type", "color");
+        layerColor.addEventListener("change", () => {
+          if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
+            return layerColor.classList.add("lcDisabled");
+          }
+          InventoryGet(this.canvasCharacter, asset.Group.Name).Color[n] = layerColor.value;
+          CharacterRefresh(this.canvasCharacter);
+          this.cyberDiaperSettings.color[n] = layerColor.value;
+        });
+        layerN++;
+      });
+    }
+    exit() {
+      this.setSubscreen(new CyberDiaperSettingsMenu(this.cyberDiaperSettings));
+    }
+  };
+
   // src/subscreens/cyberDiaperSettingsMenu.ts
   var CyberDiaperSettingsMenu = class extends BaseSubscreen {
     cyberDiaperSettings;
@@ -3448,6 +3551,7 @@ These are the changes in the last 4 days.`);
         if (InformationSheetSelection.IsPlayer()) {
           modStorage.cyberDiaper = this.cyberDiaperSettings;
           updateDiaperItem();
+          addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed settings of cyber diaper`, false);
           syncStorage();
         } else {
           chatSendModMessage(
@@ -3501,7 +3605,13 @@ These are the changes in the last 4 days.`);
         padding: 2,
         fontSize: 8
       });
+      if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
+        buyBtn.classList.add("lcDisabled");
+      }
       buyBtn.addEventListener("click", () => {
+        if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
+          return buyBtn.classList.add("lcDisabled");
+        }
         if (Player.Money < 499) return notify("Not enough money.");
         CharacterChangeMoney(Player, -499);
         notify("Successfully bought Cyber Diaper.");
@@ -3566,7 +3676,8 @@ These are the changes in the last 4 days.`);
           deleteBtn.classList.add("lcDisabled");
         }
         if (InformationSheetSelection.IsPlayer()) {
-          modStorage.notes.list.splice(this.key - 1, 1);
+          const [note] = modStorage.notes.list.splice(this.key - 1, 1);
+          addLog(`${getNickname(Player)} (${Player.MemberNumber}) deleted note: "${note.text}"`, false);
           this.exit();
         } else {
           chatSendModMessage("deleteNote", {
@@ -3657,6 +3768,7 @@ These are the changes in the last 4 days.`);
           if (!modStorage.notes) modStorage.notes = {};
           if (!modStorage.notes.list) modStorage.notes.list = [];
           modStorage.notes.list.push(note);
+          addLog(`${getNickname(Player)} (${Player.MemberNumber}) added note: "${note.text}"`, false);
         } else {
           chatSendModMessage("addNote", {
             text: noteInput.value
@@ -3827,6 +3939,89 @@ These are the changes in the last 4 days.`);
     }
   };
 
+  // src/subscreens/logsMenu.ts
+  var LogsMenu = class extends BaseSubscreen {
+    scrollView;
+    get name() {
+      return "Logs";
+    }
+    get icon() {
+      return `Icons/Title.png`;
+    }
+    async load() {
+      this.createText({
+        text: this.name,
+        x: 100,
+        y: 60,
+        fontSize: 10
+      });
+      if (!hasAccessRightTo(Player, InformationSheetSelection, "READ_LOGS" /* READ_LOGS */)) {
+        return this.createText({
+          text: "403 | Not enough rights to read logs",
+          x: 400,
+          y: 400,
+          width: 1200,
+          fontSize: 8
+        }).style.textAlign = "center";
+      }
+      let logs;
+      if (InformationSheetSelection.IsPlayer()) {
+        logs = modStorage.logs?.list ?? [];
+      } else {
+        const statusText = this.createText({
+          text: "Loading Logs...",
+          x: 400,
+          y: 400,
+          width: 1200,
+          fontSize: 8
+        });
+        statusText.style.textAlign = "center";
+        const res = await sendRequest("getLogs", null, InformationSheetSelection.MemberNumber);
+        if (res.isError) return statusText.textContent = "Loading Error :(";
+        statusText.remove();
+        logs = res.data;
+      }
+      const scrollView = this.createScrollView({
+        scroll: "y",
+        x: 150,
+        y: 260,
+        width: 1700,
+        height: 600
+      });
+      scrollView.style.display = "flex";
+      scrollView.style.flexDirection = "column";
+      scrollView.style.alignItems = "center";
+      scrollView.style.rowGap = "1vw";
+      this.scrollView = scrollView;
+      logs.forEach((log) => {
+        const btn = this.createButton({
+          text: `${log.message} at (${new Date(log.ts).toUTCString()})`,
+          place: false,
+          padding: 2
+        });
+        btn.style.wordBreak = "break-all";
+        btn.style.width = "90%";
+        scrollView.append(btn);
+        scrollView.scrollTo(0, scrollView.scrollHeight);
+      });
+    }
+    // update() {
+    //     this.scrollView.innerHTML = "";
+    //     const notesList: Readonly<Note[]> = InformationSheetSelection.IsPlayer() ?
+    //         (modStorage.notes?.list ?? [])
+    //         : (InformationSheetSelection.LITTLISH_CLUB?.notes?.list ?? []);
+    //     notesList.forEach((note, i) => {
+    //         addNote(note, this, this.scrollView, i + 1);
+    //     });
+    // }
+    exit() {
+      this.setSubscreen(new MainMenu());
+    }
+  };
+
+  // src/images/discord.png
+  var discord_default = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAACXBIWXMAAAOwAAADsAEnxA+tAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAADtVJREFUeJztnXtwXNV9xz+/c1e2jLUr2UBtMM+6CTg8mhpoiGnMI7QGksAAFVrJbqJgaQ32uJSkmXqgBaU8Ap3pJAMkwEoOSQyWZMNkKLhtUp6NoTROYxpICaGkkNgEjLG1D8mypT2//iHZwbZW2sd9yHA+M5qRds/93q/u+d1z7z33nN8Bh8PhcDgcDofD4XA4HA6Hw+FwOBwOh8PhcHwAkagNlErymp0nMBw7U0XPEjhFxV7Xm254PWpfAE1tuXkIXzeqmy2yyZqhn6xPz/x11L5KIRa1gbFobdXaXVMyC43KOYqcBZxJgSMR3Rexol4WaInQ5j7E6K0oi1RYJCiexki2Z98BNimyySgb+6bVPfcvd8vuqL0eyKRpAVqu7vt9a7wLRfRC4CKF+ASbKLZwRs/qGZvD8FeMlra+M6yYTUx4LGVAsM8r8oRR+8Tarob/CsXgBETWApzXobFZW7N/KsiVwCILx4CipUuIGu9W4DNBeSwFK+YWSjqR9DBFLgQutGJItmffRPiBWPvwcKb+qfXrpRC017EItQXo6FDz6lu5BWqlEdEmYFa1mir2jN50w099sFc2zW3501Xsi1R/HHcAGyzme+s6pz8JUsZ5UB2hBMDiVP40q7ZV4SrgGF/FVdb2dMUX+6pZIslUdg3KEp9l3wR6VOW7vV3xV3zWPojAAiCV0pqc5i9HdYUKC4PaDzCMV/hIv9217TAbPx5TOFbUHIPocYIcp5ajEGaCxBBtQCUGGgdqgWmjGv3AHiADFED6QIeAnapsFWQLom+K2q0Wb8uAyb05fajhcGLDrwM1Af1fCjytKt+0mbpHg7pE+B4Ajcvzs71hbUf1GuBov/WLMMhIhYZJePsU/Q1W7quJSdea++LbfJX2U6y5PfNVRVYBU/zUdexjt8BXuzsTX/NL0LcAaF6W/aRaNgLGL03HmFhrWbhudeI5P8R8qayLV+pUtaz2S88xLsYYulpb1ZfLjy8V1rAr+3fAPD+0HCVx8mAse4MfQlVfAkafhX9CcHfDjrEZ8sSc8VC67qVqRKpsAVRU7L24yo+CGmvtPaBVncRVBUCyPbsEWFCNhqNyVFjY3JatqhOs4uhpXL6tzhuqfZXwnvUdY/NOQYZPWp+emalk44pbAG+o9gZc5U8GZnkau7nSjStqAZpSfXNFzc+BqZXu2OEre0zBzlv77YZflbthRS2AUbkVV/mTiSnqyW2VbFh2C7A4lT+toPZFXKfPZEPFcE73/Yn/KGejsiuxoPb2SrZzBI6o5fayNyqncHMq+yeq/KjcnTjCw4pcsC4df7rU8uWdycrfl+3IESpGtawngpJbgJalmT+2Rv6zfEuOsBHkvO7O+LOllC25BbBGfHn54AiD0luBklqAprbcPBF9GXfzd+ggenZPun7CFrukCjWiq0ot65gkqLmulGITtgCNy/OzvSH7Jm6Y16HGcEGG5040RW3Cs9rbo8twlX8oEjMaWzFRoXFbgPM6NDZ7a+4NYI5frhyhsrNQF5+z/uuyq1iBcVuAWW/lL8dV/qHMDJPPXjFegXEDwKhe668fR9gI0j7+90VoWbrzeGu8X+Hu/g95RJjXnU78YqzvilZuwYstGe97x6GDKq3FvitawaLq96RHR1SIthQbPDpmACRTmU8AJwdqyhEeKsc2L8udPdZXYwaAYpLBOnKEjpWmsT4eMwBE9bJg3TjCRlWbGhvVO/DzgwKgKdU3HzgxFFeO8BBmew25Txz48UEBICqXh+PIETpycD6lMS4BcmkYXiogtLw5PjA5veoEAbAk1X8UcFpohsZniyr/iLKQgjen0BevqRkcqFOVjym6BNgADEVtEigI+gSwtGDklIHC7kRPZ9yLiXe0GBYg3I5Q9nj9gDh9cdvAfjma9ns2bG7LLFGRNeF62h+BnIre/PbRibuf6ZDh8co2pfrmouYugUvC8ncAP/LErJh4hq5Ksi13NcIdwBGhOCtuZVlPVzy998/9AiDZnn0AivcahcAvCjK8qNw0q82p3DJV/SZw0F1uYIjc1JOuu7WclG7NqewRqjwGjPlMHg7S3dMZ35dhdf97ANFPh+5nFEVfLAzLwkpy7Han4/ejkgTGbTH8QkVX9qTjt5Sbz687ndheMzhwIapPBuVtYnS/jG37AmCkOZVjwzcECn3i2cvXPxB/t1KNnq74wygVT5IsHb2vN11/T6Vbr1kzu9/UaCNIVMmk5zSl+ubu/WNfABgrn4zGD4jKNT33zXijWp2Tj4nfAZQ0HLpCXinUJb5Urcjaext2iuhiInpaEDXn7v19XwCoiei6JLq5p6tunR9SHR1igeCGr6t8dbzRNeXQnU5sVOVxP7TKRZV9J/vv7gHURBIAivman7lxezoTzxNMK/BaIVP3sL+SWvZcPj8Qkfl7fzcAjdfrNNDTI/DSn51a909+i4pIt9+aoL1+p2vt7ap/AXjDT83S0FMvXqlTYTQAvIHMKUST6OmZIBZRsBSe8FtTRH7gtyaAKr57LYEpM3ZlToXRABA1p0RgAhUpay57qYwuJVPxE8UY2DjxQOZFihDIMZgIK2Y+jAaAKqdGYUJUfxugvJ9Jld9LpyWQbmf112fJyOiAHzPqIpoAsL6epQey3S8h8bc12Q9jeC8o7fFQOAn2BoBElObVSJAzjnzLYaRB3h/ZQI/BeHwUwKRSWoPfq3iUTtVLxozDbL+ExEetA1ENTnsCTkyltMbkhzPHEuZLlPeh6HFB6I4GtW8HViHe2rqzwS+9/RCNpPsdiOUle4KxNbEoh3+dH4RoTvML8Hk1j12x2AV+6u1FAzoGpTCs5hiDtcdHZQA4szmV9f39uIr+md+aInqR35oXr9SpAudOXDIYRO3RBiTKdK9GLSk/BS9eqVNRvuCn5ihNLdf2zfBTMLEr1wJM91OzHIzIHINyZFQGRvlS4/JtdX6J1Q/mv0gwM5oThWFvpV9ijY3qGcPf+KVXCWpljiHqIUrC4WZ42i1+SDW35WdRZpq0cjDoXzcuzfyBL1oNuetUR57FI8PYWUbE/l6kJgBRva6pLVvlZBQVFduFBPjIBnHPyCPVrtfTlOqbL+Dbyl8VY6XeKMbX61qFiAgPJpflKxqSdl6HxpLtuW8Dn/XZ11icPliTe/hzqbcOq2Tj5rb86WLNBiZH2p16I6K+XX+rpA5rNyTbs63lLIPSnMoeMXtr7hHCHcz6mela98PkFwfKeoZvas9cbMU+G2QrVRZCQpKpzK+jGgtYDIGnRe1XxltivfF6nRbrz39erd6GcHiY/t5HP3CLVzt070N3H54tVqipPftRgduAPw/PWklskWR79j1gZtROivAKwvdRXrPobz2RaSO9h3KWKJcpxKM2OMqgwgajuhExv7FSyGFltmBOBP0swplRGyzCDkm2Z3cR/rq7jslB1uCWfPsw47kcQB9uXAB8yIm5APhwowawUbtwRIPAoAF8meniOPRQ2GVQBqI24ogKGTSIawE+vOigQeiP2oYjIkT7DUpf1D4cEaFmu1EfJ1A4Di0E+54RopmZIpADVgmsJ6TULpOM3cAaRG4CBqMwYGFHjGhagF+CXNHTGf857FuY6gvASj7oK5QobyN8t+DF7l5/32FbAZJLdz6O8R4h5AytBrYbhY3AnjB3rMID3aOVD7D+W3Vv93Qm7szUxueqypXAo2F7CpjdCo8AlyVM/LiezsSqvZUPcPKxDf+tIy1hqJ4K8LzA6Bg1NQ9CqHMEX7AiNxRb6PjzK7KH79ktSUSvABYCsRC9+cEwqs+qMY/Ygu1dv7p+x1iFWtoylxSE2wT5eGjOhJfFmsXdXXU/2zf0qvF6nebl8/8AuoIyVxWv0s2/KfbG3s76TcVKtFzbN6MwLJcIXApyAVGPZC6G8p4IT1n0US+m/7z23oadxYqOrsR+O/CpEB1agW9MHYrf+J3vyCCMUdFXtWcWGUyagObtFUFVeVzF3LWuc/qT4+cMUlmc6j+1QOF8kHNBz4pwSNtbwCZFn8Z4z8w7avpLo4mqxqSjQ80vt2QvsmKuA/9nL03A/4lKW3dX/Kn3fzjmmX7p1e/Gp3m1t8lIaxDqG0OB/1Hk7prB/jVr1swuqZOqOZU9Amv/SMXMF+EkLHNVmItfN5QjN26vo/yvCK9idDMFb3N3V907pWzemNpRb9RrFWQF8BFfPJVOQZVvDJj8TY+ljz6o23/cpr6pLXO2GOmMIoGEQp8RvtKdTnRVqtHaqrW7pmTmYOVIo3KkFY4Qow2oTAGpgZER0YoMCLpbYUigj5Eno+0K2wckv2WsA1cqzansl1XpAEIffa3oi55q23iDa8e9sertqn8hldL5GXIrBW4C6n13WQSBBkWrelE1ep17ffQnEtTKIOEPvd8haMfbcxL3TpRwu+SbvcalmZmemJsRXUE4+QR+3NMZP9vPHIJRMLr87otAGIm4LPBQYVi+XGra3bLv9lva8x8voHcIuqhse2Ugwqe604mNQe4jLFraMpdYkQ0B7+ZxQVa9v3+lFCp+3Eu2ZxcwMtnhvEo1xuHhns5EYwC6kdHUnvvXgE6a5wS5sbszXlF21Kqf91vaMpdY5G8R/Eo2vUfFfmw0198HhsWp/GkFtZvx6fIpyr8XxNyyrrOuqkSTvnX4XLUst9BYXQVcVKXunT2diVU+2ZpUJFOZe1BZUYWEBR4Tw53d9yd8STDpe49f07L8H4q1fwk0A9PK3PyV2qH4/L29VB80Lr363fhh3tSfASeUuWke9EFVc1dvV/wVPz0F1uXbmNpR79maJkT/itLeMQwbq+esXV3/46A8TQauSuXONyMrhpRy7F8DVhesdhZ7l1Atgff5d3SoefWt3AKFvxClueiETuH2nnTixqD9TAaSbZlvIXJtka+zwKMW872Ju8WrJ8SXPtC4fFtdbLj2SrUkET7N3nmJwsuZqfEzg8gcPhlpXL6tzhuqfYnfXQoGgR8i2luYnvi+X4tSlEKoAfB+GpdmZhqRy0T4nIq9tTfd8NOovERBc3vuXNAVFn00Vjv82Hj5BRwOh8PhcDgcDofD4XA4HA6Hw+FwOBwOh8PhKJP/B7idFt8TkKuJAAAAAElFTkSuQmCC";
+
   // src/subscreens/mainMenu.ts
   var MainMenu = class extends BaseSubscreen {
     canvasCharacter;
@@ -3876,6 +4071,14 @@ Thanks for installing the mod!`;
           this.setSubscreen(new AddBabyMenu());
         });
       }
+      const joinDiscordBtn = this.createButton({
+        icon: discord_default,
+        width: 90,
+        height: 90,
+        x: 1815,
+        y: 235
+      });
+      joinDiscordBtn.addEventListener("click", () => open(DISCORD_SERVER_INVITE_LINK));
       const openWardrobeBtn = this.createButton({
         icon: "Icons/Rectangle/Dress.png",
         width: 90,
@@ -3919,14 +4122,15 @@ Thanks for installing the mod!`;
         new FamilyMenu(),
         new RulesMenu(),
         new CyberDiaperMenu(),
-        new NotesMenu()
+        new NotesMenu(),
+        new LogsMenu()
       ].forEach((m, i) => {
         const btn = this.createButton({
           text: m.name,
           x: 150,
-          y: (InformationSheetSelection.IsPlayer() && isExploringModeEnabled() ? 250 : 150) + 140 * i,
+          y: (InformationSheetSelection.IsPlayer() && isExploringModeEnabled() ? 225 : 150) + 115 * i,
           width: 600,
-          padding: 3,
+          padding: 2,
           icon: m.icon ?? null
         });
         btn.style.fontWeight = "bold";
