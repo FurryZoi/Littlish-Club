@@ -657,7 +657,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       case "DELETE_NOTES" /* DELETE_NOTES */:
         return isMommyOf(C1, C2) || isCaregiverOf(C1, C2) && isCaregiverAccessRightEnabled(C2, 1002 /* DELETE_NOTES */);
       case "READ_LOGS" /* READ_LOGS */:
-        return isMommyOf(C1, C2) || isCaregiverOf(C1, C2) && isCaregiverAccessRightEnabled(C2, 1004 /* READ_LOGS */);
+        return C1.MemberNumber === C2.MemberNumber || isMommyOf(C1, C2) || isCaregiverOf(C1, C2) && isCaregiverAccessRightEnabled(C2, 1004 /* READ_LOGS */);
     }
   }
 
@@ -2703,7 +2703,7 @@ Changelog:
               return !!e.TargetCharacter;
             })?.TargetCharacter
           );
-          if (target.IsPlayer() && ["Spank", "FrenchKiss"].includes(activityName) && isSleeping(Player)) {
+          if (target?.IsPlayer() && ["Spank", "FrenchKiss"].includes(activityName) && isSleeping(Player)) {
             CharacterSetFacialExpression(Player, "Emoticon", null);
             CharacterSetFacialExpression(Player, "Eyes", "Open");
             ChatRoomCharacterUpdate(Player);
