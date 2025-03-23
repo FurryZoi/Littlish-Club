@@ -8,14 +8,13 @@ import { getNickname } from "@/utils/characters";
 
 
 function addNote(note: Note, subscreen: NotesMenu, scrollView: HTMLDivElement, key: number, pending = false): void {
-    console.log(key);
     const btn = subscreen.createButton({
         text: `${note.author.name} (${note.author.id}) noted: ${note.text}`,
         place: false,
         padding: 2
     });
     btn.style.wordBreak = "break-all";
-    btn.style.width = "90%";
+    btn.style.width = "98%";
     if (pending) btn.classList.add("lcDisabled");
     btn.addEventListener("click", () => {
         subscreen.setSubscreen(new NoteSettingsMenu(note, key));
@@ -56,6 +55,7 @@ export class NotesMenu extends BaseSubscreen {
         });
         scrollView.style.display = "flex";
         scrollView.style.flexDirection = "column";
+        scrollView.style.alignItems = "center";
         scrollView.style.rowGap = "1vw";
         this.scrollView = scrollView;
 

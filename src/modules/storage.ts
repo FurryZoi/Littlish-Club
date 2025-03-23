@@ -211,7 +211,7 @@ export function initStorage(): void {
                     ts: Date.now()
                 };
                 modStorage.notes.list.push(note);
-                const _message = `${getNickname(sender)} (${sender.MemberNumber}) added note: ${data.text}`;
+                const _message = `${getNickname(sender)} (${sender.MemberNumber}) added note: "${data.text}"`;
                 addLog(_message, false);
                 syncStorage();
                 chatSendLocal(_message);
@@ -222,7 +222,7 @@ export function initStorage(): void {
                 if (!note) return;
                 if (note.author.id !== sender.MemberNumber && !hasAccessRightTo(sender, Player, AccessRight.DELETE_NOTES)) return;
                 modStorage.notes.list.splice(data.key - 1, 1);
-                const _message = `${getNickname(sender)} (${sender.MemberNumber}) deleted note: ${note.text}`;
+                const _message = `${getNickname(sender)} (${sender.MemberNumber}) deleted note: "${note.text}"`;
                 addLog(_message, false);
                 syncStorage();
                 chatSendLocal(_message);
@@ -247,6 +247,11 @@ export function initStorage(): void {
                 syncStorage();
                 updateDiaperItem();
                 chatSendLocal(_message);
+            }
+            if (msg === "releaseBaby" && hasAccessRightTo(sender, Player, AccessRight.RELEASE_BABY)) {
+                delete modStorage.mommy;
+                syncStorage();
+                chatSendLocal(`${getNickname(sender)} (${sender.MemberNumber}) released you`)
             }
         }
         next(args);

@@ -57,7 +57,8 @@ export enum AccessRight {
     MANAGE_CAREGIVERS_ACCESS_RIGHTS = "MANAGE_CAREGIVERS_ACCESS_RIGHTS",
     TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST = "TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST",
     CHANGE_CAREGIVERS_LIST = "CHANGE_CAREGIVERS_LIST",
-    READ_LOGS = "READ_LOGS"
+    READ_LOGS = "READ_LOGS",
+    RELEASE_BABY = "RELEASE_BABY"
 }
 
 export const caregiverAccessRightsList: CaregiverAccessRight[] = [
@@ -172,5 +173,7 @@ export function hasAccessRightTo(C1: Character, C2: Character, accessRight: Acce
                     isCaregiverAccessRightEnabled(C2, CaregiverAccessRightId.READ_LOGS)
                 )
             )
+        case AccessRight.RELEASE_BABY:
+            return isMommyOf(C1, C2);
     }
 }

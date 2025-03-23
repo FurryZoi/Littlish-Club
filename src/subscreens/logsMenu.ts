@@ -92,7 +92,7 @@ export class LogsMenu extends BaseSubscreen {
                 padding: 2
             });
             btn.style.wordBreak = "break-all";
-            btn.style.width = "90%";
+            btn.style.width = "98%";
             // btn.addEventListener("click", () => {
             //     this.setSubscreen(new NoteSettingsMenu(note, key));
             // });

@@ -26,6 +26,7 @@ export class AddBabyMenu extends BaseSubscreen {
         });
         scrollView.style.display = "flex";
         scrollView.style.flexDirection = "column";
+        scrollView.style.alignItems = "center";
         scrollView.style.rowGap = "1vw";
 
         ChatRoomCharacter?.forEach((C) => {
@@ -35,7 +36,7 @@ export class AddBabyMenu extends BaseSubscreen {
                 padding: 2
             });
             btn.style.wordBreak = "break-all";
-            btn.style.width = "90%";
+            btn.style.width = "98%";
             btn.addEventListener("click", () => {
                 if (!C.LITTLISH_CLUB || C.IsPlayer() || hasMommy(C)) return;
                 chatSendModMessage("addBaby", null, C.MemberNumber);
