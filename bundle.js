@@ -658,6 +658,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
         return isMommyOf(C1, C2) || isCaregiverOf(C1, C2) && isCaregiverAccessRightEnabled(C2, 1002 /* DELETE_NOTES */);
       case "READ_LOGS" /* READ_LOGS */:
         return C1.MemberNumber === C2.MemberNumber || isMommyOf(C1, C2) || isCaregiverOf(C1, C2) && isCaregiverAccessRightEnabled(C2, 1004 /* READ_LOGS */);
+      case "RELEASE_BABY" /* RELEASE_BABY */:
+        return isMommyOf(C1, C2);
     }
   }
 
@@ -2097,7 +2099,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
             ts: Date.now()
           };
           modStorage.notes.list.push(note);
-          const _message = `${getNickname(sender)} (${sender.MemberNumber}) added note: ${data2.text}`;
+          const _message = `${getNickname(sender)} (${sender.MemberNumber}) added note: "${data2.text}"`;
           addLog(_message, false);
           syncStorage();
           chatSendLocal(_message);
@@ -2108,7 +2110,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if (!note) return;
           if (note.author.id !== sender.MemberNumber && !hasAccessRightTo(sender, Player, "DELETE_NOTES" /* DELETE_NOTES */)) return;
           modStorage.notes.list.splice(data2.key - 1, 1);
-          const _message = `${getNickname(sender)} (${sender.MemberNumber}) deleted note: ${note.text}`;
+          const _message = `${getNickname(sender)} (${sender.MemberNumber}) deleted note: "${note.text}"`;
           addLog(_message, false);
           syncStorage();
           chatSendLocal(_message);
@@ -2130,6 +2132,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
           syncStorage();
           updateDiaperItem();
           chatSendLocal(_message);
+        }
+        if (msg === "releaseBaby" && hasAccessRightTo(sender, Player, "RELEASE_BABY" /* RELEASE_BABY */)) {
+          delete modStorage.mommy;
+          syncStorage();
+          chatSendLocal(`${getNickname(sender)} (${sender.MemberNumber}) released you`);
         }
       }
       next(args);
@@ -2795,6 +2802,52 @@ Changelog:
     });
   }
 
+  // src/subscreens/shared/oneButtonMenu.ts
+  var OneButtonMenu = class extends BaseSubscreen {
+    screenName;
+    content;
+    buttonText;
+    onClick;
+    constructor({
+      screenName,
+      content,
+      buttonText,
+      onClick
+    }) {
+      super();
+      this.screenName = screenName;
+      this.content = content;
+      this.buttonText = buttonText;
+      this.onClick = onClick;
+    }
+    load() {
+      this.createText({
+        text: this.screenName,
+        x: 100,
+        y: 60,
+        fontSize: 10
+      });
+      this.createText({
+        text: this.content,
+        x: 400,
+        y: 250,
+        width: 1200,
+        fontSize: 8
+      }).style.textAlign = "center";
+      const btn = this.createButton({
+        text: this.buttonText,
+        x: 100,
+        y: 800,
+        padding: 4,
+        style: "inverted"
+      });
+      btn.addEventListener("click", () => {
+        this.onClick();
+        this.exit();
+      });
+    }
+  };
+
   // src/subscreens/globalMenu.ts
   var GlobalMenu = class extends BaseSubscreen {
     get name() {
@@ -2818,7 +2871,7 @@ Changelog:
           fontSize: 6
         });
         const resetBtn = this.createButton({
-          text: "Reset settings",
+          text: "Reset Settings",
           x: 100,
           y: 825,
           width: 500,
@@ -2828,10 +2881,41 @@ Changelog:
         if (isRuleActive(Player, 1009 /* DISABLE_RESET_SETTINGS_BUTTON */)) resetBtn.classList.add("lcDisabled");
         resetBtn.addEventListener("click", () => {
           if (isRuleActive(Player, 1009 /* DISABLE_RESET_SETTINGS_BUTTON */)) return;
-          resetStorage();
-          this.exit();
+          this.setSubscreen(
+            new OneButtonMenu({
+              screenName: "Global > Reset Settings",
+              content: "Are you sure you want to reset all your mod data?",
+              buttonText: "Reset Settings",
+              onClick: resetStorage
+            })
+          );
         });
       }
+      const releaseBtn = this.createButton({
+        text: "Release Baby",
+        x: 1400,
+        y: 825,
+        width: 500,
+        padding: 2,
+        icon: "Icons/Cancel.png"
+      });
+      if (!hasAccessRightTo(Player, InformationSheetSelection, "RELEASE_BABY" /* RELEASE_BABY */) || !hasMommy(InformationSheetSelection)) releaseBtn.classList.add("lcDisabled");
+      releaseBtn.addEventListener("click", () => {
+        if (!hasAccessRightTo(Player, InformationSheetSelection, "RELEASE_BABY" /* RELEASE_BABY */) || !hasMommy(InformationSheetSelection)) return releaseBtn.classList.add("lcDisabled");
+        this.setSubscreen(
+          new OneButtonMenu({
+            screenName: "Global > Release Baby",
+            content: "Are you sure you want to release baby?",
+            buttonText: "Release Baby",
+            onClick: () => {
+              chatSendModMessage("releaseBaby", null, InformationSheetSelection.MemberNumber);
+            }
+          })
+        );
+      });
+    }
+    exit() {
+      this.setSubscreen(new MainMenu());
     }
   };
 
@@ -3695,14 +3779,13 @@ Changelog:
 
   // src/subscreens/notesMenu.ts
   function addNote(note, subscreen, scrollView, key, pending = false) {
-    console.log(key);
     const btn = subscreen.createButton({
       text: `${note.author.name} (${note.author.id}) noted: ${note.text}`,
       place: false,
       padding: 2
     });
     btn.style.wordBreak = "break-all";
-    btn.style.width = "90%";
+    btn.style.width = "98%";
     if (pending) btn.classList.add("lcDisabled");
     btn.addEventListener("click", () => {
       subscreen.setSubscreen(new NoteSettingsMenu(note, key));
@@ -3735,6 +3818,7 @@ Changelog:
       });
       scrollView.style.display = "flex";
       scrollView.style.flexDirection = "column";
+      scrollView.style.alignItems = "center";
       scrollView.style.rowGap = "1vw";
       this.scrollView = scrollView;
       notesList.forEach((note, i) => {
@@ -3812,6 +3896,7 @@ Changelog:
       });
       scrollView.style.display = "flex";
       scrollView.style.flexDirection = "column";
+      scrollView.style.alignItems = "center";
       scrollView.style.rowGap = "1vw";
       ChatRoomCharacter?.forEach((C) => {
         const btn = this.createButton({
@@ -3820,7 +3905,7 @@ Changelog:
           padding: 2
         });
         btn.style.wordBreak = "break-all";
-        btn.style.width = "90%";
+        btn.style.width = "98%";
         btn.addEventListener("click", () => {
           if (!C.LITTLISH_CLUB || C.IsPlayer() || hasMommy(C)) return;
           chatSendModMessage("addBaby", null, C.MemberNumber);
@@ -4000,7 +4085,7 @@ Changelog:
           padding: 2
         });
         btn.style.wordBreak = "break-all";
-        btn.style.width = "90%";
+        btn.style.width = "98%";
         scrollView.append(btn);
         scrollView.scrollTo(0, scrollView.scrollHeight);
       });
