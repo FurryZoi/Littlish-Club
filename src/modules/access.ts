@@ -165,6 +165,7 @@ export function hasAccessRightTo(C1: Character, C2: Character, accessRight: Acce
             )
         case AccessRight.READ_LOGS:
             return (
+                C1.MemberNumber === C2.MemberNumber ||
                 isMommyOf(C1, C2) ||
                 (
                     isCaregiverOf(C1, C2) &&

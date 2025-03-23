@@ -495,7 +495,7 @@ export function loadRules(): void {
                         // @ts-ignore
                     })?.TargetCharacter
                 );
-                if (target.IsPlayer() && ["Spank", "FrenchKiss"].includes(activityName) && isSleeping(Player)) {
+                if (target?.IsPlayer() && ["Spank", "FrenchKiss"].includes(activityName) && isSleeping(Player)) {
                     CharacterSetFacialExpression(Player, "Emoticon", null);
                     CharacterSetFacialExpression(Player, "Eyes", "Open");
                     ChatRoomCharacterUpdate(Player);
