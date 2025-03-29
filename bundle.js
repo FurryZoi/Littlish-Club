@@ -196,6 +196,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var MOD_MESSAGE_KEY = "lcMsg";
   var DISCORD_SERVER_INVITE_LINK = "https://discord.gg/aDUvte772D";
   var MOD_BUTTON_POSITION = [1705, 800 - 115, 90, 90];
+  var MAX_NOTE_SIZE_IN_KBYTES = 0.2;
   var CANVAS_BABIES_APPEARANCES = [
     {
       name: "Little Baby",
@@ -1856,9 +1857,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       if ((bccStorage?.abdl?.mommy || bccStorage?.abdl?.caretakers || bccStorage?.abdl?.notes?.list) && !findModByName("BCC")) bccAbdlPartSync(bccStorage.abdl);
     } catch (e) {
     }
-    chatSendModMessage("syncStorage", {
-      storage: modStorage
-    });
+    syncStorage();
     hookFunction("ChatRoomSync", 1 /* ADD_BEHAVIOR */, (args, next) => {
       next(args);
       chatSendModMessage("syncStorage", {
@@ -1907,9 +1906,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
     chatSendLocal("Littlish Club was synced with BCC's ABDL module");
   }
   function deleteProtectedProperties(data) {
-    data = cloneDeep_default(data);
-    delete data.logs;
-    return data;
+    let _data = cloneDeep_default(data);
+    delete _data.logs;
+    return _data;
   }
   function syncStorage() {
     if (typeof modStorage !== "object") return;
@@ -1950,6 +1949,13 @@ One of mods you are using is using an old version of SDK. It will work for now b
     if (c1 === "Default" && Array.isArray(c2) && c2.filter((d) => d === "Default").length === c2.length) return true;
     if (c2 === "Default" && Array.isArray(c1) && c1.filter((d) => d === "Default").length === c1.length) return true;
     return JSON.stringify(c1) === JSON.stringify(c2);
+  }
+  function getSizeInKbytes(b) {
+    if (typeof b === "string") {
+      return Math.round(new TextEncoder().encode(b).byteLength / 100) / 10;
+    } else {
+      return Math.round(new TextEncoder().encode(JSON.stringify(b)).byteLength / 100) / 10;
+    }
   }
 
   // src/utils/chat.ts
@@ -2590,7 +2596,7 @@ Changelog:
       });
       if (InformationSheetSelection.IsPlayer()) {
         this.createText({
-          text: `Mod Data Size: ${Math.round(new TextEncoder().encode(Player.ExtensionSettings?.LITTLISH_CLUB ?? "").byteLength / 100) / 10}KB`,
+          text: `Mod Data Size: ${getSizeInKbytes(Player.ExtensionSettings?.LITTLISH_CLUB ?? "")}KB`,
           x: 150,
           y: 240,
           fontSize: 6
@@ -3661,6 +3667,13 @@ Changelog:
       });
       placeNoteBtn.addEventListener("click", () => {
         if (noteInput.value.trim() === "") return;
+        if (new TextEncoder().encode(noteInput.value).byteLength / 1024 > MAX_NOTE_SIZE_IN_KBYTES) {
+          return notify(
+            `That note takes up more size than the set limit. You are evil.`,
+            4500
+          );
+        }
+        ;
         const note = {
           text: noteInput.value,
           author: {
@@ -4358,6 +4371,12 @@ Thanks for installing the mod!`;
         }
         if (msg === "addNote") {
           if (typeof data?.text !== "string" || data.text.trim() === "") return;
+          if (new TextEncoder().encode(data.text).byteLength / 1024 > MAX_NOTE_SIZE_IN_KBYTES) {
+            return chatSendLocal(
+              `${getNickname(sender)} (${sender.MemberNumber}) tried to add note that takes up more size than the set limit. Probably it was attempt to break the account.`
+            );
+          }
+          ;
           if (!modStorage.notes) modStorage.notes = {};
           if (!modStorage.notes.list) modStorage.notes.list = [];
           const note = {
@@ -4418,13 +4437,13 @@ Thanks for installing the mod!`;
     const style = document.createElement("style");
     style.innerHTML = styles_default;
     document.head.append(style);
-    console.log(`${MOD_NAME} loaded`);
     initStorage();
     loadMessaging();
     createApi();
     loadUI();
     loadRules();
     loadCyberDiaper();
+    console.log(`${MOD_NAME} loaded`);
     if (MOD_VERSION !== modStorage.version) {
       waitFor(() => !!document.getElementById("InputChat")).then(() => {
         modStorage.version = MOD_VERSION;
