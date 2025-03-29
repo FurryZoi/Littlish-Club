@@ -33,7 +33,6 @@ export function loadUI(): void {
             );
         }
         if (window.LITTLISH_CLUB.inModSubscreen()) {
-            DrawButton(1815, 75, 90, 90, "", "White", "Icons/Exit.png");
             return currentSubscreen.run();
         }
         next(args);
@@ -55,9 +54,7 @@ export function loadUI(): void {
             else setSubscreen(new MainMenu());
         }
         if (window.LITTLISH_CLUB.inModSubscreen()) {
-            if (MouseIn(1815, 75, 90, 90)) currentSubscreen.exit();
-            else currentSubscreen.click();
-            return;
+            return currentSubscreen.click();
         }
         next(args);
     });

@@ -53,7 +53,7 @@ export class MainMenu extends BaseSubscreen {
 
         if (InformationSheetSelection.IsPlayer()) {
             const addBabyBtn = this.createButton({
-                text: "Add baby",
+                text: "Add Baby",
                 x: 1000,
                 y: 820,
                 width: 550,
@@ -86,16 +86,9 @@ export class MainMenu extends BaseSubscreen {
             this.setSubscreen(new WardrobeMenu());
         });
 
-        // this.createText({
-        //     text: MOD_NAME,
-        //     x: 1075,
-        //     y: 120,
-        //     fontSize: 10
-        // });
-
         this.createText({
-            text: MOD_NAME + " (BETA)",
-            x: 850,
+            text: MOD_NAME,
+            x: 1075,
             y: 120,
             fontSize: 10
         });

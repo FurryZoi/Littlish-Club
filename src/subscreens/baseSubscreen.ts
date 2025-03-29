@@ -137,6 +137,17 @@ function autosetFontSize(element: HTMLElement) {
     });
 }
 
+function loadSubscreen(subscreen: BaseSubscreen): void {
+    subscreen.createButton({
+        x: 1815,
+        y: 75,
+        width: 90,
+        height: 90,
+        icon: "Icons/Exit.png"
+    }).addEventListener("click", () => subscreen.exit());
+    subscreen.load();
+}
+
 export function setPreviousSubscreen(): void {
     setSubscreen(previousSubscreen);
 }
@@ -144,7 +155,7 @@ export function setPreviousSubscreen(): void {
 export function setSubscreen(subscreen: BaseSubscreen | null): void {
     previousSubscreen = currentSubscreen;
     currentSubscreen = subscreen;
-    if (currentSubscreen) currentSubscreen.load();
+    if (currentSubscreen) loadSubscreen(currentSubscreen);
     if (previousSubscreen) previousSubscreen.unload();
 }
 
