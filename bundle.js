@@ -335,13 +335,23 @@ One of mods you are using is using an old version of SDK. It will work for now b
       fontSize: Font + "px"
     });
   }
+  function loadSubscreen(subscreen) {
+    subscreen.createButton({
+      x: 1815,
+      y: 75,
+      width: 90,
+      height: 90,
+      icon: "Icons/Exit.png"
+    }).addEventListener("click", () => subscreen.exit());
+    subscreen.load();
+  }
   function setPreviousSubscreen() {
     setSubscreen(previousSubscreen);
   }
   function setSubscreen(subscreen) {
     previousSubscreen = currentSubscreen;
     currentSubscreen = subscreen;
-    if (currentSubscreen) currentSubscreen.load();
+    if (currentSubscreen) loadSubscreen(currentSubscreen);
     if (previousSubscreen) previousSubscreen.unload();
   }
   var currentSubscreen;
@@ -3955,7 +3965,7 @@ Thanks for installing the mod!`;
       cloudBtn.style.borderRadius = "4vw";
       if (InformationSheetSelection.IsPlayer()) {
         const addBabyBtn = this.createButton({
-          text: "Add baby",
+          text: "Add Baby",
           x: 1e3,
           y: 820,
           width: 550,
@@ -3986,8 +3996,8 @@ Thanks for installing the mod!`;
         this.setSubscreen(new WardrobeMenu());
       });
       this.createText({
-        text: MOD_NAME + " (BETA)",
-        x: 850,
+        text: MOD_NAME,
+        x: 1075,
         y: 120,
         fontSize: 10
       });
@@ -4114,7 +4124,6 @@ Thanks for installing the mod!`;
         );
       }
       if (window.LITTLISH_CLUB.inModSubscreen()) {
-        DrawButton(1815, 75, 90, 90, "", "White", "Icons/Exit.png");
         return currentSubscreen.run();
       }
       next(args);
@@ -4125,9 +4134,7 @@ Thanks for installing the mod!`;
         else setSubscreen(new MainMenu());
       }
       if (window.LITTLISH_CLUB.inModSubscreen()) {
-        if (MouseIn(1815, 75, 90, 90)) currentSubscreen.exit();
-        else currentSubscreen.click();
-        return;
+        return currentSubscreen.click();
       }
       next(args);
     });
