@@ -6,7 +6,7 @@ import { hookFunction, HookPriority } from "./bcModSdk";
 import { StorageCyberDiaper, CyberDiaperChangePermission, updateDiaperItem } from "./cyberDiaper";
 import { addLog } from "./logs";
 import { rulesList, isRuleStrict, StorageRule } from "./rules";
-import { modStorage, syncStorage, Note, PublicModStorage } from "./storage";
+import { modStorage, syncStorage, Note, PublicModStorage, deleteProtectedProperties } from "./storage";
 import { MAX_NOTE_SIZE_IN_KBYTES, MOD_MESSAGE_KEY } from "@/constants";
 
 
@@ -104,7 +104,7 @@ export function loadMessaging(): void {
             if (msg === "syncStorage") {
                 if (!sender.LITTLISH_CLUB) {
                     chatSendModMessage<SyncStorageMessageData>("syncStorage", {
-                        storage: modStorage,
+                        storage: deleteProtectedProperties(modStorage),
                     }, sender.MemberNumber);
                 }
                 sender.LITTLISH_CLUB = data.storage;
