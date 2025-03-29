@@ -5,6 +5,7 @@ import { MainMenu } from "./mainMenu";
 import { chatSendModMessage } from "@/utils/chat";
 import { addLog } from "@/modules/logs";
 import { getNickname } from "@/utils/characters";
+import { AddNoteMessageData } from "@/modules/messaging";
 
 
 function addNote(note: Note, subscreen: NotesMenu, scrollView: HTMLDivElement, key: number, pending = false): void {
@@ -94,7 +95,7 @@ export class NotesMenu extends BaseSubscreen {
                 modStorage.notes.list.push(note);
                 addLog(`${getNickname(Player)} (${Player.MemberNumber}) added note: "${note.text}"`, false);
             } else {
-                chatSendModMessage("addNote", {
+                chatSendModMessage<AddNoteMessageData>("addNote", {
                     text: noteInput.value
                 }, InformationSheetSelection.MemberNumber);
             }

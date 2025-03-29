@@ -1,20 +1,21 @@
-import { MOD_NAME, MOD_VERSION } from "@/constants";
+import { MOD_MESSAGE_KEY, MOD_NAME, MOD_VERSION } from "@/constants";
 import { modStorage } from "@/modules/storage";
 import { getRandomNumber } from "./main";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
+import { RequestMessageData, RequestResponseMessageData } from "@/modules/messaging";
 
-const pendingRequests: Map<number, PendingRequest> = new Map();
+const pendingRequests: Map<number, PendingRequest<any>> = new Map();
 
-interface PendingRequest {
+interface PendingRequest<T> {
 	message: string
-	data: any
+	data: T
 	target: number,
-	resolve: (data: any) => any,
-	reject: (data: any) => any
+	resolve: (data: T) => any,
+	reject: (data: T) => any
 }
 
-interface RequestResponse {
-	data?: any
+interface RequestResponse<T> {
+	data?: T
 	isError: boolean
 }
 
@@ -69,9 +70,9 @@ export function chatSendActionMessage(msg: string, target: undefined | number = 
 	});
 }
 
-export function chatSendModMessage(msg: string, _data = null, targetNumber = null): void {
+export function chatSendModMessage<T>(msg: string, _data: T = null, targetNumber = null): void {
 	const data: ServerChatRoomMessage = {
-		Content: "lcClubMsg",
+		Content: MOD_MESSAGE_KEY,
 		Dictionary: {
 			// @ts-ignore
 			msg
@@ -90,7 +91,7 @@ export function chatSendBeep(data: any, targetId: number): void {
 		BeepType: "Leash",
 		MemberNumber: targetId,
 		Message: JSON.stringify({
-			type: "DOGS",
+			type: MOD_MESSAGE_KEY,
 			...data
 		})
 	};
@@ -98,7 +99,7 @@ export function chatSendBeep(data: any, targetId: number): void {
 	ServerSend("AccountBeep", beep);
 }
 
-export function sendRequest(message: string, data: any, target: number): Promise<RequestResponse> {
+export function sendRequest<T>(message: string, data: any, target: number): Promise<RequestResponse<T>> {
 	return new Promise((resolve, reject) => {
 		const requestId = parseInt(`${Date.now()}${getRandomNumber(1000, 10000)}`);
 		pendingRequests.set(requestId, {
@@ -108,7 +109,7 @@ export function sendRequest(message: string, data: any, target: number): Promise
 			resolve,
 			reject
 		});
-		chatSendModMessage("request", {
+		chatSendModMessage<RequestMessageData>("request", {
 			requestId,
 			message,
 			data
@@ -134,7 +135,7 @@ export function handleRequest(requestId: number, message: string, data: any, sen
 	switch (message) {
 		case "getLogs":
 			if (!hasAccessRightTo(sender, Player, AccessRight.READ_LOGS)) return;
-			chatSendModMessage("requestResponse", {
+			chatSendModMessage<RequestResponseMessageData>("requestResponse", {
 				requestId,
 				message,
 				data: modStorage.logs?.list ?? []

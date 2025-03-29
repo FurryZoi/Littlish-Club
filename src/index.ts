@@ -8,6 +8,7 @@ import { createApi } from "./modules/api";
 import { loadCyberDiaper } from "./modules/cyberDiaper";
 import { waitFor } from "./utils/main";
 import { chatSendChangelog } from "./utils/chat";
+import { loadMessaging } from "./modules/messaging";
 
 
 const init = () => {
@@ -16,6 +17,7 @@ const init = () => {
     document.head.append(style);
     console.log(`${MOD_NAME} loaded`);
     initStorage();
+    loadMessaging();
     createApi();
     loadUI();
     loadRules();

@@ -6,6 +6,7 @@ import { AccessRight, getCaregiversOf, getMommyOf, hasAccessRightTo, hasMommy } 
 import { chatSendModMessage } from "@/utils/chat";
 import { addLog } from "@/modules/logs";
 import { getNickname } from "@/utils/characters";
+import { ChangeCaregiversListMessageData } from "@/modules/messaging";
 
 export class FamilyMenu extends BaseSubscreen {
     get name() {
@@ -49,7 +50,7 @@ export class FamilyMenu extends BaseSubscreen {
                 modStorage.caregivers.list = list;
                 addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed caregivers list`, false);
             } else {
-                chatSendModMessage("changeCaregiversList", {
+                chatSendModMessage<ChangeCaregiversListMessageData>("changeCaregiversList", {
                     list
                 }, InformationSheetSelection.MemberNumber);
             }

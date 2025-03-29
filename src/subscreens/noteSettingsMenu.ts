@@ -4,6 +4,7 @@ import { AccessRight, hasAccessRightTo } from "@/modules/access";
 import { chatSendModMessage } from "@/utils/chat";
 import { addLog } from "@/modules/logs";
 import { getNickname } from "@/utils/characters";
+import { DeleteNoteMessageData } from "@/modules/messaging";
 
 
 
@@ -72,7 +73,7 @@ export class NoteSettingsMenu extends BaseSubscreen {
                 addLog(`${getNickname(Player)} (${Player.MemberNumber}) deleted note: "${note.text}"`, false);
                 this.exit();
             } else {
-                chatSendModMessage("deleteNote", {
+                chatSendModMessage<DeleteNoteMessageData>("deleteNote", {
                     key: this.key
                 }, InformationSheetSelection.MemberNumber);
                 this.setPreviousSubscreen();

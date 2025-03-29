@@ -66,7 +66,7 @@ export class LogsMenu extends BaseSubscreen {
                 fontSize: 8
             });
             statusText.style.textAlign = "center";
-            const res = await sendRequest("getLogs", null, InformationSheetSelection.MemberNumber);
+            const res = await sendRequest<Log[]>("getLogs", null, InformationSheetSelection.MemberNumber);
             if (res.isError) return statusText.textContent = "Loading Error :(";
             statusText.remove();
             logs = res.data;

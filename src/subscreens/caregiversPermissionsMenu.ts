@@ -4,6 +4,7 @@ import { chatSendModMessage } from "@/utils/chat";
 import { addLog } from "@/modules/logs";
 import { getNickname } from "@/utils/characters";
 import { syncStorage } from "@/modules/storage";
+import { TurnCaregiversAccessRightMessageData } from "@/modules/messaging";
 
 export class CaregiversPermissionsMenu extends BaseSubscreen {
     get name() {
@@ -44,7 +45,7 @@ export class CaregiversPermissionsMenu extends BaseSubscreen {
                     );
                     syncStorage();
                 } else {
-                    chatSendModMessage("turnCaregiversAccessRight", {
+                    chatSendModMessage<TurnCaregiversAccessRightMessageData>("turnCaregiversAccessRight", {
                         accessRightId: p.id
                     }, InformationSheetSelection.MemberNumber);
                 }

@@ -10,6 +10,7 @@ import { chatSendModMessage } from "@/utils/chat";
 import { cloneDeep } from "lodash-es";
 import { addLog } from "@/modules/logs";
 import { getNickname } from "@/utils/characters";
+import { ChangeCyberDiaperSettingsMessageData } from "@/modules/messaging";
 
 export class CyberDiaperSettingsMenu extends BaseSubscreen {
     private cyberDiaperSettings: StorageCyberDiaper;
@@ -181,7 +182,7 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
                 addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed settings of cyber diaper`, false);
                 syncStorage();
             } else {
-                chatSendModMessage(
+                chatSendModMessage<ChangeCyberDiaperSettingsMessageData>(
                     "changeCyberDiaperSettings",
                     this.cyberDiaperSettings,
                     InformationSheetSelection.MemberNumber

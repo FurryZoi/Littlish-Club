@@ -5,6 +5,7 @@ import { AccessRight, hasAccessRightTo, isExploringModeEnabled, isMommyOf } from
 import { chatSendModMessage } from "@/utils/chat";
 import { addLog } from "@/modules/logs";
 import { getNickname } from "@/utils/characters";
+import { ChangeRuleSettingsMessageData } from "@/modules/messaging";
 
 
 export class RuleSettingsMenu extends BaseSubscreen {
@@ -331,7 +332,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
                 };
                 if (this.ruleSettings.data) dataToSend.data = this.ruleSettings.data;
                 if (this.ruleSettings.conditions) dataToSend.conditions = this.ruleSettings.conditions;
-                chatSendModMessage("changeRuleSettings", dataToSend, InformationSheetSelection.MemberNumber);
+                chatSendModMessage<ChangeRuleSettingsMessageData>("changeRuleSettings", dataToSend, InformationSheetSelection.MemberNumber);
             }
             this.exit();
         });
