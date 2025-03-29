@@ -6,6 +6,8 @@ import { chatSendModMessage } from "@/utils/chat";
 import { addLog } from "@/modules/logs";
 import { getNickname } from "@/utils/characters";
 import { AddNoteMessageData } from "@/modules/messaging";
+import { MAX_NOTE_SIZE_IN_KBYTES } from "@/constants";
+import { notify } from "@/modules/ui";
 
 
 function addNote(note: Note, subscreen: NotesMenu, scrollView: HTMLDivElement, key: number, pending = false): void {
@@ -81,6 +83,12 @@ export class NotesMenu extends BaseSubscreen {
         });
         placeNoteBtn.addEventListener("click", () => {
             if (noteInput.value.trim() === "") return;
+            if ((new TextEncoder().encode(noteInput.value).byteLength / 1024) > MAX_NOTE_SIZE_IN_KBYTES) {
+                return notify(
+                    `That note takes up more size than the set limit. You are evil.`,
+                    4500
+                );
+            };
             const note: Note = {
                 text: noteInput.value,
                 author: {

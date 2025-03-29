@@ -5,6 +5,7 @@ export const REPO_URL: string = "https://github.com/FurryZoi/Littlish-Club";
 export const MOD_MESSAGE_KEY: string = "lcMsg";
 export const DISCORD_SERVER_INVITE_LINK = "https://discord.gg/aDUvte772D";
 export const MOD_BUTTON_POSITION: RectTuple = [1705, 800 - 115, 90, 90];
+export const MAX_NOTE_SIZE_IN_KBYTES = 0.2;
 export const CANVAS_BABIES_APPEARANCES: {
     name: string
     creator: string

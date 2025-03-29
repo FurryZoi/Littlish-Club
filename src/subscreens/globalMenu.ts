@@ -5,6 +5,7 @@ import { OneButtonMenu } from "./shared/oneButtonMenu";
 import { MainMenu } from "./mainMenu";
 import { AccessRight, hasAccessRightTo, hasMommy } from "@/modules/access";
 import { chatSendModMessage } from "@/utils/chat";
+import { getSizeInKbytes } from "@/utils/main";
 
 export class GlobalMenu extends BaseSubscreen {
     get name() {
@@ -25,8 +26,7 @@ export class GlobalMenu extends BaseSubscreen {
 
         if (InformationSheetSelection.IsPlayer()) {
             this.createText({
-                text: `Mod Data Size: ${Math.round(new TextEncoder().encode(Player.ExtensionSettings?.LITTLISH_CLUB ?? "").byteLength / 100) / 10
-                    }KB`,
+                text: `Mod Data Size: ${getSizeInKbytes(Player.ExtensionSettings?.LITTLISH_CLUB ?? "")}KB`,
                 x: 150,
                 y: 240,
                 fontSize: 6

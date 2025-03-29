@@ -6,8 +6,8 @@ import { hookFunction, HookPriority } from "./bcModSdk";
 import { StorageCyberDiaper, CyberDiaperChangePermission, updateDiaperItem } from "./cyberDiaper";
 import { addLog } from "./logs";
 import { rulesList, isRuleStrict, StorageRule } from "./rules";
-import { modStorage, syncStorage, Note, ModStorage } from "./storage";
-import { MOD_MESSAGE_KEY } from "@/constants";
+import { modStorage, syncStorage, Note, PublicModStorage } from "./storage";
+import { MAX_NOTE_SIZE_IN_KBYTES, MOD_MESSAGE_KEY } from "@/constants";
 
 
 export interface RequestMessageData {
@@ -23,7 +23,7 @@ export interface RequestResponseMessageData {
 }
 
 export interface SyncStorageMessageData {
-    storage: ModStorage
+    storage: PublicModStorage
 }
 
 export interface ChangeCaregiversListMessageData {
@@ -208,6 +208,11 @@ export function loadMessaging(): void {
             }
             if (msg === "addNote") {
                 if (typeof data?.text !== "string" || data.text.trim() === "") return;
+                if ((new TextEncoder().encode(data.text).byteLength / 1024) > MAX_NOTE_SIZE_IN_KBYTES) {
+                    return chatSendLocal(
+                        `${getNickname(sender)} (${sender.MemberNumber}) tried to add note that takes up more size than the set limit. Probably it was attempt to break the account.`
+                    );
+                };
                 if (!modStorage.notes) modStorage.notes = {};
                 if (!modStorage.notes.list) modStorage.notes.list = [];
                 const note: Note = {

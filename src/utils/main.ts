@@ -23,7 +23,7 @@ export function getRandomNumber(min: number, max: number): number {
 export function isVersionNewer(version1: string, version2: string): boolean {
 	const v1Parts = version1.split('.');
 	const v2Parts = version2.split('.');
-  
+
 	for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
 		const v1Part = parseInt(v1Parts[i] || '0', 10);
 		const v2Part = parseInt(v2Parts[i] || '0', 10);
@@ -44,4 +44,12 @@ export function colorsEqual(c1: string[] | string | null | undefined, c2: string
 	if (c1 === "Default" && Array.isArray(c2) && c2.filter(d => d === "Default").length === c2.length) return true;
 	if (c2 === "Default" && Array.isArray(c1) && c1.filter(d => d === "Default").length === c1.length) return true;
 	return JSON.stringify(c1) === JSON.stringify(c2);
+}
+
+export function getSizeInKbytes(b: any): number {
+	if (typeof b === "string") {
+		return Math.round(new TextEncoder().encode(b).byteLength / 100) / 10;
+	} else {
+		return Math.round(new TextEncoder().encode(JSON.stringify(b)).byteLength / 100) / 10;
+	}
 }

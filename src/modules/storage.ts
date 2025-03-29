@@ -48,6 +48,8 @@ export interface ModStorage {
     version: string
 }
 
+export type PublicModStorage = Omit<ModStorage, "logs">;
+
 export let modStorage: ModStorage;
 
 export function initStorage(): void {
@@ -76,9 +78,7 @@ export function initStorage(): void {
         ) bccAbdlPartSync(bccStorage.abdl);
     } catch (e) { }
 
-    chatSendModMessage<SyncStorageMessageData>("syncStorage", {
-        storage: modStorage,
-    });
+    syncStorage();
 
     hookFunction("ChatRoomSync", HookPriority.ADD_BEHAVIOR, (args, next) => {
         next(args);
@@ -137,10 +137,10 @@ function bccAbdlPartSync(oldAbdlData: Record<string, any>): void {
     chatSendLocal("Littlish Club was synced with BCC's ABDL module");
 }
 
-function deleteProtectedProperties(data: ModStorage): ModStorage {
-    data = cloneDeep(data);
-    delete data.logs;
-    return data;
+function deleteProtectedProperties(data: ModStorage): PublicModStorage {
+    let _data = cloneDeep(data);
+    delete _data.logs;
+    return _data;
 }
 
 export function syncStorage(): void {

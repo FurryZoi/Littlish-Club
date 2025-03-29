@@ -15,13 +15,13 @@ const init = () => {
     const style = document.createElement("style");
     style.innerHTML = styles;
     document.head.append(style);
-    console.log(`${MOD_NAME} loaded`);
     initStorage();
     loadMessaging();
     createApi();
     loadUI();
     loadRules();
     loadCyberDiaper();
+    console.log(`${MOD_NAME} loaded`);
 
     if (MOD_VERSION !== modStorage.version) {
         waitFor(() => !!document.getElementById("InputChat")).then(() => {
