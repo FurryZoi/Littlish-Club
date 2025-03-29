@@ -193,6 +193,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var MOD_NAME = "Littlish Club";
   var MOD_FULL_NAME = MOD_NAME;
   var REPO_URL = "https://github.com/FurryZoi/Littlish-Club";
+  var MOD_MESSAGE_KEY = "lcMsg";
   var DISCORD_SERVER_INVITE_LINK = "https://discord.gg/aDUvte772D";
   var MOD_BUTTON_POSITION = [1705, 800 - 115, 90, 90];
   var CANVAS_BABIES_APPEARANCES = [
@@ -547,22 +548,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // src/utils/characters.ts
-  function getPlayer(value) {
-    if (!value) return;
-    return ChatRoomCharacter.find((Character) => {
-      return Character.MemberNumber == value || Character.Name.toLowerCase() === value || Character.Nickname?.toLowerCase() === value;
-    });
-  }
-  function getNickname(target) {
-    return CharacterNickname(target);
-  }
-  function serverAppearanceBundleToAppearance(assetFamily, serverAppearanceBundle) {
-    return serverAppearanceBundle.map((t) => {
-      return ServerBundledItemToAppearanceItem(assetFamily, t);
-    });
-  }
-
   // src/modules/access.ts
   function isExploringModeEnabled() {
     return !hasMommy(Player);
@@ -661,128 +646,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
       case "RELEASE_BABY" /* RELEASE_BABY */:
         return isMommyOf(C1, C2);
     }
-  }
-
-  // src/utils/main.ts
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-  async function waitFor(func, cancelFunc = () => false) {
-    while (!func()) {
-      if (cancelFunc()) {
-        return false;
-      }
-      await sleep(10);
-    }
-    return true;
-  }
-  function getRandomNumber(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-  function colorsEqual(c1, c2) {
-    if (!c1 && !c2) return true;
-    if (!c1 && c2 === "Default" || !c2 && c1 === "Default") return true;
-    if (c1 === "Default" && Array.isArray(c2) && c2.filter((d) => d === "Default").length === c2.length) return true;
-    if (c2 === "Default" && Array.isArray(c1) && c1.filter((d) => d === "Default").length === c1.length) return true;
-    return JSON.stringify(c1) === JSON.stringify(c2);
-  }
-
-  // src/modules/cyberDiaper.ts
-  var CyberDiaperChangePermission = /* @__PURE__ */ ((CyberDiaperChangePermission2) => {
-    CyberDiaperChangePermission2["EVERYONE"] = "EVERYONE";
-    CyberDiaperChangePermission2["EVERYONE_EXCEPT_WEARER"] = "EVERYONE_EXCEPT_WEARER";
-    CyberDiaperChangePermission2["CAREGIVERS"] = "CAREGIVERS";
-    CyberDiaperChangePermission2["MOMMY"] = "MOMMY";
-    return CyberDiaperChangePermission2;
-  })(CyberDiaperChangePermission || {});
-  var cyberDiaperChangePermissionsHierarchy = [
-    "EVERYONE" /* EVERYONE */,
-    "EVERYONE_EXCEPT_WEARER" /* EVERYONE_EXCEPT_WEARER */,
-    "CAREGIVERS" /* CAREGIVERS */,
-    "MOMMY" /* MOMMY */
-  ];
-  function getNextCyberDiaperChangePermission(p) {
-    if (cyberDiaperChangePermissionsHierarchy.indexOf(p) === cyberDiaperChangePermissionsHierarchy.length - 1) return cyberDiaperChangePermissionsHierarchy[0];
-    return cyberDiaperChangePermissionsHierarchy[cyberDiaperChangePermissionsHierarchy.indexOf(p) + 1];
-  }
-  function getCyberDiaperModelName(model) {
-    switch (model) {
-      case "BULKY_DIAPER" /* BULKY_DIAPER */:
-        return "Bulky Diaper";
-      case "POOFY_DIAPER" /* POOFY_DIAPER */:
-        return "Poofy Diaper";
-    }
-  }
-  function getCyberDiaperAssetName(model) {
-    switch (model) {
-      case "BULKY_DIAPER" /* BULKY_DIAPER */:
-        return "BulkyDiaper";
-      case "POOFY_DIAPER" /* POOFY_DIAPER */:
-        return "PoofyDiaper";
-      default:
-        return "BulkyDiaper";
-    }
-  }
-  function putCyberDiaperOn() {
-    const cyberDiaper = modStorage.cyberDiaper;
-    const asset = AssetGet(Player.AssetFamily, "ItemPelvis", getCyberDiaperAssetName(cyberDiaper.model));
-    InventoryWear(Player, getCyberDiaperAssetName(cyberDiaper.model), "ItemPelvis", cyberDiaper.color, 10, 0, {
-      Name: cyberDiaper.name ?? "[No Name]",
-      Description: cyberDiaper.description ?? "[No Description]",
-      MemberName: "Littlish Club Production",
-      MemberNumber: 133997,
-      Property: "Comfy",
-      Color: (cyberDiaper.color ?? asset.DefaultColor).join(","),
-      Lock: "",
-      Item: getCyberDiaperAssetName(cyberDiaper.model),
-      Private: true,
-      ItemProperty: null
-    });
-    ChatRoomCharacterItemUpdate(Player, "ItemPelvis");
-  }
-  function takeCyberDiaperOff() {
-    InventoryRemove(Player, "ItemPelvis");
-    ChatRoomCharacterItemUpdate(Player, "ItemPelvis");
-  }
-  function updateDiaperItem() {
-    if (modStorage.cyberDiaper.locked) putCyberDiaperOn();
-    else takeCyberDiaperOff();
-  }
-  function checkCyberDiaper() {
-    const cyberDiaperStorage = modStorage.cyberDiaper;
-    const cyberDiaperItem = InventoryGet(Player, "ItemPelvis");
-    if (!cyberDiaperStorage?.locked) return;
-    if (!cyberDiaperItem) putCyberDiaperOn();
-    const asset = AssetGet(Player.AssetFamily, "ItemPelvis", getCyberDiaperAssetName(cyberDiaperStorage.model));
-    if (!cyberDiaperItem || cyberDiaperItem.Asset?.Name !== getCyberDiaperAssetName(cyberDiaperStorage.model) || // @ts-ignore
-    !colorsEqual(cyberDiaperStorage.color ?? asset.DefaultColor, cyberDiaperItem.Color ?? asset.DefaultColor)) putCyberDiaperOn();
-  }
-  function loadCyberDiaper() {
-    hookFunction("ChatRoomCharacterItemUpdate", 0 /* OBSERVE */, (args, next) => {
-      next(args);
-      checkCyberDiaper();
-    });
-    hookFunction("ChatRoomSyncItem", 0 /* OBSERVE */, (args, next) => {
-      next(args);
-      checkCyberDiaper();
-    });
-    hookFunction("ChatRoomSyncSingle", 0 /* OBSERVE */, (args, next) => {
-      next(args);
-      checkCyberDiaper();
-    });
-  }
-
-  // src/modules/logs.ts
-  function addLog(message, push = true) {
-    if (!modStorage.logs) modStorage.logs = {};
-    if (!modStorage.logs.list) modStorage.logs.list = [];
-    modStorage.logs.list.push({
-      message,
-      ts: Date.now()
-    });
-    if (push) syncStorage();
   }
 
   // node_modules/lodash-es/_freeGlobal.js
@@ -1986,202 +1849,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
     chatSendModMessage("syncStorage", {
       storage: modStorage
     });
-    hookFunction("ChatRoomMessage", 1 /* ADD_BEHAVIOR */, (args, next) => {
-      const message = args[0];
-      const sender = getPlayer(message.Sender);
-      if (!sender) return next(args);
-      if (message.Content === "lcClubMsg" && !sender.IsPlayer()) {
-        const msg = message.Dictionary.msg;
-        const data2 = message.Dictionary.data;
-        if (msg === "request") {
-          if (typeof data2.requestId !== "number" || typeof data2.message !== "string") return;
-          handleRequest(data2.requestId, data2.message, data2.data, sender);
-        }
-        if (msg === "requestResponse") {
-          if (typeof data2.requestId !== "number") return;
-          handleRequestResponse(data2.requestId, data2.data);
-        }
-        if (msg === "syncStorage") {
-          if (!sender.LITTLISH_CLUB) {
-            chatSendModMessage("syncStorage", {
-              storage: modStorage
-            }, sender.MemberNumber);
-          }
-          sender.LITTLISH_CLUB = data2.storage;
-          if (InformationSheetSelection && InformationSheetSelection.MemberNumber === sender.MemberNumber) {
-            currentSubscreen.update();
-          }
-        }
-        if (msg === "addBaby" && !hasMommy(Player) && modStorage.requestReciviedFrom?.id !== sender.MemberNumber) {
-          modStorage.requestReciviedFrom = {
-            name: CharacterNickname(sender),
-            id: sender.MemberNumber
-          };
-          syncStorage();
-          chatSendLocal(`${getNickname(sender)} (${sender.MemberNumber}) wants to become your mommy, open Littlish Club menu`);
-        }
-        if (msg === "turnCanChangeCaregiversList" && hasAccessRightTo(sender, Player, "TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST" /* TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST */)) {
-          if (!modStorage.caregivers) modStorage.caregivers = {};
-          modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
-          addLog(
-            `${getNickname(sender)} (${sender.MemberNumber}) ${modStorage.caregivers.canChangeList ? "allowed" : "forbade"} ${getNickname(Player)} to change caregivers list`,
-            false
-          );
-          syncStorage();
-        }
-        if (msg === "changeCaregiversList" && hasAccessRightTo(sender, Player, "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */)) {
-          if (!Array.isArray(data2?.list)) return;
-          if (!modStorage.caregivers) modStorage.caregivers = {};
-          modStorage.caregivers.list = data2.list;
-          chatSendLocal(`${getNickname(sender)} (${sender.MemberNumber}) changed your caregivers list`);
-          addLog(
-            `${getNickname(sender)} (${sender.MemberNumber}) changed caregivers list`,
-            false
-          );
-          syncStorage();
-        }
-        if (msg === "turnCaregiversAccessRight" && hasAccessRightTo(sender, Player, "MANAGE_CAREGIVERS_ACCESS_RIGHTS" /* MANAGE_CAREGIVERS_ACCESS_RIGHTS */)) {
-          if (!caregiverAccessRightsList.find((r) => r.id === data2?.accessRightId)) return;
-          turnCaregiverAccessRight(data2.accessRightId);
-          const _message = `${getNickname(sender)} (${sender.MemberNumber}) turned ${isCaregiverAccessRightEnabled(Player, data2.accessRightId) ? "on" : "off"} caregiver access right "${caregiverAccessRightsList.find((r) => r.id === data2.accessRightId).name}"`;
-          addLog(
-            _message,
-            false
-          );
-          syncStorage();
-          chatSendLocal(_message);
-        }
-        if (msg === "changeRuleSettings" && hasAccessRightTo(sender, Player, "MANAGE_RULES" /* MANAGE_RULES */)) {
-          if (!rulesList.find((r2) => r2.id === data2?.id)) return;
-          if (isRuleStrict(Player, data2.id) && !isMommyOf(sender, Player)) return;
-          if (!modStorage.rules) modStorage.rules = {};
-          if (!modStorage.rules.list) modStorage.rules.list = [];
-          let r = modStorage.rules.list.find((d) => d.id === data2.id);
-          if (r) {
-            if (typeof data2.state === "boolean") r.state = data2.state;
-            if (typeof data2.strict === "boolean" && hasAccessRightTo(sender, Player, "TURN_RULE_STRICT_MODE" /* TURN_RULE_STRICT_MODE */)) {
-              r.strict = data2.strict;
-            }
-            validateRuleData(r, data2);
-            validateRuleConditions(r, data2);
-            r.changedBy = sender.MemberNumber;
-            r.ts = Date.now();
-          } else {
-            let d = {
-              id: data2.id,
-              state: typeof data2.state === "boolean" ? data2.state : false,
-              strict: typeof data2.strict === "boolean" && hasAccessRightTo(sender, Player, "TURN_RULE_STRICT_MODE" /* TURN_RULE_STRICT_MODE */) ? data2.strict : false,
-              changedBy: sender.MemberNumber,
-              ts: Date.now()
-            };
-            validateRuleData(d, data2);
-            validateRuleConditions(d, data2);
-            modStorage.rules.list.push(d);
-          }
-          const _message = `${getNickname(sender)} (${sender.MemberNumber}) changed settings of "${rulesList.find((r2) => r2.id === data2?.id).name}" rule`;
-          addLog(
-            _message,
-            false
-          );
-          syncStorage();
-          chatSendLocal(_message);
-        }
-        if (msg === "addNote") {
-          if (typeof data2?.text !== "string" || data2.text.trim() === "") return;
-          if (!modStorage.notes) modStorage.notes = {};
-          if (!modStorage.notes.list) modStorage.notes.list = [];
-          const note = {
-            text: data2.text,
-            author: {
-              name: CharacterNickname(sender),
-              id: sender.MemberNumber
-            },
-            ts: Date.now()
-          };
-          modStorage.notes.list.push(note);
-          const _message = `${getNickname(sender)} (${sender.MemberNumber}) added note: "${data2.text}"`;
-          addLog(_message, false);
-          syncStorage();
-          chatSendLocal(_message);
-        }
-        if (msg === "deleteNote") {
-          if (typeof data2?.key !== "number") return;
-          const note = modStorage.notes?.list?.find((n, i) => i === data2.key - 1);
-          if (!note) return;
-          if (note.author.id !== sender.MemberNumber && !hasAccessRightTo(sender, Player, "DELETE_NOTES" /* DELETE_NOTES */)) return;
-          modStorage.notes.list.splice(data2.key - 1, 1);
-          const _message = `${getNickname(sender)} (${sender.MemberNumber}) deleted note: "${note.text}"`;
-          addLog(_message, false);
-          syncStorage();
-          chatSendLocal(_message);
-        }
-        if (msg === "changeCyberDiaperSettings" && hasAccessRightTo(sender, Player, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
-          const { name, description, model, locked, color, changePermission } = data2;
-          if (!modStorage.cyberDiaper) {
-            modStorage.cyberDiaper = {};
-            chatSendLocal(`${getNickname(sender)} bought cyber diaper for you`);
-          }
-          if (typeof name === "string") modStorage.cyberDiaper.name = name;
-          if (typeof description === "string") modStorage.cyberDiaper.description = description;
-          if (typeof model === "string") modStorage.cyberDiaper.model = model;
-          if (typeof locked === "boolean") modStorage.cyberDiaper.locked = locked;
-          if (Array.isArray(color)) modStorage.cyberDiaper.color = color;
-          if (Object.values(CyberDiaperChangePermission).includes(changePermission)) modStorage.cyberDiaper.changePermission = changePermission;
-          const _message = `${getNickname(sender)} (${sender.MemberNumber}) changed cyber diaper's settings`;
-          addLog(_message, false);
-          syncStorage();
-          updateDiaperItem();
-          chatSendLocal(_message);
-        }
-        if (msg === "releaseBaby" && hasAccessRightTo(sender, Player, "RELEASE_BABY" /* RELEASE_BABY */)) {
-          delete modStorage.mommy;
-          syncStorage();
-          chatSendLocal(`${getNickname(sender)} (${sender.MemberNumber}) released you`);
-        }
-      }
-      next(args);
-    });
     hookFunction("ChatRoomSync", 1 /* ADD_BEHAVIOR */, (args, next) => {
       next(args);
       chatSendModMessage("syncStorage", {
         storage: modStorage
       });
     });
-  }
-  function validateRuleConditions(r, data) {
-    console.log(r, data);
-    if (data.conditions) {
-      if (!r.conditions) r.conditions = {};
-      if (["any", "all"].includes(data.conditions.type)) r.conditions.type = data.conditions.type;
-      else r.conditions.type = "any";
-      if (data.conditions.whenInRoomWithRole) {
-        if (!r.conditions.whenInRoomWithRole) r.conditions.whenInRoomWithRole = {};
-        if (typeof data.conditions.whenInRoomWithRole?.inRoom === "boolean") {
-          r.conditions.whenInRoomWithRole.inRoom = data.conditions.whenInRoomWithRole.inRoom;
-        }
-        if (["mommy", "caregiver"].includes(data.conditions.whenInRoomWithRole?.role)) {
-          r.conditions.whenInRoomWithRole.role = data.conditions.whenInRoomWithRole.role;
-        }
-      } else delete r.conditions.whenInRoomWithRole;
-      if (data.conditions.whenInRoomWhereAbdl) {
-        if (!r.conditions.whenInRoomWhereAbdl) r.conditions.whenInRoomWhereAbdl = {};
-        if (typeof data.conditions.whenInRoomWhereAbdl?.blocked === "boolean") {
-          r.conditions.whenInRoomWhereAbdl.blocked = data.conditions.whenInRoomWhereAbdl.blocked;
-        }
-      } else delete r.conditions.whenInRoomWhereAbdl;
-    }
-    console.log(r, data);
-  }
-  function validateRuleData(r, data) {
-    const ruleParams = rulesList.find((g) => g.id === r.id).data ?? [];
-    for (const param of ruleParams) {
-      const p = data.data?.[param.name];
-      if (param.type === "number" && typeof p !== "number") continue;
-      if (param.type === "text" && typeof p !== "string") continue;
-      if (param.type === "checkbox" && typeof p !== "boolean") continue;
-      if (!r.data) r.data = {};
-      r.data[param.name] = p;
-    }
   }
   function migrateModStorage() {
   }
@@ -2243,6 +1916,32 @@ One of mods you are using is using an old version of SDK. It will work for now b
     syncStorage();
   }
 
+  // src/utils/main.ts
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+  async function waitFor(func, cancelFunc = () => false) {
+    while (!func()) {
+      if (cancelFunc()) {
+        return false;
+      }
+      await sleep(10);
+    }
+    return true;
+  }
+  function getRandomNumber(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  function colorsEqual(c1, c2) {
+    if (!c1 && !c2) return true;
+    if (!c1 && c2 === "Default" || !c2 && c1 === "Default") return true;
+    if (c1 === "Default" && Array.isArray(c2) && c2.filter((d) => d === "Default").length === c2.length) return true;
+    if (c2 === "Default" && Array.isArray(c1) && c1.filter((d) => d === "Default").length === c1.length) return true;
+    return JSON.stringify(c1) === JSON.stringify(c2);
+  }
+
   // src/utils/chat.ts
   var pendingRequests = /* @__PURE__ */ new Map();
   function chatSendLocal(message) {
@@ -2287,7 +1986,7 @@ Changelog:
   }
   function chatSendModMessage(msg, _data = null, targetNumber = null) {
     const data = {
-      Content: "lcClubMsg",
+      Content: MOD_MESSAGE_KEY,
       Dictionary: {
         // @ts-ignore
         msg
@@ -2321,14 +2020,14 @@ Changelog:
       }, 6e3);
     });
   }
-  function handleRequestResponse(requestId, data) {
+  function handleRequestResponse2(requestId, data) {
     const request = pendingRequests.get(requestId);
     if (!request) return;
     request.resolve({
       data
     });
   }
-  function handleRequest(requestId, message, data, sender) {
+  function handleRequest2(requestId, message, data, sender) {
     switch (message) {
       case "getLogs":
         if (!hasAccessRightTo(sender, Player, "READ_LOGS" /* READ_LOGS */)) return;
@@ -2339,6 +2038,22 @@ Changelog:
         }, sender.MemberNumber);
         return;
     }
+  }
+
+  // src/utils/characters.ts
+  function getPlayer(value) {
+    if (!value) return;
+    return ChatRoomCharacter.find((Character) => {
+      return Character.MemberNumber == value || Character.Name.toLowerCase() === value || Character.Nickname?.toLowerCase() === value;
+    });
+  }
+  function getNickname(target) {
+    return CharacterNickname(target);
+  }
+  function serverAppearanceBundleToAppearance(assetFamily, serverAppearanceBundle) {
+    return serverAppearanceBundle.map((t) => {
+      return ServerBundledItemToAppearanceItem(assetFamily, t);
+    });
   }
 
   // src/modules/rules.ts
@@ -2919,6 +2634,17 @@ Changelog:
     }
   };
 
+  // src/modules/logs.ts
+  function addLog(message, push = true) {
+    if (!modStorage.logs) modStorage.logs = {};
+    if (!modStorage.logs.list) modStorage.logs.list = [];
+    modStorage.logs.list.push({
+      message,
+      ts: Date.now()
+    });
+    if (push) syncStorage();
+  }
+
   // src/subscreens/caregiversPermissionsMenu.ts
   var CaregiversPermissionsMenu = class extends BaseSubscreen {
     get name() {
@@ -3385,6 +3111,91 @@ Changelog:
       this.setSubscreen(new MainMenu());
     }
   };
+
+  // src/modules/cyberDiaper.ts
+  var CyberDiaperChangePermission = /* @__PURE__ */ ((CyberDiaperChangePermission2) => {
+    CyberDiaperChangePermission2["EVERYONE"] = "EVERYONE";
+    CyberDiaperChangePermission2["EVERYONE_EXCEPT_WEARER"] = "EVERYONE_EXCEPT_WEARER";
+    CyberDiaperChangePermission2["CAREGIVERS"] = "CAREGIVERS";
+    CyberDiaperChangePermission2["MOMMY"] = "MOMMY";
+    return CyberDiaperChangePermission2;
+  })(CyberDiaperChangePermission || {});
+  var cyberDiaperChangePermissionsHierarchy = [
+    "EVERYONE" /* EVERYONE */,
+    "EVERYONE_EXCEPT_WEARER" /* EVERYONE_EXCEPT_WEARER */,
+    "CAREGIVERS" /* CAREGIVERS */,
+    "MOMMY" /* MOMMY */
+  ];
+  function getNextCyberDiaperChangePermission(p) {
+    if (cyberDiaperChangePermissionsHierarchy.indexOf(p) === cyberDiaperChangePermissionsHierarchy.length - 1) return cyberDiaperChangePermissionsHierarchy[0];
+    return cyberDiaperChangePermissionsHierarchy[cyberDiaperChangePermissionsHierarchy.indexOf(p) + 1];
+  }
+  function getCyberDiaperModelName(model) {
+    switch (model) {
+      case "BULKY_DIAPER" /* BULKY_DIAPER */:
+        return "Bulky Diaper";
+      case "POOFY_DIAPER" /* POOFY_DIAPER */:
+        return "Poofy Diaper";
+    }
+  }
+  function getCyberDiaperAssetName(model) {
+    switch (model) {
+      case "BULKY_DIAPER" /* BULKY_DIAPER */:
+        return "BulkyDiaper";
+      case "POOFY_DIAPER" /* POOFY_DIAPER */:
+        return "PoofyDiaper";
+      default:
+        return "BulkyDiaper";
+    }
+  }
+  function putCyberDiaperOn() {
+    const cyberDiaper = modStorage.cyberDiaper;
+    const asset = AssetGet(Player.AssetFamily, "ItemPelvis", getCyberDiaperAssetName(cyberDiaper.model));
+    InventoryWear(Player, getCyberDiaperAssetName(cyberDiaper.model), "ItemPelvis", cyberDiaper.color, 10, 0, {
+      Name: cyberDiaper.name ?? "[No Name]",
+      Description: cyberDiaper.description ?? "[No Description]",
+      MemberName: "Littlish Club Production",
+      MemberNumber: 133997,
+      Property: "Comfy",
+      Color: (cyberDiaper.color ?? asset.DefaultColor).join(","),
+      Lock: "",
+      Item: getCyberDiaperAssetName(cyberDiaper.model),
+      Private: true,
+      ItemProperty: null
+    });
+    ChatRoomCharacterItemUpdate(Player, "ItemPelvis");
+  }
+  function takeCyberDiaperOff() {
+    InventoryRemove(Player, "ItemPelvis");
+    ChatRoomCharacterItemUpdate(Player, "ItemPelvis");
+  }
+  function updateDiaperItem() {
+    if (modStorage.cyberDiaper.locked) putCyberDiaperOn();
+    else takeCyberDiaperOff();
+  }
+  function checkCyberDiaper() {
+    const cyberDiaperStorage = modStorage.cyberDiaper;
+    const cyberDiaperItem = InventoryGet(Player, "ItemPelvis");
+    if (!cyberDiaperStorage?.locked) return;
+    if (!cyberDiaperItem) putCyberDiaperOn();
+    const asset = AssetGet(Player.AssetFamily, "ItemPelvis", getCyberDiaperAssetName(cyberDiaperStorage.model));
+    if (!cyberDiaperItem || cyberDiaperItem.Asset?.Name !== getCyberDiaperAssetName(cyberDiaperStorage.model) || // @ts-ignore
+    !colorsEqual(cyberDiaperStorage.color ?? asset.DefaultColor, cyberDiaperItem.Color ?? asset.DefaultColor)) putCyberDiaperOn();
+  }
+  function loadCyberDiaper() {
+    hookFunction("ChatRoomCharacterItemUpdate", 0 /* OBSERVE */, (args, next) => {
+      next(args);
+      checkCyberDiaper();
+    });
+    hookFunction("ChatRoomSyncItem", 0 /* OBSERVE */, (args, next) => {
+      next(args);
+      checkCyberDiaper();
+    });
+    hookFunction("ChatRoomSyncSingle", 0 /* OBSERVE */, (args, next) => {
+      next(args);
+      checkCyberDiaper();
+    });
+  }
 
   // src/subscreens/cyberDiaperChangeColorMenu.ts
   var CyberDiaperChangeColorMenu = class extends BaseSubscreen {
@@ -4402,6 +4213,199 @@ Thanks for installing the mod!`;
     });
   }
 
+  // src/modules/messaging.ts
+  function validateRuleConditions(r, data) {
+    if (data.conditions) {
+      if (!r.conditions) r.conditions = {};
+      if (["any", "all"].includes(data.conditions.type)) r.conditions.type = data.conditions.type;
+      else r.conditions.type = "any";
+      if (data.conditions.whenInRoomWithRole) {
+        if (!r.conditions.whenInRoomWithRole) r.conditions.whenInRoomWithRole = {};
+        if (typeof data.conditions.whenInRoomWithRole?.inRoom === "boolean") {
+          r.conditions.whenInRoomWithRole.inRoom = data.conditions.whenInRoomWithRole.inRoom;
+        }
+        if (["mommy", "caregiver"].includes(data.conditions.whenInRoomWithRole?.role)) {
+          r.conditions.whenInRoomWithRole.role = data.conditions.whenInRoomWithRole.role;
+        }
+      } else delete r.conditions.whenInRoomWithRole;
+      if (data.conditions.whenInRoomWhereAbdl) {
+        if (!r.conditions.whenInRoomWhereAbdl) r.conditions.whenInRoomWhereAbdl = {};
+        if (typeof data.conditions.whenInRoomWhereAbdl?.blocked === "boolean") {
+          r.conditions.whenInRoomWhereAbdl.blocked = data.conditions.whenInRoomWhereAbdl.blocked;
+        }
+      } else delete r.conditions.whenInRoomWhereAbdl;
+    }
+    console.log(r, data);
+  }
+  function validateRuleData(r, data) {
+    const ruleParams = rulesList.find((g) => g.id === r.id).data ?? [];
+    for (const param of ruleParams) {
+      const p = data.data?.[param.name];
+      if (param.type === "number" && typeof p !== "number") continue;
+      if (param.type === "text" && typeof p !== "string") continue;
+      if (param.type === "checkbox" && typeof p !== "boolean") continue;
+      if (!r.data) r.data = {};
+      r.data[param.name] = p;
+    }
+  }
+  function loadMessaging() {
+    hookFunction("ChatRoomMessage", 1 /* ADD_BEHAVIOR */, (args, next) => {
+      const message = args[0];
+      const sender = getPlayer(message.Sender);
+      if (!sender) return next(args);
+      if (message.Content === MOD_MESSAGE_KEY && !sender.IsPlayer()) {
+        const msg = message.Dictionary.msg;
+        const data = message.Dictionary.data;
+        if (msg === "request") {
+          if (typeof data.requestId !== "number" || typeof data.message !== "string") return;
+          handleRequest2(data.requestId, data.message, data.data, sender);
+        }
+        if (msg === "requestResponse") {
+          if (typeof data.requestId !== "number") return;
+          handleRequestResponse2(data.requestId, data.data);
+        }
+        if (msg === "syncStorage") {
+          if (!sender.LITTLISH_CLUB) {
+            chatSendModMessage("syncStorage", {
+              storage: modStorage
+            }, sender.MemberNumber);
+          }
+          sender.LITTLISH_CLUB = data.storage;
+          if (InformationSheetSelection && InformationSheetSelection.MemberNumber === sender.MemberNumber && window.LITTLISH_CLUB.inModSubscreen()) {
+            currentSubscreen.update();
+          }
+        }
+        if (msg === "addBaby" && !hasMommy(Player) && modStorage.requestReciviedFrom?.id !== sender.MemberNumber) {
+          modStorage.requestReciviedFrom = {
+            name: CharacterNickname(sender),
+            id: sender.MemberNumber
+          };
+          syncStorage();
+          chatSendLocal(`${getNickname(sender)} (${sender.MemberNumber}) wants to become your mommy, open Littlish Club menu`);
+        }
+        if (msg === "turnCanChangeCaregiversList" && hasAccessRightTo(sender, Player, "TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST" /* TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST */)) {
+          if (!modStorage.caregivers) modStorage.caregivers = {};
+          modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
+          addLog(
+            `${getNickname(sender)} (${sender.MemberNumber}) ${modStorage.caregivers.canChangeList ? "allowed" : "forbade"} ${getNickname(Player)} to change caregivers list`,
+            false
+          );
+          syncStorage();
+        }
+        if (msg === "changeCaregiversList" && hasAccessRightTo(sender, Player, "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */)) {
+          if (!Array.isArray(data?.list)) return;
+          if (!modStorage.caregivers) modStorage.caregivers = {};
+          modStorage.caregivers.list = data.list;
+          chatSendLocal(`${getNickname(sender)} (${sender.MemberNumber}) changed your caregivers list`);
+          addLog(
+            `${getNickname(sender)} (${sender.MemberNumber}) changed caregivers list`,
+            false
+          );
+          syncStorage();
+        }
+        if (msg === "turnCaregiversAccessRight" && hasAccessRightTo(sender, Player, "MANAGE_CAREGIVERS_ACCESS_RIGHTS" /* MANAGE_CAREGIVERS_ACCESS_RIGHTS */)) {
+          if (!caregiverAccessRightsList.find((r) => r.id === data?.accessRightId)) return;
+          turnCaregiverAccessRight(data.accessRightId);
+          const _message = `${getNickname(sender)} (${sender.MemberNumber}) turned ${isCaregiverAccessRightEnabled(Player, data.accessRightId) ? "on" : "off"} caregiver access right "${caregiverAccessRightsList.find((r) => r.id === data.accessRightId).name}"`;
+          addLog(
+            _message,
+            false
+          );
+          syncStorage();
+          chatSendLocal(_message);
+        }
+        if (msg === "changeRuleSettings" && hasAccessRightTo(sender, Player, "MANAGE_RULES" /* MANAGE_RULES */)) {
+          if (!rulesList.find((r2) => r2.id === data?.id)) return;
+          if (isRuleStrict(Player, data.id) && !isMommyOf(sender, Player)) return;
+          if (!modStorage.rules) modStorage.rules = {};
+          if (!modStorage.rules.list) modStorage.rules.list = [];
+          let r = modStorage.rules.list.find((d) => d.id === data.id);
+          if (r) {
+            if (typeof data.state === "boolean") r.state = data.state;
+            if (typeof data.strict === "boolean" && hasAccessRightTo(sender, Player, "TURN_RULE_STRICT_MODE" /* TURN_RULE_STRICT_MODE */)) {
+              r.strict = data.strict;
+            }
+            validateRuleData(r, data);
+            validateRuleConditions(r, data);
+            r.changedBy = sender.MemberNumber;
+            r.ts = Date.now();
+          } else {
+            let d = {
+              id: data.id,
+              state: typeof data.state === "boolean" ? data.state : false,
+              strict: typeof data.strict === "boolean" && hasAccessRightTo(sender, Player, "TURN_RULE_STRICT_MODE" /* TURN_RULE_STRICT_MODE */) ? data.strict : false,
+              changedBy: sender.MemberNumber,
+              ts: Date.now()
+            };
+            validateRuleData(d, data);
+            validateRuleConditions(d, data);
+            modStorage.rules.list.push(d);
+          }
+          const _message = `${getNickname(sender)} (${sender.MemberNumber}) changed settings of "${rulesList.find((r2) => r2.id === data?.id).name}" rule`;
+          addLog(
+            _message,
+            false
+          );
+          syncStorage();
+          chatSendLocal(_message);
+        }
+        if (msg === "addNote") {
+          if (typeof data?.text !== "string" || data.text.trim() === "") return;
+          if (!modStorage.notes) modStorage.notes = {};
+          if (!modStorage.notes.list) modStorage.notes.list = [];
+          const note = {
+            text: data.text,
+            author: {
+              name: CharacterNickname(sender),
+              id: sender.MemberNumber
+            },
+            ts: Date.now()
+          };
+          modStorage.notes.list.push(note);
+          const _message = `${getNickname(sender)} (${sender.MemberNumber}) added note: "${data.text}"`;
+          addLog(_message, false);
+          syncStorage();
+          chatSendLocal(_message);
+        }
+        if (msg === "deleteNote") {
+          if (typeof data?.key !== "number") return;
+          const note = modStorage.notes?.list?.find((n, i) => i === data.key - 1);
+          if (!note) return;
+          if (note.author.id !== sender.MemberNumber && !hasAccessRightTo(sender, Player, "DELETE_NOTES" /* DELETE_NOTES */)) return;
+          modStorage.notes.list.splice(data.key - 1, 1);
+          const _message = `${getNickname(sender)} (${sender.MemberNumber}) deleted note: "${note.text}"`;
+          addLog(_message, false);
+          syncStorage();
+          chatSendLocal(_message);
+        }
+        if (msg === "changeCyberDiaperSettings" && hasAccessRightTo(sender, Player, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
+          const { name, description, model, locked, color, changePermission } = data;
+          if (!modStorage.cyberDiaper) {
+            modStorage.cyberDiaper = {};
+            chatSendLocal(`${getNickname(sender)} bought cyber diaper for you`);
+          }
+          if (typeof name === "string") modStorage.cyberDiaper.name = name;
+          if (typeof description === "string") modStorage.cyberDiaper.description = description;
+          if (typeof model === "string") modStorage.cyberDiaper.model = model;
+          if (typeof locked === "boolean") modStorage.cyberDiaper.locked = locked;
+          if (Array.isArray(color)) modStorage.cyberDiaper.color = color;
+          if (Object.values(CyberDiaperChangePermission).includes(changePermission)) modStorage.cyberDiaper.changePermission = changePermission;
+          const _message = `${getNickname(sender)} (${sender.MemberNumber}) changed cyber diaper's settings`;
+          addLog(_message, false);
+          syncStorage();
+          updateDiaperItem();
+          chatSendLocal(_message);
+        }
+        if (msg === "releaseBaby" && hasAccessRightTo(sender, Player, "RELEASE_BABY" /* RELEASE_BABY */)) {
+          delete modStorage.mommy;
+          syncStorage();
+          chatSendLocal(`${getNickname(sender)} (${sender.MemberNumber}) released you`);
+        }
+      }
+      next(args);
+    });
+  }
+
   // src/index.ts
   var init = () => {
     const style = document.createElement("style");
@@ -4409,6 +4413,7 @@ Thanks for installing the mod!`;
     document.head.append(style);
     console.log(`${MOD_NAME} loaded`);
     initStorage();
+    loadMessaging();
     createApi();
     loadUI();
     loadRules();
