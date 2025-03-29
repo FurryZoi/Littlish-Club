@@ -1861,7 +1861,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     hookFunction("ChatRoomSync", 1 /* ADD_BEHAVIOR */, (args, next) => {
       next(args);
       chatSendModMessage("syncStorage", {
-        storage: modStorage
+        storage: deleteProtectedProperties(modStorage)
       });
     });
   }
@@ -4287,7 +4287,7 @@ Thanks for installing the mod!`;
         if (msg === "syncStorage") {
           if (!sender.LITTLISH_CLUB) {
             chatSendModMessage("syncStorage", {
-              storage: modStorage
+              storage: deleteProtectedProperties(modStorage)
             }, sender.MemberNumber);
           }
           sender.LITTLISH_CLUB = data.storage;
