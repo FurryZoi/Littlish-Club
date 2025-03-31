@@ -1,4 +1,4 @@
-import { BaseSubscreen } from "./baseSubscreen";
+import { BaseSubscreen } from "@/subscreens/baseSubscreen";
 
 export class ExploringModeMenu extends BaseSubscreen {
     get name() {

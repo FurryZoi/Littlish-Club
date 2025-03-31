@@ -251,7 +251,7 @@ export abstract class BaseSubscreen {
         fontSize = "auto", anchor = "top-left", padding
     }: CreateTextArgs): HTMLParagraphElement {
         const p = document.createElement("p");
-        p.textContent = text;
+        p.innerHTML = text;
         p.style.color = color ?? "var(--tmd-text, black)";
         if (withBackground) p.style.background = "var(--tmd-element,rgb(239, 239, 239))";
         p.style.fontFamily = "Emilys Candy";

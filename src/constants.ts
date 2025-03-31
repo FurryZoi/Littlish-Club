@@ -4,6 +4,7 @@ export const MOD_FULL_NAME: string = MOD_NAME;
 export const REPO_URL: string = "https://github.com/FurryZoi/Littlish-Club";
 export const MOD_MESSAGE_KEY: string = "lcMsg";
 export const DISCORD_SERVER_INVITE_LINK = "https://discord.gg/aDUvte772D";
+export const DISCORD_SERVER_LW_OUTFITS_CHANNEL_LINK = "https://discord.com/channels/1253391626378674289/1356326756105195622";
 export const MOD_BUTTON_POSITION: RectTuple = [1705, 800 - 115, 90, 90];
 export const MAX_NOTE_SIZE_IN_KBYTES = 0.2;
 export const CANVAS_BABIES_APPEARANCES: {

@@ -6,6 +6,8 @@ import { chatSendModMessage } from "@/utils/chat";
 import { addLog } from "@/modules/logs";
 import { getNickname } from "@/utils/characters";
 import { ChangeRuleSettingsMessageData } from "@/modules/messaging";
+import { AboutRulesSettingsMenu } from "./introductions/aboutRulesSettingsMenu";
+import { RulesMenu } from "./rulesMenu";
 
 
 export class RuleSettingsMenu extends BaseSubscreen {
@@ -27,18 +29,21 @@ export class RuleSettingsMenu extends BaseSubscreen {
         return `Rules > ${this.rule.name}`
     }
 
-    constructor(rule: Rule) {
+    constructor(rule: Rule, ruleSettings?: StorageRule) {
         super();
         this.rule = rule;
-        const storage = InformationSheetSelection.IsPlayer() ? modStorage : InformationSheetSelection.LITTLISH_CLUB;
-        this.ruleSettings = storage.rules?.list?.find((r) => r.id === this.rule.id) ?? {
-            id: this.rule.id,
-            state: false,
-            strict: false,
-            changedBy: Player.MemberNumber,
-            ts: Date.now()
-        };
-        this.ruleSettings = JSON.parse(JSON.stringify(this.ruleSettings));
+        if (ruleSettings) this.ruleSettings = ruleSettings;
+        else {
+            const storage = InformationSheetSelection.IsPlayer() ? modStorage : InformationSheetSelection.LITTLISH_CLUB;
+            this.ruleSettings = storage.rules?.list?.find((r) => r.id === this.rule.id) ?? {
+                id: this.rule.id,
+                state: false,
+                strict: false,
+                changedBy: Player.MemberNumber,
+                ts: Date.now()
+            };
+            this.ruleSettings = JSON.parse(JSON.stringify(this.ruleSettings));
+        }
     }
 
     load() {
@@ -47,6 +52,18 @@ export class RuleSettingsMenu extends BaseSubscreen {
             x: 100,
             y: 60,
             fontSize: 10
+        });
+
+        const openIntroBtn = this.createButton({
+            icon: "Icons/Notifications.png",
+            width: 90,
+            height: 90,
+            x: 1815,
+            y: 175
+        });
+        openIntroBtn.style.zIndex = "10";
+        openIntroBtn.addEventListener("click", () => {
+            this.setSubscreen(new AboutRulesSettingsMenu(this.rule, this.ruleSettings));
         });
 
         const description = this.createText({
@@ -118,7 +135,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
         });
 
         const turnStateBtn = this.createButton({
-            text: isRuleEnabled(InformationSheetSelection, this.rule.id) ? "State: Enabled" : "State: Disabled",
+            text: this.ruleSettings.state ? "State: Enabled" : "State: Disabled",
             x: 150,
             y: 250,
             width: 600,
@@ -336,5 +353,9 @@ export class RuleSettingsMenu extends BaseSubscreen {
             }
             this.exit();
         });
+    }
+
+    exit() {
+        this.setSubscreen(new RulesMenu());
     }
 }

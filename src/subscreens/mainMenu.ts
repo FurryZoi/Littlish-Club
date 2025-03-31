@@ -9,7 +9,7 @@ import { CyberDiaperMenu } from "./cyberDiaperMenu";
 import { NotesMenu } from "./notesMenu";
 import { AddBabyMenu } from "./addBabyMenu";
 import { WardrobeMenu } from "./wardrobeMenu";
-import { ExploringModeMenu } from "./exploringModeMenu";
+import { ExploringModeMenu } from "./introductions/exploringModeMenu";
 import { isExploringModeEnabled } from "@/modules/access";
 import { modStorage } from "@/modules/storage";
 import { CyberDiaperSettingsMenu } from "./cyberDiaperSettingsMenu";
@@ -108,7 +108,7 @@ export class MainMenu extends BaseSubscreen {
                 padding: 1,
                 fontSize: 2,
                 x: 160,
-                y: 150,
+                y: 145,
                 width: 50,
                 height: 50
             });

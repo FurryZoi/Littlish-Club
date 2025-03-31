@@ -3,6 +3,8 @@ import { BaseSubscreen } from "./baseSubscreen";
 import { CANVAS_BABIES_APPEARANCES } from "@/constants";
 import { getRandomNumber } from "@/utils/main";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
+import { AboutWardrobeMenu } from "./introductions/aboutWardrobeMenu";
+import { MainMenu } from "./mainMenu";
 
 export class WardrobeMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -10,6 +12,15 @@ export class WardrobeMenu extends BaseSubscreen {
 
     get name() {
         return "Littlish Wardrobe";
+    }
+
+    constructor(currentAppearance?: {
+        name: string
+        creator: string
+        bundle: string
+    }) {
+        super();
+        if (currentAppearance) this.currentAppearance = currentAppearance;
     }
 
     run() {
@@ -24,6 +35,16 @@ export class WardrobeMenu extends BaseSubscreen {
             fontSize: 10
         });
 
+        this.createButton({
+            icon: "Icons/Notifications.png",
+            width: 90,
+            height: 90,
+            x: 1815,
+            y: 175
+        }).addEventListener("click", () => {
+            this.setSubscreen(new AboutWardrobeMenu(this.currentAppearance));
+        });
+
         this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
         const appearanceBundle = JSON.parse(
             LZString.decompressFromBase64(
@@ -36,9 +57,9 @@ export class WardrobeMenu extends BaseSubscreen {
 
         const createrName = this.createText({
             text: `By ${this.currentAppearance.creator}`,
-            x: 1500,
+            x: 1400,
             y: 240,
-            width: 400
+            width: 500
         });
         createrName.style.textAlign = "center";
 
@@ -94,5 +115,9 @@ export class WardrobeMenu extends BaseSubscreen {
             ChatRoomCharacterUpdate(InformationSheetSelection);
             this.exit();
         });
+    }
+
+    exit() {
+        this.setSubscreen(new MainMenu());
     }
 }
