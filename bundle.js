@@ -195,6 +195,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var REPO_URL = "https://github.com/FurryZoi/Littlish-Club";
   var MOD_MESSAGE_KEY = "lcMsg";
   var DISCORD_SERVER_INVITE_LINK = "https://discord.gg/aDUvte772D";
+  var DISCORD_SERVER_LW_OUTFITS_CHANNEL_LINK = "https://discord.com/channels/1253391626378674289/1356326756105195622";
   var MOD_BUTTON_POSITION = [1705, 800 - 115, 90, 90];
   var MAX_NOTE_SIZE_IN_KBYTES = 0.2;
   var CANVAS_BABIES_APPEARANCES = [
@@ -456,7 +457,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       padding
     }) {
       const p = document.createElement("p");
-      p.textContent = text;
+      p.innerHTML = text;
       p.style.color = color ?? "var(--tmd-text, black)";
       if (withBackground) p.style.background = "var(--tmd-element,rgb(239, 239, 239))";
       p.style.fontFamily = "Emilys Candy";
@@ -2796,6 +2797,73 @@ Changelog:
     }
   };
 
+  // src/subscreens/introductions/aboutRulesSettingsMenu.ts
+  var AboutRulesSettingsMenu = class extends BaseSubscreen {
+    rule;
+    ruleSettings;
+    get name() {
+      return "Rules > About Settings";
+    }
+    constructor(rule, ruleSettings) {
+      super();
+      this.rule = rule;
+      this.ruleSettings = ruleSettings;
+    }
+    load() {
+      this.createText({
+        text: this.name,
+        x: 100,
+        y: 60,
+        fontSize: 10
+      });
+      this.createButton({
+        text: this.ruleSettings.state ? "State: Enabled" : "State: Disabled",
+        x: 150,
+        y: 250,
+        width: 600,
+        padding: 2
+      });
+      this.createText({
+        text: `- State of the rule, whether the rule can be triggered.`,
+        x: 785,
+        y: 250,
+        padding: 2,
+        width: 1e3
+      });
+      this.createButton({
+        text: `Strict: ${this.ruleSettings.strict ? "Yes" : "No"}`,
+        x: 150,
+        y: 365,
+        width: 600,
+        padding: 2
+      });
+      this.createText({
+        text: `- Strictness of the rule, if the rule is strict, then <b>only</b> mommy can change its settings.`,
+        x: 785,
+        y: 365,
+        padding: 2,
+        width: 1e3
+      });
+      this.createButton({
+        text: (this.ruleSettings.conditions?.type ?? "any") === "any" ? "Trigger Conditions: Any" : "Trigger Conditions All",
+        x: 150,
+        y: 525,
+        width: 600,
+        padding: 2
+      });
+      this.createText({
+        text: `- Trigger conditions of the rule. Conditions under which the rule is active, if the conditions are not set, then the rule is always active (if it is enabled)`,
+        x: 785,
+        y: 525,
+        padding: 2,
+        width: 1e3
+      });
+    }
+    exit() {
+      this.setSubscreen(new RuleSettingsMenu(this.rule, this.ruleSettings));
+    }
+  };
+
   // src/subscreens/ruleSettingsMenu.ts
   var RuleSettingsMenu = class extends BaseSubscreen {
     rule;
@@ -2804,18 +2872,21 @@ Changelog:
     get name() {
       return `Rules > ${this.rule.name}`;
     }
-    constructor(rule) {
+    constructor(rule, ruleSettings) {
       super();
       this.rule = rule;
-      const storage = InformationSheetSelection.IsPlayer() ? modStorage : InformationSheetSelection.LITTLISH_CLUB;
-      this.ruleSettings = storage.rules?.list?.find((r) => r.id === this.rule.id) ?? {
-        id: this.rule.id,
-        state: false,
-        strict: false,
-        changedBy: Player.MemberNumber,
-        ts: Date.now()
-      };
-      this.ruleSettings = JSON.parse(JSON.stringify(this.ruleSettings));
+      if (ruleSettings) this.ruleSettings = ruleSettings;
+      else {
+        const storage = InformationSheetSelection.IsPlayer() ? modStorage : InformationSheetSelection.LITTLISH_CLUB;
+        this.ruleSettings = storage.rules?.list?.find((r) => r.id === this.rule.id) ?? {
+          id: this.rule.id,
+          state: false,
+          strict: false,
+          changedBy: Player.MemberNumber,
+          ts: Date.now()
+        };
+        this.ruleSettings = JSON.parse(JSON.stringify(this.ruleSettings));
+      }
     }
     load() {
       this.createText({
@@ -2823,6 +2894,17 @@ Changelog:
         x: 100,
         y: 60,
         fontSize: 10
+      });
+      const openIntroBtn = this.createButton({
+        icon: "Icons/Notifications.png",
+        width: 90,
+        height: 90,
+        x: 1815,
+        y: 175
+      });
+      openIntroBtn.style.zIndex = "10";
+      openIntroBtn.addEventListener("click", () => {
+        this.setSubscreen(new AboutRulesSettingsMenu(this.rule, this.ruleSettings));
       });
       const description = this.createText({
         text: `${this.rule.description}`,
@@ -2890,7 +2972,7 @@ Changelog:
         }
       });
       const turnStateBtn = this.createButton({
-        text: isRuleEnabled(InformationSheetSelection, this.rule.id) ? "State: Enabled" : "State: Disabled",
+        text: this.ruleSettings.state ? "State: Enabled" : "State: Disabled",
         x: 150,
         y: 250,
         width: 600,
@@ -3086,6 +3168,9 @@ Changelog:
         }
         this.exit();
       });
+    }
+    exit() {
+      this.setSubscreen(new RulesMenu());
     }
   };
 
@@ -3751,12 +3836,55 @@ Changelog:
     }
   };
 
+  // src/subscreens/introductions/aboutWardrobeMenu.ts
+  var AboutWardrobeMenu = class extends BaseSubscreen {
+    currentAppearance;
+    get name() {
+      return "Littlish Wardrobe > About";
+    }
+    constructor(currentAppearance) {
+      super();
+      this.currentAppearance = currentAppearance;
+    }
+    load() {
+      this.createText({
+        text: this.name,
+        x: 100,
+        y: 60,
+        fontSize: 10
+      });
+      this.createText({
+        text: `<b>Littlish Wardrobe</b> is library of cute ABDL-themed outfits. Want to see your outfit there? Join our discord and send the base64 code of the outfit in <a href="${DISCORD_SERVER_LW_OUTFITS_CHANNEL_LINK}" target="_blank">this channel</a> and don't forget to specify your name.`,
+        width: 1e3,
+        x: 500,
+        y: 220,
+        fontSize: 6
+      }).style.textAlign = "center";
+      this.createText({
+        text: "Outfit can <b>always</b> be renamed, changed and deleted at the request of the author.",
+        width: 1e3,
+        x: 500,
+        y: 650,
+        fontSize: 6,
+        padding: 2,
+        withBackground: true
+      }).style.textAlign = "center";
+    }
+    exit() {
+      this.setSubscreen(new WardrobeMenu(this.currentAppearance));
+    }
+  };
+
   // src/subscreens/wardrobeMenu.ts
   var WardrobeMenu = class extends BaseSubscreen {
     canvasCharacter;
     currentAppearance = CANVAS_BABIES_APPEARANCES[getRandomNumber(0, CANVAS_BABIES_APPEARANCES.length - 1)];
     get name() {
       return "Littlish Wardrobe";
+    }
+    constructor(currentAppearance) {
+      super();
+      if (currentAppearance) this.currentAppearance = currentAppearance;
     }
     run() {
       DrawCharacter(this.canvasCharacter, 1100, 100, 0.8, false);
@@ -3767,6 +3895,15 @@ Changelog:
         x: 100,
         y: 60,
         fontSize: 10
+      });
+      this.createButton({
+        icon: "Icons/Notifications.png",
+        width: 90,
+        height: 90,
+        x: 1815,
+        y: 175
+      }).addEventListener("click", () => {
+        this.setSubscreen(new AboutWardrobeMenu(this.currentAppearance));
       });
       this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
       const appearanceBundle = JSON.parse(
@@ -3779,9 +3916,9 @@ Changelog:
       CharacterRefresh(this.canvasCharacter);
       const createrName = this.createText({
         text: `By ${this.currentAppearance.creator}`,
-        x: 1500,
+        x: 1400,
         y: 240,
-        width: 400
+        width: 500
       });
       createrName.style.textAlign = "center";
       const scrollView = this.createScrollView({
@@ -3835,9 +3972,12 @@ Changelog:
         this.exit();
       });
     }
+    exit() {
+      this.setSubscreen(new MainMenu());
+    }
   };
 
-  // src/subscreens/exploringModeMenu.ts
+  // src/subscreens/introductions/exploringModeMenu.ts
   var ExploringModeMenu = class extends BaseSubscreen {
     get name() {
       return "Exploring Mode";
@@ -4028,7 +4168,7 @@ Thanks for installing the mod!`;
           padding: 1,
           fontSize: 2,
           x: 160,
-          y: 150,
+          y: 145,
           width: 50,
           height: 50
         });
@@ -4187,7 +4327,7 @@ Thanks for installing the mod!`;
 }
 
 .lcButton[data-lc-style="green"]:hover {
-    background: rgb(89, 189, 89);
+    background: rgb(94, 197, 94);
     color: black;
 }
 
