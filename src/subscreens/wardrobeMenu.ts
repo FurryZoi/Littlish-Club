@@ -5,6 +5,7 @@ import { getRandomNumber } from "@/utils/main";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
 import { AboutWardrobeMenu } from "./introductions/aboutWardrobeMenu";
 import { MainMenu } from "./mainMenu";
+import { attachAppearance } from "@/modules/wardrobe";
 
 export class WardrobeMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -18,6 +19,7 @@ export class WardrobeMenu extends BaseSubscreen {
         name: string
         creator: string
         bundle: string
+        requiredMods?: string[]
     }) {
         super();
         if (currentAppearance) this.currentAppearance = currentAppearance;
@@ -46,17 +48,17 @@ export class WardrobeMenu extends BaseSubscreen {
         });
 
         this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
-        const appearanceBundle = JSON.parse(
+        const appearanceBundle = serverAppearanceBundleToAppearance(InformationSheetSelection.AssetFamily, JSON.parse(
             LZString.decompressFromBase64(
                 this.currentAppearance.bundle
             )
-        );
-        this.canvasCharacter.Appearance = InformationSheetSelection.Appearance;
-        ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, appearanceBundle, Player.MemberNumber);
+        ));
+        this.canvasCharacter.Appearance = attachAppearance(InformationSheetSelection.Appearance, appearanceBundle);
+        // ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, appearanceBundle, Player.MemberNumber);
         CharacterRefresh(this.canvasCharacter);
 
         const createrName = this.createText({
-            text: `By ${this.currentAppearance.creator}`,
+            text: `<b>Creator:</b> ${this.currentAppearance.creator}`,
             x: 1400,
             y: 240,
             width: 500
@@ -86,14 +88,29 @@ export class WardrobeMenu extends BaseSubscreen {
             btn.style.position = "relative";
             btn.addEventListener("click", () => {
                 this.currentAppearance = a;
-                const appearanceBundle = JSON.parse(
+                const appearanceBundle = serverAppearanceBundleToAppearance(InformationSheetSelection.AssetFamily, JSON.parse(
                     LZString.decompressFromBase64(
                         a.bundle
                     )
-                );
-                ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, appearanceBundle, Player.MemberNumber);
+                ));
+                this.canvasCharacter.Appearance = attachAppearance(InformationSheetSelection.Appearance, appearanceBundle);
+                // ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, appearanceBundle, Player.MemberNumber);
                 CharacterRefresh(this.canvasCharacter);
-                createrName.textContent = `By ${a.creator}`;
+                createrName.innerHTML = `<b>Creator:</b> ${a.creator}`;
+                if (typeof requiredModsText !== "undefined") requiredModsText.remove();
+                if (
+                    Array.isArray(this.currentAppearance.requiredMods) &&
+                    this.currentAppearance.requiredMods.length > 0
+                ) {
+                    requiredModsText = this.createText({
+                        text: `Required mods: ${this.currentAppearance.requiredMods.map((d) => `<b>${d}</b>`).join(", ")}`,
+                        x: 1400,
+                        y: 850,
+                        width: 500,
+                        padding: 2,
+                        withBackground: true
+                    });
+                }
             });
             scrollView.append(btn);
         });
@@ -115,6 +132,21 @@ export class WardrobeMenu extends BaseSubscreen {
             ChatRoomCharacterUpdate(InformationSheetSelection);
             this.exit();
         });
+
+        let requiredModsText: HTMLParagraphElement;
+        if (
+            Array.isArray(this.currentAppearance.requiredMods) &&
+            this.currentAppearance.requiredMods.length > 0
+        ) {
+            requiredModsText = this.createText({
+                text: `Required mods: ${this.currentAppearance.requiredMods.map((d) => `<b>${d}</b>`).join(", ")}`,
+                x: 1400,
+                y: 850,
+                width: 500,
+                padding: 2,
+                withBackground: true
+            });
+        }
     }
 
     exit() {

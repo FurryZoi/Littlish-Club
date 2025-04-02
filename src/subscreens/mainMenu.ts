@@ -1,4 +1,4 @@
-import { CANVAS_BABIES_APPEARANCES, DISCORD_SERVER_INVITE_LINK, MOD_NAME, MOD_VERSION } from "@/constants";
+import { CANVAS_BABIES_APPEARANCES, DISCORD_SERVER_INVITE_LINK, MOD_NAME, MOD_VERSION, MY_APPEARANCE_BUNDLE } from "@/constants";
 import { BaseSubscreen } from "./baseSubscreen";
 import { GlobalMenu } from "./globalMenu";
 import { FamilyMenu } from "./familyMenu";
@@ -15,6 +15,7 @@ import { modStorage } from "@/modules/storage";
 import { CyberDiaperSettingsMenu } from "./cyberDiaperSettingsMenu";
 import { LogsMenu } from "./logsMenu";
 import discordIcon from "@/images/discord.png";
+import { attachAppearance } from "@/modules/wardrobe";
 
 export class MainMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -27,14 +28,20 @@ export class MainMenu extends BaseSubscreen {
     
     load() {
         this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
-        const appearance = JSON.parse(
+        const baseAppearance = serverAppearanceBundleToAppearance(InformationSheetSelection.AssetFamily, JSON.parse(
+            LZString.decompressFromBase64(
+                MY_APPEARANCE_BUNDLE
+            )
+        ));
+        const babyAppearance = serverAppearanceBundleToAppearance(InformationSheetSelection.AssetFamily, JSON.parse(
             LZString.decompressFromBase64(
                 CANVAS_BABIES_APPEARANCES[getRandomNumber(0, CANVAS_BABIES_APPEARANCES.length - 1)].bundle
             )
-        );
-        this.canvasCharacter.Appearance = serverAppearanceBundleToAppearance(
-            this.canvasCharacter.AssetFamily, appearance
-        );
+        ));
+        // this.canvasCharacter.Appearance = serverAppearanceBundleToAppearance(
+        //     this.canvasCharacter.AssetFamily, appearance
+        // );
+        this.canvasCharacter.Appearance = attachAppearance(baseAppearance, babyAppearance);
         PoseSetActive(this.canvasCharacter, "Kneel");
         CharacterRefresh(this.canvasCharacter);
 
