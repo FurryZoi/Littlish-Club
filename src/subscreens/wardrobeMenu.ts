@@ -105,7 +105,7 @@ export class WardrobeMenu extends BaseSubscreen {
                     requiredModsText = this.createText({
                         text: `Required mods: ${this.currentAppearance.requiredMods.map((d) => `<b>${d}</b>`).join(", ")}`,
                         x: 1400,
-                        y: 850,
+                        y: 840,
                         width: 500,
                         padding: 2,
                         withBackground: true
