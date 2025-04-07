@@ -29,7 +29,6 @@ export function isCosplay(item: Item | Asset | AssetGroup): boolean {
 }
 
 export function isBody(item: Item | Asset | AssetGroup): boolean {
-    console.log(item)
     const group = smartGetAssetGroup(item);
     return group.Category === "Appearance" && !group.Clothing;
 }
@@ -43,10 +42,24 @@ export function isBind(
     return !excludeSlots.includes(group.Name);
 }
 
-export function attachAppearance(currentBundle: Item[], bundleToAttach: Item[]): Item[] {
-    console.log(currentBundle, bundleToAttach);
+export type IncludeType = "Cosplay" | "Binds" | "Collar" | "Locks";
+
+export function attachAppearance(
+    currentBundle: Item[],
+    bundleToAttach: Item[],
+    include: IncludeType[] = ["Cosplay", "Binds", "Collar", "Locks"]
+): Item[] {
+    currentBundle = currentBundle.filter((i) => !!i && isBody(i));
+    bundleToAttach = bundleToAttach.filter((i) => !!i && !isBody(i));
+    if (!include.includes("Cosplay")) bundleToAttach = bundleToAttach.filter((i) => !isCosplay(i));
+    if (!include.includes("Binds")) bundleToAttach = bundleToAttach.filter((i) => !isBind(i));
+    if (!include.includes("Collar")) bundleToAttach = bundleToAttach.filter((i) => i.Asset.Group.Name !== "ItemNeck");
+    if (!include.includes("Locks")) bundleToAttach = bundleToAttach.map((i) => {
+        if (i.Property?.LockedBy) delete i.Property.LockedBy;
+        return i;
+    });
     return [
-        ...currentBundle.filter((i) => !!i && isBody(i)),
-        ...bundleToAttach.filter((i) => !!i && !isBody(i))
+        ...currentBundle,
+        ...bundleToAttach
     ];
 }

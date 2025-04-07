@@ -15,7 +15,7 @@ import { modStorage } from "@/modules/storage";
 import { CyberDiaperSettingsMenu } from "./cyberDiaperSettingsMenu";
 import { LogsMenu } from "./logsMenu";
 import discordIcon from "@/images/discord.png";
-import { attachAppearance } from "@/modules/wardrobe";
+import { attachAppearance } from "@/utils/wardrobe";
 
 export class MainMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -24,8 +24,10 @@ export class MainMenu extends BaseSubscreen {
         DrawCircle(1650, 575, 6, 2, "Black");
         DrawCircle(1625, 550, 8, 2, "Black");
         DrawCircle(1600, 525, 10, 2, "Black");
+        if (MouseIn(1680, 500, 150, 180) && document.body.style.cursor != "pointer") document.body.style.cursor = "pointer";
+        if (!MouseIn(1680, 500, 150, 180) && document.body.style.cursor != "") document.body.style.cursor = "";
     }
-    
+
     load() {
         this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
         const baseAppearance = serverAppearanceBundleToAppearance(InformationSheetSelection.AssetFamily, JSON.parse(
@@ -145,6 +147,20 @@ export class MainMenu extends BaseSubscreen {
             });
         });
     }
+
+    click() {
+        if (MouseIn(1680, 500, 150, 180)) {
+            CharacterSetFacialExpression(this.canvasCharacter, "Blush", "Medium");
+            CharacterSetFacialExpression(this.canvasCharacter, "Eyes", "Daydream");
+            CharacterSetFacialExpression(this.canvasCharacter, "Emoticon", "Tear");
+            setTimeout(() => {
+                CharacterSetFacialExpression(this.canvasCharacter, "Blush", null);
+                CharacterSetFacialExpression(this.canvasCharacter, "Eyes", null);
+                CharacterSetFacialExpression(this.canvasCharacter, "Emoticon", null);
+            }, 2000);
+        }
+    }
+
     exit() {
         this.setSubscreen(null);
     }

@@ -5,11 +5,14 @@ import { getRandomNumber } from "@/utils/main";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
 import { AboutWardrobeMenu } from "./introductions/aboutWardrobeMenu";
 import { MainMenu } from "./mainMenu";
-import { attachAppearance } from "@/modules/wardrobe";
+import { attachAppearance, IncludeType } from "@/utils/wardrobe";
 
 export class WardrobeMenu extends BaseSubscreen {
     private canvasCharacter: Character;
     private currentAppearance = CANVAS_BABIES_APPEARANCES[getRandomNumber(0, CANVAS_BABIES_APPEARANCES.length - 1)];
+    private includeTypes: IncludeType[] = ["Binds", "Cosplay", "Collar", "Locks"];
+    private requiredModsElement: HTMLParagraphElement;
+    private creatorNameElement: HTMLParagraphElement;
 
     get name() {
         return "Littlish Wardrobe";
@@ -57,13 +60,26 @@ export class WardrobeMenu extends BaseSubscreen {
         // ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, appearanceBundle, Player.MemberNumber);
         CharacterRefresh(this.canvasCharacter);
 
-        const createrName = this.createText({
+        this.creatorNameElement = this.createText({
             text: `<b>Creator:</b> ${this.currentAppearance.creator}`,
             x: 1400,
             y: 240,
-            width: 500
+            width: 425
         });
-        createrName.style.textAlign = "center";
+        this.creatorNameElement.style.textAlign = "center";
+
+        this.includeTypes.forEach((d, i) => {
+            this.createCheckbox({
+                text: d,
+                x: 1500,
+                y: 380 + (80 * i),
+                isChecked: true
+            }).addEventListener("click", () => {
+                if (this.includeTypes.includes(d)) this.includeTypes.splice(this.includeTypes.indexOf(d), 1);
+                else this.includeTypes.push(d);
+                this.refresh();
+            });
+        });
 
         const scrollView = this.createScrollView({
             scroll: "y",
@@ -88,29 +104,7 @@ export class WardrobeMenu extends BaseSubscreen {
             btn.style.position = "relative";
             btn.addEventListener("click", () => {
                 this.currentAppearance = a;
-                const appearanceBundle = serverAppearanceBundleToAppearance(InformationSheetSelection.AssetFamily, JSON.parse(
-                    LZString.decompressFromBase64(
-                        a.bundle
-                    )
-                ));
-                this.canvasCharacter.Appearance = attachAppearance(InformationSheetSelection.Appearance, appearanceBundle);
-                // ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, appearanceBundle, Player.MemberNumber);
-                CharacterRefresh(this.canvasCharacter);
-                createrName.innerHTML = `<b>Creator:</b> ${a.creator}`;
-                if (typeof requiredModsText !== "undefined") requiredModsText.remove();
-                if (
-                    Array.isArray(this.currentAppearance.requiredMods) &&
-                    this.currentAppearance.requiredMods.length > 0
-                ) {
-                    requiredModsText = this.createText({
-                        text: `Required mods: ${this.currentAppearance.requiredMods.map((d) => `<b>${d}</b>`).join(", ")}`,
-                        x: 1400,
-                        y: 840,
-                        width: 500,
-                        padding: 2,
-                        withBackground: true
-                    });
-                }
+                this.refresh();
             });
             scrollView.append(btn);
         });
@@ -133,20 +127,38 @@ export class WardrobeMenu extends BaseSubscreen {
             this.exit();
         });
 
-        let requiredModsText: HTMLParagraphElement;
+        this.loadRequiredModsWarning();
+    }
+
+    loadRequiredModsWarning() {
         if (
             Array.isArray(this.currentAppearance.requiredMods) &&
             this.currentAppearance.requiredMods.length > 0
         ) {
-            requiredModsText = this.createText({
+            this.requiredModsElement = this.createText({
                 text: `Required mods: ${this.currentAppearance.requiredMods.map((d) => `<b>${d}</b>`).join(", ")}`,
                 x: 1400,
-                y: 850,
+                y: 840,
                 width: 500,
                 padding: 2,
                 withBackground: true
             });
         }
+    }
+
+    refresh() {
+        const appearanceBundle = serverAppearanceBundleToAppearance(
+            InformationSheetSelection.AssetFamily,
+            JSON.parse(
+                LZString.decompressFromBase64(this.currentAppearance.bundle)
+            )
+        );
+        this.canvasCharacter.Appearance = attachAppearance(InformationSheetSelection.Appearance, appearanceBundle, this.includeTypes);
+        // ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, appearanceBundle, Player.MemberNumber);
+        CharacterRefresh(this.canvasCharacter);
+        this.creatorNameElement.innerHTML = `<b>Creator:</b> ${this.currentAppearance.creator}`;
+        if (typeof this.requiredModsElement !== "undefined") this.requiredModsElement.remove();
+        this.loadRequiredModsWarning();
     }
 
     exit() {
