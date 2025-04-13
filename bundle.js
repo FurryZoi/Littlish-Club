@@ -189,7 +189,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   });
 
   // src/constants.ts
-  var MOD_VERSION = "1.0.2";
+  var MOD_VERSION = "1.0.3";
   var MOD_NAME = "Littlish Club";
   var MOD_FULL_NAME = MOD_NAME;
   var REPO_URL = "https://github.com/FurryZoi/Littlish-Club";
@@ -492,7 +492,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
       withBackground = false,
       fontSize = "auto",
       anchor = "top-left",
-      padding
+      padding,
+      place = true
     }) {
       const p = document.createElement("p");
       p.innerHTML = text;
@@ -500,7 +501,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       if (withBackground) p.style.background = "var(--tmd-element,rgb(239, 239, 239))";
       p.style.fontFamily = "Emilys Candy";
       const setProperties = () => {
-        setPosition(p, x, y, anchor);
+        if (x && y) setPosition(p, x, y, anchor);
         setSize(p, width, height);
         if (padding) setPadding(p, padding);
         if (fontSize === "auto") autosetFontSize(p);
@@ -508,7 +509,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       };
       setProperties();
       window.addEventListener("resize", setProperties);
-      document.body.append(p);
+      if (place) document.body.append(p);
       this.resizeEventListeners.push(setProperties);
       this.htmlElements.push(p);
       return p;
@@ -523,14 +524,15 @@ One of mods you are using is using an old version of SDK. It will work for now b
       textArea = false,
       fontSize = "auto",
       anchor = "top-left",
-      padding
+      padding,
+      place = true
     }) {
       const input = document.createElement(textArea ? "textarea" : "input");
       input.classList.add("lcInput");
       if (placeholder) input.placeholder = placeholder;
       if (value) input.value = value;
       const setProperties = () => {
-        setPosition(input, x, y, anchor);
+        if (x && y) setPosition(input, x, y, anchor);
         setSize(input, width, height);
         if (padding) setPadding(input, padding);
         if (fontSize === "auto") autosetFontSize(input);
@@ -538,7 +540,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       };
       setProperties();
       window.addEventListener("resize", setProperties);
-      document.body.append(input);
+      if (place) document.body.append(input);
       this.resizeEventListeners.push(setProperties);
       this.htmlElements.push(input);
       return input;
@@ -549,7 +551,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
       y,
       isChecked,
       width,
-      anchor = "top-left"
+      anchor = "top-left",
+      place = true
     }) {
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
@@ -560,7 +563,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       p.style.color = "var(--tmd-text, black)";
       p.style.fontFamily = "Emilys Candy";
       const setProperties = () => {
-        setPosition(checkbox, x, y, anchor);
+        if (x && y) setPosition(checkbox, x, y, anchor);
         setPosition(p, x + 100, y, anchor);
         setSize(checkbox, 65, 65);
         if (width) setSize(p, width, null);
@@ -568,7 +571,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       };
       setProperties();
       window.addEventListener("resize", setProperties);
-      document.body.append(checkbox, p);
+      if (place) document.body.append(checkbox, p);
       this.resizeEventListeners.push(setProperties);
       this.htmlElements.push(checkbox, p);
       return checkbox;
@@ -586,7 +589,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       if (scroll === "x") div.style.overflowX = "scroll";
       if (scroll === "y") div.style.overflowY = "scroll";
       const setProperties = () => {
-        setPosition(div, x, y, anchor);
+        if (x && y) setPosition(div, x, y, anchor);
         setSize(div, width, height);
       };
       setProperties();
@@ -688,7 +691,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       case "MANAGE_DIAPER" /* MANAGE_DIAPER */:
         return isMommyOf(C1, C2) || isCaregiverOf(C1, C2) && isCaregiverAccessRightEnabled(C2, 1e3 /* MANAGE_DIAPER */);
       case "MANAGE_APPEARANCE" /* MANAGE_APPEARANCE */:
-        return C1.MemberNumber === C2.MemberNumber || isMommyOf(C1, C2) || isCaregiverOf(C1, C2) && isCaregiverAccessRightEnabled(C2, 1003 /* MANAGE_APPEARANCE */);
+        return C1.MemberNumber === C2.MemberNumber && !isRuleActive(C1, 1014 /* PREVENT_APPLYING_OUTFITS_FROM_LITTLISH_WARDROBE_ON_SELF */) || isMommyOf(C1, C2) || isCaregiverOf(C1, C2) && isCaregiverAccessRightEnabled(C2, 1003 /* MANAGE_APPEARANCE */);
       case "DELETE_NOTES" /* DELETE_NOTES */:
         return isMommyOf(C1, C2) || isCaregiverOf(C1, C2) && isCaregiverAccessRightEnabled(C2, 1002 /* DELETE_NOTES */);
       case "READ_LOGS" /* READ_LOGS */:
@@ -2016,10 +2019,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
     chatSendLocal(`${MOD_NAME} v${MOD_VERSION}
 
 Changelog:
-\u2022 Fixed few minor bugs
-\u2022 Logs system
-\u2022 UI changes
-\u2022 A lot of "hidden" technical changes`);
+\u2022 Fixed bug with exiting rules menu after changing remote settings
+\u2022 Improved "Walk like baby" rule, not its smart
+\u2022 Improved rules UI a lot
+\u2022 Added new rules`);
   }
   function chatSendActionMessage(msg, target = void 0, dictionary = []) {
     if (!msg || !ServerPlayerIsInChatRoom()) return;
@@ -2111,10 +2114,14 @@ Changelog:
     });
   }
 
+  // src/images/pacifier.png
+  var pacifier_default = "data:image/png;base64,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";
+
   // src/modules/rules.ts
   var dialogMenuButtonClickHooks = /* @__PURE__ */ new Map();
   var buttonLabels = /* @__PURE__ */ new Map();
   var imageRedirects = /* @__PURE__ */ new Map();
+  var timerLastRulesCycleCall = 0;
   var rulesList = [
     {
       id: 1e3,
@@ -2170,7 +2177,7 @@ Changelog:
       data: [
         {
           name: "multiplier",
-          text: "Size Multiplier",
+          text: "Size multiplier",
           type: "number",
           min: 0.25,
           max: 1,
@@ -2182,6 +2189,50 @@ Changelog:
       id: 1009,
       name: "Disable reset settings button",
       description: "Disables button to reset mod settings"
+    },
+    {
+      id: 1010,
+      name: "Pacifier-checkboxes",
+      description: "Replaces the default checkbox with the pacifier-checkbox in ALL places where possible"
+    },
+    {
+      id: 1011,
+      name: "Control nickname",
+      description: "Control nickname",
+      data: [
+        {
+          name: "nickname",
+          text: "Nickname",
+          type: "text"
+        },
+        {
+          name: "color",
+          text: "Label color",
+          type: "color"
+        }
+      ]
+    },
+    {
+      id: 1012,
+      name: "Prevent using bondage on other",
+      description: "Prevents baby from using bondage items on other characters",
+      data: [
+        {
+          name: "allowAbdlItems",
+          type: "checkbox",
+          text: "Allow using ABDL items"
+        }
+      ]
+    },
+    {
+      id: 1013,
+      name: "Prevent joining ABDL blocked rooms",
+      description: "Prevents baby from joining rooms with blocked ABDL category"
+    },
+    {
+      id: 1014,
+      name: "Prevent using Littlish Wardrobe on self",
+      description: "Prevents baby from applying outfits from Littlish Wardrobe on self"
     }
   ];
   function isRuleActive(C, ruleId) {
@@ -2209,7 +2260,7 @@ Changelog:
     if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
     return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
   }
-  function isRuleStrict(C, ruleId) {
+  function isRuleStrict2(C, ruleId) {
     if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
     return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
   }
@@ -2308,16 +2359,16 @@ Changelog:
       attempt
     );
     hookFunction("Player.CanChangeToPose", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) || isSleeping(Player)) return false;
+      if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) && !Player.Effect.includes("OnBed") || isSleeping(Player)) return false;
       return next(args);
     });
     hookFunction("PoseCanChangeUnaidedStatus", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
       if (!args[0].IsPlayer()) return next(args);
-      if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) || isSleeping(Player)) return PoseChangeStatus.NEVER;
+      if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) && !Player.Effect.includes("OnBed") || isSleeping(Player)) return PoseChangeStatus.NEVER;
       return next(args);
     });
     hookFunction("ChatRoomCanAttemptStand", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) || isSleeping(Player)) return false;
+      if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) && !Player.Effect.includes("OnBed") || isSleeping(Player)) return false;
       return next(args);
     });
     hookFunction("ChatAdminCanEdit", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
@@ -2540,8 +2591,12 @@ Changelog:
       const item = InventoryGet(C, focusGroup?.Name);
       const clickedItem = args[0];
       if (DialogMenuMode !== "items") return next(args);
-      if (!item) return next(args);
-      if (C.IsPlayer() && item && item?.Asset?.Category?.includes("ABDL") && isRuleActive(Player, 1e3 /* PREVENT_TAKING_ABDL_ITEMS_OFF */)) return;
+      console.log(C, clickedItem, isRuleActive(Player, 1012 /* PREVENT_USING_BONDAGE_ON_OTHER */));
+      if (C.IsPlayer() && item?.Asset?.Category?.includes("ABDL") && isRuleActive(Player, 1e3 /* PREVENT_TAKING_ABDL_ITEMS_OFF */)) return;
+      if (!C.IsPlayer() && clickedItem?.Asset?.IsRestraint && isRuleActive(Player, 1012 /* PREVENT_USING_BONDAGE_ON_OTHER */)) {
+        if (getRuleParameter(Player, 1012 /* PREVENT_USING_BONDAGE_ON_OTHER */, "allowAbdlItems") && clickedItem.Asset.Category?.includes("ABDL")) return next(args);
+        return;
+      }
       return next(args);
     });
     hookFunction("InterfaceTextGet", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
@@ -2569,6 +2624,49 @@ Changelog:
         }
       }
       return next(args);
+    });
+    hookFunction("DrawButton", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      const [Left, Top, Width, Height, Label, Color, Image] = args;
+      if (isRuleActive(Player, 1010 /* PACIFIER_CHECKBOXES */) && Width === Height && Width === 64 && Image === "Icons/Checked.png") args[6] = pacifier_default;
+      return next(args);
+    });
+    hookFunction("TimerProcess", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (timerLastRulesCycleCall + 2e3 <= CommonTime()) {
+        if (isRuleActive(Player, 1011 /* CONTROL_NICKNAME */) && Player.Nickname !== getRuleParameter(Player, 1011 /* CONTROL_NICKNAME */, "nickname")) {
+          const status = CharacterSetNickname(Player, getRuleParameter(Player, 1011 /* CONTROL_NICKNAME */, "nickname"));
+          if (typeof status === "string") {
+            modStorage.rules.list.find((r) => r.id === 1011 /* CONTROL_NICKNAME */).data.nickname = CharacterNickname(Player);
+            syncStorage();
+          }
+        }
+        if (isRuleActive(Player, 1011 /* CONTROL_NICKNAME */) && Player.LabelColor !== (getRuleParameter(Player, 1011 /* CONTROL_NICKNAME */, "color") ?? Player.LabelColor)) {
+          Player.LabelColor = getRuleParameter(Player, 1011 /* CONTROL_NICKNAME */, "color");
+          ServerAccountUpdate.QueueData({ LabelColor: getRuleParameter(Player, 1011 /* CONTROL_NICKNAME */, "color") });
+        }
+        if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) && !DialogIsKneeling(Player) && PoseAvailable(Player, "BodyLower", "Kneel") && !Player.Effect.includes("OnBed")) {
+          PoseSetActive(Player, "Kneel", true);
+          ChatRoomCharacterUpdate(Player);
+        }
+        timerLastRulesCycleCall = CommonTime();
+      }
+      return next(args);
+    });
+    hookFunction("ChatSearchJoin", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (!isRuleActive(Player, 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */)) return next(args);
+      CommonGenerateGrid(ChatSearchResult, ChatSearchResultOffset, ChatSearchListParams, (room, x, y, width, height) => {
+        if (!MouseIn(x, y, width, height)) return false;
+        if (room?.BlockCategory?.includes("ABDL")) {
+          notify("You can't join that room because it blocks ABDL", 4e3);
+          return false;
+        }
+        const RoomName = room.Name;
+        if (ChatSearchLastQueryJoin != RoomName || ChatSearchLastQueryJoin == RoomName && ChatSearchLastQueryJoinTime + 1e3 < CommonTime()) {
+          ChatSearchLastQueryJoinTime = CommonTime();
+          ChatSearchLastQueryJoin = RoomName;
+          ServerSend("ChatRoomJoin", { Name: RoomName });
+        }
+        return true;
+      });
     });
   }
 
@@ -2906,7 +3004,7 @@ Changelog:
   var RuleSettingsMenu = class extends BaseSubscreen {
     rule;
     ruleSettings;
-    canChangeSettings = () => hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */) && (!isRuleStrict(InformationSheetSelection, this.rule.id) || isMommyOf(Player, InformationSheetSelection) || InformationSheetSelection.IsPlayer() && isExploringModeEnabled());
+    canChangeSettings = () => hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_RULES" /* MANAGE_RULES */) && (!isRuleStrict2(InformationSheetSelection, this.rule.id) || isMommyOf(Player, InformationSheetSelection) || InformationSheetSelection.IsPlayer() && isExploringModeEnabled());
     get name() {
       return `Rules > ${this.rule.name}`;
     }
@@ -2920,7 +3018,7 @@ Changelog:
           id: this.rule.id,
           state: false,
           strict: false,
-          changedBy: Player.MemberNumber,
+          changedBy: null,
           ts: Date.now()
         };
         this.ruleSettings = JSON.parse(JSON.stringify(this.ruleSettings));
@@ -2932,7 +3030,7 @@ Changelog:
         x: 100,
         y: 60,
         fontSize: 10
-      });
+      }).style.cssText += "max-width: 85%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;";
       const openIntroBtn = this.createButton({
         icon: "Icons/Notifications.png",
         width: 90,
@@ -2946,33 +3044,46 @@ Changelog:
       });
       const description = this.createText({
         text: `${this.rule.description}`,
-        x: 1e3,
-        y: 250,
-        width: 800,
-        fontSize: 6,
+        x: 850,
+        y: 215,
+        width: 900,
+        height: 125,
+        fontSize: 4,
         withBackground: true,
-        padding: 2
+        padding: 1
       });
-      description.style.textAlign = "center";
-      this.rule.data?.forEach((param, i) => {
+      description.style.overflowY = "scroll";
+      const paramsView = this.createScrollView({
+        x: 850,
+        y: 360,
+        width: 1050,
+        height: 400,
+        scroll: "y"
+      });
+      paramsView.style.display = "flex";
+      paramsView.style.flexDirection = "column";
+      paramsView.style.rowGap = "1vw";
+      this.rule.data?.forEach((param) => {
+        const paramBlock = document.createElement("div");
+        paramBlock.style.cssText = "display: flex; align-items: center; column-gap: 0.8vw; width: 100%;";
         if (param.type !== "checkbox") {
-          this.createText({
+          const paramText = this.createText({
             text: param.text + ":",
-            x: 1e3,
-            y: 420 + i * 140,
-            width: 400,
-            fontSize: 5
+            fontSize: 4,
+            place: false
           });
+          paramText.style.whiteSpace = "nowrap";
+          paramBlock.append(paramText);
         }
         if (param.type === "number") {
           const input = this.createInput({
             value: getRuleParameter(InformationSheetSelection, this.rule.id, param.name)?.toString() ?? "",
             placeholder: param.type,
-            x: 1350,
-            y: 420,
             width: 500,
-            height: 80
+            height: 70,
+            place: false
           });
+          input.style.width = "100%";
           input.setAttribute("type", param.type);
           if (param.min) input.setAttribute("min", param.min);
           if (param.max) input.setAttribute("max", param.max);
@@ -2989,13 +3100,34 @@ Changelog:
             if (!this.ruleSettings.data) this.ruleSettings.data = {};
             this.ruleSettings.data[param.name] = param.type === "number" ? parseFloat(input.value) : input.value;
           });
+          paramBlock.append(input);
+        } else if (param.type === "text") {
+          const input = this.createInput({
+            value: getRuleParameter(InformationSheetSelection, this.rule.id, param.name) ?? "",
+            placeholder: param.type,
+            width: 500,
+            height: 70,
+            place: false
+          });
+          input.style.width = "100%";
+          input.setAttribute("type", param.type);
+          if (!this.canChangeSettings()) {
+            input.classList.add("lcDisabled");
+          }
+          input.addEventListener("change", () => {
+            if (!this.canChangeSettings()) {
+              return input.classList.add("lcDisabled");
+            }
+            if (!this.ruleSettings.data) this.ruleSettings.data = {};
+            this.ruleSettings.data[param.name] = input.value;
+          });
+          paramBlock.append(input);
         } else if (param.type === "checkbox") {
           const checkbox = this.createCheckbox({
-            x: 1e3,
-            y: 440,
             width: 800,
             isChecked: !!getRuleParameter(InformationSheetSelection, this.rule.id, param.name),
-            text: param.text
+            text: param.text,
+            place: false
           });
           if (!this.canChangeSettings()) {
             checkbox.classList.add("lcDisabled");
@@ -3007,12 +3139,53 @@ Changelog:
             if (!this.ruleSettings.data) this.ruleSettings.data = {};
             this.ruleSettings.data[param.name] = checkbox.checked;
           });
+          paramBlock.append(checkbox);
+          paramBlock.append(
+            this.createText({
+              text: param.text,
+              fontSize: 4
+            })
+          );
+        } else if (param.type === "color") {
+          const input = this.createInput({
+            width: 500,
+            height: 70,
+            value: getRuleParameter(InformationSheetSelection, this.rule.id, param.name),
+            padding: 1,
+            place: false
+          });
+          input.style.width = "100%";
+          input.setAttribute("type", param.type);
+          if (!this.canChangeSettings()) {
+            input.classList.add("lcDisabled");
+          }
+          input.addEventListener("change", () => {
+            if (!this.canChangeSettings()) {
+              return input.classList.add("lcDisabled");
+            }
+            if (!this.ruleSettings.data) this.ruleSettings.data = {};
+            this.ruleSettings.data[param.name] = input.value;
+          });
+          paramBlock.append(input);
         }
+        paramsView.append(paramBlock);
       });
+      const lastTimeWasChanged = this.createText({
+        text: `Last time it was changed by ${this.ruleSettings.changedBy ?? "-"} at ${new Date(this.ruleSettings.ts).toUTCString() ?? "-"}`,
+        x: 150,
+        y: 215,
+        width: 600,
+        height: 145,
+        padding: 1,
+        fontSize: 4
+      });
+      lastTimeWasChanged.style.background = "var(--tmd-element, rgb(235, 235, 255))";
+      lastTimeWasChanged.style.borderLeft = "0.4vw solid var(--tmd-accent, rgb(199 199 241))";
+      lastTimeWasChanged.style.overflowY = "scroll";
       const turnStateBtn = this.createButton({
         text: this.ruleSettings.state ? "State: Enabled" : "State: Disabled",
         x: 150,
-        y: 250,
+        y: 380,
         width: 600,
         padding: 2
       });
@@ -3029,7 +3202,7 @@ Changelog:
       const turnStrictBtn = this.createButton({
         text: `Strict: ${this.ruleSettings.strict ? "Yes" : "No"}`,
         x: 150,
-        y: 365,
+        y: 490,
         width: 600,
         padding: 2
       });
@@ -3046,7 +3219,7 @@ Changelog:
       const triggerConditionsBtn = this.createButton({
         text: (this.ruleSettings.conditions?.type ?? "any") === "any" ? "Trigger Conditions: Any" : "Trigger Conditions All",
         x: 150,
-        y: 525,
+        y: 625,
         width: 600,
         padding: 2
       });
@@ -3064,7 +3237,7 @@ Changelog:
       const whenCheckbox = this.createCheckbox({
         text: "When",
         x: 150,
-        y: 650,
+        y: 750,
         isChecked: !!this.ruleSettings.conditions?.whenInRoomWithRole
       });
       if (!this.canChangeSettings()) {
@@ -3073,7 +3246,7 @@ Changelog:
       const inRoomBtn = this.createButton({
         text: this.ruleSettings.conditions?.whenInRoomWithRole?.inRoom ?? true ? "in room" : "not in room",
         x: 395,
-        y: 650,
+        y: 750,
         width: 180,
         height: 65,
         fontSize: 3
@@ -3093,13 +3266,13 @@ Changelog:
       this.createText({
         text: "with role",
         x: 600,
-        y: 650,
+        y: 750,
         fontSize: 5
       });
       const caregiverBtn = this.createButton({
         text: this.ruleSettings.conditions?.whenInRoomWithRole?.role ?? "caregiver",
         x: 805,
-        y: 650,
+        y: 750,
         width: 180,
         height: 65,
         fontSize: 3
@@ -3119,13 +3292,13 @@ Changelog:
       this.createText({
         text: "and higher",
         x: 1e3,
-        y: 650,
+        y: 750,
         fontSize: 5
       });
       const whenCheckbox2 = this.createCheckbox({
         text: "When in room where ABDL is",
         x: 150,
-        y: 750,
+        y: 850,
         isChecked: !!this.ruleSettings.conditions?.whenInRoomWhereAbdl
       });
       if (!this.canChangeSettings()) {
@@ -3134,7 +3307,7 @@ Changelog:
       const isBlockedBtn = this.createButton({
         text: this.ruleSettings.conditions?.whenInRoomWhereAbdl?.blocked ?? true ? "blocked" : "not blocked",
         x: 930,
-        y: 750,
+        y: 850,
         width: 200,
         height: 65,
         fontSize: 3
@@ -3213,7 +3386,9 @@ Changelog:
   };
 
   // src/subscreens/rulesMenu.ts
+  var scrollTop = null;
   var RulesMenu = class extends BaseSubscreen {
+    rulesBlock;
     get name() {
       return "Rules";
     }
@@ -3227,26 +3402,43 @@ Changelog:
         y: 60,
         fontSize: 10
       });
-      rulesList.forEach((rule, i) => {
+      this.rulesBlock = this.createScrollView({
+        scroll: "y",
+        x: 200,
+        y: 300,
+        width: 1600,
+        height: 600
+      });
+      this.rulesBlock.style.display = "grid";
+      this.rulesBlock.style.gridTemplateColumns = "1fr 1fr";
+      this.rulesBlock.style.gap = "1vw";
+      rulesList.forEach((rule) => {
         const ruleBtn = this.createButton({
           text: rule.name,
-          x: i > 4 ? 150 + 800 + 100 : 150,
-          y: i > 4 ? 300 + (i - 5) * 115 : 300 + i * 115,
-          width: 800,
-          padding: 2,
-          style: isRuleEnabled(InformationSheetSelection, rule.id) ? "green" : "default"
+          padding: 3,
+          style: isRuleEnabled(InformationSheetSelection, rule.id) ? "green" : "default",
+          place: false
         });
         ruleBtn.style.fontWeight = "bold";
+        ruleBtn.setAttribute("data-lc-ruleId", rule.id);
         ruleBtn.addEventListener("click", () => {
+          scrollTop = this.rulesBlock.scrollTop;
           this.setSubscreen(new RuleSettingsMenu(rule));
         });
+        this.rulesBlock.append(ruleBtn);
       });
+      if (scrollTop) this.rulesBlock.scrollBy({ top: scrollTop });
     }
     update() {
-      this.unload();
-      this.load();
+      for (const ruleElement of this.rulesBlock.children) {
+        ruleElement.setAttribute(
+          "data-lc-style",
+          isRuleEnabled(InformationSheetSelection, parseInt(ruleElement.getAttribute("data-lc-ruleId"))) ? "green" : null
+        );
+      }
     }
     exit() {
+      scrollTop = null;
       this.setSubscreen(new MainMenu());
     }
   };
@@ -3730,7 +3922,7 @@ Changelog:
   // src/subscreens/notesMenu.ts
   function addNote(note, subscreen, scrollView, key, pending = false) {
     const btn = subscreen.createButton({
-      text: `${note.author.name} (${note.author.id}) noted: ${note.text}`,
+      text: `${note.author.name} (${note.author.id}) noted: "${note.text}"`,
       place: false,
       padding: 2
     });
@@ -4427,6 +4619,7 @@ Thanks for installing the mod!`;
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 .lcButton {
@@ -4600,7 +4793,7 @@ Thanks for installing the mod!`;
         }
         if (msg === "changeRuleSettings" && hasAccessRightTo(sender, Player, "MANAGE_RULES" /* MANAGE_RULES */)) {
           if (!rulesList.find((r2) => r2.id === data?.id)) return;
-          if (isRuleStrict(Player, data.id) && !isMommyOf(sender, Player)) return;
+          if (isRuleStrict2(Player, data.id) && !isMommyOf(sender, Player)) return;
           if (!modStorage.rules) modStorage.rules = {};
           if (!modStorage.rules.list) modStorage.rules.list = [];
           let r = modStorage.rules.list.find((d) => d.id === data.id);
