@@ -15,36 +15,40 @@ interface CreateButtonArgs {
 interface CreateTextArgs {
     text?: string
     color?: "string"
-    x: number
-    y: number
+    x?: number
+    y?: number
     fontSize?: number | "auto"
     withBackground?: boolean
     width?: number
     height?: number
     padding?: number
     anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+    place?: boolean
 }
 
 interface CreateInputArgs {
     value?: string
     placeholder?: string
-    x: number
-    y: number
+    x?: number
+    y?: number
     width: number
     height?: number
     textArea?: boolean
     fontSize?: number | "auto"
     anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
     padding?: number
+    place?: boolean
+
 }
 
 interface CreateCheckboxArgs {
     isChecked: boolean
-    x: number
-    y: number
-    width?: number,
+    x?: number
+    y?: number
+    width?: number
     text: string
     anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+    place?: boolean
 }
 
 interface CreateScrollViewArgs {
@@ -248,7 +252,7 @@ export abstract class BaseSubscreen {
     }
     createText({
         text, color, x, y, width, height, withBackground = false,
-        fontSize = "auto", anchor = "top-left", padding
+        fontSize = "auto", anchor = "top-left", padding, place = true
     }: CreateTextArgs): HTMLParagraphElement {
         const p = document.createElement("p");
         p.innerHTML = text;
@@ -257,7 +261,7 @@ export abstract class BaseSubscreen {
         p.style.fontFamily = "Emilys Candy";
 
         const setProperties = () => {
-            setPosition(p, x, y, anchor);
+            if (x && y) setPosition(p, x, y, anchor);
             setSize(p, width, height);
             if (padding) setPadding(p, padding);
             if (fontSize === "auto") autosetFontSize(p);
@@ -266,14 +270,14 @@ export abstract class BaseSubscreen {
 
         setProperties();
         window.addEventListener("resize", setProperties);
-        document.body.append(p);
+        if (place) document.body.append(p);
         this.resizeEventListeners.push(setProperties);
         this.htmlElements.push(p);
         return p;
     }
     createInput({
         value, placeholder, x, y, width, height, textArea = false,
-        fontSize = "auto", anchor = "top-left", padding
+        fontSize = "auto", anchor = "top-left", padding, place = true
     }: CreateInputArgs): HTMLInputElement | HTMLTextAreaElement {
         const input = document.createElement(textArea ? "textarea" : "input");
         input.classList.add("lcInput");
@@ -281,7 +285,7 @@ export abstract class BaseSubscreen {
         if (value) input.value = value;
 
         const setProperties = () => {
-            setPosition(input, x, y, anchor);
+            if (x && y) setPosition(input, x, y, anchor);
             setSize(input, width, height);
             if (padding) setPadding(input, padding);
             if (fontSize === "auto") autosetFontSize(input);
@@ -290,14 +294,14 @@ export abstract class BaseSubscreen {
 
         setProperties();
         window.addEventListener("resize", setProperties);
-        document.body.append(input);
+        if (place) document.body.append(input);
         this.resizeEventListeners.push(setProperties);
         this.htmlElements.push(input);
         return input;
     }
     createCheckbox({
         text, x, y, isChecked, width,
-        anchor = "top-left"
+        anchor = "top-left", place = true
     }: CreateCheckboxArgs): HTMLInputElement {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox"
@@ -310,7 +314,7 @@ export abstract class BaseSubscreen {
         p.style.fontFamily = "Emilys Candy";
 
         const setProperties = () => {
-            setPosition(checkbox, x, y, anchor);
+            if (x && y) setPosition(checkbox, x, y, anchor);
             setPosition(p, x + 100, y, anchor);
             setSize(checkbox, 65, 65);
             if (width) setSize(p, width, null);
@@ -319,7 +323,7 @@ export abstract class BaseSubscreen {
 
         setProperties();
         window.addEventListener("resize", setProperties);
-        document.body.append(checkbox, p);
+        if (place) document.body.append(checkbox, p);
         this.resizeEventListeners.push(setProperties);
         this.htmlElements.push(checkbox, p);
         return checkbox;
@@ -334,7 +338,7 @@ export abstract class BaseSubscreen {
         if (scroll === "y") div.style.overflowY = "scroll";
 
         const setProperties = () => {
-            setPosition(div, x, y, anchor);
+            if (x && y) setPosition(div, x, y, anchor);
             setSize(div, width, height);
         }
 

@@ -4,11 +4,14 @@ import { ModStorage, modStorage, syncStorage } from "./storage";
 import { MOD_NAME } from "@/constants";
 import { getRandomNumber } from "@/utils/main";
 import { getNickname, getPlayer } from "@/utils/characters";
+import paciferImage from "@/images/pacifier.png";
+import { notify } from "./ui";
 
 
 const dialogMenuButtonClickHooks = new Map();
 const buttonLabels = new Map();
 const imageRedirects = new Map();
+let timerLastRulesCycleCall = 0;
 
 
 export const rulesList: Rule[] = [
@@ -66,7 +69,7 @@ export const rulesList: Rule[] = [
         data: [
             {
                 name: "multiplier",
-                text: "Size Multiplier",
+                text: "Size multiplier",
                 type: "number",
                 min: 0.25,
                 max: 1,
@@ -78,7 +81,51 @@ export const rulesList: Rule[] = [
         id: 1009,
         name: "Disable reset settings button",
         description: "Disables button to reset mod settings"
-    }
+    },
+    {
+        id: 1010,
+        name: "Pacifier-checkboxes",
+        description: "Replaces the default checkbox with the pacifier-checkbox in ALL places where possible"
+    },
+    {
+        id: 1011,
+        name: "Control nickname",
+        description: "Control nickname",
+        data: [
+            {
+                name: "nickname",
+                text: "Nickname",
+                type: "text",
+            },
+            {
+                name: "color",
+                text: "Label color",
+                type: "color",
+            }
+        ]
+    },
+    {
+        id: 1012,
+        name: "Prevent using bondage on other",
+        description: "Prevents baby from using bondage items on other characters",
+        data: [
+            {
+                name: "allowAbdlItems",
+                type: "checkbox",
+                text: "Allow using ABDL items"
+            }
+        ]
+    },
+    {
+        id: 1013,
+        name: "Prevent joining ABDL blocked rooms",
+        description: "Prevents baby from joining rooms with blocked ABDL category"
+    },
+    {
+        id: 1014,
+        name: "Prevent using Littlish Wardrobe on self",
+        description: "Prevents baby from applying outfits from Littlish Wardrobe on self"
+    },
 ];
 
 export enum RuleId {
@@ -91,7 +138,12 @@ export enum RuleId {
     CANT_GO_SHOP_ALONE = 1006,
     FALL_SLEEP_AFTER_MILK_BOTTLE = 1007,
     DECREASE_SIZE = 1008,
-    DISABLE_RESET_SETTINGS_BUTTON = 1009
+    DISABLE_RESET_SETTINGS_BUTTON = 1009,
+    PACIFIER_CHECKBOXES = 1010,
+    CONTROL_NICKNAME = 1011,
+    PREVENT_USING_BONDAGE_ON_OTHER = 1012,
+    PREVENT_jOINING_ABDL_BLOCKED_ROOMS = 1013,
+    PREVENT_APPLYING_OUTFITS_FROM_LITTLISH_WARDROBE_ON_SELF = 1014
 }
 
 export interface Rule {
@@ -101,7 +153,7 @@ export interface Rule {
     data?: {
         name: string
         text: string
-        type: "text" | "number" | "checkbox"
+        type: "text" | "number" | "checkbox" | "color"
         min?: number
         max?: number
         step?: number
@@ -158,22 +210,22 @@ export function isRuleActive(C: Character, ruleId: RuleId): boolean {
 
 }
 
-export function isRuleEnabled(C: Character, ruleId: number): boolean {
+export function isRuleEnabled(C: Character, ruleId: RuleId): boolean {
     if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
     return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
 }
 
-export function isRuleStrict(C: Character, ruleId: number): boolean {
+export function isRuleStrict(C: Character, ruleId: RuleId): boolean {
     if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
     return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.strict ?? false;
 }
 
-export function getRuleParameter<T>(C: Character, ruleId: number, parameter: string): T | null {
+export function getRuleParameter<T>(C: Character, ruleId: RuleId, parameter: string): T | null {
     if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.data?.[parameter] as T ?? null;
     return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.data?.[parameter] as T ?? null;
 }
 
-export function getRuleConditions(C: Character, ruleId: number) {
+export function getRuleConditions(C: Character, ruleId: RuleId) {
     if (C.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.conditions ?? null;
     return C.LITTLISH_CLUB?.rules?.list?.find((r) => r.id === ruleId)?.conditions ?? null;
 }
@@ -282,18 +334,36 @@ export function loadRules(): void {
 
 
     hookFunction("Player.CanChangeToPose", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
-        if (isRuleActive(Player, RuleId.WALK_LIKE_BABY) || isSleeping(Player)) return false;
+        if (
+            (
+                isRuleActive(Player, RuleId.WALK_LIKE_BABY) &&
+                !Player.Effect.includes("OnBed")
+            ) ||
+            isSleeping(Player)
+        ) return false;
         return next(args);
     });
 
     hookFunction("PoseCanChangeUnaidedStatus", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
         if (!args[0].IsPlayer()) return next(args);
-        if (isRuleActive(Player, RuleId.WALK_LIKE_BABY) || isSleeping(Player)) return PoseChangeStatus.NEVER;
+        if (
+            (
+                isRuleActive(Player, RuleId.WALK_LIKE_BABY) &&
+                !Player.Effect.includes("OnBed")
+            ) ||
+            isSleeping(Player)
+        ) return PoseChangeStatus.NEVER;
         return next(args);
     });
 
     hookFunction("ChatRoomCanAttemptStand", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
-        if (isRuleActive(Player, RuleId.WALK_LIKE_BABY) || isSleeping(Player)) return false;
+        if (
+            (
+                isRuleActive(Player, RuleId.WALK_LIKE_BABY) &&
+                !Player.Effect.includes("OnBed")
+            ) ||
+            isSleeping(Player)
+        ) return false;
         return next(args);
     });
 
@@ -573,14 +643,25 @@ export function loadRules(): void {
         const item = InventoryGet(C, focusGroup?.Name);
         const clickedItem = args[0];
         if (DialogMenuMode !== "items") return next(args);
-        if (!item) return next(args);
+        console.log(C, clickedItem, isRuleActive(Player, RuleId.PREVENT_USING_BONDAGE_ON_OTHER));
 
         if (
             C.IsPlayer() &&
-            item &&
             item?.Asset?.Category?.includes("ABDL") &&
             isRuleActive(Player, RuleId.PREVENT_TAKING_ABDL_ITEMS_OFF)
         ) return;
+
+        if (
+            !C.IsPlayer() &&
+            clickedItem?.Asset?.IsRestraint &&
+            isRuleActive(Player, RuleId.PREVENT_USING_BONDAGE_ON_OTHER)
+        ) {
+            if (
+                getRuleParameter(Player, RuleId.PREVENT_USING_BONDAGE_ON_OTHER, "allowAbdlItems") &&
+                clickedItem.Asset.Category?.includes("ABDL")
+            ) return next(args);
+            return;
+        }
 
         return next(args);
     });
@@ -615,4 +696,65 @@ export function loadRules(): void {
         return next(args);
     });
 
+    hookFunction("DrawButton", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        const [Left, Top, Width, Height, Label, Color, Image] = args as [number, number, number, number, string, string, string];
+        if (
+            isRuleActive(Player, RuleId.PACIFIER_CHECKBOXES) &&
+            Width === Height &&
+            Width === 64 &&
+            Image === "Icons/Checked.png"
+        ) args[6] = paciferImage;
+        return next(args);
+    });
+
+    hookFunction("TimerProcess", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (timerLastRulesCycleCall + 2000 <= CommonTime()) {
+            if (
+                isRuleActive(Player, RuleId.CONTROL_NICKNAME) &&
+                Player.Nickname !== getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "nickname")
+            ) {
+                const status = CharacterSetNickname(Player, getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "nickname"));
+                if (typeof status === "string") {
+                    modStorage.rules.list.find((r) => r.id === RuleId.CONTROL_NICKNAME).data.nickname = CharacterNickname(Player);
+                    syncStorage();
+                }
+            }
+            if (
+                isRuleActive(Player, RuleId.CONTROL_NICKNAME) &&
+                Player.LabelColor !== (getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "color") ?? Player.LabelColor)
+            ) {
+                Player.LabelColor = getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "color");
+                ServerAccountUpdate.QueueData({ LabelColor: getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "color") });
+            }
+            if (
+                isRuleActive(Player, RuleId.WALK_LIKE_BABY) &&
+                !DialogIsKneeling(Player) &&
+                PoseAvailable(Player, "BodyLower", "Kneel") &&
+                !Player.Effect.includes("OnBed")
+            ) {
+                PoseSetActive(Player, "Kneel", true);
+                ChatRoomCharacterUpdate(Player);
+            }
+            timerLastRulesCycleCall = CommonTime();
+        }
+        return next(args);
+    });
+
+    hookFunction("ChatSearchJoin", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (!isRuleActive(Player, RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS)) return next(args);
+        CommonGenerateGrid(ChatSearchResult, ChatSearchResultOffset, ChatSearchListParams, (room, x, y, width, height) => {
+            if (!MouseIn(x, y, width, height)) return false;
+            if (room?.BlockCategory?.includes("ABDL")) {
+                notify("You can't join that room because it blocks ABDL", 4000);
+                return false;
+            }
+            const RoomName = room.Name;
+            if (ChatSearchLastQueryJoin != RoomName || (ChatSearchLastQueryJoin == RoomName && ChatSearchLastQueryJoinTime + 1000 < CommonTime())) {
+                ChatSearchLastQueryJoinTime = CommonTime();
+                ChatSearchLastQueryJoin = RoomName;
+                ServerSend("ChatRoomJoin", { Name: RoomName });
+            }
+            return true;
+        });
+    });
 }

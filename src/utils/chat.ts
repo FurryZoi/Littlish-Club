@@ -37,7 +37,7 @@ export function chatSendLocal(message: string | Node): void {
 }
 
 export function chatSendChangelog(): void {
-	chatSendLocal(`${MOD_NAME} v${MOD_VERSION}\n\nChangelog:\n• Fixed few minor bugs\n• Logs system\n• UI changes\n• A lot of "hidden" technical changes`);
+	chatSendLocal(`${MOD_NAME} v${MOD_VERSION}\n\nChangelog:\n• Fixed bug with exiting rules menu after changing remote settings\n• Improved "Walk like baby" rule, not its smart\n• Improved rules UI a lot\n• Added new rules`);
 }
 
 export function chatSendActionMessage(msg: string, target: undefined | number = undefined, dictionary: ChatMessageDictionaryEntry[] = []) {

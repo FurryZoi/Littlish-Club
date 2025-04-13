@@ -12,7 +12,7 @@ import { notify } from "@/modules/ui";
 
 function addNote(note: Note, subscreen: NotesMenu, scrollView: HTMLDivElement, key: number, pending = false): void {
     const btn = subscreen.createButton({
-        text: `${note.author.name} (${note.author.id}) noted: ${note.text}`,
+        text: `${note.author.name} (${note.author.id}) noted: "${note.text}"`,
         place: false,
         padding: 2
     });

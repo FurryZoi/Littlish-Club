@@ -1,4 +1,4 @@
-import { isRuleStrict } from "./rules";
+import { isRuleActive, isRuleStrict, RuleId } from "./rules";
 import { modStorage } from "./storage";
 
 export function isExploringModeEnabled(): boolean {
@@ -149,7 +149,10 @@ export function hasAccessRightTo(C1: Character, C2: Character, accessRight: Acce
             );
         case AccessRight.MANAGE_APPEARANCE:
             return (
-                C1.MemberNumber === C2.MemberNumber ||
+                (
+                    C1.MemberNumber === C2.MemberNumber && 
+                    !isRuleActive(C1, RuleId.PREVENT_APPLYING_OUTFITS_FROM_LITTLISH_WARDROBE_ON_SELF)
+                ) ||
                 isMommyOf(C1, C2) ||
                 (
                     isCaregiverOf(C1, C2) &&

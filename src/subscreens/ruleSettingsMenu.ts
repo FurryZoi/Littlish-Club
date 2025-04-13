@@ -39,7 +39,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
                 id: this.rule.id,
                 state: false,
                 strict: false,
-                changedBy: Player.MemberNumber,
+                changedBy: null,
                 ts: Date.now()
             };
             this.ruleSettings = JSON.parse(JSON.stringify(this.ruleSettings));
@@ -52,7 +52,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
             x: 100,
             y: 60,
             fontSize: 10
-        });
+        }).style.cssText += "max-width: 85%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;";
 
         const openIntroBtn = this.createButton({
             icon: "Icons/Notifications.png",
@@ -68,35 +68,51 @@ export class RuleSettingsMenu extends BaseSubscreen {
 
         const description = this.createText({
             text: `${this.rule.description}`,
-            x: 1000,
-            y: 250,
-            width: 800,
-            fontSize: 6,
+            x: 850,
+            y: 215,
+            width: 900,
+            height: 125,
+            fontSize: 4,
             withBackground: true,
-            padding: 2
+            padding: 1
         });
-        description.style.textAlign = "center";
+        // description.style.textAlign = "center";
+        description.style.overflowY = "scroll";
 
-        this.rule.data?.forEach((param, i) => {
+        const paramsView = this.createScrollView({
+            x: 850,
+            y: 360,
+            width: 1050,
+            height: 400,
+            scroll: "y"
+        });
+        paramsView.style.display = "flex";
+        paramsView.style.flexDirection = "column";
+        paramsView.style.rowGap = "1vw";
+
+        this.rule.data?.forEach((param) => {
+            const paramBlock = document.createElement("div");
+            paramBlock.style.cssText = "display: flex; align-items: center; column-gap: 0.8vw; width: 100%;";
+
             if (param.type !== "checkbox") {
-                this.createText({
+                const paramText = this.createText({
                     text: param.text + ":",
-                    x: 1000,
-                    y: 420 + i * 140,
-                    width: 400,
-                    fontSize: 5
+                    fontSize: 4,
+                    place: false
                 });
+                paramText.style.whiteSpace = "nowrap";
+                paramBlock.append(paramText);
             }
 
             if (param.type === "number") {
                 const input = this.createInput({
                     value: getRuleParameter(InformationSheetSelection, this.rule.id, param.name)?.toString() ?? "",
                     placeholder: param.type,
-                    x: 1350,
-                    y: 420,
                     width: 500,
-                    height: 80
+                    height: 70,
+                    place: false
                 });
+                input.style.width = "100%";
                 input.setAttribute("type", param.type);
                 if (param.min) input.setAttribute("min", param.min);
                 if (param.max) input.setAttribute("max", param.max);
@@ -113,13 +129,34 @@ export class RuleSettingsMenu extends BaseSubscreen {
                     if (!this.ruleSettings.data) this.ruleSettings.data = {};
                     this.ruleSettings.data[param.name] = (param.type === "number") ? parseFloat(input.value) : input.value;
                 });
+                paramBlock.append(input);
+            } else if (param.type === "text") {
+                const input = this.createInput({
+                    value: getRuleParameter(InformationSheetSelection, this.rule.id, param.name) ?? "",
+                    placeholder: param.type,
+                    width: 500,
+                    height: 70,
+                    place: false
+                });
+                input.style.width = "100%";
+                input.setAttribute("type", param.type);
+                if (!this.canChangeSettings()) {
+                    input.classList.add("lcDisabled");
+                }
+                input.addEventListener("change", () => {
+                    if (!this.canChangeSettings()) {
+                        return input.classList.add("lcDisabled");
+                    }
+                    if (!this.ruleSettings.data) this.ruleSettings.data = {};
+                    this.ruleSettings.data[param.name] = input.value;
+                });
+                paramBlock.append(input);
             } else if (param.type === "checkbox") {
                 const checkbox = this.createCheckbox({
-                    x: 1000,
-                    y: 440,
                     width: 800,
                     isChecked: !!getRuleParameter(InformationSheetSelection, this.rule.id, param.name),
-                    text: param.text
+                    text: param.text,
+                    place: false
                 });
                 if (!this.canChangeSettings()) {
                     checkbox.classList.add("lcDisabled");
@@ -131,13 +168,55 @@ export class RuleSettingsMenu extends BaseSubscreen {
                     if (!this.ruleSettings.data) this.ruleSettings.data = {};
                     this.ruleSettings.data[param.name] = checkbox.checked;
                 });
+                paramBlock.append(checkbox);
+                paramBlock.append(
+                    this.createText({
+                        text: param.text,
+                        fontSize: 4
+                    })
+                );
+            } else if (param.type === "color") {
+                const input = this.createInput({
+                    width: 500,
+                    height: 70,
+                    value: getRuleParameter(InformationSheetSelection, this.rule.id, param.name),
+                    padding: 1,
+                    place: false
+                });
+                input.style.width = "100%";
+                input.setAttribute("type", param.type);
+                if (!this.canChangeSettings()) {
+                    input.classList.add("lcDisabled");
+                }
+                input.addEventListener("change", () => {
+                    if (!this.canChangeSettings()) {
+                        return input.classList.add("lcDisabled");
+                    }
+                    if (!this.ruleSettings.data) this.ruleSettings.data = {};
+                    this.ruleSettings.data[param.name] = input.value;
+                });
+                paramBlock.append(input);
             }
+            paramsView.append(paramBlock);
         });
+
+        const lastTimeWasChanged = this.createText({
+            text: `Last time it was changed by ${this.ruleSettings.changedBy ?? "-"} at ${new Date(this.ruleSettings.ts).toUTCString() ?? "-"}`,
+            x: 150,
+            y: 215,
+            width: 600,
+            height: 145,
+            padding: 1,
+            fontSize: 4
+        });
+        lastTimeWasChanged.style.background = "var(--tmd-element, rgb(235, 235, 255))";
+        lastTimeWasChanged.style.borderLeft = "0.4vw solid var(--tmd-accent, rgb(199 199 241))";
+        lastTimeWasChanged.style.overflowY = "scroll";
 
         const turnStateBtn = this.createButton({
             text: this.ruleSettings.state ? "State: Enabled" : "State: Disabled",
             x: 150,
-            y: 250,
+            y: 380,
             width: 600,
             padding: 2
         });
@@ -155,7 +234,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
         const turnStrictBtn = this.createButton({
             text: `Strict: ${this.ruleSettings.strict ? "Yes" : "No"}`,
             x: 150,
-            y: 365,
+            y: 490,
             width: 600,
             padding: 2
         });
@@ -175,7 +254,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
                 "Trigger Conditions: Any"
                 : "Trigger Conditions All",
             x: 150,
-            y: 525,
+            y: 625,
             width: 600,
             padding: 2
         });
@@ -191,13 +270,12 @@ export class RuleSettingsMenu extends BaseSubscreen {
             triggerConditionsBtn.textContent = (this.ruleSettings.conditions?.type ?? "any") === "any" ?
                 "Trigger Conditions: Any"
                 : "Trigger Conditions All";
-
         });
 
         const whenCheckbox = this.createCheckbox({
             text: "When",
             x: 150,
-            y: 650,
+            y: 750,
             isChecked: !!this.ruleSettings.conditions?.whenInRoomWithRole
         });
         if (!this.canChangeSettings()) {
@@ -207,7 +285,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
         const inRoomBtn = this.createButton({
             text: (this.ruleSettings.conditions?.whenInRoomWithRole?.inRoom ?? true) ? "in room" : "not in room",
             x: 395,
-            y: 650,
+            y: 750,
             width: 180,
             height: 65,
             fontSize: 3
@@ -229,14 +307,14 @@ export class RuleSettingsMenu extends BaseSubscreen {
         this.createText({
             text: "with role",
             x: 600,
-            y: 650,
+            y: 750,
             fontSize: 5
         });
 
         const caregiverBtn = this.createButton({
             text: this.ruleSettings.conditions?.whenInRoomWithRole?.role ?? "caregiver",
             x: 805,
-            y: 650,
+            y: 750,
             width: 180,
             height: 65,
             fontSize: 3
@@ -260,14 +338,14 @@ export class RuleSettingsMenu extends BaseSubscreen {
         this.createText({
             text: "and higher",
             x: 1000,
-            y: 650,
+            y: 750,
             fontSize: 5
         });
 
         const whenCheckbox2 = this.createCheckbox({
             text: "When in room where ABDL is",
             x: 150,
-            y: 750,
+            y: 850,
             isChecked: !!this.ruleSettings.conditions?.whenInRoomWhereAbdl
         });
         if (!this.canChangeSettings()) {
@@ -277,7 +355,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
         const isBlockedBtn = this.createButton({
             text: (this.ruleSettings.conditions?.whenInRoomWhereAbdl?.blocked ?? true) ? "blocked" : "not blocked",
             x: 930,
-            y: 750,
+            y: 850,
             width: 200,
             height: 65,
             fontSize: 3
