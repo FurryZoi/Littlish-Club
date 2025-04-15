@@ -586,7 +586,7 @@ export function loadRules(): void {
         const sizeMultiplier = (getRuleParameter(C, RuleId.DECREASE_SIZE, "multiplier") ?? 1) as number;
         if (sizeMultiplier > 1 || sizeMultiplier < 0.25) return next(args);
         if (isRuleActive(C, RuleId.DECREASE_SIZE)) {
-            return next(args) * sizeMultiplier;
+            return sizeMultiplier;
         }
         return next(args);
     });
