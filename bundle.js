@@ -2548,7 +2548,7 @@ Changelog:
       const sizeMultiplier = getRuleParameter(C, 1008 /* DECREASE_SIZE */, "multiplier") ?? 1;
       if (sizeMultiplier > 1 || sizeMultiplier < 0.25) return next(args);
       if (isRuleActive(C, 1008 /* DECREASE_SIZE */)) {
-        return next(args) * sizeMultiplier;
+        return sizeMultiplier;
       }
       return next(args);
     });
