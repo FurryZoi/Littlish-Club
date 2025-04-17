@@ -201,7 +201,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
         });
 
         const lastTimeWasChanged = this.createText({
-            text: `Last time it was changed by ${this.ruleSettings.changedBy ?? "-"} at ${new Date(this.ruleSettings.ts).toUTCString() ?? "-"}`,
+            text: `Last time it was changed by ${this.ruleSettings.changedBy ?? "-"} at ${this.ruleSettings.ts ? new Date(this.ruleSettings.ts).toUTCString() : "-"}`,
             x: 150,
             y: 215,
             width: 600,
