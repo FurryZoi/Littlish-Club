@@ -40,7 +40,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
                 state: false,
                 strict: false,
                 changedBy: null,
-                ts: Date.now()
+                ts: null
             };
             this.ruleSettings = JSON.parse(JSON.stringify(this.ruleSettings));
         }
