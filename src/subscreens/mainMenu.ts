@@ -97,9 +97,9 @@ export class MainMenu extends BaseSubscreen {
 
         this.createText({
             text: MOD_NAME,
-            x: 1075,
-            y: 120,
-            fontSize: 10
+            x: 940,
+            y: 110,
+            fontSize: 14
         });
 
         if (InformationSheetSelection.IsPlayer() && isExploringModeEnabled()) {

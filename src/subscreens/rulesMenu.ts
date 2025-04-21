@@ -27,6 +27,15 @@ export class RulesMenu extends BaseSubscreen {
             fontSize: 10
         });
 
+        const searchInput = this.createInput({
+            x: 400,
+            y: 170,
+            width: 1200,
+            padding: 2,
+            placeholder: "Search rule"
+        });
+        searchInput.addEventListener("input", (e) => this.refreshRules((e.target as HTMLInputElement).value));
+
         this.rulesBlock = this.createScrollView({
             scroll: "y",
             x: 200,
@@ -38,7 +47,15 @@ export class RulesMenu extends BaseSubscreen {
         this.rulesBlock.style.gridTemplateColumns = "1fr 1fr";
         this.rulesBlock.style.gap = "1vw";
 
+        this.refreshRules();
+
+        if (scrollTop) this.rulesBlock.scrollBy({ top: scrollTop });
+    }
+
+    refreshRules(searchFilter?: string) {
+        this.rulesBlock.innerHTML = "";
         rulesList.forEach((rule) => {
+            if (searchFilter && !rule.name.toLowerCase().includes(searchFilter.toLowerCase())) return;
             const ruleBtn = this.createButton({
                 text: rule.name,
                 padding: 3,
@@ -46,6 +63,7 @@ export class RulesMenu extends BaseSubscreen {
                 place: false
             });
             ruleBtn.style.fontWeight = "bold";
+            // ruleBtn.style.height = "fit-content";
             ruleBtn.setAttribute("data-lc-ruleId", rule.id);
             ruleBtn.addEventListener("click", () => {
                 scrollTop = this.rulesBlock.scrollTop;
@@ -53,8 +71,6 @@ export class RulesMenu extends BaseSubscreen {
             });
             this.rulesBlock.append(ruleBtn);
         });
-
-        if (scrollTop) this.rulesBlock.scrollBy({ top: scrollTop });
     }
 
     update() {

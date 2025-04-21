@@ -126,6 +126,23 @@ export const rulesList: Rule[] = [
         name: "Prevent using Littlish Wardrobe on self",
         description: "Prevents baby from applying outfits from Littlish Wardrobe on self"
     },
+    {
+        id: 1015,
+        name: "Prevent joining certain rooms",
+        description: "Prevents baby from joining rooms with certain names",
+        data: [
+            {
+                name: "roomNames",
+                type: "text",
+                text: "Room names"
+            },
+            {
+                name: "whitelistMode",
+                type: "checkbox",
+                text: "Whitelist mode"
+            }
+        ]
+    }
 ];
 
 export enum RuleId {
@@ -143,7 +160,8 @@ export enum RuleId {
     CONTROL_NICKNAME = 1011,
     PREVENT_USING_BONDAGE_ON_OTHER = 1012,
     PREVENT_jOINING_ABDL_BLOCKED_ROOMS = 1013,
-    PREVENT_APPLYING_OUTFITS_FROM_LITTLISH_WARDROBE_ON_SELF = 1014
+    PREVENT_APPLYING_OUTFITS_FROM_LITTLISH_WARDROBE_ON_SELF = 1014,
+    PREVENT_JOINING_CERTAIN_ROOMS = 1015
 }
 
 export interface Rule {
@@ -741,11 +759,23 @@ export function loadRules(): void {
     });
 
     hookFunction("ChatSearchJoin", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
-        if (!isRuleActive(Player, RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS)) return next(args);
+        if (
+            !isRuleActive(Player, RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS) &&
+            !isRuleActive(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS)
+        ) return next(args);
         CommonGenerateGrid(ChatSearchResult, ChatSearchResultOffset, ChatSearchListParams, (room, x, y, width, height) => {
             if (!MouseIn(x, y, width, height)) return false;
-            if (room?.BlockCategory?.includes("ABDL")) {
-                notify("You can't join that room because it blocks ABDL", 4000);
+            if (isRuleActive(Player, RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS) && room?.BlockCategory?.includes("ABDL")) {
+                notify(`Rule "${rulesList.find((r) => r.id === RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS).name}" prevented you from joining that room`, 5000);
+                return false;
+            }
+            if (
+                isRuleActive(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS) &&
+                getRuleParameter(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS, "whitelistMode") ? 
+                    !getRuleParameter(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS, "roomNames")?.split(",").map((n) => n.trim().toLowerCase()).includes(room.Name.toLowerCase())
+                    : getRuleParameter(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS, "roomNames")?.split(",").map((n) => n.trim().toLowerCase()).includes(room.Name.toLowerCase())
+            ) {
+                notify(`Rule "${rulesList.find((r) => r.id === RuleId.PREVENT_JOINING_CERTAIN_ROOMS).name}" prevented you from joining that room`, 5000);
                 return false;
             }
             const RoomName = room.Name;

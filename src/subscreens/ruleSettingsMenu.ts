@@ -414,8 +414,10 @@ export class RuleSettingsMenu extends BaseSubscreen {
                 if (r) {
                     for (let i in r) delete r[i];
                     for (let i in this.ruleSettings) r[i] = this.ruleSettings[i];
+                    r.changedBy = Player.MemberNumber;
+                    r.ts = Date.now();
                 } else {
-                    modStorage.rules.list.push(this.ruleSettings);
+                    modStorage.rules.list.push({ ...this.ruleSettings, changedBy: Player.MemberNumber, ts: Date.now() });
                 }
                 addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed settings of "${this.rule.name}" rule`, false);
                 syncStorage();

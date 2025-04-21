@@ -39,7 +39,6 @@ export interface ModStorage {
     cyberDiaper?: StorageCyberDiaper
     notes?: {
         list?: Note[],
-        visibility?: 0 | 1 | 2
     }
     logs?: {
         list?: Log[]

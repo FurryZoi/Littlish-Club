@@ -306,7 +306,7 @@ export abstract class BaseSubscreen {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox"
         checkbox.checked = isChecked;
-        checkbox.classList.add("lcCheckbox");
+        checkbox.classList.add("lcCheckbox", "checkbox");
 
         const p = document.createElement("p");
         p.textContent = text;
