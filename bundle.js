@@ -291,12 +291,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
       creator: "Shizu",
       bundle: "NobwRAcghgtgpmAXGAwgJwPYAcAq2wA0YA4pgK5ZKoA2GALgBaGoa1pLBgAicAZlGWp1mAYgBiEyWAC6RAAqYscNHQCeScAHksUAMYBLNRwAMBAIyywmgG7K0+gCZwF+jPaOIATAE4Avr4JwaHgqACEMADsIuDozZlIMCioACShhIhRWNw4wEQBBAFFCwtEADlKzAFYAZlCZAKDYBGRk429K43jySha4fQBzBnSWNioefkFhBsgmqgBlGChqai7EnrBwh1UAVSwldgys9mQAdQZDBHlFZQ9wHFUlACU4XTcHDTA1JXfEYwCwe5KJARQTUfyBGYhZALJYrIgJJLITaqAAyGAA7spmJlRshxgIhGBpsFmmBUvo0GJMBE6J4AGyrRFkqAUqmRYY47KITgiLgFTz0zrSYmzFostChPQAa0qcXh3RS4sluil2KOYz4BKmEJJVAKqjgAGdSoz1vqjWrcTyACxmOneApxYU60Vgc3G016g2GzyWrk8wpmADs1u89RdULAz36gigBxICuQAFlEow/ccefzKp5Sr7LApsDd1Ig7g84M9XmgfuAVr8iMJfv8uPpeLx9LpJsXTBtaCqOJYCq2Xg3gJZko5mqOiOOnABJOhwGD9oh5ZYYvK6Oj6ayGYtTsB5Oh0ewAIzIC+XALLVGoxjonXBjUjEH0e2oRrlCbWVBfb4th1xbhNUmIkI1JUJqDIQ0mHlb8kUg6D0w1CZCRFSMxEgxxDU9ZAMLILCkLxYDULAvUYHodtIhwt1yK3V4IkIoCUO1J9SXNE9MHRQ1PwRM0DQ4jFsIArkmK1UDWOQsTYKZZI4Cgd5hOOUSQLQ0k5gYOBZPjXiqALCJEgiISRhE/EQKuQsVGLcBB14YcchROTEOFVTdKgw1VB4xMwDkNz1EUySVNI5BqLyNAYENBzeA5dUiOY8TIVJEKwsNR4BiGRjTJIiTguk9ZUgiBwIr4aLAMyliEqoaj8sK1LBhKkziPK3VoQwFVDQZXL5laqUjM5DNcmtOkgzMMQwyIMrw2ysBADgVQBF5UAb6zPLgsBAAbTOaAH0UTIAAvfQMsa+LmrAQBZJVm31OuQFbTs2na9v82KxJcpFBClVRmygfZqLkKAaX0f9jP6kQgwKINvCDSoyk8YGgzqIgREGuljCDLhREkKRnSmlE0jgAAPPIsGpaiUFoRgN10I1DTcPyAZyERPC4Sp0fM/ZbivJ4XjeD4vjgH4zH8J6NgwLYUAYFkIggF4pWoPRLi/JkJZVaXycInkxBQNW1dR9XtZkZmiw+Gw7AnFw3F3JBqj+AXQn0KV9AifQlqZUI0CgFXcnpxmJEmirkFnAqMDcOZqFffYjJ06EGAwf6+tp0pHS4a1ztyPJKjya00+9o68nt+BiApOE5fWYn6AYdbAApvMvAGmwrbdrdumGakOGuGqTxjEqWHcmbrg6S4INRFCW0UGtApRAZgVKhRuHqm79WxH72U05H/Nrksg3bDQewnBN9wrI2TBWqYRALfGmIWWoOIj8tgWAE1BBiCcADU4GoWw6BOOMYDTC6aBL8uK+r26ScY7clyEGIa4DmATRPnFaBUllKElgWZeBwhl4WVZtoPQZtuRmAIKYPBuCCHGGckFQW6JlRSjJhTKmRMSYMEoYaSmaBVB/wAbXe6yDDqulSieE8kRuJVXFPQxhqhqgsJrndGmICRA928MYL2cMZFyLnsKaQQA=",
       requiredMods: ["LSCG", "Echo"]
+    },
+    {
+      name: "Blessed cutie",
+      creator: "Furude nya",
+      bundle: "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="
     }
-    // {
-    //     name: "Blessed cutie",
-    //     creator: "Furude nya",
-    //     bundle: "NobwRAgmBcYBIAYCcCFgDRgOI3gUwEsBzACwBcMwBhGYAXQF91wpYANAGQEMAnIvSjlgAhAPYATAJ4BVAA6y8PSjVgB1EgTICmLXJ179BuMVI6iA7ouW51m7c0i44XAjwBiPUQDsyAJgAsRrDOrh7eFJgqwGAAxAAivkjCAKw0jA6sYACikngARp7mAM4AjEHZuQUWRWA6jrA5eKXljTV1ma1lmEIVTb61GbgASnhEAK4ANrzlALKiY2Qk1tDRMSX+6+uUcXgAZlyTFOm6sAByBPITTV3YuOeXTQMnYAAKY0VFkjc9bx+ST/UwABlEh4OBWbq4F6eLzzLxtQawHb7Q7lcFccQAzJYAhcHxiczfJwuHgQADGZKaRVEPEkAGZlqsSgB2ErJNlgY6AkI8YRcMkAa2S/UhwRJfMFjNiVDpSGZyTcnPauAg4kOfLykjiPCpItusCoE1EiylMQQyXN5soMSytuEWWE1qyCAAbL4IMylYjgWRRIKCF4iEVAqLgWNNGZLEpIrRYiVhPH417nhAvAKrkCyDwuLIQaJHqG8wXqLGYm43CkUsnAVgJpotNH9dQjYtyZSPjTJAB9QAU3n3ANNhHDGAC8CHqorEkG4Xcz/MlrUh/C7F4quZkgX6BUUXeUN4KajGVrEIEgXQAOc/bPYHCZHZWwQAu4YA3cL1PR5bapnZuE5tcSy5c9TAYhdOkz18ctrRAsCIKAqDwNXe8wAAaQID4AFteAFWYuCKLDDyZDZCOrTJU34CZVADINygowMEWeKhCi8EMm2cChENrUQADcmjcMZGx6DjuIPEsjxtEo4gkrJrQQEoZJkpU6CAA="
-    // }
   ];
 
   // src/modules/bcModSdk.ts
@@ -557,7 +557,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.checked = isChecked;
-      checkbox.classList.add("lcCheckbox");
+      checkbox.classList.add("lcCheckbox", "checkbox");
       const p = document.createElement("p");
       p.textContent = text;
       p.style.color = "var(--tmd-text, black)";
@@ -2233,6 +2233,23 @@ Changelog:
       id: 1014,
       name: "Prevent using Littlish Wardrobe on self",
       description: "Prevents baby from applying outfits from Littlish Wardrobe on self"
+    },
+    {
+      id: 1015,
+      name: "Prevent joining certain rooms",
+      description: "Prevents baby from joining rooms with certain names",
+      data: [
+        {
+          name: "roomNames",
+          type: "text",
+          text: "Room names"
+        },
+        {
+          name: "whitelistMode",
+          type: "checkbox",
+          text: "Whitelist mode"
+        }
+      ]
     }
   ];
   function isRuleActive(C, ruleId) {
@@ -2652,11 +2669,15 @@ Changelog:
       return next(args);
     });
     hookFunction("ChatSearchJoin", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
-      if (!isRuleActive(Player, 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */)) return next(args);
+      if (!isRuleActive(Player, 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */) && !isRuleActive(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */)) return next(args);
       CommonGenerateGrid(ChatSearchResult, ChatSearchResultOffset, ChatSearchListParams, (room, x, y, width, height) => {
         if (!MouseIn(x, y, width, height)) return false;
-        if (room?.BlockCategory?.includes("ABDL")) {
-          notify("You can't join that room because it blocks ABDL", 4e3);
+        if (isRuleActive(Player, 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */) && room?.BlockCategory?.includes("ABDL")) {
+          notify(`Rule "${rulesList.find((r) => r.id === 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */).name}" prevented you from joining that room`, 5e3);
+          return false;
+        }
+        if (isRuleActive(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */) && getRuleParameter(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */, "whitelistMode") ? !getRuleParameter(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */, "roomNames")?.split(",").map((n) => n.trim().toLowerCase()).includes(room.Name.toLowerCase()) : getRuleParameter(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */, "roomNames")?.split(",").map((n) => n.trim().toLowerCase()).includes(room.Name.toLowerCase())) {
+          notify(`Rule "${rulesList.find((r) => r.id === 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */).name}" prevented you from joining that room`, 5e3);
           return false;
         }
         const RoomName = room.Name;
@@ -3362,8 +3383,10 @@ Changelog:
           if (r) {
             for (let i in r) delete r[i];
             for (let i in this.ruleSettings) r[i] = this.ruleSettings[i];
+            r.changedBy = Player.MemberNumber;
+            r.ts = Date.now();
           } else {
-            modStorage.rules.list.push(this.ruleSettings);
+            modStorage.rules.list.push({ ...this.ruleSettings, changedBy: Player.MemberNumber, ts: Date.now() });
           }
           addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed settings of "${this.rule.name}" rule`, false);
           syncStorage();
@@ -3402,6 +3425,14 @@ Changelog:
         y: 60,
         fontSize: 10
       });
+      const searchInput = this.createInput({
+        x: 400,
+        y: 170,
+        width: 1200,
+        padding: 2,
+        placeholder: "Search rule"
+      });
+      searchInput.addEventListener("input", (e) => this.refreshRules(e.target.value));
       this.rulesBlock = this.createScrollView({
         scroll: "y",
         x: 200,
@@ -3412,7 +3443,13 @@ Changelog:
       this.rulesBlock.style.display = "grid";
       this.rulesBlock.style.gridTemplateColumns = "1fr 1fr";
       this.rulesBlock.style.gap = "1vw";
+      this.refreshRules();
+      if (scrollTop) this.rulesBlock.scrollBy({ top: scrollTop });
+    }
+    refreshRules(searchFilter) {
+      this.rulesBlock.innerHTML = "";
       rulesList.forEach((rule) => {
+        if (searchFilter && !rule.name.toLowerCase().includes(searchFilter.toLowerCase())) return;
         const ruleBtn = this.createButton({
           text: rule.name,
           padding: 3,
@@ -3427,7 +3464,6 @@ Changelog:
         });
         this.rulesBlock.append(ruleBtn);
       });
-      if (scrollTop) this.rulesBlock.scrollBy({ top: scrollTop });
     }
     update() {
       for (const ruleElement of this.rulesBlock.children) {
@@ -4454,9 +4490,9 @@ Thanks for installing the mod!`;
       });
       this.createText({
         text: MOD_NAME,
-        x: 1075,
-        y: 120,
-        fontSize: 10
+        x: 940,
+        y: 110,
+        fontSize: 14
       });
       if (InformationSheetSelection.IsPlayer() && isExploringModeEnabled()) {
         this.createText({
