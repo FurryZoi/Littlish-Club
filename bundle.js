@@ -2962,6 +2962,7 @@ Changelog:
   // src/subscreens/familyMenu.ts
   var FamilyMenu = class extends BaseSubscreen {
     getCaregiversInputValue;
+    oldCaregiversList;
     get name() {
       return "Family";
     }
@@ -2969,6 +2970,7 @@ Changelog:
       return `Assets/Female3DCG/Emoticon/Hearts/Icon.png`;
     }
     load() {
+      this.oldCaregiversList = getCaregiversOf(InformationSheetSelection);
       this.createText({
         text: this.name,
         x: 100,
@@ -3030,15 +3032,15 @@ Changelog:
       });
     }
     exit() {
-      if (hasAccessRightTo(Player, InformationSheetSelection, "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */)) {
-        const list = this.getCaregiversInputValue();
+      const newCaregiversList = this.getCaregiversInputValue();
+      if (this.oldCaregiversList.join(",") !== newCaregiversList.join(",") && hasAccessRightTo(Player, InformationSheetSelection, "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */)) {
         if (InformationSheetSelection.IsPlayer()) {
           if (!modStorage.caregivers) modStorage.caregivers = {};
-          modStorage.caregivers.list = list;
+          modStorage.caregivers.list = newCaregiversList;
           addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed caregivers list`, false);
         } else {
           chatSendModMessage("changeCaregiversList", {
-            list
+            list: newCaregiversList
           }, InformationSheetSelection.MemberNumber);
         }
       }
