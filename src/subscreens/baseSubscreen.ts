@@ -413,7 +413,7 @@ export abstract class BaseSubscreen {
                 else item.style.border = "";
                 e.stopPropagation();
             });
-            items.push(numbersOnly ? parseInt(text) : text);
+            items.push(text);
         }
 
         const setProperties = () => {
@@ -430,7 +430,7 @@ export abstract class BaseSubscreen {
         addButton("Icons/Trash.png", () => {
             for (const c of [...itemsElement.children]) {
                 if (c.getAttribute("style").includes("border: 2px solid red;")) {
-                    items.splice(items.indexOf(c.textContent, 1));
+                    items.splice(items.indexOf(c.textContent), 1);
                     c.remove();
                 }
             }
@@ -458,7 +458,7 @@ export abstract class BaseSubscreen {
         value.forEach((v) => addItem(String(v)));
         return [
             div,
-            () => items
+            () => numbersOnly ? items.map((i) => parseInt(i)) : items 
         ];
     }
 }

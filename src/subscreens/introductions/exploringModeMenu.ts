@@ -15,9 +15,10 @@ export class ExploringModeMenu extends BaseSubscreen {
 
         this.createText({
             text: "As long as you don't have mommy, you are in exporing mode. This mode allows you to explore how all the mod's functions work. It removes all restrictions and allows you to fully manage all your mod settings. But you get excited early, as soon as you have a mommy, you will lose that freedom and your mommy will take control of you...",
-            width: 1200,
-            x: 400,
-            y: 350
+            width: 1400,
+            x: 300,
+            y: 320,
+            fontSize: 6
         });
     }
 }

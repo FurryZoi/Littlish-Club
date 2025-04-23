@@ -58,4 +58,11 @@ export function loadUI(): void {
         }
         next(args);
     });
+
+    hookFunction("InformationSheetExit", HookPriority.OBSERVE, (args, next) => {
+        if (window.LITTLISH_CLUB.inModSubscreen()) {
+            return currentSubscreen.exit();
+        }
+        next(args);
+    });
 }
