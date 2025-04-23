@@ -9,6 +9,8 @@ import { getNickname } from "@/utils/characters";
 import { ChangeCaregiversListMessageData } from "@/modules/messaging";
 
 export class FamilyMenu extends BaseSubscreen {
+    private getCaregiversInputValue: () => number[];
+
     get name() {
         return "Family";
     }
@@ -25,36 +27,19 @@ export class FamilyMenu extends BaseSubscreen {
             fontSize: 10
         });
 
-        const caregiversInput = this.createInput({
-            placeholder: "Caregivers member numbers",
-            value: getCaregiversOf(InformationSheetSelection).join(", "),
+        const [caregiversInput, getCaregiversInputValue] = this.createInputList({
+            title: "Caregivers member numbers",
+            value: getCaregiversOf(InformationSheetSelection),
             x: 1000,
             y: 200,
             width: 850,
             height: 600,
-            textArea: true
+            numbersOnly: true
         });
+        this.getCaregiversInputValue = getCaregiversInputValue as () => number[];
         if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)) {
             caregiversInput.classList.add("lcDisabled");
         }
-        caregiversInput.addEventListener("change", () => {
-            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)) {
-                return caregiversInput.classList.add("lcDisabled");
-            }
-            const list = caregiversInput.value
-                .split(",")
-                .map((c) => parseInt(c.trim()))
-                .filter((c) => typeof c === "number" && !Number.isNaN(c));
-            if (InformationSheetSelection.IsPlayer()) {
-                if (!modStorage.caregivers) modStorage.caregivers = {};
-                modStorage.caregivers.list = list;
-                addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed caregivers list`, false);
-            } else {
-                chatSendModMessage<ChangeCaregiversListMessageData>("changeCaregiversList", {
-                    list
-                }, InformationSheetSelection.MemberNumber);
-            }
-        });
 
         const caregiversPermissionsBtn = this.createButton({
             text: "Caregivers permissions",
@@ -93,8 +78,7 @@ export class FamilyMenu extends BaseSubscreen {
                 if (!modStorage.caregivers) modStorage.caregivers = {};
                 modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
                 addLog(
-                    `${getNickname(Player)} (${Player.MemberNumber}) ${
-                        modStorage.caregivers.canChangeList ? "allowed" : "forbade"
+                    `${getNickname(Player)} (${Player.MemberNumber}) ${modStorage.caregivers.canChangeList ? "allowed" : "forbade"
                     } ${getNickname(Player)} to change caregivers list`,
                     false
                 );
@@ -109,6 +93,18 @@ export class FamilyMenu extends BaseSubscreen {
     }
 
     exit() {
+        if (hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)) {
+            const list = this.getCaregiversInputValue();
+            if (InformationSheetSelection.IsPlayer()) {
+                if (!modStorage.caregivers) modStorage.caregivers = {};
+                modStorage.caregivers.list = list;
+                addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed caregivers list`, false);
+            } else {
+                chatSendModMessage<ChangeCaregiversListMessageData>("changeCaregiversList", {
+                    list
+                }, InformationSheetSelection.MemberNumber);
+            }
+        }
         syncStorage();
         this.setSubscreen(new MainMenu());
     }

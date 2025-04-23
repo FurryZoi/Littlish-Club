@@ -38,7 +38,6 @@ interface CreateInputArgs {
     anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
     padding?: number
     place?: boolean
-
 }
 
 interface CreateCheckboxArgs {
@@ -58,6 +57,20 @@ interface CreateScrollViewArgs {
     width: number,
     height?: number
     anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+}
+
+interface CreateInputListArgs {
+    value?: string[] | number[]
+    title?: string
+    x?: number
+    y?: number
+    width: number
+    height?: number
+    fontSize?: number | "auto"
+    anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+    padding?: number
+    place?: boolean
+    numbersOnly?: boolean
 }
 
 function getRelativeHeight(height: number) {
@@ -195,13 +208,14 @@ export abstract class BaseSubscreen {
     exit?() {
         setPreviousSubscreen();
     }
-    update?() {}
+    update?() { }
     setPreviousSubscreen() {
         setPreviousSubscreen();
     }
     setSubscreen(subscreen: BaseSubscreen | null) {
         setSubscreen(subscreen);
     }
+
     createButton({
         text, x, y, width, height, fontSize = "auto",
         anchor = "top-left", padding, style = "default",
@@ -250,6 +264,7 @@ export abstract class BaseSubscreen {
         this.htmlElements.push(btn);
         return btn;
     }
+
     createText({
         text, color, x, y, width, height, withBackground = false,
         fontSize = "auto", anchor = "top-left", padding, place = true
@@ -275,6 +290,7 @@ export abstract class BaseSubscreen {
         this.htmlElements.push(p);
         return p;
     }
+
     createInput({
         value, placeholder, x, y, width, height, textArea = false,
         fontSize = "auto", anchor = "top-left", padding, place = true
@@ -299,6 +315,7 @@ export abstract class BaseSubscreen {
         this.htmlElements.push(input);
         return input;
     }
+
     createCheckbox({
         text, x, y, isChecked, width,
         anchor = "top-left", place = true
@@ -328,6 +345,7 @@ export abstract class BaseSubscreen {
         this.htmlElements.push(checkbox, p);
         return checkbox;
     }
+
     createScrollView({
         scroll, x, y, width, height,
         anchor = "top-left"
@@ -348,5 +366,99 @@ export abstract class BaseSubscreen {
         this.resizeEventListeners.push(setProperties);
         this.htmlElements.push(div);
         return div;
+    }
+
+    createInputList({
+        x, y, width, height, title, value,
+        anchor = "top-left", place = true, numbersOnly = false,
+    }: CreateInputListArgs): [HTMLDivElement, () => (number[] | string[])] {
+        const items = [];
+        const div = document.createElement("div");
+        div.style.cssText = `
+        display: flex; flex-direction: column; gap: 1vw; border: 2px solid var(--tmd-accent, black);
+        font-family: Emilys Candy; border-radius: 4px; padding: 0.75vw;
+        `;
+
+        const buttonsElement = document.createElement("div");
+        buttonsElement.style.cssText = "display: flex; justify-content: center; column-gap: 1vw; width: 100%;";
+
+        const titleElement = document.createElement("b");
+        titleElement.textContent = title + ":";
+        titleElement.style.cssText = "width: 100%; font-size: clamp(10px, 2.4vw, 24px); color: var(--tmd-text, black);";
+
+        const itemsElement = document.createElement("div");
+        itemsElement.style.cssText = `display: flex; gap: 1vw; flex-wrap: wrap; align-content: flex-start;
+        overflow-y: scroll;`;
+
+        const input = document.createElement("input");
+        input.style.cssText = "border: none; outline: none; background: none; height: fit-content; flex-grow: 1; padding: 0.8vw; width: 6vw; font-size: clamp(8px, 2vw, 20px);";
+
+        const addButton = (icon: string, onClick: () => void) => {
+            const b = document.createElement("button");
+            b.style.cssText = "cursor: pointer; display: grid; place-items: center; background: var(--tmd-element-hover, #e0e0e0); width: 10%; max-width: 40px; aspect-ratio: 1/1; border-radius: 8px; border: none;";
+            const img = DrawGetImage(icon);
+            img.style.cssText = "width: 90%;";
+            b.append(img);
+            buttonsElement.append(b);
+            b.addEventListener("click", onClick);
+        }
+
+        const addItem = (text: string) => {
+            const item = document.createElement("div");
+            item.style.cssText = "cursor: pointer; background: var(--tmd-element-hover, rgb(206, 206, 206)); color: var(--tmd-text, black); height: fit-content; padding: 0.8vw; border-radius: 0.8vw; font-size: clamp(8px, 2vw, 20px);";
+            item.textContent = text;
+            itemsElement.insertBefore(item, input);
+            item.addEventListener("click", (e) => {
+                if (item.style.border === "") item.style.border = "2px solid red";
+                else item.style.border = "";
+                e.stopPropagation();
+            });
+            items.push(numbersOnly ? parseInt(text) : text);
+        }
+
+        const setProperties = () => {
+            if (x && y) setPosition(div, x, y, anchor);
+            setSize(div, width, height);
+        }
+
+        addButton("Icons/Cancel.png", () => {
+            itemsElement.innerHTML = "";
+            items.splice(0, items.length);
+            itemsElement.append(input);
+            value.forEach((v) => addItem(String(v)));
+        });
+        addButton("Icons/Trash.png", () => {
+            for (const c of [...itemsElement.children]) {
+                if (c.getAttribute("style").includes("border: 2px solid red;")) {
+                    items.splice(items.indexOf(c.textContent, 1));
+                    c.remove();
+                }
+            }
+        });
+        setProperties();
+        window.addEventListener("resize", setProperties);
+        input.addEventListener("keypress", (e) => {
+            if (document.activeElement === input) {
+                switch (e.key) {
+                    case "Enter":
+                        if (numbersOnly && Number.isNaN(parseInt(input.value))) return;
+                        if (!numbersOnly && input.value.trim() === "") return;
+                        addItem(input.value);
+                        input.value = "";
+                        break;
+                }
+            }
+        });
+        div.addEventListener("click", (e) => { if (e.currentTarget == div) input.focus() });
+        itemsElement.append(input);
+        div.append(buttonsElement, titleElement, itemsElement);
+        document.body.append(div);
+        this.resizeEventListeners.push(setProperties);
+        this.htmlElements.push(div);
+        value.forEach((v) => addItem(String(v)));
+        return [
+            div,
+            () => items
+        ];
     }
 }

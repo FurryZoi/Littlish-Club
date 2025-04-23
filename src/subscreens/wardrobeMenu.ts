@@ -29,7 +29,7 @@ export class WardrobeMenu extends BaseSubscreen {
     }
 
     run() {
-        DrawCharacter(this.canvasCharacter, 1100, 100, 0.8, false);
+        DrawCharacter(this.canvasCharacter, 1000, 100, 0.8, false);
     }
 
     load() {
@@ -138,8 +138,8 @@ export class WardrobeMenu extends BaseSubscreen {
             this.requiredModsElement = this.createText({
                 text: `Required mods: ${this.currentAppearance.requiredMods.map((d) => `<b>${d}</b>`).join(", ")}`,
                 x: 1400,
-                y: 840,
-                width: 500,
+                y: 810,
+                width: 525,
                 padding: 2,
                 withBackground: true
             });

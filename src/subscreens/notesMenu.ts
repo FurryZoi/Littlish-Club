@@ -12,7 +12,7 @@ import { notify } from "@/modules/ui";
 
 function addNote(note: Note, subscreen: NotesMenu, scrollView: HTMLDivElement, key: number, pending = false): void {
     const btn = subscreen.createButton({
-        text: `${note.author.name} (${note.author.id}) noted: "${note.text}"`,
+        text: `${note.author.name} (${note.author.id}) added note "${note.text}" at ${new Date(note.ts).toUTCString()}`,
         place: false,
         padding: 2
     });
@@ -101,13 +101,13 @@ export class NotesMenu extends BaseSubscreen {
                 if (!modStorage.notes) modStorage.notes = {};
                 if (!modStorage.notes.list) modStorage.notes.list = [];
                 modStorage.notes.list.push(note);
-                addLog(`${getNickname(Player)} (${Player.MemberNumber}) added note: "${note.text}"`, false);
+                addLog(`${getNickname(Player)} (${Player.MemberNumber}) added note: "${note.text}" at ${new Date(note.ts).toUTCString()}`, false);
             } else {
                 chatSendModMessage<AddNoteMessageData>("addNote", {
                     text: noteInput.value
                 }, InformationSheetSelection.MemberNumber);
             }
-            addNote(note, this, scrollView, scrollView.children.length, !InformationSheetSelection.IsPlayer());
+            addNote(note, this, scrollView, scrollView.children.length + 1, !InformationSheetSelection.IsPlayer());
             noteInput.value = "";
         });
     }
