@@ -10,6 +10,7 @@ import { ChangeCaregiversListMessageData } from "@/modules/messaging";
 
 export class FamilyMenu extends BaseSubscreen {
     private getCaregiversInputValue: () => number[];
+    private oldCaregiversList: number[];
 
     get name() {
         return "Family";
@@ -20,6 +21,8 @@ export class FamilyMenu extends BaseSubscreen {
     }
 
     load() {
+        this.oldCaregiversList = getCaregiversOf(InformationSheetSelection);
+
         this.createText({
             text: this.name,
             x: 100,
@@ -85,23 +88,22 @@ export class FamilyMenu extends BaseSubscreen {
             } else {
                 chatSendModMessage("turnCanChangeCaregiversList", null, InformationSheetSelection.MemberNumber);
             }
-            // caregiversInput.classList.toggle(
-            //     "lcDisabled",
-            //     !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)
-            // );
         });
     }
 
     exit() {
-        if (hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)) {
-            const list = this.getCaregiversInputValue();
+        const newCaregiversList = this.getCaregiversInputValue();
+        if (
+            this.oldCaregiversList.join(",") !== newCaregiversList.join(",") &&
+            hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)
+        ) {
             if (InformationSheetSelection.IsPlayer()) {
                 if (!modStorage.caregivers) modStorage.caregivers = {};
-                modStorage.caregivers.list = list;
+                modStorage.caregivers.list = newCaregiversList;
                 addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed caregivers list`, false);
             } else {
                 chatSendModMessage<ChangeCaregiversListMessageData>("changeCaregiversList", {
-                    list
+                    list: newCaregiversList
                 }, InformationSheetSelection.MemberNumber);
             }
         }
