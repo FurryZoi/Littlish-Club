@@ -645,7 +645,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
           else item.style.border = "";
           e.stopPropagation();
         });
-        items.push(numbersOnly ? parseInt(text) : text);
+        items.push(text);
       };
       const setProperties = () => {
         if (x && y) setPosition(div, x, y, anchor);
@@ -660,7 +660,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       addButton("Icons/Trash.png", () => {
         for (const c of [...itemsElement.children]) {
           if (c.getAttribute("style").includes("border: 2px solid red;")) {
-            items.splice(items.indexOf(c.textContent, 1));
+            items.splice(items.indexOf(c.textContent), 1);
             c.remove();
           }
         }
@@ -690,7 +690,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       value.forEach((v) => addItem(String(v)));
       return [
         div,
-        () => items
+        () => numbersOnly ? items.map((i) => parseInt(i)) : items
       ];
     }
   };
@@ -4422,9 +4422,10 @@ Changelog:
       });
       this.createText({
         text: "As long as you don't have mommy, you are in exporing mode. This mode allows you to explore how all the mod's functions work. It removes all restrictions and allows you to fully manage all your mod settings. But you get excited early, as soon as you have a mommy, you will lose that freedom and your mommy will take control of you...",
-        width: 1200,
-        x: 400,
-        y: 350
+        width: 1400,
+        x: 300,
+        y: 320,
+        fontSize: 6
       });
     }
   };
@@ -4735,6 +4736,12 @@ Thanks for installing the mod!`;
       }
       if (window.LITTLISH_CLUB.inModSubscreen()) {
         return currentSubscreen.click();
+      }
+      next(args);
+    });
+    hookFunction("InformationSheetExit", 0 /* OBSERVE */, (args, next) => {
+      if (window.LITTLISH_CLUB.inModSubscreen()) {
+        return currentSubscreen.exit();
       }
       next(args);
     });
