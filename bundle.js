@@ -599,6 +599,100 @@ One of mods you are using is using an old version of SDK. It will work for now b
       this.htmlElements.push(div);
       return div;
     }
+    createInputList({
+      x,
+      y,
+      width,
+      height,
+      title,
+      value,
+      anchor = "top-left",
+      place = true,
+      numbersOnly = false
+    }) {
+      const items = [];
+      const div = document.createElement("div");
+      div.style.cssText = `
+        display: flex; flex-direction: column; gap: 1vw; border: 2px solid var(--tmd-accent, black);
+        font-family: Emilys Candy; border-radius: 4px; padding: 0.75vw;
+        `;
+      const buttonsElement = document.createElement("div");
+      buttonsElement.style.cssText = "display: flex; justify-content: center; column-gap: 1vw; width: 100%;";
+      const titleElement = document.createElement("b");
+      titleElement.textContent = title + ":";
+      titleElement.style.cssText = "width: 100%; font-size: clamp(10px, 2.4vw, 24px); color: var(--tmd-text, black);";
+      const itemsElement = document.createElement("div");
+      itemsElement.style.cssText = `display: flex; gap: 1vw; flex-wrap: wrap; align-content: flex-start;
+        overflow-y: scroll;`;
+      const input = document.createElement("input");
+      input.style.cssText = "border: none; outline: none; background: none; height: fit-content; flex-grow: 1; padding: 0.8vw; width: 6vw; font-size: clamp(8px, 2vw, 20px);";
+      const addButton = (icon, onClick) => {
+        const b = document.createElement("button");
+        b.style.cssText = "cursor: pointer; display: grid; place-items: center; background: var(--tmd-element-hover, #e0e0e0); width: 10%; max-width: 40px; aspect-ratio: 1/1; border-radius: 8px; border: none;";
+        const img = DrawGetImage(icon);
+        img.style.cssText = "width: 90%;";
+        b.append(img);
+        buttonsElement.append(b);
+        b.addEventListener("click", onClick);
+      };
+      const addItem = (text) => {
+        const item = document.createElement("div");
+        item.style.cssText = "cursor: pointer; background: var(--tmd-element-hover, rgb(206, 206, 206)); color: var(--tmd-text, black); height: fit-content; padding: 0.8vw; border-radius: 0.8vw; font-size: clamp(8px, 2vw, 20px);";
+        item.textContent = text;
+        itemsElement.insertBefore(item, input);
+        item.addEventListener("click", (e) => {
+          if (item.style.border === "") item.style.border = "2px solid red";
+          else item.style.border = "";
+          e.stopPropagation();
+        });
+        items.push(numbersOnly ? parseInt(text) : text);
+      };
+      const setProperties = () => {
+        if (x && y) setPosition(div, x, y, anchor);
+        setSize(div, width, height);
+      };
+      addButton("Icons/Cancel.png", () => {
+        itemsElement.innerHTML = "";
+        items.splice(0, items.length);
+        itemsElement.append(input);
+        value.forEach((v) => addItem(String(v)));
+      });
+      addButton("Icons/Trash.png", () => {
+        for (const c of [...itemsElement.children]) {
+          if (c.getAttribute("style").includes("border: 2px solid red;")) {
+            items.splice(items.indexOf(c.textContent, 1));
+            c.remove();
+          }
+        }
+      });
+      setProperties();
+      window.addEventListener("resize", setProperties);
+      input.addEventListener("keypress", (e) => {
+        if (document.activeElement === input) {
+          switch (e.key) {
+            case "Enter":
+              if (numbersOnly && Number.isNaN(parseInt(input.value))) return;
+              if (!numbersOnly && input.value.trim() === "") return;
+              addItem(input.value);
+              input.value = "";
+              break;
+          }
+        }
+      });
+      div.addEventListener("click", (e) => {
+        if (e.currentTarget == div) input.focus();
+      });
+      itemsElement.append(input);
+      div.append(buttonsElement, titleElement, itemsElement);
+      document.body.append(div);
+      this.resizeEventListeners.push(setProperties);
+      this.htmlElements.push(div);
+      value.forEach((v) => addItem(String(v)));
+      return [
+        div,
+        () => items
+      ];
+    }
   };
 
   // src/modules/access.ts
@@ -2867,6 +2961,7 @@ Changelog:
 
   // src/subscreens/familyMenu.ts
   var FamilyMenu = class extends BaseSubscreen {
+    getCaregiversInputValue;
     get name() {
       return "Family";
     }
@@ -2880,33 +2975,19 @@ Changelog:
         y: 60,
         fontSize: 10
       });
-      const caregiversInput = this.createInput({
-        placeholder: "Caregivers member numbers",
-        value: getCaregiversOf(InformationSheetSelection).join(", "),
+      const [caregiversInput, getCaregiversInputValue] = this.createInputList({
+        title: "Caregivers member numbers",
+        value: getCaregiversOf(InformationSheetSelection),
         x: 1e3,
         y: 200,
         width: 850,
         height: 600,
-        textArea: true
+        numbersOnly: true
       });
+      this.getCaregiversInputValue = getCaregiversInputValue;
       if (!hasAccessRightTo(Player, InformationSheetSelection, "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */)) {
         caregiversInput.classList.add("lcDisabled");
       }
-      caregiversInput.addEventListener("change", () => {
-        if (!hasAccessRightTo(Player, InformationSheetSelection, "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */)) {
-          return caregiversInput.classList.add("lcDisabled");
-        }
-        const list = caregiversInput.value.split(",").map((c) => parseInt(c.trim())).filter((c) => typeof c === "number" && !Number.isNaN(c));
-        if (InformationSheetSelection.IsPlayer()) {
-          if (!modStorage.caregivers) modStorage.caregivers = {};
-          modStorage.caregivers.list = list;
-          addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed caregivers list`, false);
-        } else {
-          chatSendModMessage("changeCaregiversList", {
-            list
-          }, InformationSheetSelection.MemberNumber);
-        }
-      });
       const caregiversPermissionsBtn = this.createButton({
         text: "Caregivers permissions",
         x: 1e3,
@@ -2949,6 +3030,18 @@ Changelog:
       });
     }
     exit() {
+      if (hasAccessRightTo(Player, InformationSheetSelection, "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */)) {
+        const list = this.getCaregiversInputValue();
+        if (InformationSheetSelection.IsPlayer()) {
+          if (!modStorage.caregivers) modStorage.caregivers = {};
+          modStorage.caregivers.list = list;
+          addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed caregivers list`, false);
+        } else {
+          chatSendModMessage("changeCaregiversList", {
+            list
+          }, InformationSheetSelection.MemberNumber);
+        }
+      }
       syncStorage();
       this.setSubscreen(new MainMenu());
     }
@@ -3958,7 +4051,7 @@ Changelog:
   // src/subscreens/notesMenu.ts
   function addNote(note, subscreen, scrollView, key, pending = false) {
     const btn = subscreen.createButton({
-      text: `${note.author.name} (${note.author.id}) noted: "${note.text}"`,
+      text: `${note.author.name} (${note.author.id}) added note "${note.text}" at ${new Date(note.ts).toUTCString()}`,
       place: false,
       padding: 2
     });
@@ -4037,13 +4130,13 @@ Changelog:
           if (!modStorage.notes) modStorage.notes = {};
           if (!modStorage.notes.list) modStorage.notes.list = [];
           modStorage.notes.list.push(note);
-          addLog(`${getNickname(Player)} (${Player.MemberNumber}) added note: "${note.text}"`, false);
+          addLog(`${getNickname(Player)} (${Player.MemberNumber}) added note: "${note.text}" at ${new Date(note.ts).toUTCString()}`, false);
         } else {
           chatSendModMessage("addNote", {
             text: noteInput.value
           }, InformationSheetSelection.MemberNumber);
         }
-        addNote(note, this, scrollView, scrollView.children.length, !InformationSheetSelection.IsPlayer());
+        addNote(note, this, scrollView, scrollView.children.length + 1, !InformationSheetSelection.IsPlayer());
         noteInput.value = "";
       });
     }
@@ -4193,7 +4286,7 @@ Changelog:
       if (currentAppearance) this.currentAppearance = currentAppearance;
     }
     run() {
-      DrawCharacter(this.canvasCharacter, 1100, 100, 0.8, false);
+      DrawCharacter(this.canvasCharacter, 1e3, 100, 0.8, false);
     }
     load() {
       this.createText({
@@ -4288,8 +4381,8 @@ Changelog:
         this.requiredModsElement = this.createText({
           text: `Required mods: ${this.currentAppearance.requiredMods.map((d) => `<b>${d}</b>`).join(", ")}`,
           x: 1400,
-          y: 840,
-          width: 500,
+          y: 810,
+          width: 525,
           padding: 2,
           withBackground: true
         });
