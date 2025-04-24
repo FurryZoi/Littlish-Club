@@ -307,6 +307,27 @@ function alternativeBabyTalk(text: String): String {
     return text.trim();
 }
 
+function chatRoomSearchCanJoinRoom(room: ChatRoomSearchResult): [boolean, string] {
+    if (isRuleActive(Player, RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS) && room?.BlockCategory?.includes("ABDL")) {
+        return [
+            false,
+            `Rule "${rulesList.find((r) => r.id === RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS).name}" prevented you from joining that room`
+        ];
+    }
+    if (
+        isRuleActive(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS) &&
+            getRuleParameter(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS, "whitelistMode") ?
+            !getRuleParameter(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS, "roomNames")?.split(",").map((n) => n.trim().toLowerCase()).includes(room.Name.toLowerCase())
+            : getRuleParameter(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS, "roomNames")?.split(",").map((n) => n.trim().toLowerCase()).includes(room.Name.toLowerCase())
+    ) {
+        return [
+            false,
+            `Rule "${rulesList.find((r) => r.id === RuleId.PREVENT_JOINING_CERTAIN_ROOMS).name}" prevented you from joining that room`
+        ];
+    }
+    return [true, ""];
+}
+
 export function loadRules(): void {
     const attempt = () => {
         const item = InventoryGet(Player, Player.FocusGroup?.Name);
@@ -765,17 +786,9 @@ export function loadRules(): void {
         ) return next(args);
         CommonGenerateGrid(ChatSearchResult, ChatSearchResultOffset, ChatSearchListParams, (room, x, y, width, height) => {
             if (!MouseIn(x, y, width, height)) return false;
-            if (isRuleActive(Player, RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS) && room?.BlockCategory?.includes("ABDL")) {
-                notify(`Rule "${rulesList.find((r) => r.id === RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS).name}" prevented you from joining that room`, 5000);
-                return false;
-            }
-            if (
-                isRuleActive(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS) &&
-                getRuleParameter(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS, "whitelistMode") ? 
-                    !getRuleParameter(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS, "roomNames")?.split(",").map((n) => n.trim().toLowerCase()).includes(room.Name.toLowerCase())
-                    : getRuleParameter(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS, "roomNames")?.split(",").map((n) => n.trim().toLowerCase()).includes(room.Name.toLowerCase())
-            ) {
-                notify(`Rule "${rulesList.find((r) => r.id === RuleId.PREVENT_JOINING_CERTAIN_ROOMS).name}" prevented you from joining that room`, 5000);
+            const canJoinResult = chatRoomSearchCanJoinRoom(room);
+            if (!canJoinResult[0]) {
+                notify(canJoinResult[1], 5000);
                 return false;
             }
             const RoomName = room.Name;
@@ -785,6 +798,22 @@ export function loadRules(): void {
                 ServerSend("ChatRoomJoin", { Name: RoomName });
             }
             return true;
+        });
+    });
+
+    hookFunction("ChatSearchNormalDraw", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (
+            !isRuleActive(Player, RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS) &&
+            !isRuleActive(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS)
+        ) return next(args);
+        next(args);
+        CommonGenerateGrid(ChatSearchResult, ChatSearchResultOffset, ChatSearchListParams, (room, x, y, width, height) => {
+            if (!chatRoomSearchCanJoinRoom(room)[0]) {
+                DrawButton(x, y, width, height, "", "#fa7db1", undefined, "Blocked by Littlish Club", true);
+                DrawTextFit((room.Friends != null && room.Friends.length > 0 ? "(" + room.Friends.length + ") " : "") + ChatSearchMuffle(room.Name) + " - " + ChatSearchMuffle(room.Creator) + " " + room.MemberCount + "/" + room.MemberLimit + "", x + 315, y + 25, 620, "black");
+                DrawTextFit(ChatSearchMuffle(room.Description), x + 315, y + 62, 620, "black");
+            }
+            return false;
         });
     });
 }
