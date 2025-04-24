@@ -3618,12 +3618,15 @@ Changelog:
       Description: cyberDiaper.description ?? "[No Description]",
       MemberName: "Littlish Club Production",
       MemberNumber: 133997,
-      Property: "Comfy",
+      Property: cyberDiaper.property ?? "Comfy",
       Color: (cyberDiaper.color ?? asset.DefaultColor).join(","),
       Lock: "",
       Item: getCyberDiaperAssetName(cyberDiaper.model),
       Private: true,
-      ItemProperty: null
+      TypeRecord: cyberDiaper.typeRecord ?? null,
+      ItemProperty: cyberDiaper.drawingPriority ? {
+        OverridePriority: cyberDiaper.drawingPriority
+      } : null
     });
     ChatRoomCharacterItemUpdate(Player, "ItemPelvis");
   }
@@ -3848,10 +3851,10 @@ Changelog:
       });
       const modelBtn = this.createButton({
         text: `Model: ${getCyberDiaperModelName(this.cyberDiaperSettings.model ?? "BULKY_DIAPER" /* BULKY_DIAPER */)}`,
-        x: 1200,
+        x: 1e3,
         y: 200,
-        width: 700,
-        height: 160
+        width: 900,
+        height: 100
       });
       if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
         modelBtn.classList.add("lcDisabled");
@@ -3872,10 +3875,10 @@ Changelog:
       };
       const changePermissionBtn = this.createButton({
         text: `Change permission: ${permissionsTexts[this.cyberDiaperSettings.changePermission ?? "EVERYONE" /* EVERYONE */]}`,
-        x: 1200,
-        y: 380,
-        width: 700,
-        height: 160
+        x: 1e3,
+        y: 320,
+        width: 900,
+        height: 100
       });
       if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
         changePermissionBtn.classList.add("lcDisabled");
@@ -3888,6 +3891,54 @@ Changelog:
           this.cyberDiaperSettings.changePermission ?? "EVERYONE" /* EVERYONE */
         );
         changePermissionBtn.textContent = `Change permission: ${permissionsTexts[this.cyberDiaperSettings.changePermission]}`;
+      });
+      this.createText({
+        text: "For Extended Settings",
+        x: 1e3,
+        width: 900,
+        y: 460,
+        fontSize: 5
+      });
+      const craftImport = this.createInput({
+        placeholder: "Crafting code (Get it in crafting menu)",
+        x: 1e3,
+        y: 525,
+        width: 900,
+        padding: 2
+      });
+      const importCraftBtn = this.createButton({
+        x: 1e3,
+        y: 635,
+        width: 900,
+        padding: 2,
+        text: "Import Settings From Craft"
+      });
+      importCraftBtn.addEventListener("click", () => {
+        const data = JSON.parse(LZString.decompressFromBase64(craftImport.value));
+        if (typeof data?.Name === "string") {
+          this.cyberDiaperSettings.name = data.Name;
+          nameInput.value = data.Name;
+        }
+        if (typeof data?.Description === "string") {
+          this.cyberDiaperSettings.description = data.Description;
+          descriptionInput.value = data.Description;
+        }
+        if (typeof data?.Item === "string") {
+          this.cyberDiaperSettings.model = data.Item === "BulkyDiaper" ? "BULKY_DIAPER" /* BULKY_DIAPER */ : "POOFY_DIAPER" /* POOFY_DIAPER */;
+          modelBtn.textContent = `Model: ${getCyberDiaperModelName(this.cyberDiaperSettings.model ?? "BULKY_DIAPER" /* BULKY_DIAPER */)}`;
+        }
+        if (typeof data?.Color === "string") {
+          this.cyberDiaperSettings.color = data.Color === "Default" ? [...AssetGet(Player.AssetFamily, "ItemPelvis", data.Item).DefaultColor] : data.Color.split(",");
+        }
+        if (data?.TypeRecord) {
+          this.cyberDiaperSettings.typeRecord = data.TypeRecord;
+        }
+        if (typeof data?.Property === "string") {
+          this.cyberDiaperSettings.property = data.Property;
+        }
+        if (typeof data?.ItemProperty?.OverridePriority === "number" || Array.isArray(data?.ItemProperty?.OverridePriority)) {
+          this.cyberDiaperSettings.drawingPriority = data.ItemProperty.OverridePriority;
+        }
       });
       const saveChangesBtn = this.createButton({
         text: "Save Changes",
@@ -5000,7 +5051,17 @@ Thanks for installing the mod!`;
           chatSendLocal(_message);
         }
         if (msg === "changeCyberDiaperSettings" && hasAccessRightTo(sender, Player, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
-          const { name, description, model, locked, color, changePermission } = data;
+          const {
+            name,
+            description,
+            model,
+            locked,
+            color,
+            changePermission,
+            property,
+            typeRecord,
+            drawingPriority
+          } = data;
           if (!modStorage.cyberDiaper) {
             modStorage.cyberDiaper = {};
             chatSendLocal(`${getNickname(sender)} bought cyber diaper for you`);
@@ -5011,6 +5072,9 @@ Thanks for installing the mod!`;
           if (typeof locked === "boolean") modStorage.cyberDiaper.locked = locked;
           if (Array.isArray(color)) modStorage.cyberDiaper.color = color;
           if (Object.values(CyberDiaperChangePermission).includes(changePermission)) modStorage.cyberDiaper.changePermission = changePermission;
+          if (typeof property === "string") modStorage.cyberDiaper.property = property;
+          if (typeRecord) modStorage.cyberDiaper.typeRecord = typeRecord;
+          if (drawingPriority) modStorage.cyberDiaper.drawingPriority = drawingPriority;
           const _message = `${getNickname(sender)} (${sender.MemberNumber}) changed cyber diaper's settings`;
           addLog(_message, false);
           syncStorage();
