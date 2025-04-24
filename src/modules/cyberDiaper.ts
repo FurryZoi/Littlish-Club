@@ -7,8 +7,11 @@ export interface StorageCyberDiaper {
     description: string
     model: CyberDiaperModel
     locked?: boolean
-    color?: string[],
-    changePermission?: CyberDiaperChangePermission,
+    color?: string[]
+    typeRecord?: TypeRecord
+    property?: CraftingPropertyType
+    drawingPriority?: AssetLayerOverridePriority
+    changePermission?: CyberDiaperChangePermission
     crotchColor?: string | null
 }
 
@@ -64,12 +67,15 @@ export function putCyberDiaperOn(): void {
         Description: cyberDiaper.description ?? "[No Description]",
         MemberName: "Littlish Club Production",
         MemberNumber: 133997,
-        Property: "Comfy",
+        Property: cyberDiaper.property ?? "Comfy",
         Color: (cyberDiaper.color ?? asset.DefaultColor).join(","),
         Lock: "",
         Item: getCyberDiaperAssetName(cyberDiaper.model),
         Private: true,
-        ItemProperty: null
+        TypeRecord: cyberDiaper.typeRecord ?? null,
+        ItemProperty: cyberDiaper.drawingPriority ? {
+            OverridePriority: cyberDiaper.drawingPriority
+        } : null
     });
     ChatRoomCharacterItemUpdate(Player, "ItemPelvis");
 }

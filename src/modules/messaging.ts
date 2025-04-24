@@ -241,7 +241,10 @@ export function loadMessaging(): void {
                 chatSendLocal(_message);
             }
             if (msg === "changeCyberDiaperSettings" && hasAccessRightTo(sender, Player, AccessRight.MANAGE_DIAPER)) {
-                const { name, description, model, locked, color, changePermission } = data as StorageCyberDiaper;
+                const {
+                    name, description, model, locked, color,
+                    changePermission, property, typeRecord, drawingPriority
+                } = data as StorageCyberDiaper;
                 if (!modStorage.cyberDiaper) {
                     // @ts-ignore
                     modStorage.cyberDiaper = {};
@@ -255,6 +258,9 @@ export function loadMessaging(): void {
                 if (
                     Object.values(CyberDiaperChangePermission).includes(changePermission)
                 ) modStorage.cyberDiaper.changePermission = changePermission;
+                if (typeof property === "string") modStorage.cyberDiaper.property = property;
+                if (typeRecord) modStorage.cyberDiaper.typeRecord = typeRecord;
+                if (drawingPriority) modStorage.cyberDiaper.drawingPriority = drawingPriority;
                 const _message = `${getNickname(sender)} (${sender.MemberNumber}) changed cyber diaper's settings`;
                 addLog(_message, false);
                 syncStorage();

@@ -3,7 +3,7 @@ import { BaseSubscreen } from "./baseSubscreen";
 import { notify } from "@/modules/ui";
 import { MainMenu } from "./mainMenu";
 import { modStorage, syncStorage } from "@/modules/storage";
-import { CyberDiaperChangePermission, CyberDiaperModel, getCyberDiaperModelName, getNextCyberDiaperChangePermission, putCyberDiaperOn, StorageCyberDiaper, updateDiaperItem } from "@/modules/cyberDiaper";
+import { CyberDiaperChangePermission, CyberDiaperModel, getCyberDiaperAssetName, getCyberDiaperModelName, getNextCyberDiaperChangePermission, putCyberDiaperOn, StorageCyberDiaper, updateDiaperItem } from "@/modules/cyberDiaper";
 import { CyberDiaperChangeColorMenu } from "./cyberDiaperChangeColorMenu";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
 import { chatSendModMessage } from "@/utils/chat";
@@ -113,10 +113,10 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
 
         const modelBtn = this.createButton({
             text: `Model: ${getCyberDiaperModelName(this.cyberDiaperSettings.model ?? CyberDiaperModel.BULKY_DIAPER)}`,
-            x: 1200,
+            x: 1000,
             y: 200,
-            width: 700,
-            height: 160
+            width: 900,
+            height: 100
         });
         if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER)) {
             modelBtn.classList.add("lcDisabled");
@@ -141,10 +141,10 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
         const changePermissionBtn = this.createButton({
             text: `Change permission: ${permissionsTexts[this.cyberDiaperSettings.changePermission ?? CyberDiaperChangePermission.EVERYONE]
                 }`,
-            x: 1200,
-            y: 380,
-            width: 700,
-            height: 160
+            x: 1000,
+            y: 320,
+            width: 900,
+            height: 100
         });
         if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER)) {
             changePermissionBtn.classList.add("lcDisabled");
@@ -158,6 +158,59 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             );
             changePermissionBtn.textContent = `Change permission: ${permissionsTexts[this.cyberDiaperSettings.changePermission]
                 }`;
+        });
+
+        this.createText({
+            text: "For Extended Settings",
+            x: 1000,
+            width: 900,
+            y: 460,
+            fontSize: 5
+        });
+
+        const craftImport = this.createInput({
+            placeholder: "Crafting code (Get it in crafting menu)",
+            x: 1000,
+            y: 525,
+            width: 900,
+            padding: 2
+        });
+
+        const importCraftBtn = this.createButton({
+            x: 1000,
+            y: 635,
+            width: 900,
+            padding: 2,
+            text: "Import Settings From Craft"
+        });
+        importCraftBtn.addEventListener("click", () => {
+            const data: CraftingItem = JSON.parse(LZString.decompressFromBase64(craftImport.value));
+            if (typeof data?.Name === "string") {
+                this.cyberDiaperSettings.name = data.Name;
+                nameInput.value = data.Name;
+            }
+            if (typeof data?.Description === "string") {
+                this.cyberDiaperSettings.description = data.Description;
+                descriptionInput.value = data.Description;
+            }
+            if (typeof data?.Item === "string") {
+                this.cyberDiaperSettings.model = data.Item === "BulkyDiaper" ? CyberDiaperModel.BULKY_DIAPER : CyberDiaperModel.POOFY_DIAPER;
+                modelBtn.textContent = `Model: ${getCyberDiaperModelName(this.cyberDiaperSettings.model ?? CyberDiaperModel.BULKY_DIAPER)}`
+            }
+            if (typeof data?.Color === "string") {
+                this.cyberDiaperSettings.color = data.Color === "Default" ?
+                    [...AssetGet(Player.AssetFamily, "ItemPelvis", data.Item).DefaultColor]
+                    : data.Color.split(",");
+            }
+            if (data?.TypeRecord) {
+                this.cyberDiaperSettings.typeRecord = data.TypeRecord;
+            }
+            if (typeof data?.Property === "string") {
+                this.cyberDiaperSettings.property = data.Property;
+            }
+            if (typeof data?.ItemProperty?.OverridePriority === "number" || Array.isArray(data?.ItemProperty?.OverridePriority)) {
+                this.cyberDiaperSettings.drawingPriority = data.ItemProperty.OverridePriority;
+            }
         });
 
         const saveChangesBtn = this.createButton({
