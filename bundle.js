@@ -2432,6 +2432,21 @@ Changelog:
     text = text.replace(/(\w+)\b/g, (word) => word + (getRandomNumber(1, text.split(" ").length) === 1 ? " " + babyWords[Math.floor(Math.random() * babyWords.length)] : ""));
     return text.trim();
   }
+  function chatRoomSearchCanJoinRoom(room) {
+    if (isRuleActive(Player, 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */) && room?.BlockCategory?.includes("ABDL")) {
+      return [
+        false,
+        `Rule "${rulesList.find((r) => r.id === 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */).name}" prevented you from joining that room`
+      ];
+    }
+    if (isRuleActive(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */) && getRuleParameter(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */, "whitelistMode") ? !getRuleParameter(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */, "roomNames")?.split(",").map((n) => n.trim().toLowerCase()).includes(room.Name.toLowerCase()) : getRuleParameter(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */, "roomNames")?.split(",").map((n) => n.trim().toLowerCase()).includes(room.Name.toLowerCase())) {
+      return [
+        false,
+        `Rule "${rulesList.find((r) => r.id === 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */).name}" prevented you from joining that room`
+      ];
+    }
+    return [true, ""];
+  }
   function loadRules() {
     const attempt = () => {
       const item = InventoryGet(Player, Player.FocusGroup?.Name);
@@ -2766,12 +2781,9 @@ Changelog:
       if (!isRuleActive(Player, 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */) && !isRuleActive(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */)) return next(args);
       CommonGenerateGrid(ChatSearchResult, ChatSearchResultOffset, ChatSearchListParams, (room, x, y, width, height) => {
         if (!MouseIn(x, y, width, height)) return false;
-        if (isRuleActive(Player, 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */) && room?.BlockCategory?.includes("ABDL")) {
-          notify(`Rule "${rulesList.find((r) => r.id === 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */).name}" prevented you from joining that room`, 5e3);
-          return false;
-        }
-        if (isRuleActive(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */) && getRuleParameter(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */, "whitelistMode") ? !getRuleParameter(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */, "roomNames")?.split(",").map((n) => n.trim().toLowerCase()).includes(room.Name.toLowerCase()) : getRuleParameter(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */, "roomNames")?.split(",").map((n) => n.trim().toLowerCase()).includes(room.Name.toLowerCase())) {
-          notify(`Rule "${rulesList.find((r) => r.id === 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */).name}" prevented you from joining that room`, 5e3);
+        const canJoinResult = chatRoomSearchCanJoinRoom(room);
+        if (!canJoinResult[0]) {
+          notify(canJoinResult[1], 5e3);
           return false;
         }
         const RoomName = room.Name;
@@ -2781,6 +2793,18 @@ Changelog:
           ServerSend("ChatRoomJoin", { Name: RoomName });
         }
         return true;
+      });
+    });
+    hookFunction("ChatSearchNormalDraw", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
+      if (!isRuleActive(Player, 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */) && !isRuleActive(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */)) return next(args);
+      next(args);
+      CommonGenerateGrid(ChatSearchResult, ChatSearchResultOffset, ChatSearchListParams, (room, x, y, width, height) => {
+        if (!chatRoomSearchCanJoinRoom(room)[0]) {
+          DrawButton(x, y, width, height, "", "#fa7db1", void 0, "Blocked by Littlish Club", true);
+          DrawTextFit((room.Friends != null && room.Friends.length > 0 ? "(" + room.Friends.length + ") " : "") + ChatSearchMuffle(room.Name) + " - " + ChatSearchMuffle(room.Creator) + " " + room.MemberCount + "/" + room.MemberLimit, x + 315, y + 25, 620, "black");
+          DrawTextFit(ChatSearchMuffle(room.Description), x + 315, y + 62, 620, "black");
+        }
+        return false;
       });
     });
   }
