@@ -291,15 +291,22 @@ function registerButton(name: string, label: string, icon: string, fn: () => voi
     }
 }
 
-function alternativeBabyTalk(text: String): String {
+function alternativeBabyTalk(text: string): string {
     text = text.toLowerCase();
 
+    text = text.replaceAll("s", "th");
+    text = text.replaceAll("h", "hh");
     text = text.replaceAll("is", "ith");
     text = text.replaceAll("are", "aw");
     text = text.replaceAll("am", "amm");
     text = text.replaceAll("no", "ni");
-    text = text.replaceAll("s", "th");
-    text = text.replaceAll("h", "hh");
+    text = text.replaceAll("yeth", "yeshs");
+    text = text.replaceAll("sorry", "sowwy");
+    text = text.replaceAll("thanks", "tanks");
+    text = text.replaceAll("this", "dis");
+    text = text.replaceAll("the", "da");
+    text = text.replaceAll("hello", "hewo");
+    text = text.replaceAll("so", "sho");
 
     const babyWords = ['ba-bye', 'da-da', 'ma-ma', 'goo-goo', 'wee', 'ooh', 'gu', 'ga', 'agu', 'guga'];
     text = text.replace(/(\w+)\b/g, (word) => word + (getRandomNumber(1, text.split(" ").length) === 1 ? " " + babyWords[Math.floor(Math.random() * babyWords.length)] : ""));
