@@ -790,6 +790,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
         return isMommyOf(C1, C2) || isCaregiverOf(C1, C2) && isCaregiverAccessRightEnabled(C2, 1002 /* DELETE_NOTES */);
       case "READ_LOGS" /* READ_LOGS */:
         return C1.MemberNumber === C2.MemberNumber || isMommyOf(C1, C2) || isCaregiverOf(C1, C2) && isCaregiverAccessRightEnabled(C2, 1004 /* READ_LOGS */);
+      case "DELETE_LOGS" /* DELETE_LOGS */:
+        return isMommyOf(C1, C2);
       case "RELEASE_BABY" /* RELEASE_BABY */:
         return isMommyOf(C1, C2);
     }
@@ -2937,11 +2939,12 @@ Changelog:
   function addLog(message, push = true) {
     if (!modStorage.logs) modStorage.logs = {};
     if (!modStorage.logs.list) modStorage.logs.list = [];
-    modStorage.logs.list.push({
+    const l = modStorage.logs.list.push({
       message,
       ts: Date.now()
     });
     if (push) syncStorage();
+    return modStorage.logs.list[l - 1];
   }
 
   // src/subscreens/caregiversPermissionsMenu.ts
@@ -4554,39 +4557,92 @@ Changelog:
         statusText.remove();
         logs = res.data;
       }
+      if (logs.length === 0) return;
       const scrollView = this.createScrollView({
         scroll: "y",
         x: 150,
-        y: 260,
+        y: 240,
         width: 1700,
-        height: 600
+        height: 580
       });
       scrollView.style.display = "flex";
       scrollView.style.flexDirection = "column";
       scrollView.style.alignItems = "center";
       scrollView.style.rowGap = "1vw";
       this.scrollView = scrollView;
-      logs.forEach((log) => {
-        const btn = this.createButton({
-          text: `${log.message} at (${new Date(log.ts).toUTCString()})`,
-          place: false,
-          padding: 2
-        });
-        btn.style.wordBreak = "break-all";
-        btn.style.width = "98%";
-        scrollView.append(btn);
-        scrollView.scrollTo(0, scrollView.scrollHeight);
+      logs.forEach((log) => this.createLogButton(log));
+      const deleteLogsInput = this.createInput({
+        placeholder: "How much logs to delete",
+        x: 150,
+        y: 845,
+        width: 840,
+        padding: 2
       });
+      deleteLogsInput.setAttribute("type", "number");
+      deleteLogsInput.addEventListener("input", () => {
+        if (!hasAccessRightTo(Player, InformationSheetSelection, "DELETE_LOGS" /* DELETE_LOGS */)) {
+          return deleteLogsInput.classList.add("lcDisabled");
+        }
+        if (parseInt(deleteLogsInput.value) > scrollView.children.length) deleteLogsInput.value = String(scrollView.children.length);
+        if (parseInt(deleteLogsInput.value) < 0) deleteLogsInput.value = "0";
+        for (const c of [...scrollView.children]) {
+          const style = c.getAttribute("style");
+          if (style.includes("border: 2px solid red;")) {
+            c.setAttribute("style", style.replaceAll("border: 2px solid red;", ""));
+          }
+        }
+        for (let i = 0; i < parseInt(deleteLogsInput.value); i++) {
+          const style = scrollView.children[i].getAttribute("style");
+          scrollView.children[i].setAttribute("style", style + "border: 2px solid red;");
+        }
+      });
+      const deleteLogsBtn = this.createButton({
+        text: "Delete",
+        x: 1010,
+        y: 845,
+        width: 840,
+        padding: 2
+      });
+      deleteLogsBtn.addEventListener("click", () => {
+        if (!hasAccessRightTo(Player, InformationSheetSelection, "DELETE_LOGS" /* DELETE_LOGS */)) {
+          return deleteLogsBtn.classList.add("lcDisabled");
+        }
+        const count = parseInt(deleteLogsInput.value);
+        if (count === 0) return;
+        const children = [...scrollView.children];
+        for (let i = 0; i < count; i++) children[i].remove();
+        deleteLogsInput.value = "";
+        if (InformationSheetSelection.IsPlayer()) {
+          const logObject = addLog(`${getNickname(Player)} (${Player.MemberNumber}) deleted log entries (${count})`, false);
+          this.createLogButton(logObject);
+          modStorage.logs.list.splice(0, count);
+          syncStorage();
+        } else {
+          chatSendModMessage("deleteLogs", {
+            count
+          }, InformationSheetSelection.MemberNumber);
+          this.createLogButton({
+            message: `${getNickname(Player)} (${Player.MemberNumber}) deleted log entries (${count})`,
+            ts: Date.now()
+          });
+        }
+      });
+      if (!hasAccessRightTo(Player, InformationSheetSelection, "DELETE_LOGS" /* DELETE_LOGS */)) {
+        deleteLogsInput.classList.add("lcDisabled");
+        deleteLogsBtn.classList.add("lcDisabled");
+      }
     }
-    // update() {
-    //     this.scrollView.innerHTML = "";
-    //     const notesList: Readonly<Note[]> = InformationSheetSelection.IsPlayer() ?
-    //         (modStorage.notes?.list ?? [])
-    //         : (InformationSheetSelection.LITTLISH_CLUB?.notes?.list ?? []);
-    //     notesList.forEach((note, i) => {
-    //         addNote(note, this, this.scrollView, i + 1);
-    //     });
-    // }
+    createLogButton(log) {
+      const btn = this.createButton({
+        text: `${log.message} at (${new Date(log.ts).toUTCString()})`,
+        place: false,
+        padding: 2
+      });
+      btn.style.wordBreak = "break-all";
+      btn.style.width = "98%";
+      this.scrollView.append(btn);
+      this.scrollView.scrollTo(0, this.scrollView.scrollHeight);
+    }
     exit() {
       this.setSubscreen(new MainMenu());
     }
@@ -4932,7 +4988,6 @@ Thanks for installing the mod!`;
         }
       } else delete r.conditions.whenInRoomWhereAbdl;
     }
-    console.log(r, data);
   }
   function validateRuleData(r, data) {
     const ruleParams = rulesList.find((g) => g.id === r.id).data ?? [];
@@ -5116,6 +5171,14 @@ Thanks for installing the mod!`;
           delete modStorage.mommy;
           syncStorage();
           chatSendLocal(`${getNickname(sender)} (${sender.MemberNumber}) released you`);
+        }
+        if (msg === "deleteLogs" && hasAccessRightTo(sender, Player, "DELETE_LOGS" /* DELETE_LOGS */)) {
+          if (typeof data.count !== "number") return;
+          const _message = `${getNickname(sender)} (${sender.MemberNumber}) deleted log entries (${data.count})`;
+          modStorage.logs.list.splice(0, data.count);
+          addLog(_message, false);
+          chatSendLocal(_message);
+          syncStorage();
         }
       }
       next(args);
