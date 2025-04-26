@@ -61,7 +61,7 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
 
         const descriptionInput = this.createInput({
             placeholder: "Description",
-            value: this.cyberDiaperSettings.description ?? "",
+            value: CraftingDescription.Decode(this.cyberDiaperSettings.description) ?? "",
             x: 130,
             y: 310,
             width: 800,
@@ -190,8 +190,9 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
                 nameInput.value = data.Name;
             }
             if (typeof data?.Description === "string") {
+                const decodedDescription = CraftingDescription.Decode(data.Description);
                 this.cyberDiaperSettings.description = data.Description;
-                descriptionInput.value = data.Description;
+                descriptionInput.value = decodedDescription;
             }
             if (typeof data?.Item === "string") {
                 this.cyberDiaperSettings.model = data.Item === "BulkyDiaper" ? CyberDiaperModel.BULKY_DIAPER : CyberDiaperModel.POOFY_DIAPER;
