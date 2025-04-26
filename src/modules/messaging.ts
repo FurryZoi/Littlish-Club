@@ -46,6 +46,10 @@ export interface DeleteNoteMessageData {
 
 export type ChangeCyberDiaperSettingsMessageData = StorageCyberDiaper;
 
+export interface DeleteLogsMessageData {
+    count: number
+}
+
 
 function validateRuleConditions(r: StorageRule, data: Partial<StorageRule>): void {
     if (data.conditions) {
@@ -70,7 +74,6 @@ function validateRuleConditions(r: StorageRule, data: Partial<StorageRule>): voi
             }
         } else delete r.conditions.whenInRoomWhereAbdl;
     }
-    console.log(r, data);
 }
 
 function validateRuleData(r: StorageRule, data: Partial<StorageRule>): void {
@@ -271,6 +274,14 @@ export function loadMessaging(): void {
                 delete modStorage.mommy;
                 syncStorage();
                 chatSendLocal(`${getNickname(sender)} (${sender.MemberNumber}) released you`);
+            }
+            if (msg === "deleteLogs" && hasAccessRightTo(sender, Player, AccessRight.DELETE_LOGS)) {
+                if (typeof data.count !== "number") return;
+                const _message = `${getNickname(sender)} (${sender.MemberNumber}) deleted log entries (${data.count})`;
+                modStorage.logs.list.splice(0, data.count);
+                addLog(_message, false);
+                chatSendLocal(_message);
+                syncStorage()
             }
         }
         next(args);

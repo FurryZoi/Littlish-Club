@@ -3,26 +3,11 @@ import { BaseSubscreen } from "./baseSubscreen";
 import { NoteSettingsMenu } from "./noteSettingsMenu";
 import { MainMenu } from "./mainMenu";
 import { chatSendModMessage, sendRequest } from "@/utils/chat";
-import { Log } from "@/modules/logs";
+import { addLog, Log } from "@/modules/logs";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
+import { getNickname } from "@/utils/characters";
+import { DeleteLogsMessageData } from "@/modules/messaging";
 
-
-// function addNote(note: Note, subscreen: NotesMenu, scrollView: HTMLDivElement, key: number, pending = false): void {
-//     console.log(key);
-//     const btn = subscreen.createButton({
-//         text: `${note.author.name} (${note.author.id}) noted: ${note.text}`,
-//         place: false,
-//         padding: 2
-//     });
-//     btn.style.wordBreak = "break-all";
-//     btn.style.width = "90%";
-//     if (pending) btn.classList.add("lcDisabled");
-//     btn.addEventListener("click", () => {
-//         subscreen.setSubscreen(new NoteSettingsMenu(note, key));
-//     });
-//     scrollView.append(btn);
-//     scrollView.scrollTo(0, scrollView.scrollHeight);
-// }
 
 export class LogsMenu extends BaseSubscreen {
     private scrollView: HTMLDivElement;
@@ -72,12 +57,14 @@ export class LogsMenu extends BaseSubscreen {
             logs = res.data;
         }
 
+        if (logs.length === 0) return;
+
         const scrollView = this.createScrollView({
             scroll: "y",
             x: 150,
-            y: 260,
+            y: 240,
             width: 1700,
-            height: 600
+            height: 580
         });
         scrollView.style.display = "flex";
         scrollView.style.flexDirection = "column";
@@ -85,34 +72,85 @@ export class LogsMenu extends BaseSubscreen {
         scrollView.style.rowGap = "1vw";
         this.scrollView = scrollView;
 
-        logs.forEach((log) => {
-            const btn = this.createButton({
-                text: `${log.message} at (${new Date(log.ts).toUTCString()})`,
-                place: false,
-                padding: 2
-            });
-            btn.style.wordBreak = "break-all";
-            btn.style.width = "98%";
-            // btn.addEventListener("click", () => {
-            //     this.setSubscreen(new NoteSettingsMenu(note, key));
-            // });
-            scrollView.append(btn);
-            scrollView.scrollTo(0, scrollView.scrollHeight);
+        logs.forEach((log) => this.createLogButton(log));
+
+        const deleteLogsInput = this.createInput({
+            placeholder: "How much logs to delete",
+            x: 150,
+            y: 845,
+            width: 840,
+            padding: 2
         });
+        deleteLogsInput.setAttribute("type", "number");
+        deleteLogsInput.addEventListener("input", () => {
+            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_LOGS)) {
+                return deleteLogsInput.classList.add("lcDisabled");
+            }
+            if (parseInt(deleteLogsInput.value) > scrollView.children.length) deleteLogsInput.value = String(scrollView.children.length);
+            if (parseInt(deleteLogsInput.value) < 0) deleteLogsInput.value = "0";
+            for (const c of [...scrollView.children]) {
+                const style = c.getAttribute("style");
+                if (style.includes("border: 2px solid red;")) {
+                    c.setAttribute("style", style.replaceAll("border: 2px solid red;", ""));
+                }
+            }
+            for (let i = 0; i < parseInt(deleteLogsInput.value); i++) {
+                const style = scrollView.children[i].getAttribute("style");
+                scrollView.children[i].setAttribute("style", style + "border: 2px solid red;");
+            }
+        });
+
+        const deleteLogsBtn = this.createButton({
+            text: "Delete",
+            x: 1010,
+            y: 845,
+            width: 840,
+            padding: 2
+        });
+        deleteLogsBtn.addEventListener("click", () => {
+            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_LOGS)) {
+                return deleteLogsBtn.classList.add("lcDisabled");
+            }
+            const count = parseInt(deleteLogsInput.value);
+            if (count === 0) return;
+            const children = [...scrollView.children];
+            for (let i = 0; i < count; i++) children[i].remove();
+            deleteLogsInput.value = "";
+            if (InformationSheetSelection.IsPlayer()) {
+                const logObject = addLog(`${getNickname(Player)} (${Player.MemberNumber}) deleted log entries (${count})`, false);
+                this.createLogButton(logObject);
+                modStorage.logs.list.splice(0, count);
+                syncStorage();
+            } else {
+                chatSendModMessage<DeleteLogsMessageData>("deleteLogs", {
+                    count
+                }, InformationSheetSelection.MemberNumber);
+                this.createLogButton({
+                    message: `${getNickname(Player)} (${Player.MemberNumber}) deleted log entries (${count})`,
+                    ts: Date.now()
+                });
+            }
+        });
+
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_LOGS)) {
+            deleteLogsInput.classList.add("lcDisabled");
+            deleteLogsBtn.classList.add("lcDisabled");
+        }
     }
 
-    // update() {
-    //     this.scrollView.innerHTML = "";
-    //     const notesList: Readonly<Note[]> = InformationSheetSelection.IsPlayer() ?
-    //         (modStorage.notes?.list ?? [])
-    //         : (InformationSheetSelection.LITTLISH_CLUB?.notes?.list ?? []);
-    //     notesList.forEach((note, i) => {
-    //         addNote(note, this, this.scrollView, i + 1);
-    //     });
-    // }
+    createLogButton(log: Log) {
+        const btn = this.createButton({
+            text: `${log.message} at (${new Date(log.ts).toUTCString()})`,
+            place: false,
+            padding: 2
+        });
+        btn.style.wordBreak = "break-all";
+        btn.style.width = "98%";
+        this.scrollView.append(btn);
+        this.scrollView.scrollTo(0, this.scrollView.scrollHeight);
+    }
 
     exit() {
-        // syncStorage();
         this.setSubscreen(new MainMenu());
     }
 }

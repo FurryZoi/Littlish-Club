@@ -58,6 +58,7 @@ export enum AccessRight {
     TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST = "TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST",
     CHANGE_CAREGIVERS_LIST = "CHANGE_CAREGIVERS_LIST",
     READ_LOGS = "READ_LOGS",
+    DELETE_LOGS = "DELETE_LOGS",
     RELEASE_BABY = "RELEASE_BABY"
 }
 
@@ -150,7 +151,7 @@ export function hasAccessRightTo(C1: Character, C2: Character, accessRight: Acce
         case AccessRight.MANAGE_APPEARANCE:
             return (
                 (
-                    C1.MemberNumber === C2.MemberNumber && 
+                    C1.MemberNumber === C2.MemberNumber &&
                     !isRuleActive(C1, RuleId.PREVENT_APPLYING_OUTFITS_FROM_LITTLISH_WARDROBE_ON_SELF)
                 ) ||
                 isMommyOf(C1, C2) ||
@@ -166,7 +167,7 @@ export function hasAccessRightTo(C1: Character, C2: Character, accessRight: Acce
                     isCaregiverOf(C1, C2) &&
                     isCaregiverAccessRightEnabled(C2, CaregiverAccessRightId.DELETE_NOTES)
                 )
-            )
+            );
         case AccessRight.READ_LOGS:
             return (
                 C1.MemberNumber === C2.MemberNumber ||
@@ -175,7 +176,9 @@ export function hasAccessRightTo(C1: Character, C2: Character, accessRight: Acce
                     isCaregiverOf(C1, C2) &&
                     isCaregiverAccessRightEnabled(C2, CaregiverAccessRightId.READ_LOGS)
                 )
-            )
+            );
+        case AccessRight.DELETE_LOGS:
+            return isMommyOf(C1, C2);
         case AccessRight.RELEASE_BABY:
             return isMommyOf(C1, C2);
     }

@@ -6,12 +6,13 @@ export interface Log {
     ts: number
 }
 
-export function addLog(message: string, push: boolean = true): void {
+export function addLog(message: string, push: boolean = true): Log {
     if (!modStorage.logs) modStorage.logs = {};
     if (!modStorage.logs.list) modStorage.logs.list = [];
-    modStorage.logs.list.push({
+    const l = modStorage.logs.list.push({
         message,
         ts: Date.now()
     });
     if (push) syncStorage();
+    return modStorage.logs.list[l - 1];
 }
