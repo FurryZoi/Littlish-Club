@@ -2790,6 +2790,21 @@ Changelog:
       if (isRuleActive(Player, 1010 /* PACIFIER_CHECKBOXES */) && Width === Height && Width === 64 && Image === "Icons/Checked.png") args[6] = pacifier_default;
       return next(args);
     });
+    const observer = new MutationObserver((mutationList, observer2) => {
+      if (!isRuleActive(Player, 1010 /* PACIFIER_CHECKBOXES */)) return;
+      for (const mutation of mutationList) {
+        if (mutation.type === "childList") {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE && node.tagName === "INPUT") {
+              if (node.classList.contains("checkbox")) {
+                node.classList.add("paciCheckbox");
+              }
+            }
+          });
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true, childList: true, subtree: true });
     hookFunction("TimerProcess", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
       if (timerLastRulesCycleCall + 2e3 <= CommonTime()) {
         if (isRuleActive(Player, 1011 /* CONTROL_NICKNAME */) && Player.Nickname !== getRuleParameter(Player, 1011 /* CONTROL_NICKNAME */, "nickname")) {
@@ -5025,6 +5040,13 @@ Thanks for installing the mod!`;
 .lcDisabled {
     pointer-events: none;
     opacity: 0.6;
+}
+
+.paciCheckbox::before {
+	background-image: url("https://raw.githubusercontent.com/FurryZoi/Littlish-Club/refs/heads/main/src/images/pacifier.png") !important;
+	background-size: cover !important;
+    clip-path: none !important;
+    background-color: unset !important;
 }`;
 
   // src/modules/api.ts
