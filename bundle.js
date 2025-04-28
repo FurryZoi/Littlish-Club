@@ -196,7 +196,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var MOD_MESSAGE_KEY = "lcMsg";
   var DISCORD_SERVER_INVITE_LINK = "https://discord.gg/aDUvte772D";
   var DISCORD_SERVER_LW_OUTFITS_CHANNEL_LINK = "https://discord.com/channels/1253391626378674289/1356326756105195622";
-  var MOD_BUTTON_POSITION = [1705, 800 - 115, 90, 90];
+  var MOD_BUTTON_POSITION = [1700, 800 - 115, 90, 90];
   var MAX_NOTE_SIZE_IN_KBYTES = 0.2;
   var MY_APPEARANCE_BUNDLE = "NobwRAcghgtgpmAXGAmgVwNZQC5QIxgA0YA4gE4D2aADkmAMIA2F2AFkQxc2UsGAMQAmAJwAGAMziAgmAC6AX0Lho8OvVYBLAHZwAznAAKULdg16CxclVrIjJs7o70uFHsgAicAGZQ0jbGCKyrAIyORQACZmJnbYAJ6sFPocVjR0AMoUAMYYjsTO3LwCACwAQqLCAGzFHPx4YuKCMgpKkCFqaLrYFDAAEnBwjHmklGnI6Yl6Ti5ufPzFAKKiAOwArJW1UvTCAGIAHDLE/Fu7B5vb+4dgnj5+AbLEBpTUcGTxSOAAKnEvAEpwWVcEQ+YBgSFExC04OIFHBimuGi8Xg0WTucWhYFKzByvAeYAWSIBAUQwDxvQ0EVCpOI5MpAElsHAwSS8VJGMwAO5SLKmABuGneLOIUmw2DIGgARmhGbj5EE2qpkL0KpVRClRjYwP0NABzVgBfIzWWtFShMAAGSgZB1CEsGropQoETiAFVqC8eIbCsgpLoNMYOE8KB7BV8fnB/oCyMDEOB4i8Y6J4d8XkgtH5GHKTe1kAANS3W20jawOp1xc0UDmvabesC+/1Q+Wmui9KAaMg7SgmQSrdUlpVtjtdg2cb1zcT0UTrPZyJs5rWD0pQHLFQR9sYL9tLnFe1xFfgTqeVGctYKK/FxOASygc3Rru39i9Xm/DAp7jzeXz+QPPV6hsAphGAJAiCjiIBCYA2BBbhJsQ7iIsiqL+Oi4HEFi2QYLixAEl4RJYVqFJUmShEMky+Fspy3J8gKKHUnWorilKMpCgB4Z0LoojUKIZBqlmZ5mgsl66HgFjFhuglTLuswCHs4jFMIpRrqeCpmvQOASeumoSRMkSVjW75zII5SrIsciPL+bwoeAADy1DLjR4IAHR7HxKl0BJwmiakWlCfeo4GTJckKUpc7njsGaaXQACyVBsPp0lCHgEjiMstRQFAqyZb2eJBiGVmsX8wHRiCjAYsSsEIkiKJohi6E4ixOF4SxtJETSJGMsydEUZWVEaPygpdQxkrSq1BVmowojYLxoVmhAGjuoweh+d5dBzQtkn+W41yfncgTZueBidLocRefathHeiUl0DcX4BDNGSsHA/SemJmpBloVBaK+Rofrc373b9t2RUqcCRPF107f9+1mlinTsA+G6w7o8ObRDf13dDdA7IwaAUsMK3INjuMRN9tY3btAP4jALAohQUII1p1OmIC9Oo4DFOY8gvxJHA9A3qzBMLiOb4JXgpTLAsYu1AsxSrMIUhqspzaExoyM6NgJDMLyG2C5rFDa6TAX8JUqw9pls6c2AADSqu6DAVqYQz0VQLojts4ZEj1Ir5nBn++WAZGIGxmAWRIHgxBuOHYBeBiUKoWApXgfC8FVUhgoQXVmENYSPL4S1eftWRLHdVyPJ9Q5xdDUxRGucrkAAhgjDLnANRO8gEAN03WRFiLaNA5TwN1mQMC6Oa3jCz923o3t/F0IPUjD7ovy6vq4Ps1Ds/IIPrZaCTY9eBPZOQxjm9gNvxgk8veqH++U/97IQA==";
   var CANVAS_BABIES_APPEARANCES = [
@@ -2462,7 +2462,7 @@ Changelog:
     text = text.replaceAll("the", "da");
     text = text.replaceAll("hello", "hewo");
     text = text.replaceAll("so", "sho");
-    const babyWords = ["ba-bye", "da-da", "ma-ma", "goo-goo", "wee", "ooh", "gu", "ga", "agu", "guga"];
+    const babyWords = ["ba-ba", "da-da", "ma-ma", "goo-goo", "wee", "ooh", "gu", "ga", "agu", "guga"];
     text = text.replace(/(\w+)\b/g, (word) => word + (getRandomNumber(1, text.split(" ").length) === 1 ? " " + babyWords[Math.floor(Math.random() * babyWords.length)] : ""));
     return text.trim();
   }
@@ -4037,6 +4037,9 @@ Changelog:
         text: "Import Settings From Craft"
       });
       importCraftBtn.addEventListener("click", () => {
+        if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
+          return importCraftBtn.classList.add("lcDisabled");
+        }
         const data = JSON.parse(LZString.decompressFromBase64(craftImport.value));
         if (typeof data?.Name === "string") {
           this.cyberDiaperSettings.name = data.Name;
@@ -4064,6 +4067,10 @@ Changelog:
           this.cyberDiaperSettings.drawingPriority = data.ItemProperty.OverridePriority;
         }
       });
+      if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */)) {
+        craftImport.classList.add("lcDisabled");
+        importCraftBtn.classList.add("lcDisabled");
+      }
       const saveChangesBtn = this.createButton({
         text: "Save Changes",
         x: 1520,
