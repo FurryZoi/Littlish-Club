@@ -112,7 +112,7 @@ export class LogsMenu extends BaseSubscreen {
                 return deleteLogsBtn.classList.add("lcDisabled");
             }
             const count = parseInt(deleteLogsInput.value);
-            if (count === 0) return;
+            if (count === 0 || Number.isNaN(count)) return;
             const children = [...scrollView.children];
             for (let i = 0; i < count; i++) children[i].remove();
             deleteLogsInput.value = "";

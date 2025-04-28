@@ -10,6 +10,8 @@ interface CreateButtonArgs {
     anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
     place?: boolean
     icon?: string
+    iconAbsolutePosition?: boolean
+    iconWidth?: string
 }
 
 interface CreateTextArgs {
@@ -71,6 +73,13 @@ interface CreateInputListArgs {
     padding?: number
     place?: boolean
     numbersOnly?: boolean
+}
+
+interface CreateImageArgs {
+    src: string
+    x: number
+    y: number
+    width: number
 }
 
 function getRelativeHeight(height: number) {
@@ -219,34 +228,38 @@ export abstract class BaseSubscreen {
     createButton({
         text, x, y, width, height, fontSize = "auto",
         anchor = "top-left", padding, style = "default",
-        place = true, icon
+        place = true, icon, iconAbsolutePosition = true,
+        iconWidth
     }: CreateButtonArgs): HTMLButtonElement {
         const btn = document.createElement("button");
-        btn.textContent = text;
         btn.classList.add("lcButton");
         btn.setAttribute("data-lc-style", style);
+        btn.style.display = "flex";
+        btn.style.alignItems = "center";
+        btn.style.justifyContent = "center";
+        btn.style.columnGap = "1.25vw";
 
         if (icon) {
-            const div = document.createElement("div");
-            div.style.position = "absolute";
-            div.style.width = "100%";
-            div.style.height = "100%";
-            div.style.left = "0";
-            div.style.top = "0";
-            div.style.display = "flex";
-            div.style.alignItems = "center"
             const img = document.createElement("img");
             img.src = icon;
-            // img.style.aspectRatio = "1/1";
-            img.style.height = "80%";
-            if (text) {
+            if (iconWidth) img.style.width = iconWidth;
+            else img.style.height = "80%";
+            if (text && iconAbsolutePosition) {
                 img.style.position = "absolute";
                 img.style.left = "1vw";
-            } else {
-                div.style.justifyContent = "center";
             }
-            div.append(img);
-            btn.append(div);
+            if (text && !iconAbsolutePosition) btn.style.justifyContent = "";
+            btn.append(img);
+        }
+
+        if (text) {
+            const span = document.createElement("span");
+            span.textContent = text;
+            if (icon && !iconAbsolutePosition && iconWidth) {
+                span.style.width = "100%";
+                span.style.marginRight = iconWidth;
+            }
+            btn.append(span);
         }
 
         const setProperties = () => {
@@ -458,7 +471,27 @@ export abstract class BaseSubscreen {
         value.forEach((v) => addItem(String(v)));
         return [
             div,
-            () => numbersOnly ? items.map((i) => parseInt(i)) : items 
+            () => numbersOnly ? items.map((i) => parseInt(i)) : items
         ];
+    }
+
+    createImage({
+        x, y, width, src,
+    }: CreateImageArgs): HTMLImageElement {
+        const img = document.createElement("img");
+        img.src = src;
+
+        const setProperties = () => {
+            if (x && y) setPosition(img, x, y);
+            setSize(img, width, 0);
+            img.style.height = "auto";
+        }
+
+        setProperties();
+        window.addEventListener("resize", setProperties);
+        document.body.append(img);
+        this.resizeEventListeners.push(setProperties);
+        this.htmlElements.push(img);
+        return img;
     }
 }

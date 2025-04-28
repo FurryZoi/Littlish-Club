@@ -96,7 +96,7 @@ export class WardrobeMenu extends BaseSubscreen {
         CANVAS_BABIES_APPEARANCES.forEach((a) => {
             const btn = this.createButton({
                 text: a.name,
-                padding: 2,
+                padding: 2.5,
                 icon: "Icons/Rectangle/Dress.png",
                 place: false
             });
@@ -114,7 +114,7 @@ export class WardrobeMenu extends BaseSubscreen {
             x: 160,
             y: 800,
             width: 750,
-            padding: 2,
+            padding: 3,
             style: "inverted"
         });
         if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_APPEARANCE)) {

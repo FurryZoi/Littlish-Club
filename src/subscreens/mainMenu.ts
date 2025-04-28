@@ -59,6 +59,7 @@ export class MainMenu extends BaseSubscreen {
         cloudBtn.innerHTML = cloudHtml;
         cloudBtn.style.pointerEvents = "none";
         cloudBtn.style.borderRadius = "4vw";
+        cloudBtn.style.display = "block";
 
         if (InformationSheetSelection.IsPlayer()) {
             const addBabyBtn = this.createButton({
@@ -66,7 +67,7 @@ export class MainMenu extends BaseSubscreen {
                 x: 1000,
                 y: 820,
                 width: 550,
-                padding: 3,
+                height: 115,
                 style: "inverted"
             });
             addBabyBtn.style.fontWeight = "bold";
@@ -114,7 +115,6 @@ export class MainMenu extends BaseSubscreen {
 
             const exploringModeBtn = this.createButton({
                 icon: "Icons/Notifications.png",
-                padding: 1,
                 fontSize: 2,
                 x: 160,
                 y: 145,
@@ -135,7 +135,7 @@ export class MainMenu extends BaseSubscreen {
                 x: 150,
                 y: ((InformationSheetSelection.IsPlayer() && isExploringModeEnabled()) ? 225 : 150) + 115 * i,
                 width: 600,
-                padding: 2,
+                height: 100,
                 icon: m.icon ?? null
             });
             btn.style.fontWeight = "bold";

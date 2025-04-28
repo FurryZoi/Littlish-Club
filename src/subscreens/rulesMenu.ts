@@ -1,11 +1,12 @@
 import { MOD_NAME } from "@/constants";
 import { BaseSubscreen } from "./baseSubscreen";
-import { isRuleActive, isRuleEnabled, rulesList } from "@/modules/rules";
+import { isRuleActive, isRuleEnabled, isRuleStrict, rulesList } from "@/modules/rules";
 import { RuleSettingsMenu } from "./ruleSettingsMenu";
 import { MainMenu } from "./mainMenu";
+import { RulesMarkingMenu } from "./introductions/rulesMarkingMenu";
 
 
-let scrollTop: number | null = null; 
+let scrollTop: number | null = null;
 
 
 export class RulesMenu extends BaseSubscreen {
@@ -25,6 +26,18 @@ export class RulesMenu extends BaseSubscreen {
             x: 100,
             y: 60,
             fontSize: 10
+        });
+
+        const rulesMarkingBtn = this.createButton({
+            icon: "Icons/Notifications.png",
+            width: 90,
+            height: 90,
+            x: 1815,
+            y: 175
+        });
+        rulesMarkingBtn.style.zIndex = "10";
+        rulesMarkingBtn.addEventListener("click", () => {
+            this.setSubscreen(new RulesMarkingMenu());
         });
 
         const searchInput = this.createInput({
@@ -60,10 +73,16 @@ export class RulesMenu extends BaseSubscreen {
                 text: rule.name,
                 padding: 3,
                 style: isRuleEnabled(InformationSheetSelection, rule.id) ? "green" : "default",
-                place: false
+                place: false,
+                icon: isRuleStrict(InformationSheetSelection, rule.id) ? "Icons/Management.png" : null,
+                iconAbsolutePosition: false,
+                iconWidth: "12.5%"
             });
+            if (isRuleEnabled(InformationSheetSelection, rule.id) && !isRuleActive(InformationSheetSelection, rule.id)) {
+                ruleBtn.style.color = "red";
+            }
             ruleBtn.style.fontWeight = "bold";
-            // ruleBtn.style.height = "fit-content";
+            ruleBtn.style.position = "relative";
             ruleBtn.setAttribute("data-lc-ruleId", rule.id);
             ruleBtn.addEventListener("click", () => {
                 scrollTop = this.rulesBlock.scrollTop;

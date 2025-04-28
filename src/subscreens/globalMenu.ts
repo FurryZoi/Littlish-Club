@@ -37,7 +37,7 @@ export class GlobalMenu extends BaseSubscreen {
                 x: 100,
                 y: 825,
                 width: 500,
-                padding: 2,
+                height: 110,
                 icon: "Icons/ServiceBell.png"
             });
             if (isRuleActive(Player, RuleId.DISABLE_RESET_SETTINGS_BUTTON)) resetBtn.classList.add("lcDisabled");
@@ -59,7 +59,7 @@ export class GlobalMenu extends BaseSubscreen {
             x: 1400,
             y: 825,
             width: 500,
-            padding: 2,
+            height: 110,
             icon: "Icons/Cancel.png"
         });
         if (
