@@ -184,6 +184,9 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             text: "Import Settings From Craft"
         });
         importCraftBtn.addEventListener("click", () => {
+            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER)) {
+                return importCraftBtn.classList.add("lcDisabled");
+            }
             const data: CraftingItem = JSON.parse(LZString.decompressFromBase64(craftImport.value));
             if (typeof data?.Name === "string") {
                 this.cyberDiaperSettings.name = data.Name;
@@ -213,6 +216,11 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
                 this.cyberDiaperSettings.drawingPriority = data.ItemProperty.OverridePriority;
             }
         });
+
+        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER)) {
+            craftImport.classList.add("lcDisabled");
+            importCraftBtn.classList.add("lcDisabled");
+        }
 
         const saveChangesBtn = this.createButton({
             text: "Save Changes",

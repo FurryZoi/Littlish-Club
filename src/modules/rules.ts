@@ -308,7 +308,7 @@ function alternativeBabyTalk(text: string): string {
     text = text.replaceAll("hello", "hewo");
     text = text.replaceAll("so", "sho");
 
-    const babyWords = ['ba-bye', 'da-da', 'ma-ma', 'goo-goo', 'wee', 'ooh', 'gu', 'ga', 'agu', 'guga'];
+    const babyWords = ['ba-ba', 'da-da', 'ma-ma', 'goo-goo', 'wee', 'ooh', 'gu', 'ga', 'agu', 'guga'];
     text = text.replace(/(\w+)\b/g, (word) => word + (getRandomNumber(1, text.split(" ").length) === 1 ? " " + babyWords[Math.floor(Math.random() * babyWords.length)] : ""));
 
     return text.trim();
