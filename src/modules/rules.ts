@@ -352,7 +352,6 @@ export function loadRules(): void {
         }
     }
 
-
     registerButton(
         "LC_Remove",
         `Blocked by ${MOD_NAME}`,
@@ -752,6 +751,22 @@ export function loadRules(): void {
         ) args[6] = paciferImage;
         return next(args);
     });
+
+    const observer = new MutationObserver((mutationList, observer) => {
+        if (!isRuleActive(Player, RuleId.PACIFIER_CHECKBOXES)) return;
+        for (const mutation of mutationList) {
+            if (mutation.type === "childList") {
+                mutation.addedNodes.forEach((node: HTMLElement) => {
+                    if (node.nodeType === Node.ELEMENT_NODE && node.tagName === "INPUT") {
+                        if (node.classList.contains("checkbox")) {
+                            node.classList.add("paciCheckbox")
+                        }
+                    }
+                });
+            }
+        }
+    });
+    observer.observe(document.body, { attributes: true, childList: true, subtree: true });
 
     hookFunction("TimerProcess", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
         if (timerLastRulesCycleCall + 2000 <= CommonTime()) {

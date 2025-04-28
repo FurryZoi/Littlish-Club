@@ -63,3 +63,10 @@
     pointer-events: none;
     opacity: 0.6;
 }
+
+.paciCheckbox::before {
+	background-image: url("https://raw.githubusercontent.com/FurryZoi/Littlish-Club/refs/heads/main/src/images/pacifier.png") !important;
+	background-size: cover !important;
+    clip-path: none !important;
+    background-color: unset !important;
+}
