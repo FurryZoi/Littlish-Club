@@ -100,7 +100,6 @@ export function checkCyberDiaper(): void {
     const cyberDiaperStorage = modStorage.cyberDiaper;
     const cyberDiaperItem = InventoryGet(Player, "ItemPelvis");
     if (!cyberDiaperStorage?.locked) return;
-    if (!cyberDiaperItem) putCyberDiaperOn();
     const asset = AssetGet(Player.AssetFamily, "ItemPelvis", getCyberDiaperAssetName(cyberDiaperStorage.model));
     if (
         !cyberDiaperItem ||
