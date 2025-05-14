@@ -93,12 +93,8 @@ export class RulesMenu extends BaseSubscreen {
     }
 
     update() {
-        for (const ruleElement of this.rulesBlock.children) {
-            ruleElement.setAttribute(
-                "data-lc-style",
-                isRuleEnabled(InformationSheetSelection, parseInt(ruleElement.getAttribute("data-lc-ruleId"))) ? "green" : null
-            );
-        }
+        this.refreshRules();
+        if (scrollTop) this.rulesBlock.scrollBy({ top: scrollTop });
     }
 
     exit() {

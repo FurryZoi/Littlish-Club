@@ -1,3 +1,5 @@
+import { MOD_NAME } from "@/constants";
+
 export function smartGetAsset(item: Item | Asset): Asset {
     const asset = Asset.includes(item as Asset) ? item as Asset : (item as Item).Asset;
     if (!Asset.includes(asset)) {
@@ -44,12 +46,13 @@ export function isBind(
 
 export type IncludeType = "Cosplay" | "Binds" | "Collar" | "Locks";
 
-export function attachAppearance(
-    currentBundle: Item[],
+export function importAppearance(
+    C: Character,
     bundleToAttach: Item[],
-    include: IncludeType[] = ["Cosplay", "Binds", "Collar", "Locks"]
-): Item[] {
-    currentBundle = currentBundle.filter((i) => !!i && isBody(i));
+    include: IncludeType[] = ["Cosplay", "Binds", "Collar", "Locks"],
+    characterValidate: Character = C,
+    ignoreAccessValidation: boolean = false
+): void {
     bundleToAttach = bundleToAttach.filter((i) => !!i && !isBody(i));
     if (!include.includes("Cosplay")) bundleToAttach = bundleToAttach.filter((i) => !isCosplay(i));
     if (!include.includes("Binds")) bundleToAttach = bundleToAttach.filter((i) => !isBind(i));
@@ -58,8 +61,57 @@ export function attachAppearance(
         if (i.Property?.LockedBy) delete i.Property.LockedBy;
         return i;
     });
-    return [
-        ...currentBundle,
-        ...bundleToAttach
-    ];
+
+    const blockedGroups = [];
+    if (ignoreAccessValidation) {
+        C.Appearance = C.Appearance.filter((a) => isBody(a));
+    } else {
+        const validationParams = ValidationCreateDiffParams(characterValidate, Player.MemberNumber);
+        C.Appearance = C.Appearance.filter((a) => {
+            if (isBody(a)) {
+                blockedGroups.push(a.Asset.Group.Name);
+                return true;
+            }
+            if (
+                !ValidationCanRemoveItem(
+                    a, validationParams, !!bundleToAttach.find((b) => b?.Asset?.Group?.Name === a?.Asset?.Group?.Name)
+                ) ||
+                (
+                    a.Property?.LockedBy &&
+                    !DialogCanUnlock(characterValidate, a)
+                ) ||
+                (
+                    a.Asset.Name === "SlaveCollar" &&
+                    characterValidate.IsPlayer()
+                )
+            ) {
+                blockedGroups.push(a.Asset.Group.Name);
+                return true;
+            }
+            return false;
+        });
+    }
+    
+    for (const item of bundleToAttach) {
+        if (!ignoreAccessValidation) {
+            if (!validationCanAccessCheck(characterValidate, item.Asset.Group.Name, item.Asset)) continue;
+            if (blockedGroups.includes(item.Asset.Group.Name)) continue;
+        }
+        CharacterAppearanceSetItem(C, item.Asset.Group.Name, item.Asset, item.Color);
+        const _item = InventoryGet(C, item.Asset.Group.Name);
+        if (item.Craft && CraftingValidate(item.Craft, item.Asset) !== CraftingStatusType.CRITICAL_ERROR) _item.Craft = item.Craft;
+        if (item.Property) {
+            ValidationSanitizeProperties(C, item);
+            _item.Property = item.Property;
+        }
+    }
+
+    CharacterRefresh(C);
+    if (!C.IsNpc()) ChatRoomCharacterUpdate(C);
+}
+
+export function validationCanAccessCheck(C: Character, group: AssetGroupName, asset: Asset): boolean {
+    return (
+        !ValidationIsItemBlockedOrLimited(C, Player.MemberNumber, group, asset.Name) && ServerChatRoomGetAllowItem(Player, C)
+    );
 }

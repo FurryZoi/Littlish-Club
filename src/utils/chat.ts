@@ -37,7 +37,7 @@ export function chatSendLocal(message: string | Node): void {
 }
 
 export function chatSendChangelog(): void {
-	chatSendLocal(`${MOD_NAME} v${MOD_VERSION}\n\nChangelog:\n• Fixed bug with exiting rules menu after changing remote settings\n• Improved "Walk like baby" rule, not its smart\n• Improved rules UI a lot\n• Added new rules`);
+	chatSendLocal(`${MOD_NAME} v${MOD_VERSION}\n\nChangelog:\n• Fixed bug with "in room/not in room with role caregiver and higher" condition where mommy's presence in the room did not make the condition active\n• Added access validation in Littlish Wardrobe\n• Added extended list of ABDL items to make certain rules work better\n• Other fixes`);
 }
 
 export function chatSendActionMessage(msg: string, target: undefined | number = undefined, dictionary: ChatMessageDictionaryEntry[] = []) {

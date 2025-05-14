@@ -15,7 +15,7 @@ import { modStorage } from "@/modules/storage";
 import { CyberDiaperSettingsMenu } from "./cyberDiaperSettingsMenu";
 import { LogsMenu } from "./logsMenu";
 import discordIcon from "@/images/discord.png";
-import { attachAppearance } from "@/utils/wardrobe";
+import { importAppearance } from "@/utils/wardrobe";
 
 export class MainMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -43,7 +43,12 @@ export class MainMenu extends BaseSubscreen {
         // this.canvasCharacter.Appearance = serverAppearanceBundleToAppearance(
         //     this.canvasCharacter.AssetFamily, appearance
         // );
-        this.canvasCharacter.Appearance = attachAppearance(baseAppearance, babyAppearance);
+        ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, JSON.parse(
+            LZString.decompressFromBase64(
+                MY_APPEARANCE_BUNDLE
+            )
+        ));
+        importAppearance(this.canvasCharacter, babyAppearance);
         PoseSetActive(this.canvasCharacter, "Kneel");
         CharacterRefresh(this.canvasCharacter);
 

@@ -5,7 +5,7 @@ import { getRandomNumber } from "@/utils/main";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
 import { AboutWardrobeMenu } from "./introductions/aboutWardrobeMenu";
 import { MainMenu } from "./mainMenu";
-import { attachAppearance, IncludeType } from "@/utils/wardrobe";
+import { importAppearance, IncludeType } from "@/utils/wardrobe";
 
 export class WardrobeMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -13,6 +13,7 @@ export class WardrobeMenu extends BaseSubscreen {
     private includeTypes: IncludeType[] = ["Binds", "Cosplay", "Collar", "Locks"];
     private requiredModsElement: HTMLParagraphElement;
     private creatorNameElement: HTMLParagraphElement;
+    private isViewingMode: boolean = false;
 
     get name() {
         return "Littlish Wardrobe";
@@ -51,19 +52,11 @@ export class WardrobeMenu extends BaseSubscreen {
         });
 
         this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
-        const appearanceBundle = serverAppearanceBundleToAppearance(InformationSheetSelection.AssetFamily, JSON.parse(
-            LZString.decompressFromBase64(
-                this.currentAppearance.bundle
-            )
-        ));
-        this.canvasCharacter.Appearance = attachAppearance(InformationSheetSelection.Appearance, appearanceBundle);
-        // ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, appearanceBundle, Player.MemberNumber);
-        CharacterRefresh(this.canvasCharacter);
 
         this.creatorNameElement = this.createText({
             text: `<b>Creator:</b> ${this.currentAppearance.creator}`,
             x: 1400,
-            y: 240,
+            y: 225,
             width: 425
         });
         this.creatorNameElement.style.textAlign = "center";
@@ -72,13 +65,26 @@ export class WardrobeMenu extends BaseSubscreen {
             this.createCheckbox({
                 text: d,
                 x: 1500,
-                y: 380 + (80 * i),
+                y: 360 + (80 * i),
                 isChecked: true
             }).addEventListener("click", () => {
                 if (this.includeTypes.includes(d)) this.includeTypes.splice(this.includeTypes.indexOf(d), 1);
                 else this.includeTypes.push(d);
                 this.refresh();
             });
+        });
+
+        this.createCheckbox({
+            text: "Viewing Mode",
+            x: 1500,
+            y: 720,
+            isChecked: false
+        }).addEventListener("click", () => {
+            this.isViewingMode = !this.isViewingMode;
+            if (
+                hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_APPEARANCE)
+            ) applyBtn.classList.toggle("lcDisabled");
+            this.refresh();
         });
 
         const scrollView = this.createScrollView({
@@ -117,17 +123,18 @@ export class WardrobeMenu extends BaseSubscreen {
             padding: 3,
             style: "inverted"
         });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_APPEARANCE)) {
+        if (
+            !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_APPEARANCE) ||
+            this.isViewingMode
+        ) {
             applyBtn.classList.add("lcDisabled");
         }
         applyBtn.addEventListener("click", () => {
-            const appearanceBundle = ServerAppearanceBundle(this.canvasCharacter.Appearance);
-            ServerAppearanceLoadFromBundle(InformationSheetSelection, this.canvasCharacter.AssetFamily, appearanceBundle, Player.MemberNumber);
-            ChatRoomCharacterUpdate(InformationSheetSelection);
+            importAppearance(InformationSheetSelection, this.canvasCharacter.Appearance, this.includeTypes);
             this.exit();
         });
 
-        this.loadRequiredModsWarning();
+        this.refresh();
     }
 
     loadRequiredModsWarning() {
@@ -153,9 +160,11 @@ export class WardrobeMenu extends BaseSubscreen {
                 LZString.decompressFromBase64(this.currentAppearance.bundle)
             )
         );
-        this.canvasCharacter.Appearance = attachAppearance(InformationSheetSelection.Appearance, appearanceBundle, this.includeTypes);
-        // ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, appearanceBundle, Player.MemberNumber);
-        CharacterRefresh(this.canvasCharacter);
+        ServerAppearanceLoadFromBundle(
+            this.canvasCharacter, this.canvasCharacter.AssetFamily,
+            ServerAppearanceBundle(InformationSheetSelection.Appearance)
+        );
+        importAppearance(this.canvasCharacter, appearanceBundle, this.includeTypes, InformationSheetSelection, this.isViewingMode);
         this.creatorNameElement.innerHTML = `<b>Creator:</b> ${this.currentAppearance.creator}`;
         if (typeof this.requiredModsElement !== "undefined") this.requiredModsElement.remove();
         this.loadRequiredModsWarning();

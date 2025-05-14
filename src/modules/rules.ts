@@ -1,7 +1,7 @@
 import { chatSendActionMessage, chatSendLocal } from "@/utils/chat";
 import { hookFunction, HookPriority } from "./bcModSdk";
 import { ModStorage, modStorage, syncStorage } from "./storage";
-import { MOD_NAME } from "@/constants";
+import { extendedABDLItemNames, MOD_NAME } from "@/constants";
 import { getRandomNumber } from "@/utils/main";
 import { getNickname, getPlayer } from "@/utils/characters";
 import paciferImage from "@/images/pacifier.png";
@@ -206,8 +206,8 @@ export function isRuleActive(C: Character, ruleId: RuleId): boolean {
     if (conditions.whenInRoomWithRole) {
         if ((conditions?.whenInRoomWithRole?.role ?? "caregiver") === "caregiver") {
             whenInRoomWithRoleCondition = (conditions?.whenInRoomWithRole?.inRoom ?? true) ?
-                inRoomWithCaregiver(C)
-                : !inRoomWithCaregiver(C);
+                inRoomWithCaregiver(C) || inRoomWithMommy(C)
+                : !(inRoomWithCaregiver(C) || inRoomWithMommy(C));
         } else {
             whenInRoomWithRoleCondition = (conditions?.whenInRoomWithRole?.inRoom ?? true) ?
                 inRoomWithMommy(C)
@@ -341,7 +341,10 @@ export function loadRules(): void {
         if (!item) return;
         const itemName = item.Craft ? item.Craft.Name : item.Asset.Description;
         if (
-            item?.Asset?.Category?.includes("ABDL") &&
+            (
+                item?.Asset?.Category?.includes("ABDL") ||
+                extendedABDLItemNames.includes(item?.Asset?.Name)
+            ) &&
             isRuleActive(Player, RuleId.PREVENT_TAKING_ABDL_ITEMS_OFF)
         ) {
             chatSendActionMessage(
@@ -440,12 +443,13 @@ export function loadRules(): void {
     });
 
     hookFunction("DialogInventoryAdd", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
-        const [C, item, isWorn, sortOrder] = args;
+        const [C, item, isWorn, sortOrder] = args as [Character, Item, boolean, DialogSortOrder];
         const asset = item.Asset;
 
         if (DialogMenuMode !== "permissions") {
             if (
                 !asset.Category?.includes("ABDL") &&
+                !extendedABDLItemNames.includes(asset.Name) &&
                 isRuleActive(Player, RuleId.ABDL_INVENTORY)
             ) return;
         }
@@ -653,7 +657,10 @@ export function loadRules(): void {
         if (
             C.IsPlayer() &&
             item &&
-            item?.Asset?.Category?.includes("ABDL") &&
+            (
+                item?.Asset?.Category?.includes("ABDL") ||
+                extendedABDLItemNames.includes(item?.Asset?.Name)
+            ) &&
             isRuleActive(Player, RuleId.PREVENT_TAKING_ABDL_ITEMS_OFF)
         ) {
             {
@@ -692,7 +699,10 @@ export function loadRules(): void {
 
         if (
             C.IsPlayer() &&
-            item?.Asset?.Category?.includes("ABDL") &&
+            (
+                item?.Asset?.Category?.includes("ABDL") ||
+                extendedABDLItemNames.includes(item?.Asset?.Name)
+            ) &&
             isRuleActive(Player, RuleId.PREVENT_TAKING_ABDL_ITEMS_OFF)
         ) return;
 
