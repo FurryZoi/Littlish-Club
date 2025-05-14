@@ -189,7 +189,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   });
 
   // src/constants.ts
-  var MOD_VERSION = "1.0.3";
+  var MOD_VERSION = "1.0.4";
   var MOD_NAME = "Littlish Club";
   var MOD_FULL_NAME = MOD_NAME;
   var REPO_URL = "https://github.com/FurryZoi/Littlish-Club";
@@ -297,6 +297,28 @@ One of mods you are using is using an old version of SDK. It will work for now b
       creator: "Furude nya",
       bundle: "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="
     }
+  ];
+  var extendedABDLItemNames = [
+    "AdultBabyDress1",
+    "AdultBabyDress2",
+    "AdultBabyDress3",
+    "AdultBabyDress4",
+    "PaddedMittens",
+    "PawMittens",
+    "Bib",
+    "BabydollDress1",
+    "PuffyDress",
+    "FlowerDress",
+    "ChangingTable",
+    "Crib",
+    "FoxPlush",
+    "BunPlush",
+    "Shark",
+    "CowPrintedSocks",
+    "Socks5",
+    "Socks6",
+    "Bonnet1",
+    "Bonnet2"
   ];
 
   // src/modules/bcModSdk.ts
@@ -2140,10 +2162,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
     chatSendLocal(`${MOD_NAME} v${MOD_VERSION}
 
 Changelog:
-\u2022 Fixed bug with exiting rules menu after changing remote settings
-\u2022 Improved "Walk like baby" rule, not its smart
-\u2022 Improved rules UI a lot
-\u2022 Added new rules`);
+\u2022 Fixed bug with "in room/not in room with role caregiver and higher" condition where mommy's presence in the room did not make the condition active
+\u2022 Added access validation in Littlish Wardrobe
+\u2022 Added extended list of ABDL items to make certain rules work better
+\u2022 Other fixes`);
   }
   function chatSendActionMessage(msg, target = void 0, dictionary = []) {
     if (!msg || !ServerPlayerIsInChatRoom()) return;
@@ -2381,7 +2403,7 @@ Changelog:
     let whenInRoomWhereAbdlCondition = false;
     if (conditions.whenInRoomWithRole) {
       if ((conditions?.whenInRoomWithRole?.role ?? "caregiver") === "caregiver") {
-        whenInRoomWithRoleCondition = conditions?.whenInRoomWithRole?.inRoom ?? true ? inRoomWithCaregiver(C) : !inRoomWithCaregiver(C);
+        whenInRoomWithRoleCondition = conditions?.whenInRoomWithRole?.inRoom ?? true ? inRoomWithCaregiver(C) || inRoomWithMommy(C) : !(inRoomWithCaregiver(C) || inRoomWithMommy(C));
       } else {
         whenInRoomWithRoleCondition = conditions?.whenInRoomWithRole?.inRoom ?? true ? inRoomWithMommy(C) : !inRoomWithMommy(C);
       }
@@ -2486,7 +2508,7 @@ Changelog:
       const item = InventoryGet(Player, Player.FocusGroup?.Name);
       if (!item) return;
       const itemName = item.Craft ? item.Craft.Name : item.Asset.Description;
-      if (item?.Asset?.Category?.includes("ABDL") && isRuleActive(Player, 1e3 /* PREVENT_TAKING_ABDL_ITEMS_OFF */)) {
+      if ((item?.Asset?.Category?.includes("ABDL") || extendedABDLItemNames.includes(item?.Asset?.Name)) && isRuleActive(Player, 1e3 /* PREVENT_TAKING_ABDL_ITEMS_OFF */)) {
         chatSendActionMessage(
           `Baby ${CharacterNickname(
             Player
@@ -2556,7 +2578,7 @@ Changelog:
       const [C, item, isWorn, sortOrder] = args;
       const asset = item.Asset;
       if (DialogMenuMode !== "permissions") {
-        if (!asset.Category?.includes("ABDL") && isRuleActive(Player, 1003 /* ABDL_INVENTORY */)) return;
+        if (!asset.Category?.includes("ABDL") && !extendedABDLItemNames.includes(asset.Name) && isRuleActive(Player, 1003 /* ABDL_INVENTORY */)) return;
       }
       next(args);
     });
@@ -2724,7 +2746,7 @@ Changelog:
       next(args);
       const C = args[0];
       const item = InventoryGet(C, C?.FocusGroup?.Name);
-      if (C.IsPlayer() && item && item?.Asset?.Category?.includes("ABDL") && isRuleActive(Player, 1e3 /* PREVENT_TAKING_ABDL_ITEMS_OFF */)) {
+      if (C.IsPlayer() && item && (item?.Asset?.Category?.includes("ABDL") || extendedABDLItemNames.includes(item?.Asset?.Name)) && isRuleActive(Player, 1e3 /* PREVENT_TAKING_ABDL_ITEMS_OFF */)) {
         {
           const removeIndex = DialogMenuButton.indexOf("Remove");
           const struggleIndex = DialogMenuButton.indexOf("Struggle");
@@ -2752,7 +2774,7 @@ Changelog:
       const clickedItem = args[0];
       if (DialogMenuMode !== "items") return next(args);
       console.log(C, clickedItem, isRuleActive(Player, 1012 /* PREVENT_USING_BONDAGE_ON_OTHER */));
-      if (C.IsPlayer() && item?.Asset?.Category?.includes("ABDL") && isRuleActive(Player, 1e3 /* PREVENT_TAKING_ABDL_ITEMS_OFF */)) return;
+      if (C.IsPlayer() && (item?.Asset?.Category?.includes("ABDL") || extendedABDLItemNames.includes(item?.Asset?.Name)) && isRuleActive(Player, 1e3 /* PREVENT_TAKING_ABDL_ITEMS_OFF */)) return;
       if (!C.IsPlayer() && clickedItem?.Asset?.IsRestraint && isRuleActive(Player, 1012 /* PREVENT_USING_BONDAGE_ON_OTHER */)) {
         if (getRuleParameter(Player, 1012 /* PREVENT_USING_BONDAGE_ON_OTHER */, "allowAbdlItems") && clickedItem.Asset.Category?.includes("ABDL")) return next(args);
         return;
@@ -3684,12 +3706,8 @@ Changelog:
       });
     }
     update() {
-      for (const ruleElement of this.rulesBlock.children) {
-        ruleElement.setAttribute(
-          "data-lc-style",
-          isRuleEnabled(InformationSheetSelection, parseInt(ruleElement.getAttribute("data-lc-ruleId"))) ? "green" : null
-        );
-      }
+      this.refreshRules();
+      if (scrollTop) this.rulesBlock.scrollBy({ top: scrollTop });
     }
     exit() {
       scrollTop = null;
@@ -4438,8 +4456,7 @@ Changelog:
     if (group.Category !== "Item" || group.BodyCosplay) return false;
     return !excludeSlots.includes(group.Name);
   }
-  function attachAppearance(currentBundle, bundleToAttach, include = ["Cosplay", "Binds", "Collar", "Locks"]) {
-    currentBundle = currentBundle.filter((i) => !!i && isBody(i));
+  function importAppearance(C, bundleToAttach, include = ["Cosplay", "Binds", "Collar", "Locks"], characterValidate = C, ignoreAccessValidation = false) {
     bundleToAttach = bundleToAttach.filter((i) => !!i && !isBody(i));
     if (!include.includes("Cosplay")) bundleToAttach = bundleToAttach.filter((i) => !isCosplay(i));
     if (!include.includes("Binds")) bundleToAttach = bundleToAttach.filter((i) => !isBind(i));
@@ -4448,10 +4465,45 @@ Changelog:
       if (i.Property?.LockedBy) delete i.Property.LockedBy;
       return i;
     });
-    return [
-      ...currentBundle,
-      ...bundleToAttach
-    ];
+    const blockedGroups = [];
+    if (ignoreAccessValidation) {
+      C.Appearance = C.Appearance.filter((a) => isBody(a));
+    } else {
+      const validationParams = ValidationCreateDiffParams(characterValidate, Player.MemberNumber);
+      C.Appearance = C.Appearance.filter((a) => {
+        if (isBody(a)) {
+          blockedGroups.push(a.Asset.Group.Name);
+          return true;
+        }
+        if (!ValidationCanRemoveItem(
+          a,
+          validationParams,
+          !!bundleToAttach.find((b) => b?.Asset?.Group?.Name === a?.Asset?.Group?.Name)
+        ) || a.Property?.LockedBy && !DialogCanUnlock(characterValidate, a) || a.Asset.Name === "SlaveCollar" && characterValidate.IsPlayer()) {
+          blockedGroups.push(a.Asset.Group.Name);
+          return true;
+        }
+        return false;
+      });
+    }
+    for (const item of bundleToAttach) {
+      if (!ignoreAccessValidation) {
+        if (!validationCanAccessCheck(characterValidate, item.Asset.Group.Name, item.Asset)) continue;
+        if (blockedGroups.includes(item.Asset.Group.Name)) continue;
+      }
+      CharacterAppearanceSetItem(C, item.Asset.Group.Name, item.Asset, item.Color);
+      const _item = InventoryGet(C, item.Asset.Group.Name);
+      if (item.Craft && CraftingValidate(item.Craft, item.Asset) !== CraftingStatusType.CRITICAL_ERROR) _item.Craft = item.Craft;
+      if (item.Property) {
+        ValidationSanitizeProperties(C, item);
+        _item.Property = item.Property;
+      }
+    }
+    CharacterRefresh(C);
+    if (!C.IsNpc()) ChatRoomCharacterUpdate(C);
+  }
+  function validationCanAccessCheck(C, group, asset) {
+    return !ValidationIsItemBlockedOrLimited(C, Player.MemberNumber, group, asset.Name) && ServerChatRoomGetAllowItem(Player, C);
   }
 
   // src/subscreens/wardrobeMenu.ts
@@ -4461,6 +4513,7 @@ Changelog:
     includeTypes = ["Binds", "Cosplay", "Collar", "Locks"];
     requiredModsElement;
     creatorNameElement;
+    isViewingMode = false;
     get name() {
       return "Littlish Wardrobe";
     }
@@ -4488,17 +4541,10 @@ Changelog:
         this.setSubscreen(new AboutWardrobeMenu(this.currentAppearance));
       });
       this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
-      const appearanceBundle = serverAppearanceBundleToAppearance(InformationSheetSelection.AssetFamily, JSON.parse(
-        LZString.decompressFromBase64(
-          this.currentAppearance.bundle
-        )
-      ));
-      this.canvasCharacter.Appearance = attachAppearance(InformationSheetSelection.Appearance, appearanceBundle);
-      CharacterRefresh(this.canvasCharacter);
       this.creatorNameElement = this.createText({
         text: `<b>Creator:</b> ${this.currentAppearance.creator}`,
         x: 1400,
-        y: 240,
+        y: 225,
         width: 425
       });
       this.creatorNameElement.style.textAlign = "center";
@@ -4506,13 +4552,23 @@ Changelog:
         this.createCheckbox({
           text: d,
           x: 1500,
-          y: 380 + 80 * i,
+          y: 360 + 80 * i,
           isChecked: true
         }).addEventListener("click", () => {
           if (this.includeTypes.includes(d)) this.includeTypes.splice(this.includeTypes.indexOf(d), 1);
           else this.includeTypes.push(d);
           this.refresh();
         });
+      });
+      this.createCheckbox({
+        text: "Viewing Mode",
+        x: 1500,
+        y: 720,
+        isChecked: false
+      }).addEventListener("click", () => {
+        this.isViewingMode = !this.isViewingMode;
+        if (hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_APPEARANCE" /* MANAGE_APPEARANCE */)) applyBtn.classList.toggle("lcDisabled");
+        this.refresh();
       });
       const scrollView = this.createScrollView({
         scroll: "y",
@@ -4548,16 +4604,14 @@ Changelog:
         padding: 3,
         style: "inverted"
       });
-      if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_APPEARANCE" /* MANAGE_APPEARANCE */)) {
+      if (!hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_APPEARANCE" /* MANAGE_APPEARANCE */) || this.isViewingMode) {
         applyBtn.classList.add("lcDisabled");
       }
       applyBtn.addEventListener("click", () => {
-        const appearanceBundle2 = ServerAppearanceBundle(this.canvasCharacter.Appearance);
-        ServerAppearanceLoadFromBundle(InformationSheetSelection, this.canvasCharacter.AssetFamily, appearanceBundle2, Player.MemberNumber);
-        ChatRoomCharacterUpdate(InformationSheetSelection);
+        importAppearance(InformationSheetSelection, this.canvasCharacter.Appearance, this.includeTypes);
         this.exit();
       });
-      this.loadRequiredModsWarning();
+      this.refresh();
     }
     loadRequiredModsWarning() {
       if (Array.isArray(this.currentAppearance.requiredMods) && this.currentAppearance.requiredMods.length > 0) {
@@ -4578,8 +4632,12 @@ Changelog:
           LZString.decompressFromBase64(this.currentAppearance.bundle)
         )
       );
-      this.canvasCharacter.Appearance = attachAppearance(InformationSheetSelection.Appearance, appearanceBundle, this.includeTypes);
-      CharacterRefresh(this.canvasCharacter);
+      ServerAppearanceLoadFromBundle(
+        this.canvasCharacter,
+        this.canvasCharacter.AssetFamily,
+        ServerAppearanceBundle(InformationSheetSelection.Appearance)
+      );
+      importAppearance(this.canvasCharacter, appearanceBundle, this.includeTypes, InformationSheetSelection, this.isViewingMode);
       this.creatorNameElement.innerHTML = `<b>Creator:</b> ${this.currentAppearance.creator}`;
       if (typeof this.requiredModsElement !== "undefined") this.requiredModsElement.remove();
       this.loadRequiredModsWarning();
@@ -4770,7 +4828,12 @@ Changelog:
           CANVAS_BABIES_APPEARANCES[getRandomNumber(0, CANVAS_BABIES_APPEARANCES.length - 1)].bundle
         )
       ));
-      this.canvasCharacter.Appearance = attachAppearance(baseAppearance, babyAppearance);
+      ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, JSON.parse(
+        LZString.decompressFromBase64(
+          MY_APPEARANCE_BUNDLE
+        )
+      ));
+      importAppearance(this.canvasCharacter, babyAppearance);
       PoseSetActive(this.canvasCharacter, "Kneel");
       CharacterRefresh(this.canvasCharacter);
       let cloudText = `Littlish Club v${MOD_VERSION}
