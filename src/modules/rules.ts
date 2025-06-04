@@ -784,7 +784,7 @@ export function loadRules(): void {
                 isRuleActive(Player, RuleId.CONTROL_NICKNAME) &&
                 Player.Nickname !== (getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "nickname") ?? "")
             ) {
-                const status = CharacterSetNickname(Player, getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "nickname"));
+                const status = CharacterSetNickname(Player, getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "nickname") ?? "");
                 if (typeof status === "string") {
                     modStorage.rules.list.find((r) => r.id === RuleId.CONTROL_NICKNAME).data.nickname = CharacterNickname(Player);
                     syncStorage();

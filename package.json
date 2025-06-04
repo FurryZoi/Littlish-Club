@@ -1,6 +1,6 @@
 {
   "name": "Littlish Club",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "main": "index.js",
   "scripts": {
     "dev": "esbuild src/index.ts --bundle --sourcemap --watch --outfile=dist/bundle.js --loader:.ts=ts --loader:.css=text --loader:.png=dataurl --loader:.ttf=file",
@@ -13,8 +13,8 @@
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
     "bc-stubs": "^113.0.0",
-    "esbuild": "^0.25.0",
-    "typescript": "^5.7.3"
+    "esbuild": "^0.25.5",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "bondage-club-mod-sdk": "^1.2.0",
