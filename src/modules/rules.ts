@@ -782,7 +782,7 @@ export function loadRules(): void {
         if (timerLastRulesCycleCall + 2000 <= CommonTime()) {
             if (
                 isRuleActive(Player, RuleId.CONTROL_NICKNAME) &&
-                Player.Nickname !== getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "nickname")
+                Player.Nickname !== (getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "nickname") ?? "")
             ) {
                 const status = CharacterSetNickname(Player, getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "nickname"));
                 if (typeof status === "string") {
