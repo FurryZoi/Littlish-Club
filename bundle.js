@@ -2830,7 +2830,7 @@ Changelog:
     hookFunction("TimerProcess", 10 /* OVERRIDE_BEHAVIOR */, (args, next) => {
       if (timerLastRulesCycleCall + 2e3 <= CommonTime()) {
         if (isRuleActive(Player, 1011 /* CONTROL_NICKNAME */) && Player.Nickname !== (getRuleParameter(Player, 1011 /* CONTROL_NICKNAME */, "nickname") ?? "")) {
-          const status = CharacterSetNickname(Player, getRuleParameter(Player, 1011 /* CONTROL_NICKNAME */, "nickname"));
+          const status = CharacterSetNickname(Player, getRuleParameter(Player, 1011 /* CONTROL_NICKNAME */, "nickname") ?? "");
           if (typeof status === "string") {
             modStorage.rules.list.find((r) => r.id === 1011 /* CONTROL_NICKNAME */).data.nickname = CharacterNickname(Player);
             syncStorage();
