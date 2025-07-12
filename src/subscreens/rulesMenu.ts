@@ -1,5 +1,5 @@
 import { MOD_NAME } from "@/constants";
-import { BaseSubscreen } from "./baseSubscreen";
+import { BaseSubscreen } from "zois-core/ui";
 import { isRuleActive, isRuleEnabled, isRuleStrict, rulesList } from "@/modules/rules";
 import { RuleSettingsMenu } from "./ruleSettingsMenu";
 import { MainMenu } from "./mainMenu";
@@ -21,12 +21,7 @@ export class RulesMenu extends BaseSubscreen {
     }
 
     load() {
-        this.createText({
-            text: this.name,
-            x: 100,
-            y: 60,
-            fontSize: 10
-        });
+        super.load();
 
         const rulesMarkingBtn = this.createButton({
             icon: "Icons/Notifications.png",
@@ -98,6 +93,7 @@ export class RulesMenu extends BaseSubscreen {
     }
 
     exit() {
+        super.exit();
         scrollTop = null;
         this.setSubscreen(new MainMenu());
     }

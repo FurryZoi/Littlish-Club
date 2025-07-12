@@ -1,4 +1,4 @@
-import { BaseSubscreen } from "@/subscreens/baseSubscreen";
+import { BaseSubscreen } from "zois-core/ui";
 import rulesMarkingImage from "@/images/rules-marking.png";
 
 export class RulesMarkingMenu extends BaseSubscreen {
@@ -7,12 +7,7 @@ export class RulesMarkingMenu extends BaseSubscreen {
     }
 
     load() {
-        this.createText({
-            text: this.name,
-            x: 100,
-            y: 60,
-            fontSize: 10
-        });
+        super.load();
 
         this.createImage({
             src: rulesMarkingImage,

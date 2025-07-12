@@ -1,10 +1,10 @@
 import { modStorage, Note, syncStorage } from "@/modules/storage";
-import { BaseSubscreen } from "./baseSubscreen";
+import { BaseSubscreen } from "zois-core/ui";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
-import { chatSendModMessage } from "@/utils/chat";
+import { messagesManager } from "zois-core/messaging";
 import { addLog } from "@/modules/logs";
-import { getNickname } from "@/utils/characters";
-import { DeleteNoteMessageData } from "@/modules/messaging";
+import { getNickname } from "zois-core";
+import { DeleteNoteMessageData } from "@/types/messages";
 
 
 
@@ -23,12 +23,7 @@ export class NoteSettingsMenu extends BaseSubscreen {
     }
 
     load() {
-        this.createText({
-            text: this.name,
-            x: 100,
-            y: 60,
-            fontSize: 10
-        });
+        super.load();
 
         const text = this.createText({
             text: this.note.text,
@@ -48,41 +43,33 @@ export class NoteSettingsMenu extends BaseSubscreen {
         });
         date.style.textAlign = "center";
 
-        const deleteBtn = this.createButton({
+        this.createButton({
             text: "Delete",
             x: 1550,
             y: 850,
             width: 360,
-            padding: 2
-        });
-        if (
-            !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_NOTES) &&
-            this.note.author.id !== Player.MemberNumber
-        ) {
-            deleteBtn.classList.add("lcDisabled");
-        }
-        deleteBtn.addEventListener("click", () => {
-            if (
+            padding: 2,
+            isDisabled: () => (
                 !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_NOTES) &&
                 this.note.author.id !== Player.MemberNumber
-            ) {
-                deleteBtn.classList.add("lcDisabled");
-            }
-            if (InformationSheetSelection.IsPlayer()) {
-                const [note] = modStorage.notes.list.splice(this.key - 1, 1);
-                addLog(`${getNickname(Player)} (${Player.MemberNumber}) deleted note: "${note.text}"`, false);
-                this.exit();
-            } else {
-                chatSendModMessage<DeleteNoteMessageData>("deleteNote", {
-                    key: this.key
-                }, InformationSheetSelection.MemberNumber);
-                this.setPreviousSubscreen();
+            ),
+            onClick: () => {
+                if (InformationSheetSelection.IsPlayer()) {
+                    const [note] = modStorage.notes.list.splice(this.key - 1, 1);
+                    addLog(`${getNickname(Player)} (${Player.MemberNumber}) deleted note: "${note.text}"`, false);
+                    this.exit();
+                } else {
+                    messagesManager.sendPacket<DeleteNoteMessageData>("deleteNote", {
+                        key: this.key
+                    }, InformationSheetSelection.MemberNumber);
+                    this.setPreviousSubscreen();
+                }
             }
         });
     }
 
     exit() {
+        super.exit();
         syncStorage();
-        this.setPreviousSubscreen();
     }
 }

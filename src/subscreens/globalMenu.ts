@@ -1,11 +1,12 @@
 import { isRuleActive, RuleId } from "@/modules/rules";
-import { BaseSubscreen } from "./baseSubscreen";
+import { BaseSubscreen } from "zois-core/ui";
 import { resetStorage } from "@/modules/storage";
-import { OneButtonMenu } from "./shared/oneButtonMenu";
+import { OneButtonMenu } from "./common/oneButtonMenu";
 import { MainMenu } from "./mainMenu";
 import { AccessRight, hasAccessRightTo, hasMommy } from "@/modules/access";
-import { chatSendModMessage } from "@/utils/chat";
-import { getSizeInKbytes } from "@/utils/main";
+import { messagesManager } from "zois-core/messaging";
+import { getSizeInKbytes, version as zcVersion } from "zois-core";
+import { version } from "@/../package.json";
 
 export class GlobalMenu extends BaseSubscreen {
     get name() {
@@ -17,12 +18,7 @@ export class GlobalMenu extends BaseSubscreen {
     }
 
     load() {
-        this.createText({
-            text: this.name,
-            x: 100,
-            y: 60,
-            fontSize: 10
-        });
+        super.load();
 
         if (InformationSheetSelection.IsPlayer()) {
             this.createText({
@@ -32,59 +28,62 @@ export class GlobalMenu extends BaseSubscreen {
                 fontSize: 6
             });
 
-            const resetBtn = this.createButton({
+            this.createText({
+                text: `Littlish Club: v${version} (ZC v${zcVersion})`,
+                x: 150,
+                y: 320,
+                fontSize: 6
+            });
+
+            this.createButton({
                 text: "Reset Settings",
                 x: 100,
                 y: 825,
                 width: 500,
                 height: 110,
-                icon: "Icons/ServiceBell.png"
-            });
-            if (isRuleActive(Player, RuleId.DISABLE_RESET_SETTINGS_BUTTON)) resetBtn.classList.add("lcDisabled");
-            resetBtn.addEventListener("click", () => {
-                if (isRuleActive(Player, RuleId.DISABLE_RESET_SETTINGS_BUTTON)) return;
-                this.setSubscreen(
-                    new OneButtonMenu({
-                        screenName: "Global > Reset Settings",
-                        content: "Are you sure you want to reset all your mod data?",
-                        buttonText: "Reset Settings",
-                        onClick: resetStorage
-                    })
-                )
+                icon: "Icons/ServiceBell.png",
+                isDisabled: () => isRuleActive(Player, RuleId.DISABLE_RESET_SETTINGS_BUTTON),
+                onClick: () => {
+                    this.setSubscreen(
+                        new OneButtonMenu({
+                            screenName: "Global > Reset Settings",
+                            content: "Are you sure you want to reset all your mod data?",
+                            buttonText: "Reset Settings",
+                            onClick: resetStorage
+                        })
+                    );
+                }
             });
         }
 
-        const releaseBtn = this.createButton({
+        this.createButton({
             text: "Release Baby",
             x: 1400,
             y: 825,
             width: 500,
             height: 110,
-            icon: "Icons/Cancel.png"
-        });
-        if (
-            !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.RELEASE_BABY) ||
-            !hasMommy(InformationSheetSelection)
-        ) releaseBtn.classList.add("lcDisabled");
-        releaseBtn.addEventListener("click", () => {
-            if (
+            icon: "Icons/Cancel.png",
+            isDisabled: () => (
                 !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.RELEASE_BABY) ||
                 !hasMommy(InformationSheetSelection)
-            ) return releaseBtn.classList.add("lcDisabled");
-            this.setSubscreen(
-                new OneButtonMenu({
-                    screenName: "Global > Release Baby",
-                    content: "Are you sure you want to release baby?",
-                    buttonText: "Release Baby",
-                    onClick: () => {
-                        chatSendModMessage("releaseBaby", null, InformationSheetSelection.MemberNumber);
-                    }
-                })
-            );
+            ),
+            onClick: () => {
+                this.setSubscreen(
+                    new OneButtonMenu({
+                        screenName: "Global > Release Baby",
+                        content: "Are you sure you want to release baby?",
+                        buttonText: "Release Baby",
+                        onClick: () => {
+                            messagesManager.sendPacket("releaseBaby", null, InformationSheetSelection.MemberNumber);
+                        }
+                    })
+                );
+            }
         });
     }
 
     exit() {
+        super.exit();
         this.setSubscreen(new MainMenu());
     }
 }

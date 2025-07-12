@@ -1,4 +1,4 @@
-import { BaseSubscreen } from "@/subscreens/baseSubscreen";
+import { BaseSubscreen } from "zois-core/ui";
 
 export class OneButtonMenu extends BaseSubscreen {
     private screenName: string;
@@ -25,6 +25,7 @@ export class OneButtonMenu extends BaseSubscreen {
     }
 
     load() {
+        super.load();
         this.createText({
             text: this.screenName,
             x: 100,
@@ -40,16 +41,16 @@ export class OneButtonMenu extends BaseSubscreen {
             fontSize: 8
         }).style.textAlign = "center";
 
-        const btn = this.createButton({
+        this.createButton({
             text: this.buttonText,
             x: 100,
             y: 800,
             padding: 4,
-            style: "inverted"
-        });
-        btn.addEventListener("click", () => {
-            this.onClick();
-            this.exit();
+            style: "inverted",
+            onClick: () => {
+                this.onClick();
+                this.exit();
+            }
         });
     }
 }

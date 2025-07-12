@@ -1,5 +1,5 @@
-import { colorsEqual } from "@/utils/main";
-import { hookFunction, HookPriority } from "./bcModSdk";
+import { colorsEqual } from "zois-core";
+import { hookFunction, HookPriority } from "zois-core/modsApi";
 import { modStorage } from "./storage";
 
 export interface StorageCyberDiaper {
@@ -12,12 +12,12 @@ export interface StorageCyberDiaper {
     property?: CraftingPropertyType
     drawingPriority?: AssetLayerOverridePriority
     changePermission?: CyberDiaperChangePermission
-    crotchColor?: string | null
 }
 
 export enum CyberDiaperModel {
     POOFY_DIAPER = "POOFY_DIAPER",
-    BULKY_DIAPER = "BULKY_DIAPER"
+    BULKY_DIAPER = "BULKY_DIAPER",
+    CRINKY_DIAPER = "CRINKY_DIAPER"
 }
 
 export enum CyberDiaperChangePermission {
@@ -45,6 +45,10 @@ export function getCyberDiaperModelName(model: CyberDiaperModel): string {
             return "Bulky Diaper";
         case CyberDiaperModel.POOFY_DIAPER:
             return "Poofy Diaper";
+        case CyberDiaperModel.CRINKY_DIAPER:
+            return "Crinky Diaper";
+        default:
+            return "Bulky Diaper";
     }
 }
 
@@ -54,6 +58,8 @@ export function getCyberDiaperAssetName(model: CyberDiaperModel): string {
             return "BulkyDiaper";
         case CyberDiaperModel.POOFY_DIAPER:
             return "PoofyDiaper";
+        case CyberDiaperModel.CRINKY_DIAPER:
+            return "UntrainersThin";
         default:
             return "BulkyDiaper";
     }
@@ -83,12 +89,6 @@ export function putCyberDiaperOn(): void {
 export function takeCyberDiaperOff(): void {
     InventoryRemove(Player, "ItemPelvis");
     ChatRoomCharacterItemUpdate(Player, "ItemPelvis");
-}
-
-export function setCyberDiaperCrotchColor(color: string | null): void {
-    if (!modStorage.cyberDiaper?.locked) return;
-    modStorage.cyberDiaper.crotchColor = color;
-    putCyberDiaperOn();
 }
 
 export function updateDiaperItem(): void {

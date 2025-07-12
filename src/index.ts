@@ -1,33 +1,52 @@
-import { hookFunction, HookPriority } from "./modules/bcModSdk";
-import { MOD_NAME, MOD_VERSION } from "./constants";
-import { loadUI } from "./modules/ui";
+import { hookFunction, HookPriority } from "zois-core/modsApi";
+import { MOD_NAME, REPO_URL } from "./constants";
 import styles from "./styles.css";
 import { initStorage, modStorage, syncStorage } from "./modules/storage";
 import { loadRules } from "./modules/rules";
 import { createApi } from "./modules/api";
 import { loadCyberDiaper } from "./modules/cyberDiaper";
-import { waitFor } from "./utils/main";
-import { chatSendChangelog } from "./utils/chat";
-import { loadMessaging } from "./modules/messaging";
+import { waitFor, registerCore, isVersionNewer, getRandomNumber } from "zois-core";
+import { toastsManager } from "zois-core/popups";
+import { version } from "../package.json";
+import { loadUI } from "./modules/ui";
+import { loadAccess } from "./modules/access";
+import { messagesManager } from "zois-core/messaging";
 
+
+registerCore({
+    name: "Littlish Club",
+    fullName: "Littlish Club",
+    key: "LC",
+    version,
+    repository: REPO_URL,
+    fontFamily: "Emilys Candy"
+});
 
 const init = () => {
     const style = document.createElement("style");
     style.innerHTML = styles;
     document.head.append(style);
+
     initStorage();
-    loadMessaging();
     createApi();
-    loadUI();
     loadRules();
     loadCyberDiaper();
-    console.log(`${MOD_NAME} loaded`);
+    loadUI();
+    loadAccess();
 
-    if (MOD_VERSION !== modStorage.version) {
+    console.log(`${MOD_NAME} v${version} loaded`);
+    toastsManager.success({
+        title: "Littlish Club loaded",
+        message: `v${version}`,
+        duration: 6000
+    });
+
+    if (isVersionNewer(version, modStorage.version)) {
         waitFor(() => !!document.getElementById("InputChat")).then(() => {
-            modStorage.version = MOD_VERSION;
+            modStorage.version = version;
             syncStorage();
-            chatSendChangelog();
+            const text = `<div class="lcChangelog"><b>Littlish Club</b> v${version}<br><br>Changes: <ul><li>Added 5 rules.</li><li>"Summoning rattle" feature.</li><li>Pop-up messages system.</li><li>Technical changes.</li></ul></div>`;
+            messagesManager.sendLocal(text);
         });
     }
 };
@@ -39,7 +58,7 @@ if (CurrentScreen == null || CurrentScreen === "Login") {
         if (
             typeof response?.Name === "string" &&
             typeof response?.AccountName === "string"
-        ) init();
+        ) setTimeout(init, getRandomNumber(3000, 6000));
     });
-} else init();
+} else setTimeout(init, getRandomNumber(3000, 6000));
 

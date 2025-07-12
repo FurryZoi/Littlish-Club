@@ -1,11 +1,7 @@
-import { MOD_NAME } from "@/constants";
-import { BaseSubscreen } from "./baseSubscreen";
-import { notify } from "@/modules/ui";
-import { MainMenu } from "./mainMenu";
-import { modStorage, syncStorage } from "@/modules/storage";
-import { CyberDiaperModel, getCyberDiaperAssetName, getCyberDiaperModelName, StorageCyberDiaper } from "@/modules/cyberDiaper";
-import { waitFor } from "@/utils/main";
-import { serverAppearanceBundleToAppearance } from "@/utils/characters";
+import { BaseSubscreen } from "zois-core/ui";
+import { CyberDiaperModel, getCyberDiaperAssetName, StorageCyberDiaper } from "@/modules/cyberDiaper";
+import { waitFor } from "zois-core";
+import { serverAppearanceBundleToAppearance } from "zois-core/wardrobe";
 import { CyberDiaperSettingsMenu } from "./cyberDiaperSettingsMenu";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
 
@@ -28,6 +24,7 @@ export class CyberDiaperChangeColorMenu extends BaseSubscreen {
     }
 
     async load() {
+        super.load();
         const asset = AssetGet(
             Player.AssetFamily,
             "ItemPelvis",
@@ -57,13 +54,6 @@ export class CyberDiaperChangeColorMenu extends BaseSubscreen {
         InventoryWear(this.canvasCharacter, asset.Name, asset.Group.Name, this.cyberDiaperSettings.color);
         CharacterRefresh(this.canvasCharacter);
 
-        this.createText({
-            text: this.name,
-            x: 100,
-            y: 60,
-            fontSize: 10
-        });
-
         let layerN = 0;
         asset.Layer.forEach((l) => {
             if (!l.AllowColorize || !ItemColorLayerNames.cache[`${asset.Group.Name}${asset.Name}${l.Name}`]) return;
@@ -74,21 +64,16 @@ export class CyberDiaperChangeColorMenu extends BaseSubscreen {
                 x: 100,
                 y: 220 + 100 * layerN,
                 width: 500,
-                height: 80
-            });
-            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER)) {
-                layerName.classList.add("lcDisabled");
-            }
-            layerName.addEventListener("click", () => {
-                if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER)) {
-                    return layerName.classList.add("lcDisabled");
+                height: 80,
+                isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
+                onClick: () => {
+                    const defaultColor = JSON.parse(JSON.stringify(asset.DefaultColor[n]));
+                    // @ts-ignore
+                    InventoryGet(this.canvasCharacter, asset.Group.Name).Color[n] = defaultColor;
+                    CharacterRefresh(this.canvasCharacter);
+                    this.cyberDiaperSettings.color[n] = defaultColor;
+                    layerColor.value = asset.DefaultColor[n];
                 }
-                const defaultColor = JSON.parse(JSON.stringify(asset.DefaultColor[n]));
-                // @ts-ignore
-                InventoryGet(this.canvasCharacter, asset.Group.Name).Color[n] = defaultColor;
-                CharacterRefresh(this.canvasCharacter);
-                this.cyberDiaperSettings.color[n] = defaultColor;
-                layerColor.value = asset.DefaultColor[n]
             });
 
             const layerColor = this.createInput({
@@ -98,25 +83,21 @@ export class CyberDiaperChangeColorMenu extends BaseSubscreen {
                 width: 200,
                 height: 80,
                 padding: 1,
-            });
-            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER)) {
-                layerColor.classList.add("lcDisabled");
-            }
-            layerColor.setAttribute("type", "color");
-            layerColor.addEventListener("change", () => {
-                if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER)) {
-                    return layerColor.classList.add("lcDisabled");
+                isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
+                onInput: () => {
+                    // @ts-ignore
+                    InventoryGet(this.canvasCharacter, asset.Group.Name).Color[n] = layerColor.value;
+                    CharacterRefresh(this.canvasCharacter);
+                    this.cyberDiaperSettings.color[n] = layerColor.value;
                 }
-                // @ts-ignore
-                InventoryGet(this.canvasCharacter, asset.Group.Name).Color[n] = layerColor.value;
-                CharacterRefresh(this.canvasCharacter);
-                this.cyberDiaperSettings.color[n] = layerColor.value;
             });
+            layerColor.setAttribute("type", "color");
             layerN++;
         });
     }
 
     exit() {
+        super.exit();
         this.setSubscreen(new CyberDiaperSettingsMenu(this.cyberDiaperSettings));
     }
 }

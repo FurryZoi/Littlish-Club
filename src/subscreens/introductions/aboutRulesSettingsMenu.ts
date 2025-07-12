@@ -1,4 +1,4 @@
-import { BaseSubscreen } from "@/subscreens/baseSubscreen";
+import { BaseSubscreen } from "zois-core/ui";
 import { RuleSettingsMenu } from "@/subscreens/ruleSettingsMenu";
 import { Rule, StorageRule } from "@/modules/rules";
 
@@ -17,12 +17,7 @@ export class AboutRulesSettingsMenu extends BaseSubscreen {
     }
 
     load() {
-        this.createText({
-            text: this.name,
-            x: 100,
-            y: 60,
-            fontSize: 10
-        });
+        super.load();
 
         this.createButton({
             text: this.ruleSettings.state ? "State: Enabled" : "State: Disabled",
@@ -76,6 +71,7 @@ export class AboutRulesSettingsMenu extends BaseSubscreen {
     }
 
     exit() {
+        super.exit();
         this.setSubscreen(new RuleSettingsMenu(this.rule, this.ruleSettings));
     }
 }

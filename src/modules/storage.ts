@@ -1,14 +1,14 @@
-import { MOD_VERSION } from "@/constants";
-import { chatSendLocal, chatSendModMessage, handleRequest, handleRequestResponse } from "@/utils/chat";
-import { findModByName, hookFunction, HookPriority } from "./bcModSdk";
-import { getNickname, getPlayer } from "@/utils/characters";
+import { version } from "@/../package.json";
+import { messagesManager } from "zois-core/messaging";
+import { findModByName, hookFunction, HookPriority } from "zois-core/modsApi";
+import { getNickname, getPlayer } from "zois-core";
 import { isRuleStrict, rulesList, StorageRule } from "./rules";
 import { AccessRight, caregiverAccessRightsList, getCaregiversOf, hasAccessRightTo, hasMommy, isCaregiverAccessRightEnabled, isCaregiverOf, isMommyOf, turnCaregiverAccessRight } from "./access";
-import { currentSubscreen } from "@/subscreens/baseSubscreen";
+import { getCurrentSubscreen } from "zois-core/ui";
 import { CyberDiaperChangePermission, putCyberDiaperOn, StorageCyberDiaper, updateDiaperItem } from "./cyberDiaper";
 import { addLog, Log } from "./logs";
 import { cloneDeep } from "lodash-es";
-import { SyncStorageMessageData } from "./messaging";
+import { SyncStorageMessageData } from "@/types/messages";
 
 export interface Note {
     text: string
@@ -53,7 +53,7 @@ export let modStorage: ModStorage;
 
 export function initStorage(): void {
     const data = {
-        version: MOD_VERSION,
+        version
     };
 
     if (typeof Player.ExtensionSettings.LITTLISH_CLUB === "string") {
@@ -81,9 +81,25 @@ export function initStorage(): void {
 
     hookFunction("ChatRoomSync", HookPriority.ADD_BEHAVIOR, (args, next) => {
         next(args);
-        chatSendModMessage<SyncStorageMessageData>("syncStorage", {
+        messagesManager.sendPacket<SyncStorageMessageData>("syncStorage", {
             storage: deleteProtectedProperties(modStorage),
         });
+    });
+
+    messagesManager.onPacket("syncStorage", (data, sender) => {
+        if (!sender.LITTLISH_CLUB) {
+            messagesManager.sendPacket<SyncStorageMessageData>("syncStorage", {
+                storage: deleteProtectedProperties(modStorage),
+            }, sender.MemberNumber);
+        }
+        sender.LITTLISH_CLUB = data.storage;
+        if (
+            InformationSheetSelection &&
+            InformationSheetSelection.MemberNumber === sender.MemberNumber &&
+            window.LITTLISH_CLUB.inModSubscreen()
+        ) {
+            getCurrentSubscreen().update();
+        }
     });
 
     // window.modStorage = modStorage;
@@ -133,7 +149,7 @@ function bccAbdlPartSync(oldAbdlData: Record<string, any>): void {
     Player.ExtensionSettings.BCC = LZString.compressToBase64(JSON.stringify(bccStorage));
     ServerPlayerExtensionSettingsSync("BCC");
     syncStorage();
-    chatSendLocal("Littlish Club was synced with BCC's ABDL module");
+    messagesManager.sendLocal("Littlish Club was synced with BCC's ABDL module");
 }
 
 export function deleteProtectedProperties(data: ModStorage): PublicModStorage {
@@ -146,14 +162,14 @@ export function syncStorage(): void {
     if (typeof modStorage !== "object") return;
     Player.ExtensionSettings.LITTLISH_CLUB = LZString.compressToBase64(JSON.stringify(modStorage));
     ServerPlayerExtensionSettingsSync("LITTLISH_CLUB");
-    chatSendModMessage<SyncStorageMessageData>("syncStorage", {
+    messagesManager.sendPacket<SyncStorageMessageData>("syncStorage", {
         storage: deleteProtectedProperties(modStorage),
     });
 }
 
 export function resetStorage(): void {
     modStorage = {
-        version: MOD_VERSION
+        version
     };
     syncStorage();
 }

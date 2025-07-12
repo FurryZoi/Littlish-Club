@@ -1,4 +1,4 @@
-import { BaseSubscreen } from "@/subscreens/baseSubscreen";
+import { BaseSubscreen } from "zois-core/ui";
 import { WardrobeMenu } from "../wardrobeMenu";
 import { DISCORD_SERVER_LW_OUTFITS_CHANNEL_LINK } from "@/constants";
 
@@ -23,12 +23,7 @@ export class AboutWardrobeMenu extends BaseSubscreen {
     }
 
     load() {
-        this.createText({
-            text: this.name,
-            x: 100,
-            y: 60,
-            fontSize: 10
-        });
+        super.load();
 
         this.createText({
             text: `<b>Littlish Wardrobe</b> is library of cute ABDL-themed outfits. Want to see your outfit there? Join our discord and send the base64 code of the outfit in <a href="${DISCORD_SERVER_LW_OUTFITS_CHANNEL_LINK}" target="_blank">this channel</a> and don't forget to specify your name.`,
@@ -50,6 +45,7 @@ export class AboutWardrobeMenu extends BaseSubscreen {
     }
 
     exit() {
+        super.exit();
         this.setSubscreen(new WardrobeMenu(this.currentAppearance));
     }
 }

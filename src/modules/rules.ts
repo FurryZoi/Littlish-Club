@@ -1,11 +1,16 @@
-import { chatSendActionMessage, chatSendLocal } from "@/utils/chat";
-import { hookFunction, HookPriority } from "./bcModSdk";
+import { messagesManager } from "zois-core/messaging";
+import { hookFunction, HookPriority } from "zois-core/modsApi";
 import { ModStorage, modStorage, syncStorage } from "./storage";
 import { extendedABDLItemNames, MOD_NAME } from "@/constants";
-import { getRandomNumber } from "@/utils/main";
-import { getNickname, getPlayer } from "@/utils/characters";
+import { getRandomNumber } from "zois-core";
+import { getNickname, getPlayer } from "zois-core";
 import paciferImage from "@/images/pacifier.png";
-import { notify } from "./ui";
+import { setSubscreen } from "zois-core/ui";
+import { ItemListMenu } from "@/subscreens/common/itemListMenu";
+import { RuleSettingsMenu } from "@/subscreens/ruleSettingsMenu";
+import { toastsManager } from "zois-core/popups";
+import { AccessRight, getCaregiversOf, getMommyOf, hasAccessRightTo } from "./access";
+import { DictMenu } from "@/subscreens/common/dictMenu";
 
 
 const dialogMenuButtonClickHooks = new Map();
@@ -89,8 +94,8 @@ export const rulesList: Rule[] = [
     },
     {
         id: 1011,
-        name: "Control nickname",
-        description: "Control nickname",
+        name: "Force nickname",
+        description: "Force nickname",
         data: [
             {
                 name: "nickname",
@@ -133,13 +138,139 @@ export const rulesList: Rule[] = [
         data: [
             {
                 name: "roomNames",
-                type: "text",
+                type: "list",
+                listNumbersOnly: false,
                 text: "Room names"
             },
             {
                 name: "whitelistMode",
                 type: "checkbox",
                 text: "Whitelist mode"
+            }
+        ]
+    },
+    {
+        id: 1016,
+        name: "Force title",
+        description: "Forces title for baby",
+        data: [
+            {
+                name: "title",
+                type: "extended",
+                text: "Title",
+                get: async (rule, ruleSettings) => {
+                    let titles: TitleName[];
+                    if (InformationSheetSelection.IsPlayer()) {
+                        titles = TitleList.filter((t) => t.Requirement()).map((t) => t.Name);
+                    } else {
+                        const spinnerId = toastsManager.spinner({
+                            message: "Loading titles"
+                        });
+                        const res = await messagesManager.sendRequest<TitleName[]>({
+                            message: "getValidTitles",
+                            target: InformationSheetSelection.MemberNumber,
+                            type: "packet"
+                        });
+                        toastsManager.removeSpinner(spinnerId);
+                        if (res.isError) {
+                            return toastsManager.error({
+                                message: "Loading error",
+                                duration: 4000
+                            });
+                        }
+                        titles = res.data;
+                    }
+                    setSubscreen(
+                        new ItemListMenu({
+                            screenName: "Pick title you want to force",
+                            items: titles.map((t) => {
+                                return {
+                                    text: TextGet("Title" + t),
+                                    value: t
+                                };
+                            }),
+                            columns: "1fr 1fr 1fr",
+                            onExit: () => {
+                                setSubscreen(new RuleSettingsMenu(rule, ruleSettings));
+                            },
+                            onClick: (title: string) => {
+                                if (!ruleSettings.data) ruleSettings.data = {};
+                                ruleSettings.data.title = title;
+                                setSubscreen(new RuleSettingsMenu(rule, ruleSettings));
+                            }
+                        })
+                    );
+                },
+                validate: (value) => typeof value === "string" && !!TitleList.find((t) => t.Name === value)
+            }
+        ]
+    },
+    {
+        id: 1017,
+        name: "Show custom names",
+        description: "Replaces characters real name with custom ones",
+        data: [
+            {
+                name: "customNames",
+                text: "Custom names",
+                type: "extended",
+                get: (rule, ruleSettings) => {
+                    setSubscreen(
+                        new DictMenu({
+                            screenName: "Enter custom names",
+                            keyName: "Member number",
+                            valueName: "Custom name",
+                            keyNumberOnly: true,
+                            valueNumberOnly: false,
+                            items: ruleSettings.data?.customNames ?? {},
+                            onExit: () => {
+                                setSubscreen(new RuleSettingsMenu(rule, ruleSettings));
+                            },
+                            onSave: (customNames) => {
+                                if (!ruleSettings.data) ruleSettings.data = {};
+                                ruleSettings.data.customNames = customNames;
+                                setSubscreen(new RuleSettingsMenu(rule, ruleSettings));
+                            }
+                        })
+                    );
+                },
+                validate: (value) => {
+                    return (
+                        Object.keys(value)?.every((d) => !Number.isNaN(parseInt(d))) &&
+                        Object.values(value)?.every((d) => typeof d === "string")
+                    );
+                }
+            }
+        ]
+    },
+    {
+        id: 1018,
+        name: "Prevent freeing self",
+        description: "Prevents baby from removing restraints from themselves"
+    },
+    {
+        id: 1019,
+        name: "Prevent using certain chat commands",
+        description: "Prevents baby using certain chat commands",
+        data: [
+            {
+                name: "commands",
+                text: "Commands",
+                type: "list",
+                listNumbersOnly: false
+            }
+        ]
+    },
+    {
+        id: 1020,
+        name: "Summoning rattle",
+        description: "Activates the feature to summon baby from any chat room",
+        data: [
+            {
+                name: "timeout",
+                text: "Timeout in seconds (Default: 5)",
+                type: "number",
+                min: 1
             }
         ]
     }
@@ -161,7 +292,12 @@ export enum RuleId {
     PREVENT_USING_BONDAGE_ON_OTHER = 1012,
     PREVENT_jOINING_ABDL_BLOCKED_ROOMS = 1013,
     PREVENT_APPLYING_OUTFITS_FROM_LITTLISH_WARDROBE_ON_SELF = 1014,
-    PREVENT_JOINING_CERTAIN_ROOMS = 1015
+    PREVENT_JOINING_CERTAIN_ROOMS = 1015,
+    FORCE_TITLE = 1016,
+    SHOW_CUSTOM_NAMES = 1017,
+    PREVENT_FREEING_SELF = 1018,
+    PREVENT_USING_CERTAIN_CHAT_COMMANDS = 1019,
+    SUMMONING_RATTLE = 1020
 }
 
 export interface Rule {
@@ -171,10 +307,13 @@ export interface Rule {
     data?: {
         name: string
         text: string
-        type: "text" | "number" | "checkbox" | "color"
+        type: "text" | "number" | "checkbox" | "color" | "list" | "extended"
         min?: number
         max?: number
         step?: number
+        listNumbersOnly?: boolean
+        get?: (rule: Rule, ruleSettings: StorageRule) => void
+        validate?: (value: unknown) => boolean
     }[]
 }
 
@@ -184,7 +323,7 @@ export interface StorageRule {
     strict: boolean
     changedBy: number
     ts: number
-    data?: Record<string, string | number | boolean>
+    data?: Record<string, unknown>
     conditions?: {
         type?: "all" | "any"
         whenInRoomWithRole?: {
@@ -321,11 +460,14 @@ function chatRoomSearchCanJoinRoom(room: ChatRoomSearchResult): [boolean, string
             `Rule "${rulesList.find((r) => r.id === RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS).name}" prevented you from joining that room`
         ];
     }
+    if (!isRuleActive(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS)) return [true, ""];
+    const roomNames = ((getRuleParameter(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS, "roomNames") ?? []) as string[])
+        .map((n) => n.trim().toLowerCase());
+    const whitelistMode = getRuleParameter(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS, "whitelistMode");
     if (
-        isRuleActive(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS) &&
-            getRuleParameter(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS, "whitelistMode") ?
-            !getRuleParameter(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS, "roomNames")?.split(",").map((n) => n.trim().toLowerCase()).includes(room.Name.toLowerCase())
-            : getRuleParameter(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS, "roomNames")?.split(",").map((n) => n.trim().toLowerCase()).includes(room.Name.toLowerCase())
+        whitelistMode ?
+            !roomNames.includes(room.Name.toLowerCase())
+            : roomNames.includes(room.Name.toLowerCase())
     ) {
         return [
             false,
@@ -340,14 +482,20 @@ export function loadRules(): void {
         const item = InventoryGet(Player, Player.FocusGroup?.Name);
         if (!item) return;
         const itemName = item.Craft ? item.Craft.Name : item.Asset.Description;
-        if (
+        if (isRuleActive(Player, RuleId.PREVENT_FREEING_SELF) && item?.Asset?.IsRestraint) {
+            messagesManager.sendAction(
+                `Baby ${CharacterNickname(
+                    Player
+                )} helplessly tried to remove ${itemName}`
+            );
+        } else if (
             (
                 item?.Asset?.Category?.includes("ABDL") ||
                 extendedABDLItemNames.includes(item?.Asset?.Name)
             ) &&
             isRuleActive(Player, RuleId.PREVENT_TAKING_ABDL_ITEMS_OFF)
         ) {
-            chatSendActionMessage(
+            messagesManager.sendAction(
                 `Baby ${CharacterNickname(
                     Player
                 )} tried to remove ${itemName} without mommy's permission`
@@ -380,6 +528,36 @@ export function loadRules(): void {
         attempt
     );
 
+    messagesManager.onRequest("getValidTitles", (data, sender: Character) => {
+        if (!hasAccessRightTo(sender, Player, AccessRight.MANAGE_RULES)) return;
+        const titles = TitleList.filter((t) => t.Requirement()).map((t) => t.Name);
+        console.log(titles);
+        return titles;
+    });
+
+    messagesManager.onRequest("summon", (data, senderNumber: MemberNumber, senderName) => {
+        if (getMommyOf(Player)?.id !== senderNumber && !getCaregiversOf(Player).includes(senderNumber)) return;
+        if (!isRuleActive(Player, RuleId.SUMMONING_RATTLE)) return;
+        if (typeof data?.roomName !== "string") return;
+        toastsManager.info({
+            title: "Summoning",
+            message: `${senderName} summoned you, you will be moved in ${getRuleParameter(Player, RuleId.SUMMONING_RATTLE, "timeout") ?? "5"}s`,
+            duration: 6000
+        });
+        setTimeout(() => {
+            if (ServerPlayerIsInChatRoom()) {
+                messagesManager.sendChat(`${CharacterNickname(Player)} was summoned.`);
+                ChatRoomLeave();
+                CommonSetScreen("Online", "ChatSearch");
+            }
+            ChatSearchLastQueryJoinTime = CommonTime();
+            ChatSearchLastQueryJoin = data.roomName;
+            ServerSend("ChatRoomJoin", { Name: data.roomName });
+        }, (getRuleParameter(Player, RuleId.SUMMONING_RATTLE, "timeout") ?? 5) as number * 1000);
+        return {
+            success: true
+        };
+    });
 
     hookFunction("Player.CanChangeToPose", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
         if (
@@ -430,7 +608,7 @@ export function loadRules(): void {
             ["Chat", "Whisper"].includes(params.Type) &&
             params.Content[0] !== "("
         ) {
-            if (isSleeping(Player)) return chatSendLocal("You are asleep, use OOC to speak");
+            if (isSleeping(Player)) return messagesManager.sendLocal("You are asleep, use OOC to speak");
             if (isRuleActive(Player, RuleId.SPEAK_LIKE_BABY)) {
                 if (getRuleParameter<boolean>(Player, RuleId.SPEAK_LIKE_BABY, "altSpeech")) {
                     params.Content = alternativeBabyTalk(params.Content);
@@ -589,8 +767,8 @@ export function loadRules(): void {
                     ChatRoomCharacterUpdate(Player);
                     modStorage.sleepState = true;
                     syncStorage();
-                    chatSendLocal("You fall asleep");
-                    chatSendActionMessage(`${getNickname(Player)} fell asleep, only spank or french kiss can wake <intensive> up`);
+                    messagesManager.sendLocal("You fall asleep");
+                    messagesManager.sendAction(`${getNickname(Player)} fell asleep, only spank or french kiss can wake <intensive> up`);
                 }, getRandomNumber(6000, 8000));
             }, getRandomNumber(6000, 10000));
         }
@@ -658,10 +836,18 @@ export function loadRules(): void {
             C.IsPlayer() &&
             item &&
             (
-                item?.Asset?.Category?.includes("ABDL") ||
-                extendedABDLItemNames.includes(item?.Asset?.Name)
-            ) &&
-            isRuleActive(Player, RuleId.PREVENT_TAKING_ABDL_ITEMS_OFF)
+                (
+                    (
+                        item?.Asset?.Category?.includes("ABDL") ||
+                        extendedABDLItemNames.includes(item?.Asset?.Name)
+                    ) &&
+                    isRuleActive(Player, RuleId.PREVENT_TAKING_ABDL_ITEMS_OFF)
+                ) ||
+                (
+                    isRuleActive(Player, RuleId.PREVENT_FREEING_SELF) &&
+                    item?.Asset?.IsRestraint
+                )
+            )
         ) {
             {
                 const removeIndex = DialogMenuButton.indexOf("Remove");
@@ -769,7 +955,7 @@ export function loadRules(): void {
                 mutation.addedNodes.forEach((node: HTMLElement) => {
                     if (node.nodeType === Node.ELEMENT_NODE && node.tagName === "INPUT") {
                         if (node.classList.contains("checkbox")) {
-                            node.classList.add("paciCheckbox")
+                            node.classList.add("paciCheckbox");
                         }
                     }
                 });
@@ -806,6 +992,12 @@ export function loadRules(): void {
                 PoseSetActive(Player, "Kneel", true);
                 ChatRoomCharacterUpdate(Player);
             }
+            if (
+                isRuleActive(Player, RuleId.FORCE_TITLE) &&
+                Player.Title !== (getRuleParameter(Player, RuleId.FORCE_TITLE, "title") ?? Player.Title)
+            ) {
+                TitleSet(getRuleParameter(Player, RuleId.FORCE_TITLE, "title"));
+            }
             timerLastRulesCycleCall = CommonTime();
         }
         return next(args);
@@ -820,7 +1012,10 @@ export function loadRules(): void {
             if (!MouseIn(x, y, width, height)) return false;
             const canJoinResult = chatRoomSearchCanJoinRoom(room);
             if (!canJoinResult[0]) {
-                notify(canJoinResult[1], 5000);
+                toastsManager.error({
+                    message: canJoinResult[1],
+                    duration: 5000
+                });
                 return false;
             }
             const RoomName = room.Name;
@@ -847,5 +1042,36 @@ export function loadRules(): void {
             }
             return false;
         });
+    });
+
+    hookFunction("TitleIsForced", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (!!InformationSheetSelection && isRuleActive(InformationSheetSelection, RuleId.FORCE_TITLE)) return true;
+        return next(args);
+    });
+
+    hookFunction("CommandExecute", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (!isRuleActive(Player, RuleId.PREVENT_USING_CERTAIN_CHAT_COMMANDS)) return next(args);
+        let trigger = false;
+        (getRuleParameter<string[]>(Player, RuleId.PREVENT_USING_CERTAIN_CHAT_COMMANDS, "commands") ?? []).forEach((c) => {
+            if (args[0].startsWith(c)) {
+                messagesManager.sendAction(
+                    `${getNickname(
+                        Player
+                    )} tried to use blocked command ${c}`
+                );
+                trigger = true;
+                return;
+            }
+        });
+        if (trigger) return false;
+        return next(args);
+    });
+
+    hookFunction("CharacterNickname", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (!isRuleActive(Player, RuleId.SHOW_CUSTOM_NAMES)) return next(args);
+        if (typeof getRuleParameter(Player, RuleId.SHOW_CUSTOM_NAMES, "customNames")?.[args[0].MemberNumber] === "string") {
+            return getRuleParameter(Player, RuleId.SHOW_CUSTOM_NAMES, "customNames")?.[args[0].MemberNumber];
+        }
+        return next(args);
     });
 }

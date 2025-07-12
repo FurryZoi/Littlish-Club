@@ -1,15 +1,15 @@
 import { modStorage, syncStorage } from "@/modules/storage";
-import { BaseSubscreen } from "./baseSubscreen";
+import { BaseSubscreen } from "zois-core/ui";
 import { CaregiversPermissionsMenu } from "./caregiversPermissionsMenu";
 import { MainMenu } from "./mainMenu";
 import { AccessRight, getCaregiversOf, getMommyOf, hasAccessRightTo, hasMommy } from "@/modules/access";
-import { chatSendModMessage } from "@/utils/chat";
+import { messagesManager } from "zois-core/messaging";
 import { addLog } from "@/modules/logs";
-import { getNickname } from "@/utils/characters";
-import { ChangeCaregiversListMessageData } from "@/modules/messaging";
+import { getNickname } from "zois-core";
+import { ChangeCaregiversListMessageData } from "@/types/messages";
 
 export class FamilyMenu extends BaseSubscreen {
-    private getCaregiversInputValue: () => number[];
+    private caregiversInputValue: number[];
     private oldCaregiversList: number[];
 
     get name() {
@@ -21,28 +21,21 @@ export class FamilyMenu extends BaseSubscreen {
     }
 
     load() {
+        super.load();
         this.oldCaregiversList = getCaregiversOf(InformationSheetSelection);
+        this.caregiversInputValue = this.oldCaregiversList;
 
-        this.createText({
-            text: this.name,
-            x: 100,
-            y: 60,
-            fontSize: 10
-        });
-
-        const [caregiversInput, getCaregiversInputValue] = this.createInputList({
+        this.createInputList({
             title: "Caregivers member numbers",
             value: getCaregiversOf(InformationSheetSelection),
             x: 1000,
             y: 200,
             width: 850,
             height: 600,
-            numbersOnly: true
+            numbersOnly: true,
+            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST),
+            onChange: (value) => this.caregiversInputValue = value as number[]
         });
-        this.getCaregiversInputValue = getCaregiversInputValue as () => number[];
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)) {
-            caregiversInput.classList.add("lcDisabled");
-        }
 
         const caregiversPermissionsBtn = this.createButton({
             text: "Caregivers permissions",
@@ -61,38 +54,34 @@ export class FamilyMenu extends BaseSubscreen {
             y: 300
         }).style.fontWeight = "bold";
 
-        const checkBox = this.createCheckbox({
+        this.createCheckbox({
             text: "Prevent baby from changing caregivers list",
             x: 150,
             y: 400,
             width: 600,
             isChecked: InformationSheetSelection.IsPlayer() ?
                 !modStorage.caregivers?.canChangeList
-                : !InformationSheetSelection.LITTLISH_CLUB?.caregivers?.canChangeList
-        });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST)) {
-            checkBox.classList.add("lcDisabled");
-        }
-        checkBox.addEventListener("change", () => {
-            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST)) {
-                return checkBox.classList.add("lcDisabled");
-            }
-            if (InformationSheetSelection.IsPlayer()) {
-                if (!modStorage.caregivers) modStorage.caregivers = {};
-                modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
-                addLog(
-                    `${getNickname(Player)} (${Player.MemberNumber}) ${modStorage.caregivers.canChangeList ? "allowed" : "forbade"
-                    } ${getNickname(Player)} to change caregivers list`,
-                    false
-                );
-            } else {
-                chatSendModMessage("turnCanChangeCaregiversList", null, InformationSheetSelection.MemberNumber);
+                : !InformationSheetSelection.LITTLISH_CLUB?.caregivers?.canChangeList,
+            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST),
+            onChange: () => {
+                if (InformationSheetSelection.IsPlayer()) {
+                    if (!modStorage.caregivers) modStorage.caregivers = {};
+                    modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
+                    addLog(
+                        `${getNickname(Player)} (${Player.MemberNumber}) ${modStorage.caregivers.canChangeList ? "allowed" : "forbade"
+                        } ${getNickname(Player)} to change caregivers list`,
+                        false
+                    );
+                } else {
+                    messagesManager.sendPacket("turnCanChangeCaregiversList", null, InformationSheetSelection.MemberNumber);
+                }
             }
         });
     }
 
     exit() {
-        const newCaregiversList = this.getCaregiversInputValue();
+        super.exit();
+        const newCaregiversList = this.caregiversInputValue;
         if (
             this.oldCaregiversList.join(",") !== newCaregiversList.join(",") &&
             hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)
@@ -102,7 +91,7 @@ export class FamilyMenu extends BaseSubscreen {
                 modStorage.caregivers.list = newCaregiversList;
                 addLog(`${getNickname(Player)} (${Player.MemberNumber}) changed caregivers list`, false);
             } else {
-                chatSendModMessage<ChangeCaregiversListMessageData>("changeCaregiversList", {
+                messagesManager.sendPacket<ChangeCaregiversListMessageData>("changeCaregiversList", {
                     list: newCaregiversList
                 }, InformationSheetSelection.MemberNumber);
             }

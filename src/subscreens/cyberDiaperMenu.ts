@@ -1,10 +1,9 @@
-import { MOD_NAME } from "@/constants";
-import { BaseSubscreen } from "./baseSubscreen";
-import { notify } from "@/modules/ui";
+import { BaseSubscreen } from "zois-core/ui";
 import { CyberDiaperSettingsMenu } from "./cyberDiaperSettingsMenu";
 import { modStorage, syncStorage } from "@/modules/storage";
 import { CyberDiaperModel } from "@/modules/cyberDiaper";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
+import { toastsManager } from "zois-core/popups";
 
 export class CyberDiaperMenu extends BaseSubscreen {
     get name() {
@@ -16,12 +15,7 @@ export class CyberDiaperMenu extends BaseSubscreen {
     }
 
     load() {
-        this.createText({
-            text: this.name,
-            x: 100,
-            y: 60,
-            fontSize: 10
-        });
+        super.load();
 
         this.createText({
             text: `I believe that babies should wear a reliable diaper 24/7 and that it should be convenient to change it. I present to you my latest development - CYBER DIAPER.`,
@@ -39,31 +33,26 @@ export class CyberDiaperMenu extends BaseSubscreen {
             fontSize: 6
         }).style.textAlign = "center";
 
-        const buyBtn = this.createButton({
+        this.createButton({
             text: "Buy Cyber Diaper for 499$",
             x: 500,
             y: 800,
             width: 1000,
             padding: 2,
-            fontSize: 8
-        });
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER)) {
-            buyBtn.classList.add("lcDisabled");
-        }
-        buyBtn.addEventListener("click", () => {
-            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER)) {
-                return buyBtn.classList.add("lcDisabled");
+            fontSize: 8,
+            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
+            onClick: () => {
+                if (Player.Money < 499) return toastsManager.error({ message: "Not enough money.", duration: 3000 });
+                CharacterChangeMoney(Player, -499);
+                toastsManager.success({ message: "Successfully bought Cyber Diaper.", duration: 4000 });
+                modStorage.cyberDiaper = {
+                    name: "Default diaper name",
+                    description: "Default diaper description",
+                    model: CyberDiaperModel.BULKY_DIAPER
+                };
+                syncStorage();
+                this.setSubscreen(new CyberDiaperSettingsMenu());
             }
-            if (Player.Money < 499) return notify("Not enough money.");
-            CharacterChangeMoney(Player, -499);
-            notify("Successfully bought Cyber Diaper.");
-            modStorage.cyberDiaper = {
-                name: "Default diaper name",
-                description: "Default diaper description",
-                model: CyberDiaperModel.BULKY_DIAPER
-            };
-            syncStorage();
-            this.setSubscreen(new CyberDiaperSettingsMenu());
         });
     }
 }

@@ -1,7 +1,3 @@
-/* @font-face {
-    font-family: HellooDarling;
-    src: url("http://127.0.0.1:5500/dist/BabyCrab.otf");
-} */
 @import url('https://fonts.googleapis.com/css2?family=Emilys+Candy&display=swap');
 
 * {
@@ -10,63 +6,22 @@
     box-sizing: border-box;
 }
 
-.lcButton {
-    cursor: pointer;
-    background: var(--tmd-element, white);
-    font-family: "Emilys Candy";
-    color: var(--tmd-text, black);
-    border: 2px solid var(--tmd-accent, black);
-    border-radius: 4px;
-}
-
-.lcButton:hover {
-    background: var(--tmd-element-hover, #ebf7fe);
-    border-color: var(--tmd-accent-hover, #7dd3fc);
-    color: var(--tmd-accent-hover, #015a8c);
-}
-
-.lcButton[data-lc-style="green"] {
-    background: rgb(124, 255, 124);
-    border-color: rgb(82, 204, 82);
-    color: black;
-}
-
-.lcButton[data-lc-style="green"]:hover {
-    background: rgb(94, 197, 94);
-    color: black;
-}
-
-.lcButton[data-lc-style="inverted"] {
-    background: var(--tmd-accent, #303030);
-    border: none;
-    color: var(--tmd-text, white);
-}
-
-.lcButton[data-lc-style="inverted"]:hover {
-    background: var(--tmd-accent-hover, #474747);
-}
-
-.lcInput {
-    background: var(--tmd-element, white);
-    font-family: Emilys Candy;
-    color: var(--tmd-text, black);
-    padding: 2vw;
-    border: 2px solid var(--tmd-accent, black);
-    border-radius: 4px;
-}
-
-.lcInput::placeholder {
-    color: var(--tmd-text, black);
-}
-
-.lcDisabled {
-    pointer-events: none;
-    opacity: 0.6;
-}
-
 .paciCheckbox::before {
 	background-image: url("https://raw.githubusercontent.com/FurryZoi/Littlish-Club/refs/heads/main/src/images/pacifier.png") !important;
 	background-size: cover !important;
     clip-path: none !important;
     background-color: unset !important;
+}
+
+.lcChangelog {
+    font-family: Comfortaa, sans-serif;
+    padding: 0.25em;
+}
+
+.lcChangelog ul {
+    padding-left: 1em;
+}
+
+.lcChangelog ul li {
+    padding: 0.5em 0;
 }

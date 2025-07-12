@@ -1,18 +1,11 @@
-import { hookFunction, HookPriority } from "@/modules/bcModSdk";
+import { hookFunction, HookPriority } from "zois-core/modsApi";
 import milkBottle from "@/images/milk-bottle.png";
 import { MOD_BUTTON_POSITION, MOD_NAME } from "@/constants";
-import { currentSubscreen, setPreviousSubscreen, setSubscreen } from "@/subscreens/baseSubscreen";
+import { getCurrentSubscreen, setPreviousSubscreen, setSubscreen } from "zois-core/ui";
 import { MainMenu } from "@/subscreens/mainMenu";
 import { modStorage } from "./storage";
 import { AcceptRequestMenu } from "@/subscreens/acceptRequestMenu";
 
-
-export function notify(message: string, time: number = 4000): void {
-    ServerBeep = {
-        Message: message,
-        Timer: Date.now() + time
-    };
-}
 
 export function loadUI(): void {
     hookFunction("InformationSheetRun", HookPriority.TOP, (args, next) => {
@@ -33,7 +26,7 @@ export function loadUI(): void {
             );
         }
         if (window.LITTLISH_CLUB.inModSubscreen()) {
-            return currentSubscreen.run();
+            return getCurrentSubscreen().run();
         }
         next(args);
     });
@@ -54,14 +47,14 @@ export function loadUI(): void {
             else setSubscreen(new MainMenu());
         }
         if (window.LITTLISH_CLUB.inModSubscreen()) {
-            return currentSubscreen.click();
+            return getCurrentSubscreen().click();
         }
         next(args);
     });
 
     hookFunction("InformationSheetExit", HookPriority.OBSERVE, (args, next) => {
         if (window.LITTLISH_CLUB.inModSubscreen()) {
-            return currentSubscreen.exit();
+            return getCurrentSubscreen().exit();
         }
         next(args);
     });

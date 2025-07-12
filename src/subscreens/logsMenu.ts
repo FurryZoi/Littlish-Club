@@ -1,12 +1,12 @@
 import { modStorage, Note, syncStorage } from "@/modules/storage";
-import { BaseSubscreen } from "./baseSubscreen";
+import { BaseSubscreen } from "zois-core/ui";
 import { NoteSettingsMenu } from "./noteSettingsMenu";
 import { MainMenu } from "./mainMenu";
-import { chatSendModMessage, sendRequest } from "@/utils/chat";
+import { messagesManager } from "zois-core/messaging";
 import { addLog, Log } from "@/modules/logs";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
-import { getNickname } from "@/utils/characters";
-import { DeleteLogsMessageData } from "@/modules/messaging";
+import { getNickname } from "zois-core";
+import { DeleteLogsMessageData } from "@/types/messages";
 
 
 export class LogsMenu extends BaseSubscreen {
@@ -21,12 +21,7 @@ export class LogsMenu extends BaseSubscreen {
     }
 
     async load() {
-        this.createText({
-            text: this.name,
-            x: 100,
-            y: 60,
-            fontSize: 10
-        });
+        super.load();
 
         if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.READ_LOGS)) {
             return this.createText({
@@ -51,7 +46,11 @@ export class LogsMenu extends BaseSubscreen {
                 fontSize: 8
             });
             statusText.style.textAlign = "center";
-            const res = await sendRequest<Log[]>("getLogs", null, InformationSheetSelection.MemberNumber);
+            const res = await messagesManager.sendRequest<Log[]>({
+                message: "getLogs",
+                type: "packet",
+                target: InformationSheetSelection.MemberNumber
+            });
             if (res.isError) return statusText.textContent = "Loading Error :(";
             statusText.remove();
             logs = res.data;
@@ -79,63 +78,54 @@ export class LogsMenu extends BaseSubscreen {
             x: 150,
             y: 845,
             width: 840,
-            padding: 2
-        });
-        deleteLogsInput.setAttribute("type", "number");
-        deleteLogsInput.addEventListener("input", () => {
-            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_LOGS)) {
-                return deleteLogsInput.classList.add("lcDisabled");
-            }
-            if (parseInt(deleteLogsInput.value) > scrollView.children.length) deleteLogsInput.value = String(scrollView.children.length);
-            if (parseInt(deleteLogsInput.value) < 0) deleteLogsInput.value = "0";
-            for (const c of [...scrollView.children]) {
-                const style = c.getAttribute("style");
-                if (style.includes("border: 2px solid red;")) {
-                    c.setAttribute("style", style.replaceAll("border: 2px solid red;", ""));
+            padding: 2,
+            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_LOGS),
+            onInput: () => {
+                if (parseInt(deleteLogsInput.value) > scrollView.children.length) deleteLogsInput.value = String(scrollView.children.length);
+                if (parseInt(deleteLogsInput.value) < 0) deleteLogsInput.value = "0";
+                for (const c of [...scrollView.children]) {
+                    const style = c.getAttribute("style");
+                    if (style.includes("border: 2px solid red;")) {
+                        c.setAttribute("style", style.replaceAll("border: 2px solid red;", ""));
+                    }
+                }
+                for (let i = 0; i < parseInt(deleteLogsInput.value); i++) {
+                    const style = scrollView.children[i].getAttribute("style");
+                    scrollView.children[i].setAttribute("style", style + "border: 2px solid red;");
                 }
             }
-            for (let i = 0; i < parseInt(deleteLogsInput.value); i++) {
-                const style = scrollView.children[i].getAttribute("style");
-                scrollView.children[i].setAttribute("style", style + "border: 2px solid red;");
-            }
         });
+        deleteLogsInput.setAttribute("type", "number");
 
         const deleteLogsBtn = this.createButton({
             text: "Delete",
             x: 1010,
             y: 845,
             width: 840,
-            padding: 2
-        });
-        deleteLogsBtn.addEventListener("click", () => {
-            if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_LOGS)) {
-                return deleteLogsBtn.classList.add("lcDisabled");
-            }
-            const count = parseInt(deleteLogsInput.value);
-            if (count === 0 || Number.isNaN(count)) return;
-            const children = [...scrollView.children];
-            for (let i = 0; i < count; i++) children[i].remove();
-            deleteLogsInput.value = "";
-            if (InformationSheetSelection.IsPlayer()) {
-                const logObject = addLog(`${getNickname(Player)} (${Player.MemberNumber}) deleted log entries (${count})`, false);
-                this.createLogButton(logObject);
-                modStorage.logs.list.splice(0, count);
-                syncStorage();
-            } else {
-                chatSendModMessage<DeleteLogsMessageData>("deleteLogs", {
-                    count
-                }, InformationSheetSelection.MemberNumber);
-                this.createLogButton({
-                    message: `${getNickname(Player)} (${Player.MemberNumber}) deleted log entries (${count})`,
-                    ts: Date.now()
-                });
+            padding: 2,
+            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_LOGS),
+            onClick: () => {
+                const count = parseInt(deleteLogsInput.value);
+                if (count === 0 || Number.isNaN(count)) return;
+                const children = [...scrollView.children];
+                for (let i = 0; i < count; i++) children[i].remove();
+                deleteLogsInput.value = "";
+                if (InformationSheetSelection.IsPlayer()) {
+                    const logObject = addLog(`${getNickname(Player)} (${Player.MemberNumber}) deleted log entries (${count})`, false);
+                    this.createLogButton(logObject);
+                    modStorage.logs.list.splice(0, count);
+                    syncStorage();
+                } else {
+                    messagesManager.sendPacket<DeleteLogsMessageData>("deleteLogs", {
+                        count
+                    }, InformationSheetSelection.MemberNumber);
+                    this.createLogButton({
+                        message: `${getNickname(Player)} (${Player.MemberNumber}) deleted log entries (${count})`,
+                        ts: Date.now()
+                    });
+                }
             }
         });
-
-        if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_LOGS)) {
-            deleteLogsInput.classList.add("lcDisabled");
-            deleteLogsBtn.classList.add("lcDisabled");
-        }
     }
 
     createLogButton(log: Log) {
@@ -151,6 +141,7 @@ export class LogsMenu extends BaseSubscreen {
     }
 
     exit() {
+        super.exit();
         this.setSubscreen(new MainMenu());
     }
 }

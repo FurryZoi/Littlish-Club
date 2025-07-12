@@ -1,11 +1,11 @@
-import { serverAppearanceBundleToAppearance } from "@/utils/characters";
-import { BaseSubscreen } from "./baseSubscreen";
+import { serverAppearanceBundleToAppearance } from "zois-core/wardrobe";
+import { BaseSubscreen } from "zois-core/ui";
 import { CANVAS_BABIES_APPEARANCES } from "@/constants";
-import { getRandomNumber } from "@/utils/main";
+import { getRandomNumber } from "zois-core";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
 import { AboutWardrobeMenu } from "./introductions/aboutWardrobeMenu";
 import { MainMenu } from "./mainMenu";
-import { importAppearance, IncludeType } from "@/utils/wardrobe";
+import { importAppearance, IncludeType } from "zois-core/wardrobe";
 
 export class WardrobeMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -34,21 +34,17 @@ export class WardrobeMenu extends BaseSubscreen {
     }
 
     load() {
-        this.createText({
-            text: this.name,
-            x: 100,
-            y: 60,
-            fontSize: 10
-        });
+        super.load();
 
         this.createButton({
             icon: "Icons/Notifications.png",
             width: 90,
             height: 90,
             x: 1815,
-            y: 175
-        }).addEventListener("click", () => {
-            this.setSubscreen(new AboutWardrobeMenu(this.currentAppearance));
+            y: 175,
+            onClick: () => {
+                this.setSubscreen(new AboutWardrobeMenu(this.currentAppearance));
+            }
         });
 
         this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
@@ -66,11 +62,12 @@ export class WardrobeMenu extends BaseSubscreen {
                 text: d,
                 x: 1500,
                 y: 360 + (80 * i),
-                isChecked: true
-            }).addEventListener("click", () => {
-                if (this.includeTypes.includes(d)) this.includeTypes.splice(this.includeTypes.indexOf(d), 1);
-                else this.includeTypes.push(d);
-                this.refresh();
+                isChecked: true,
+                onChange: () => {
+                    if (this.includeTypes.includes(d)) this.includeTypes.splice(this.includeTypes.indexOf(d), 1);
+                    else this.includeTypes.push(d);
+                    this.refresh();
+                }
             });
         });
 
@@ -78,13 +75,14 @@ export class WardrobeMenu extends BaseSubscreen {
             text: "Viewing Mode",
             x: 1500,
             y: 720,
-            isChecked: false
-        }).addEventListener("click", () => {
-            this.isViewingMode = !this.isViewingMode;
-            if (
-                hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_APPEARANCE)
-            ) applyBtn.classList.toggle("lcDisabled");
-            this.refresh();
+            isChecked: false,
+            onChange: () => {
+                this.isViewingMode = !this.isViewingMode;
+                if (
+                    hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_APPEARANCE)
+                ) applyBtn.classList.toggle("zcDisabled");
+                this.refresh();
+            }
         });
 
         const scrollView = this.createScrollView({
@@ -104,14 +102,14 @@ export class WardrobeMenu extends BaseSubscreen {
                 text: a.name,
                 padding: 2.5,
                 icon: "Icons/Rectangle/Dress.png",
-                place: false
+                place: false,
+                onClick: () => {
+                    this.currentAppearance = a;
+                    this.refresh();
+                }
             });
             btn.style.width = "95%";
             btn.style.position = "relative";
-            btn.addEventListener("click", () => {
-                this.currentAppearance = a;
-                this.refresh();
-            });
             scrollView.append(btn);
         });
 
@@ -121,17 +119,15 @@ export class WardrobeMenu extends BaseSubscreen {
             y: 800,
             width: 750,
             padding: 3,
-            style: "inverted"
-        });
-        if (
-            !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_APPEARANCE) ||
-            this.isViewingMode
-        ) {
-            applyBtn.classList.add("lcDisabled");
-        }
-        applyBtn.addEventListener("click", () => {
-            importAppearance(InformationSheetSelection, this.canvasCharacter.Appearance, this.includeTypes);
-            this.exit();
+            style: "inverted",
+            isDisabled: () => (
+                !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_APPEARANCE) ||
+                this.isViewingMode
+            ),
+            onClick: () => {
+                importAppearance(InformationSheetSelection, this.canvasCharacter.Appearance, this.includeTypes);
+                this.exit();
+            }
         });
 
         this.refresh();
@@ -171,6 +167,7 @@ export class WardrobeMenu extends BaseSubscreen {
     }
 
     exit() {
+        super.exit();
         this.setSubscreen(new MainMenu());
     }
 }
