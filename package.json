@@ -19,7 +19,7 @@
   "dependencies": {
     "bondage-club-mod-sdk": "^1.2.0",
     "lodash-es": "^4.17.21",
-    "zois-core": "^1.0.14"
+    "zois-core": "^1.0.15"
   },
   "pnpm": {
     "overrides": {}

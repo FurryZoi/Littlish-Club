@@ -953,9 +953,12 @@ export function loadRules(): void {
         for (const mutation of mutationList) {
             if (mutation.type === "childList") {
                 mutation.addedNodes.forEach((node: HTMLElement) => {
-                    if (node.nodeType === Node.ELEMENT_NODE && node.tagName === "INPUT") {
-                        if (node.classList.contains("checkbox")) {
+                    if (node.nodeType === Node.ELEMENT_NODE && node.tagName === "INPUT" && node.classList.contains("checkbox")) {
                             node.classList.add("paciCheckbox");
+                    }
+                    for (const child of node.children ?? []) {
+                        if (child.nodeType === Node.ELEMENT_NODE && child.tagName === "INPUT" && child.classList.contains("checkbox")) {
+                            child.classList.add("paciCheckbox");
                         }
                     }
                 });

@@ -38,7 +38,7 @@ const init = () => {
     toastsManager.success({
         title: "Littlish Club loaded",
         message: `v${version}`,
-        duration: 6000
+        duration: 4000
     });
 
     if (isVersionNewer(version, modStorage.version)) {
