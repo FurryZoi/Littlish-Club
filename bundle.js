@@ -50,7 +50,7 @@
         }
         function s(o2) {
           const e2 = [], t2 = /* @__PURE__ */ new Map(), n3 = /* @__PURE__ */ new Set();
-          for (const r3 of f3.values()) {
+          for (const r3 of f2.values()) {
             const i5 = r3.patching.get(o2.name);
             if (i5) {
               e2.push(...i5.hooks);
@@ -123,15 +123,15 @@ ${a4}`), t2.set(e3, a4), n3.add(r3.name);
           for (const [e2, t2] of i3) o2.set(e2, { name: e2, original: t2.original, originalHash: t2.originalHash, sdkEntrypoint: t2.router, currentEntrypoint: t2.context[t2.contextProperty], hookedByMods: r(t2.precomputed.hooks.map((o3) => o3.mod)), patchedByMods: Array.from(t2.precomputed.patchesSources) });
           return o2;
         }
-        const f3 = /* @__PURE__ */ new Map();
+        const f2 = /* @__PURE__ */ new Map();
         function u3(o2) {
-          f3.get(o2.name) !== o2 && e(`Failed to unload mod '${o2.name}': Not registered`), f3.delete(o2.name), o2.loaded = false, d4();
+          f2.get(o2.name) !== o2 && e(`Failed to unload mod '${o2.name}': Not registered`), f2.delete(o2.name), o2.loaded = false, d4();
         }
         function g(o2, t2) {
           o2 && "object" == typeof o2 || e("Failed to register mod: Expected info object, got " + typeof o2), "string" == typeof o2.name && o2.name || e("Failed to register mod: Expected name to be non-empty string, got " + typeof o2.name);
           let r2 = `'${o2.name}'`;
           "string" == typeof o2.fullName && o2.fullName || e(`Failed to register mod ${r2}: Expected fullName to be non-empty string, got ${typeof o2.fullName}`), r2 = `'${o2.fullName} (${o2.name})'`, "string" != typeof o2.version && e(`Failed to register mod ${r2}: Expected version to be string, got ${typeof o2.version}`), o2.repository || (o2.repository = void 0), void 0 !== o2.repository && "string" != typeof o2.repository && e(`Failed to register mod ${r2}: Expected repository to be undefined or string, got ${typeof o2.version}`), null == t2 && (t2 = {}), t2 && "object" == typeof t2 || e(`Failed to register mod ${r2}: Expected options to be undefined or object, got ${typeof t2}`);
-          const i4 = true === t2.allowReplace, a4 = f3.get(o2.name);
+          const i4 = true === t2.allowReplace, a4 = f2.get(o2.name);
           a4 && (a4.allowReplace && i4 || e(`Refusing to load mod ${r2}: it is already loaded and doesn't allow being replaced.
 Was the mod loaded multiple times?`), u3(a4));
           const c2 = (o3) => {
@@ -170,11 +170,11 @@ Was the mod loaded multiple times?`), u3(a4));
             "string" == typeof o3 && o3 || e(`Mod ${r2} failed to get hash: Expected function name string, got ${typeof o3}`);
             return l2(o3).originalHash;
           }) }, g2 = { name: o2.name, fullName: o2.fullName, version: o2.version, repository: o2.repository, allowReplace: i4, api: p2, loaded: true, patching: /* @__PURE__ */ new Map() };
-          return f3.set(o2.name, g2), Object.freeze(p2);
+          return f2.set(o2.name, g2), Object.freeze(p2);
         }
         function h2() {
           const o2 = [];
-          for (const e2 of f3.values()) o2.push({ name: e2.name, fullName: e2.fullName, version: e2.version, repository: e2.repository });
+          for (const e2 of f2.values()) o2.push({ name: e2.name, fullName: e2.fullName, version: e2.version, repository: e2.repository });
           return o2;
         }
         let m4;
@@ -296,7 +296,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
                 type = type._init;
                 try {
                   return getComponentNameFromType(type(innerType));
-                } catch (x3) {
+                } catch (x2) {
                 }
             }
           return null;
@@ -308,7 +308,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
           try {
             var name = getComponentNameFromType(type);
             return name ? "<" + name + ">" : "<...>";
-          } catch (x3) {
+          } catch (x2) {
             return "<...>";
           }
         }
@@ -1230,9 +1230,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
           }
           return first;
         }
-        function compare(a3, b2) {
-          var diff = a3.sortIndex - b2.sortIndex;
-          return 0 !== diff ? diff : a3.id - b2.id;
+        function compare(a3, b3) {
+          var diff = a3.sortIndex - b3.sortIndex;
+          return 0 !== diff ? diff : a3.id - b3.id;
         }
         function advanceTimers(currentTime) {
           for (var timer = peek(timerQueue); null !== timer; ) {
@@ -1798,14 +1798,14 @@ One of mods you are using is using an old version of SDK. It will work for now b
               throw Error("Unable to find node on an unmounted component.");
             return alternate !== fiber ? null : fiber;
           }
-          for (var a3 = fiber, b2 = alternate; ; ) {
+          for (var a3 = fiber, b3 = alternate; ; ) {
             var parentA = a3.return;
             if (null === parentA) break;
             var parentB = parentA.alternate;
             if (null === parentB) {
-              b2 = parentA.return;
-              if (null !== b2) {
-                a3 = b2;
+              b3 = parentA.return;
+              if (null !== b3) {
+                a3 = b3;
                 continue;
               }
               break;
@@ -1813,23 +1813,23 @@ One of mods you are using is using an old version of SDK. It will work for now b
             if (parentA.child === parentB.child) {
               for (parentB = parentA.child; parentB; ) {
                 if (parentB === a3) return assertIsMounted(parentA), fiber;
-                if (parentB === b2) return assertIsMounted(parentA), alternate;
+                if (parentB === b3) return assertIsMounted(parentA), alternate;
                 parentB = parentB.sibling;
               }
               throw Error("Unable to find node on an unmounted component.");
             }
-            if (a3.return !== b2.return) a3 = parentA, b2 = parentB;
+            if (a3.return !== b3.return) a3 = parentA, b3 = parentB;
             else {
               for (var didFindChild = false, _child = parentA.child; _child; ) {
                 if (_child === a3) {
                   didFindChild = true;
                   a3 = parentA;
-                  b2 = parentB;
+                  b3 = parentB;
                   break;
                 }
-                if (_child === b2) {
+                if (_child === b3) {
                   didFindChild = true;
-                  b2 = parentA;
+                  b3 = parentA;
                   a3 = parentB;
                   break;
                 }
@@ -1840,12 +1840,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
                   if (_child === a3) {
                     didFindChild = true;
                     a3 = parentB;
-                    b2 = parentA;
+                    b3 = parentA;
                     break;
                   }
-                  if (_child === b2) {
+                  if (_child === b3) {
                     didFindChild = true;
-                    b2 = parentB;
+                    b3 = parentB;
                     a3 = parentA;
                     break;
                   }
@@ -1857,7 +1857,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
                   );
               }
             }
-            if (a3.alternate !== b2)
+            if (a3.alternate !== b3)
               throw Error(
                 "Return fibers should always be each others' alternates. This error is likely caused by a bug in React. Please file an issue."
               );
@@ -1923,7 +1923,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
                 type = type._init;
                 try {
                   return getComponentNameFromType(type(innerType));
-                } catch (x3) {
+                } catch (x2) {
                 }
             }
           return null;
@@ -2154,9 +2154,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
         function markStateUpdateScheduled(fiber, lane) {
           null !== injectedProfilingHooks && "function" === typeof injectedProfilingHooks.markStateUpdateScheduled && injectedProfilingHooks.markStateUpdateScheduled(fiber, lane);
         }
-        function clz32Fallback(x3) {
-          x3 >>>= 0;
-          return 0 === x3 ? 32 : 31 - (log(x3) / LN2 | 0) | 0;
+        function clz32Fallback(x2) {
+          x2 >>>= 0;
+          return 0 === x2 ? 32 : 31 - (log(x2) / LN2 | 0) | 0;
         }
         function getLabelForLane(lane) {
           if (lane & 1) return "SyncHydrationLane";
@@ -2631,10 +2631,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if (void 0 === prefix)
             try {
               throw Error();
-            } catch (x3) {
-              var match = x3.stack.trim().match(/\n( *(at )?)/);
+            } catch (x2) {
+              var match = x2.stack.trim().match(/\n( *(at )?)/);
               prefix = match && match[1] || "";
-              suffix = -1 < x3.stack.indexOf("\n    at") ? " (<anonymous>)" : -1 < x3.stack.indexOf("@") ? "@unknown:0:0" : "";
+              suffix = -1 < x2.stack.indexOf("\n    at") ? " (<anonymous>)" : -1 < x2.stack.indexOf("@") ? "@unknown:0:0" : "";
             }
           return "\n" + prefix + name + suffix;
         }
@@ -2665,8 +2665,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
                     if ("object" === typeof Reflect && Reflect.construct) {
                       try {
                         Reflect.construct(Fake, []);
-                      } catch (x3) {
-                        var control = x3;
+                      } catch (x2) {
+                        var control = x2;
                       }
                       Reflect.construct(fn, [], Fake);
                     } else {
@@ -2805,8 +2805,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
               workInProgress2 = workInProgress2.return;
             } while (workInProgress2);
             return info;
-          } catch (x3) {
-            return "\nError generating stack: " + x3.message + "\n" + x3.stack;
+          } catch (x2) {
+            return "\nError generating stack: " + x2.message + "\n" + x2.stack;
           }
         }
         function describeFunctionComponentFrameWithoutLineNumber(fn) {
@@ -2862,8 +2862,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
                 (workInProgress2 = workInProgress2.owner) && ownerStack && (info += "\n" + formatOwnerStack(ownerStack));
               } else break;
             var JSCompiler_inline_result = info;
-          } catch (x3) {
-            JSCompiler_inline_result = "\nError generating stack: " + x3.message + "\n" + x3.stack;
+          } catch (x2) {
+            JSCompiler_inline_result = "\nError generating stack: " + x2.message + "\n" + x2.stack;
           }
           return JSCompiler_inline_result;
         }
@@ -3366,7 +3366,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         function describeDiff(rootNode) {
           try {
             return "\n\n" + describeNode(rootNode, 0);
-          } catch (x3) {
+          } catch (x2) {
             return "";
           }
         }
@@ -4010,8 +4010,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
             }
           }
         }
-        function batchedUpdates$1(fn, a3, b2) {
-          if (isInsideEventHandler) return fn(a3, b2);
+        function batchedUpdates$1(fn, a3, b3) {
+          if (isInsideEventHandler) return fn(a3, b3);
           isInsideEventHandler = true;
           try {
             var JSCompiler_inline_result = fn(a3);
@@ -4224,8 +4224,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if ("input" === domEventName || "change" === domEventName)
             return getInstIfValueChanged(targetInst);
         }
-        function is(x3, y2) {
-          return x3 === y2 && (0 !== x3 || 1 / x3 === 1 / y2) || x3 !== x3 && y2 !== y2;
+        function is(x2, y2) {
+          return x2 === y2 && (0 !== x2 || 1 / x2 === 1 / y2) || x2 !== x2 && y2 !== y2;
         }
         function shallowEqual(objA, objB) {
           if (objectIs(objA, objB)) return true;
@@ -6294,9 +6294,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if ("object" === typeof currentStateHook && null !== currentStateHook && "function" === typeof currentStateHook.then)
             try {
               var state = useThenable(currentStateHook);
-            } catch (x3) {
-              if (x3 === SuspenseException) throw SuspenseActionException;
-              throw x3;
+            } catch (x2) {
+              if (x2 === SuspenseException) throw SuspenseActionException;
+              throw x2;
             }
           else state = currentStateHook;
           currentStateHook = updateWorkInProgressHook();
@@ -7455,9 +7455,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
               );
               thenableState = null;
               return firstChildFiber;
-            } catch (x3) {
-              if (x3 === SuspenseException || x3 === SuspenseActionException) throw x3;
-              var fiber = createFiber(29, x3, null, returnFiber.mode);
+            } catch (x2) {
+              if (x2 === SuspenseException || x2 === SuspenseActionException) throw x2;
+              var fiber = createFiber(29, x2, null, returnFiber.mode);
               fiber.lanes = lanes;
               fiber.return = returnFiber;
               var debugInfo = fiber._debugInfo = currentDebugInfo;
@@ -19509,7 +19509,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
                 type = type._init;
                 try {
                   return getComponentNameFromType(type(innerType));
-                } catch (x3) {
+                } catch (x2) {
                 }
             }
           return null;
@@ -19543,7 +19543,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
           try {
             var name = getComponentNameFromType(type);
             return name ? "<" + name + ">" : "<...>";
-          } catch (x3) {
+          } catch (x2) {
             return "<...>";
           }
         }
@@ -19737,54 +19737,54 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   });
 
-  // node_modules/.pnpm/zois-core@1.0.14/node_modules/zois-core/dist/modsApi.js
+  // node_modules/.pnpm/zois-core@1.0.15/node_modules/zois-core/dist/modsApi.js
   var import_bondage_club_mod_sdk = __toESM(require_bcmodsdk());
 
-  // node_modules/.pnpm/zois-core@1.0.14/node_modules/zois-core/dist/styles.css
+  // node_modules/.pnpm/zois-core@1.0.15/node_modules/zois-core/dist/styles.css
   var styles_default = '*{margin:0;padding:0;box-sizing:border-box}.zcButton{cursor:pointer;background:var(--tmd-element, white);color:var(--tmd-text, black);border:2px solid var(--tmd-accent, black);border-radius:4px}.zcButton:hover{background:var(--tmd-element-hover, #ebf7fe);border-color:var(--tmd-accent-hover, #7dd3fc);color:var(--tmd-accent-hover, #015a8c)}.zcButton .tooltip{position:absolute;color:#000;text-align:center;padding:4px;border-radius:4px;background:#ff8;border:2px solid #e7e787;width:max-content;min-height:100%;visibility:hidden;z-index:10}.zcButton .tooltip[position=left]{right:calc(100% + 1vw)}.zcButton .tooltip[position=right]{left:calc(100% + 1vw)}.zcButton:hover .tooltip{visibility:visible}.zcButton[data-zc-style=green]{background:#7cff7c;border-color:#52cc52;color:#000}.zcButton[data-zc-style=green]:hover{background:#5ec55e;color:#000}.zcButton[data-zc-style=inverted]{background:var(--tmd-accent, #303030);border:none;color:var(--tmd-text, white)}.zcButton[data-zc-style=inverted]:hover{background:var(--tmd-accent-hover, #474747)}.zcInput{background:var(--tmd-element, white);color:var(--tmd-text, black);padding:2vw;border:2px solid var(--tmd-accent, black);border-radius:4px}.zcInput::placeholder{color:var(--tmd-text, black)}.zcBackNextButton{display:flex;column-gap:2vw;justify-content:center;align-items:center;background:var(--tmd-element, white);color:var(--tmd-text, black);border:2px solid var(--tmd-accent, black);border-radius:4px}.zcBackNextButton-btnDisabled{background:#ffa590;pointer-events:none}.zcTabs{display:flex}.zcTabs button{cursor:pointer;width:100%;color:var(--tmd-text, black);background:none;border:none;border-bottom:2px solid var(--tmd-element, rgb(214, 214, 214));padding:.25em}.zcTabs button[data-opened=true]{font-weight:700;border-bottom:2px solid var(--tmd-accent, rgb(81, 81, 231))!important}.zcTabs button:hover{background:var(--tmd-element, rgb(235, 235, 235));border-bottom:2px solid var(--tmd-element-hover, rgb(149, 149, 149))}.zcToastsContainer{display:flex;flex-direction:column;gap:.25vw;cursor:pointer;position:fixed;z-index:10}.zcToast[data-zc-toast-type=info],.zcToast[data-zc-toast-type=spinner]{background:#5050df}.zcToast[data-zc-toast-type=success]{background:#3ece7e}.zcToast[data-zc-toast-type=warning]{background:#debf72}.zcToast[data-zc-toast-type=error]{background:#d42e6b}@keyframes zcToast-progress{0%{width:0}to{width:100%}}@keyframes zcSlideInFromLeft{0%{transform:translate(-100%);opacity:0}to{transform:translate(0);opacity:1}}@keyframes zcSlideOutToLeft{0%{transform:translate(0);opacity:1}to{transform:translate(-100%);opacity:0}}.zcToast{max-width:25vw;animation:zcSlideInFromLeft .3s ease-out forwards}.zcToast.exiting{animation:zcSlideOutToLeft .3s ease-out forwards}.zcToast[data-zc-toast-type=info] .zcToast-ProgressBar{background:#6767ea}.zcToast[data-zc-toast-type=success] .zcToast-ProgressBar{background:#34bc71}.zcToast[data-zc-toast-type=warning] .zcToast-ProgressBar{background:#d0af5e}.zcToast[data-zc-toast-type=error] .zcToast-ProgressBar{background:#b7285c}.zcToast p{color:#fff}dialog[data-zc-dialog-type=choice_multiple] .zcDialogBtn:before{content:"";position:absolute;left:1vw;top:50%;transform:translateY(-50%);border:2px solid white;width:.5em;aspect-ratio:1/1;border-radius:50%}dialog[data-zc-dialog-type=choice_multiple] .zcDialogBtn[data-zc-picked=true]:before{background:#fff}.zcDialogBtn{cursor:pointer;background:#ffffff17;border:none;font-size:clamp(6px,2vw,24px);color:#fff;padding:.2em;border-radius:.5em}.zcDialogBtn:hover{background:#ffffff24}@keyframes zcSpin{0%{transform:rotate(0)}to{transform:rotate(360deg)}}.zcSpinner{box-sizing:border-box;border:2px solid;border-radius:100%;border-color:#fff;border-right-color:#5050df;animation:zcSpin .65s linear infinite}.zcDisabled{pointer-events:none;opacity:.6}\n';
 
-  // node_modules/.pnpm/zois-core@1.0.14/node_modules/zois-core/dist/ui.js
-  function D(b2) {
-    return b2 * (MainCanvas.canvas.clientHeight / 1e3);
+  // node_modules/.pnpm/zois-core@1.0.15/node_modules/zois-core/dist/ui.js
+  function D(b3) {
+    return b3 * (MainCanvas.canvas.clientHeight / 1e3);
   }
-  function F(b2) {
-    return b2 * (MainCanvas.canvas.clientWidth / 2e3);
+  function F(b3) {
+    return b3 * (MainCanvas.canvas.clientWidth / 2e3);
   }
-  function j(b2, e = "top") {
+  function j(b3, e = "top") {
     const o = MainCanvas.canvas.clientHeight / 1e3;
-    return e === "top" ? MainCanvas.canvas.offsetTop + b2 * o : window.innerHeight - (MainCanvas.canvas.offsetTop + MainCanvas.canvas.clientHeight) + b2 * o;
+    return e === "top" ? MainCanvas.canvas.offsetTop + b3 * o : window.innerHeight - (MainCanvas.canvas.offsetTop + MainCanvas.canvas.clientHeight) + b3 * o;
   }
-  function R(b2, e = "left") {
+  function R(b3, e = "left") {
     const o = MainCanvas.canvas.clientWidth / 2e3;
-    return e === "left" ? MainCanvas.canvas.offsetLeft + b2 * o : window.innerWidth - (MainCanvas.canvas.offsetLeft + MainCanvas.canvas.clientWidth) + b2 * o;
+    return e === "left" ? MainCanvas.canvas.offsetLeft + b3 * o : window.innerWidth - (MainCanvas.canvas.offsetLeft + MainCanvas.canvas.clientWidth) + b3 * o;
   }
-  function E(b2, e, o, u3 = "top-left") {
+  function E(b3, e, o, u3 = "top-left") {
     const m4 = u3 === "top-left" || u3 === "top-right" ? "top" : "bottom", a3 = u3 === "top-left" || u3 === "bottom-left" ? "left" : "right", n2 = j(o, m4), r = R(e, a3);
-    Object.assign(b2.style, { position: "fixed", [a3]: r + "px", [m4]: n2 + "px" });
+    Object.assign(b3.style, { position: "fixed", [a3]: r + "px", [m4]: n2 + "px" });
   }
-  function L(b2, e, o) {
-    Object.assign(b2.style, { width: F(e) + "px", height: D(o) + "px" });
+  function L(b3, e, o) {
+    Object.assign(b3.style, { width: F(e) + "px", height: D(o) + "px" });
   }
-  function H(b2, e) {
+  function H(b3, e) {
     const o = MainCanvas.canvas.clientWidth, u3 = MainCanvas.canvas.clientHeight, m4 = Math.min(o, u3) / 100, a3 = e * m4;
-    Object.assign(b2.style, { fontSize: a3 + "px" });
+    Object.assign(b3.style, { fontSize: a3 + "px" });
   }
-  function z(b2, e) {
-    b2.style.fontFamily = e ?? "sans-serif";
+  function z(b3, e) {
+    b3.style.fontFamily = e ?? "sans-serif";
   }
-  function P(b2, e) {
+  function P(b3, e) {
     const o = MainCanvas.canvas.clientWidth, u3 = MainCanvas.canvas.clientHeight, m4 = Math.min(o, u3) / 100, a3 = e * m4;
-    Object.assign(b2.style, { padding: a3 + "px" });
+    Object.assign(b3.style, { padding: a3 + "px" });
   }
-  function A(b2) {
+  function A(b3) {
     const e = MainCanvas.canvas.clientWidth <= MainCanvas.canvas.clientHeight * 2 ? MainCanvas.canvas.clientWidth / 50 : MainCanvas.canvas.clientHeight / 25;
-    Object.assign(b2.style, { fontSize: e + "px" });
+    Object.assign(b3.style, { fontSize: e + "px" });
   }
   function O() {
     W(M);
   }
-  function W(b2) {
-    M = T, T = b2, T && T.load(), M && M.unload();
+  function W(b3) {
+    M = T, T = b3, T && T.load(), M && M.unload();
   }
   function G() {
     return T;
@@ -19830,7 +19830,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     setSubscreen(e) {
       W(e);
     }
-    createButton({ text: e, x: o, y: u3, width: m4, height: a3, fontSize: n2 = "auto", anchor: r = "top-left", padding: l2, style: y2 = "default", place: s = true, icon: d4, iconAbsolutePosition: t = true, iconWidth: c, tooltip: f3, onClick: p, isDisabled: h2 }) {
+    createButton({ text: e, x: o, y: u3, width: m4, height: a3, fontSize: n2 = "auto", anchor: r = "top-left", padding: l2, style: y2 = "default", place: s = true, icon: d4, iconAbsolutePosition: t = true, iconWidth: c, tooltip: f2, onClick: p, isDisabled: h2 }) {
       const i3 = document.createElement("button");
       if (i3.classList.add("zcButton"), i3.setAttribute("data-zc-style", y2), i3.style.display = "flex", i3.style.alignItems = "center", i3.style.justifyContent = "center", i3.style.columnGap = "1.25vw", z(i3, m.fontFamily), d4) {
         const v = document.createElement("img");
@@ -19840,9 +19840,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
         const v = document.createElement("span");
         v.textContent = e, d4 && !t && c && (v.style.width = "100%", v.style.marginRight = c), i3.append(v);
       }
-      if (f3) {
+      if (f2) {
         const v = document.createElement("span");
-        v.classList.add("tooltip"), v.setAttribute("position", f3.position), v.textContent = f3.text, i3.append(v);
+        v.classList.add("tooltip"), v.setAttribute("position", f2.position), v.textContent = f2.text, i3.append(v);
       }
       const C2 = () => {
         typeof o == "number" && typeof u3 == "number" && E(i3, o, u3, r), L(i3, m4, a3), l2 && P(i3, l2), n2 === "auto" ? A(i3) : H(i3, n2);
@@ -19860,17 +19860,17 @@ One of mods you are using is using an old version of SDK. It will work for now b
       };
       return c(), window.addEventListener("resize", c), d4 && document.body.append(t), this.resizeEventListeners.push(c), this.htmlElements.push(t), t;
     }
-    createInput({ value: e, placeholder: o, x: u3, y: m4, width: a3, height: n2, textArea: r = false, fontSize: l2 = "auto", anchor: y2 = "top-left", padding: s, place: d4 = true, onChange: t, onInput: c, isDisabled: f3 }) {
+    createInput({ value: e, placeholder: o, x: u3, y: m4, width: a3, height: n2, textArea: r = false, fontSize: l2 = "auto", anchor: y2 = "top-left", padding: s, place: d4 = true, onChange: t, onInput: c, isDisabled: f2 }) {
       const p = document.createElement(r ? "textarea" : "input");
       p.classList.add("zcInput"), o && (p.placeholder = o), e && (p.value = e), z(p, m.fontFamily);
       const h2 = () => {
         typeof u3 == "number" && typeof m4 == "number" && E(p, u3, m4, y2), L(p, a3, n2), s && P(p, s), l2 === "auto" ? A(p) : H(p, l2);
       };
-      return h2(), typeof f3 == "function" && f3() && p.classList.add("zcDisabled"), p.addEventListener("change", () => {
-        if (typeof f3 == "function" && f3()) return p.classList.add("zcDisabled");
+      return h2(), typeof f2 == "function" && f2() && p.classList.add("zcDisabled"), p.addEventListener("change", () => {
+        if (typeof f2 == "function" && f2()) return p.classList.add("zcDisabled");
         typeof t == "function" && t();
       }), p.addEventListener("input", () => {
-        if (typeof f3 == "function" && f3()) return p.classList.add("zcDisabled");
+        if (typeof f2 == "function" && f2()) return p.classList.add("zcDisabled");
         typeof c == "function" && c();
       }), window.addEventListener("resize", h2), d4 && document.body.append(p), this.resizeEventListeners.push(h2), this.htmlElements.push(p), p;
     }
@@ -19903,8 +19903,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
         display: flex; flex-direction: column; gap: 1vw; border: 2px solid var(--tmd-accent, black);
         border-radius: 4px; padding: 0.75vw; background: var(--tmd-element, none);
         `, z(c, m.fontFamily);
-      const f3 = document.createElement("div");
-      f3.style.cssText = "display: flex; justify-content: center; column-gap: 1vw; width: 100%;";
+      const f2 = document.createElement("div");
+      f2.style.cssText = "display: flex; justify-content: center; column-gap: 1vw; width: 100%;";
       const p = document.createElement("b");
       p.textContent = a3 + ":", p.style.cssText = "width: 100%; font-size: clamp(10px, 2.4vw, 24px); color: var(--tmd-text, black);";
       const h2 = document.createElement("div");
@@ -19912,15 +19912,15 @@ One of mods you are using is using an old version of SDK. It will work for now b
         overflow-y: scroll;`;
       const i3 = document.createElement("input");
       i3.style.cssText = "border: none; outline: none; background: none; height: fit-content; flex-grow: 1; padding: 0.8vw; width: 6vw; font-size: clamp(8px, 2vw, 20px);";
-      const C2 = (g, x3) => {
+      const C2 = (g, x2) => {
         const k3 = document.createElement("button");
         k3.style.cssText = "cursor: pointer; display: grid; place-items: center; background: var(--tmd-element-hover, #e0e0e0); width: 10%; max-width: 40px; aspect-ratio: 1/1; border-radius: 8px; border: none;";
         const I3 = DrawGetImage(g);
-        I3.style.cssText = "width: 90%;", k3.append(I3), f3.append(k3), k3.addEventListener("click", x3);
+        I3.style.cssText = "width: 90%;", k3.append(I3), f2.append(k3), k3.addEventListener("click", x2);
       }, v = (g) => {
-        const x3 = document.createElement("div");
-        x3.style.cssText = "cursor: pointer; background: var(--tmd-element-hover, rgb(206, 206, 206)); color: var(--tmd-text, black); height: fit-content; padding: 0.8vw; border-radius: 0.8vw; font-size: clamp(8px, 2vw, 20px);", x3.textContent = g, h2.insertBefore(x3, i3), x3.addEventListener("click", (k3) => {
-          x3.style.border === "" ? x3.style.border = "2px solid red" : x3.style.border = "", k3.stopPropagation();
+        const x2 = document.createElement("div");
+        x2.style.cssText = "cursor: pointer; background: var(--tmd-element-hover, rgb(206, 206, 206)); color: var(--tmd-text, black); height: fit-content; padding: 0.8vw; border-radius: 0.8vw; font-size: clamp(8px, 2vw, 20px);", x2.textContent = g, h2.insertBefore(x2, i3), x2.addEventListener("click", (k3) => {
+          x2.style.border === "" ? x2.style.border = "2px solid red" : x2.style.border = "", k3.stopPropagation();
         }), t.push(g);
       }, S2 = () => {
         typeof e == "number" && typeof o == "number" && E(c, e, o, r), L(c, u3, m4);
@@ -19937,12 +19937,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
           case "Enter":
             if (y2 && Number.isNaN(parseInt(i3.value)) || i3.value.trim() === "") return;
             if (typeof s == "function" && s()) return c.classList.add("zcDisabled");
-            v(i3.value), i3.value = "", typeof d4 == "function" && d4(y2 ? t.map((x3) => parseInt(x3)) : t);
+            v(i3.value), i3.value = "", typeof d4 == "function" && d4(y2 ? t.map((x2) => parseInt(x2)) : t);
             break;
         }
       }), c.addEventListener("click", (g) => {
         g.currentTarget == c && i3.focus();
-      }), h2.append(i3), c.append(f3, p, h2), l2 && document.body.append(c), this.resizeEventListeners.push(S2), this.htmlElements.push(c), n2.forEach((g) => v(String(g))), c;
+      }), h2.append(i3), c.append(f2, p, h2), l2 && document.body.append(c), this.resizeEventListeners.push(S2), this.htmlElements.push(c), n2.forEach((g) => v(String(g))), c;
     }
     createImage({ x: e, y: o, width: u3, src: m4, place: a3 = true, anchor: n2 = "top-left" }) {
       const r = document.createElement("img");
@@ -19956,13 +19956,13 @@ One of mods you are using is using an old version of SDK. It will work for now b
       const t = document.createElement("div");
       t.classList.add("zcBackNextButton"), z(t, m.fontFamily);
       const c = () => {
-        n2 === 0 || typeof d4 == "function" && d4(a3[n2 - 1][1]) ? f3.classList.add("zcBackNextButton-btnDisabled") : f3.classList.remove("zcBackNextButton-btnDisabled"), n2 === a3.length - 1 || typeof d4 == "function" && d4(a3[n2 + 1][1]) ? p.classList.add("zcBackNextButton-btnDisabled") : p.classList.remove("zcBackNextButton-btnDisabled");
-      }, f3 = document.createElement("button");
-      f3.style.cssText = `
+        n2 === 0 || typeof d4 == "function" && d4(a3[n2 - 1][1]) ? f2.classList.add("zcBackNextButton-btnDisabled") : f2.classList.remove("zcBackNextButton-btnDisabled"), n2 === a3.length - 1 || typeof d4 == "function" && d4(a3[n2 + 1][1]) ? p.classList.add("zcBackNextButton-btnDisabled") : p.classList.remove("zcBackNextButton-btnDisabled");
+      }, f2 = document.createElement("button");
+      f2.style.cssText = `
         position: absolute; left: 1vw; font-size: 3.5vw; aspect-ratio: 1/1;
         height: 140%; background-image: url("Icons/Prev.png"); background-size: 100%;
-        `, f3.classList.add("zcButton"), f3.addEventListener("click", () => {
-        if (n2 === 0 || typeof d4 == "function" && d4(a3[n2 - 1][1])) return f3.classList.add("zcDisabled");
+        `, f2.classList.add("zcButton"), f2.addEventListener("click", () => {
+        if (n2 === 0 || typeof d4 == "function" && d4(a3[n2 - 1][1])) return f2.classList.add("zcDisabled");
         n2--, h2.textContent = a3[n2][0], typeof s == "function" && s(a3[n2][1]), c();
       });
       const p = document.createElement("button");
@@ -19974,7 +19974,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         n2++, h2.textContent = a3[n2][0], typeof s == "function" && s(a3[n2][1]), c();
       }), c();
       const h2 = document.createElement("p");
-      r && (h2.style.fontWeight = "bold"), h2.textContent = a3[n2][0], t.append(f3, h2, p);
+      r && (h2.style.fontWeight = "bold"), h2.textContent = a3[n2][0], t.append(f2, h2, p);
       const i3 = () => {
         typeof e == "number" && typeof o == "number" && E(t, e, o, l2), L(t, u3, m4), A(h2);
       };
@@ -19985,12 +19985,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
       const l2 = document.createElement("div");
       l2.classList.add("zcTabs"), z(l2, m.fontFamily), m4.forEach((s) => {
         const d4 = () => {
-          for (const f3 of l2.children) f3.removeAttribute("data-opened");
-          for (const f3 of r) f3 instanceof Node && document.body.removeChild(f3);
+          for (const f2 of l2.children) f2.removeAttribute("data-opened");
+          for (const f2 of r) f2 instanceof Node && document.body.removeChild(f2);
           r = [], t.setAttribute("data-opened", "true");
           const c = document.body.append.bind(document.body);
-          document.body.append = (...f3) => {
-            r.push(...f3), c(...f3);
+          document.body.append = (...f2) => {
+            r.push(...f2), c(...f2);
           }, this.tabHandlers.unload?.(), this.tabHandlers.exit?.(), s.load(), this.tabHandlers = { run: s.run, load: s.load, unload: s.unload, exit: s.exit }, document.body.append = c;
         }, t = document.createElement("button");
         t.textContent = s.name, s.name === n2 && d4(), t.addEventListener("click", d4), l2.append(t);
@@ -20010,7 +20010,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   };
   var B = {};
 
-  // node_modules/.pnpm/zois-core@1.0.14/node_modules/zois-core/dist/popups.js
+  // node_modules/.pnpm/zois-core@1.0.15/node_modules/zois-core/dist/popups.js
   var import_react2 = __toESM(require_react());
   var import_client = __toESM(require_client());
 
@@ -20058,25 +20058,25 @@ One of mods you are using is using an old version of SDK. It will work for now b
   };
   var create = (createState) => createState ? createImpl(createState) : createImpl;
 
-  // node_modules/.pnpm/zois-core@1.0.14/node_modules/zois-core/dist/assets/warningIcon.svg
+  // node_modules/.pnpm/zois-core@1.0.15/node_modules/zois-core/dist/assets/warningIcon.svg
   var warningIcon_default = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM11 15V17H13V15H11ZM11 7V13H13V7H11Z"></path></svg>';
 
-  // node_modules/.pnpm/zois-core@1.0.14/node_modules/zois-core/dist/assets/errorIcon.svg
+  // node_modules/.pnpm/zois-core@1.0.15/node_modules/zois-core/dist/assets/errorIcon.svg
   var errorIcon_default = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 10.5858L9.17157 7.75736L7.75736 9.17157L10.5858 12L7.75736 14.8284L9.17157 16.2426L12 13.4142L14.8284 16.2426L16.2426 14.8284L13.4142 12L16.2426 9.17157L14.8284 7.75736L12 10.5858Z"></path></svg>';
 
-  // node_modules/.pnpm/zois-core@1.0.14/node_modules/zois-core/dist/assets/infoIcon.svg
+  // node_modules/.pnpm/zois-core@1.0.15/node_modules/zois-core/dist/assets/infoIcon.svg
   var infoIcon_default = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM11 11V17H13V11H11ZM11 7V9H13V7H11Z"></path></svg>';
 
-  // node_modules/.pnpm/zois-core@1.0.14/node_modules/zois-core/dist/assets/successIcon.svg
+  // node_modules/.pnpm/zois-core@1.0.15/node_modules/zois-core/dist/assets/successIcon.svg
   var successIcon_default = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22ZM17.4571 9.45711L11 15.9142L6.79289 11.7071L8.20711 10.2929L11 13.0858L16.0429 8.04289L17.4571 9.45711Z"></path></svg>';
 
-  // node_modules/.pnpm/zois-core@1.0.14/node_modules/zois-core/dist/popups.js
+  // node_modules/.pnpm/zois-core@1.0.15/node_modules/zois-core/dist/popups.js
   var import_jsx_runtime = __toESM(require_jsx_runtime());
-  function P2({ children: o }) {
+  function E2({ children: o }) {
     const [e, t] = (0, import_react2.useState)({}), i3 = window.ZOISCORE.useToastsStore((s) => s.clearToasts);
     return (0, import_react2.useEffect)(() => {
       const s = () => {
-        t({ fontFamily: m.fontFamily ?? "sans-serif", bottom: j(5) + "px", left: R(5) + "px" });
+        t({ fontFamily: "ui-sans-serif", bottom: j(5) + "px", left: R(5) + "px" });
       };
       return window.addEventListener("resize", s), s(), () => {
         window.removeEventListener("resize", s);
@@ -20087,26 +20087,26 @@ One of mods you are using is using an old version of SDK. It will work for now b
       }), setTimeout(i3, 300);
     }, children: o });
   }
-  function I({ title: o, message: e, type: t, duration: i3, id: s }) {
+  function P2({ title: o, message: e, type: t, duration: i3, id: s }) {
     const [c, n2] = (0, import_react2.useState)({}), [r, l2] = (0, import_react2.useState)(false);
     return (0, import_react2.useEffect)(() => {
       const p = () => {
-        const T2 = MainCanvas.canvas.clientWidth, h2 = MainCanvas.canvas.clientHeight, g = Math.min(T2, h2) / 100;
+        const T2 = MainCanvas.canvas.clientWidth, S2 = MainCanvas.canvas.clientHeight, g = Math.min(T2, S2) / 100;
         n2({ position: "relative", width: "100%", borderRadius: "0.1em", fontSize: 3 * g + "px", padding: 1.5 * g + "px" });
       };
       window.addEventListener("resize", p), p();
-      const S2 = setTimeout(() => l2(true), i3);
+      const f2 = setTimeout(() => l2(true), i3);
       return () => {
-        clearTimeout(S2), window.removeEventListener("resize", p);
+        clearTimeout(f2), window.removeEventListener("resize", p);
       };
-    }, []), (0, import_jsx_runtime.jsxs)("div", { className: `zcToast ${r && "exiting"}`, "data-zc-toast-type": t, style: c, children: [(0, import_jsx_runtime.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: "1vw", position: "relative", zIndex: 5 }, children: [t === "spinner" ? (0, import_jsx_runtime.jsx)("div", { className: "zcSpinner", style: { width: "2vw", height: "2vw" } }) : (0, import_jsx_runtime.jsx)("img", { src: t === "info" ? infoIcon_default : t === "success" ? successIcon_default : t === "warning" ? warningIcon_default : errorIcon_default, style: { width: "2vw" } }), (0, import_jsx_runtime.jsxs)("div", { children: [o && e && (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [(0, import_jsx_runtime.jsx)("p", { children: o }), (0, import_jsx_runtime.jsx)("p", { style: { color: t === "info" ? "#b8b8ff" : t === "success" ? "#c7f9c7" : t === "error" ? "#f8bcbc" : "#ffeec5", fontSize: "70%", overflowWrap: "anywhere" }, children: e })] }), (!o && e || o && !e) && (0, import_jsx_runtime.jsx)("p", { style: { position: "relative", zIndex: 5 }, children: o || e })] })] }), (0, import_jsx_runtime.jsx)("div", { className: "zcToast-ProgressBar", style: { animation: `zcToast-progress ${i3}ms linear 0s 1 alternate none`, position: "absolute", top: 0, left: 0, height: "100%" } })] });
+    }, []), (0, import_jsx_runtime.jsxs)("div", { className: `zcToast ${r && "exiting"}`, "data-zc-toast-type": t, style: c, children: [(0, import_jsx_runtime.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: "1vw", position: "relative", zIndex: 5 }, children: [t === "spinner" ? (0, import_jsx_runtime.jsx)("div", { className: "zcSpinner", style: { width: "2vw", height: "2vw" } }) : (0, import_jsx_runtime.jsx)("img", { src: t === "info" ? infoIcon_default : t === "success" ? successIcon_default : t === "warning" ? warningIcon_default : errorIcon_default, style: { width: "2vw" } }), (0, import_jsx_runtime.jsxs)("div", { children: [o && e && (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [(0, import_jsx_runtime.jsx)("p", { children: o }), (0, import_jsx_runtime.jsx)("p", { style: { color: t === "info" ? "#b8b8ff" : t === "success" ? "#c7f9c7" : t === "error" ? "#f8bcbc" : "#ffeec5", fontSize: "70%", overflowWrap: "anywhere", marginTop: "0.25em" }, children: e })] }), (!o && e || o && !e) && (0, import_jsx_runtime.jsx)("p", { style: { position: "relative", zIndex: 5 }, children: o || e })] })] }), (0, import_jsx_runtime.jsx)("div", { className: "zcToast-ProgressBar", style: { animation: `zcToast-progress ${i3}ms linear 0s 1 alternate none`, position: "absolute", top: 0, left: 0, height: "100%" } })] });
   }
-  function R2({ dialog: o }) {
+  function I({ dialog: o }) {
     const e = window.ZOISCORE.useDialogStore((n2) => n2.clearDialog), [t, i3] = (0, import_react2.useState)({}), [s, c] = (0, import_react2.useState)([]);
     return (0, import_react2.useEffect)(() => {
       const n2 = () => {
         const r = MainCanvas.canvas.clientWidth, l2 = MainCanvas.canvas.clientHeight, p = Math.min(r, l2) / 100;
-        i3({ width: F(o.width), position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", background: "rgba(36, 36, 36, 0.96)", zIndex: 20, fontFamily: m.fontFamily ?? "sans-serif", border: "none", padding: 2 * p });
+        i3({ width: F(o.width), position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", background: "rgba(36, 36, 36, 0.96)", zIndex: 20, fontFamily: "ui-sans-serif", border: "none", padding: 2 * p });
       };
       return window.addEventListener("resize", n2), n2(), () => {
         window.removeEventListener("resize", n2);
@@ -20117,7 +20117,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       e(), o.promise.resolve(o.buttons.list.filter((n2, r) => s.includes(r)).map((n2) => n2.value));
     }, children: "Confirm" })] });
   }
-  var M2 = class {
+  var R2 = class {
     generateToastId() {
       const { toasts: e } = window.ZOISCORE.useToastsStore.getState();
       return `${Date.now()}:${e.length + 1}`;
@@ -20151,7 +20151,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       t(e);
     }
   };
-  var k = class {
+  var M2 = class {
     showDialog({ type: e, title: t, body: i3, buttons: s, width: c }) {
       const { setDialog: n2 } = window.ZOISCORE.useDialogStore.getState();
       return new Promise((r, l2) => {
@@ -20159,48 +20159,48 @@ One of mods you are using is using an old version of SDK. It will work for now b
       });
     }
   };
-  function L2() {
+  function k() {
     const o = window.ZOISCORE.useToastsStore((t) => t.toasts), e = window.ZOISCORE.useDialogStore((t) => t.dialog);
-    return (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [(0, import_jsx_runtime.jsx)(P2, { children: o.map(({ title: t, message: i3, type: s, duration: c, id: n2 }) => (0, import_jsx_runtime.jsx)(I, { id: n2, title: t, message: i3, type: s, duration: c }, n2)) }), e && (0, import_jsx_runtime.jsx)(R2, { dialog: e })] });
+    return (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [(0, import_jsx_runtime.jsx)(E2, { children: o.map(({ title: t, message: i3, type: s, duration: c, id: n2 }) => (0, import_jsx_runtime.jsx)(P2, { id: n2, title: t, message: i3, type: s, duration: c }, n2)) }), e && (0, import_jsx_runtime.jsx)(I, { dialog: e })] });
   }
-  var N = class extends HTMLElement {
+  var L2 = class extends HTMLElement {
     disconnectedCallback() {
       ServerShowBeep("VirtualDOM was removed, chaos is coming...", 5e3, {});
     }
   };
-  var Y = create((o) => ({ toasts: [], addToast: (e) => o((t) => ({ toasts: [...t.toasts, e] })), removeToast: (e) => o((t) => ({ toasts: t.toasts.filter((i3) => i3.id !== e) })), clearToasts: () => o({ toasts: [] }) }));
-  var G2 = create((o) => ({ dialog: null, setDialog: (e) => o({ dialog: e }), clearDialog: () => o({ dialog: null }) }));
-  function K() {
-    customElements.define("zc-virtual-dom", N);
+  var j2 = create((o) => ({ toasts: [], addToast: (e) => o((t) => ({ toasts: [...t.toasts, e] })), removeToast: (e) => o((t) => ({ toasts: t.toasts.filter((i3) => i3.id !== e) })), clearToasts: () => o({ toasts: [] }) }));
+  var q = create((o) => ({ dialog: null, setDialog: (e) => o({ dialog: e }), clearDialog: () => o({ dialog: null }) }));
+  function Y() {
+    customElements.define("zc-virtual-dom", L2);
     const o = document.createElement("zc-virtual-dom");
-    document.body.append(o), import_client.default.createRoot(document.getElementsByTagName("zc-virtual-dom")[0]).render((0, import_jsx_runtime.jsx)(L2, {}));
+    document.body.append(o), import_client.default.createRoot(document.getElementsByTagName("zc-virtual-dom")[0]).render((0, import_jsx_runtime.jsx)(k, {}));
   }
-  var Q = new M2();
-  var U = new k();
+  var G2 = new R2();
+  var K = new M2();
 
-  // node_modules/.pnpm/zois-core@1.0.14/node_modules/zois-core/package.json
-  var version = "1.0.14";
+  // node_modules/.pnpm/zois-core@1.0.15/node_modules/zois-core/package.json
+  var version = "1.0.15";
 
-  // node_modules/.pnpm/zois-core@1.0.14/node_modules/zois-core/dist/index.js
+  // node_modules/.pnpm/zois-core@1.0.15/node_modules/zois-core/dist/index.js
   var m;
   function M3(e) {
     if (!window.ZOISCORE) {
       const t = document.createElement("style");
-      t.innerHTML = styles_default, document.head.append(t), window.ZOISCORE = Object.freeze({ loaded: true, useToastsStore: Y, useDialogStore: G2 }), K();
+      t.innerHTML = styles_default, document.head.append(t), window.ZOISCORE = Object.freeze({ loaded: true, useToastsStore: j2, useDialogStore: q }), Y();
     }
     m = { ...e }, O2();
   }
   function h(e) {
     return new Promise((t) => setTimeout(t, e));
   }
-  async function b(e, t = () => false) {
+  async function b2(e, t = () => false) {
     for (; !e(); ) {
       if (t()) return false;
       await h(10);
     }
     return true;
   }
-  function x2(e, t) {
+  function x(e, t) {
     return e = Math.ceil(e), t = Math.floor(t), Math.floor(Math.random() * (t - e + 1)) + e;
   }
   function D2(e, t) {
@@ -20212,10 +20212,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
     return false;
   }
-  function w(e, t) {
+  function w2(e, t) {
     return !e && !t || !e && t === "Default" || !t && e === "Default" || e === "Default" && Array.isArray(t) && t.filter((r) => r === "Default").length === t.length || t === "Default" && Array.isArray(e) && e.filter((r) => r === "Default").length === e.length ? true : JSON.stringify(e) === JSON.stringify(t);
   }
-  function N3(e) {
+  function N2(e) {
     return typeof e == "string" ? Math.round(new TextEncoder().encode(e).byteLength / 100) / 10 : Math.round(new TextEncoder().encode(JSON.stringify(e)).byteLength / 100) / 10;
   }
   function O3(e) {
@@ -20225,32 +20225,32 @@ One of mods you are using is using an old version of SDK. It will work for now b
     return CharacterNickname(e);
   }
   function S() {
-    if (!N2("Themed")) return null;
+    if (!N("Themed")) return null;
     const e = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.Themed ?? ""));
     return !e?.GlobalModule?.themedEnabled || !e?.GlobalModule?.doVanillaGuiOverhaul ? null : e.ColorsModule;
   }
 
-  // node_modules/.pnpm/zois-core@1.0.14/node_modules/zois-core/dist/messaging.js
+  // node_modules/.pnpm/zois-core@1.0.15/node_modules/zois-core/dist/messaging.js
   var d2 = /* @__PURE__ */ new Map();
   var l = /* @__PURE__ */ new Map();
-  function q(o, t) {
+  function q2(o, t) {
     const e = d2.get(o);
     e && e.resolve({ data: t });
   }
   function P3(o, t, e, n2) {
-    const a3 = l.get(t);
-    if (!a3) return;
-    const s = a3(e, n2);
-    s !== void 0 && u2.sendPacket("requestResponse", { requestId: o, message: t, data: s }, n2.MemberNumber);
+    const s = l.get(t);
+    if (!s) return;
+    const a3 = s(e, n2);
+    a3 !== void 0 && u2.sendPacket("requestResponse", { requestId: o, message: t, data: a3 }, n2.MemberNumber);
   }
   function k2(o, t) {
     const e = d2.get(o);
     e && e.resolve({ data: t });
   }
-  function M4(o, t, e, n2, a3) {
-    const s = l.get(t);
-    if (console.log(s), !s) return;
-    const r = s(e, n2, a3);
+  function M4(o, t, e, n2, s) {
+    const a3 = l.get(t);
+    if (!a3) return;
+    const r = a3(e, n2, s);
     r !== void 0 && u2.sendBeep({ type: `${m.key}_requestResponse`, requestId: o, message: t, data: r }, n2);
   }
   var R3 = class {
@@ -20259,19 +20259,19 @@ One of mods you are using is using an old version of SDK. It will work for now b
       ServerSend("AccountBeep", n2);
     }
     sendPacket(t, e, n2) {
-      const a3 = { Content: m.key, Dictionary: { msg: t }, Type: "Hidden" };
-      e && (a3.Dictionary.data = e), n2 && (a3.Target = n2), ServerSend("ChatRoomChat", a3);
+      const s = { Content: m.key, Dictionary: { msg: t }, Type: "Hidden" };
+      e && (s.Dictionary.data = e), n2 && (s.Target = n2), ServerSend("ChatRoomChat", s);
     }
     sendAction(t, e = void 0, n2 = []) {
       if (!t || !ServerPlayerIsInChatRoom()) return;
-      const a3 = CharacterPronounDescription(Player) === "She/Her", s = a3 ? "Her" : "His", r = a3 ? "Her" : "Him", c = a3 ? "Herself" : "Himself", p = a3 ? "She" : "He";
-      t = t.replaceAll("<Possessive>", s).replaceAll("<possessive>", s.toLocaleLowerCase()).replaceAll("<Intensive>", r).replaceAll("<intensive>", r.toLocaleLowerCase()).replaceAll("<SelfIntensive>", c).replaceAll("<selfIntensive>", c.toLocaleLowerCase()).replaceAll("<Pronoun>", p).replaceAll("<pronoun>", p.toLocaleLowerCase()), ServerSend("ChatRoomChat", { Content: "ZC_CUSTOM_ACTION", Type: "Action", Target: e ?? void 0, Dictionary: [{ Tag: 'MISSING TEXT IN "Interface.csv": ZC_CUSTOM_ACTION', Text: t }, ...n2] });
+      const s = CharacterPronounDescription(Player) === "She/Her", a3 = s ? "Her" : "His", r = s ? "Her" : "Him", c = s ? "Herself" : "Himself", p = s ? "She" : "He";
+      t = t.replaceAll("<Possessive>", a3).replaceAll("<possessive>", a3.toLocaleLowerCase()).replaceAll("<Intensive>", r).replaceAll("<intensive>", r.toLocaleLowerCase()).replaceAll("<SelfIntensive>", c).replaceAll("<selfIntensive>", c.toLocaleLowerCase()).replaceAll("<Pronoun>", p).replaceAll("<pronoun>", p.toLocaleLowerCase()), ServerSend("ChatRoomChat", { Content: "ZC_CUSTOM_ACTION", Type: "Action", Target: e ?? void 0, Dictionary: [{ Tag: 'MISSING TEXT IN "Interface.csv": ZC_CUSTOM_ACTION', Text: t }, ...n2] });
     }
-    sendRequest({ message: t, data: e = {}, target: n2, type: a3 = "packet" }) {
-      const s = crypto.randomUUID();
+    sendRequest({ message: t, data: e = {}, target: n2, type: s = "packet" }) {
+      const a3 = crypto.randomUUID();
       return new Promise((r, c) => {
-        d2.set(s, { message: t, data: e, target: n2, resolve: r, reject: c }), a3 === "packet" ? u2.sendPacket("request", { requestId: s, message: t, data: e }, n2) : u2.sendBeep({ type: `${m.key}_request`, requestId: s, message: t, data: e }, n2), setTimeout(() => {
-          d2.delete(s), r({ isError: true });
+        d2.set(a3, { message: t, data: e, target: n2, resolve: r, reject: c }), s === "packet" ? u2.sendPacket("request", { requestId: a3, message: t, data: e }, n2) : u2.sendBeep({ type: `${m.key}_request`, requestId: a3, message: t, data: e }, n2), setTimeout(() => {
+          d2.delete(a3), r({ isError: true });
         }, 6e3);
       });
     }
@@ -20287,15 +20287,15 @@ One of mods you are using is using an old version of SDK. It will work for now b
       l.set(t, e);
     }
     onPacket(t, e) {
-      a2("ChatRoomMessage", y.ADD_BEHAVIOR, (n2, a3) => {
-        const s = n2[0], r = O3(s.Sender);
-        return r && s.Content === m.key && s.Dictionary.msg === t && !r.IsPlayer() && e(s.Dictionary.data, r), a3(n2);
+      a2("ChatRoomMessage", y.ADD_BEHAVIOR, (n2, s) => {
+        const a3 = n2[0], r = O3(a3.Sender);
+        return r && a3.Content === m.key && a3.Dictionary.msg === t && !r.IsPlayer() && e(a3.Dictionary.data, r), s(n2);
       });
     }
   };
   var u2 = new R3();
 
-  // node_modules/.pnpm/zois-core@1.0.14/node_modules/zois-core/dist/modsApi.js
+  // node_modules/.pnpm/zois-core@1.0.15/node_modules/zois-core/dist/modsApi.js
   var y = ((t) => (t[t.OBSERVE = 0] = "OBSERVE", t[t.ADD_BEHAVIOR = 1] = "ADD_BEHAVIOR", t[t.MODIFY_BEHAVIOR = 5] = "MODIFY_BEHAVIOR", t[t.OVERRIDE_BEHAVIOR = 10] = "OVERRIDE_BEHAVIOR", t[t.TOP = 100] = "TOP", t))(y || {});
   var i;
   function O2() {
@@ -20310,7 +20310,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         }
         if (u3 === "requestResponse") {
           if (typeof t.requestId != "string") return;
-          q(t.requestId, t.data);
+          q2(t.requestId, t.data);
         }
       }
       return r(e);
@@ -20338,7 +20338,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     if (!i) throw new Error("zois-core is not registered");
     return i.hookFunction(e, r, o);
   }
-  function N2(e) {
+  function N(e) {
     return !!import_bondage_club_mod_sdk.default.getModsInfo().find((r) => r.name === e);
   }
 
@@ -20704,7 +20704,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       super.load();
       if (InformationSheetSelection.IsPlayer()) {
         this.createText({
-          text: `Mod Data Size: ${N3(Player.ExtensionSettings?.LITTLISH_CLUB ?? "")}KB`,
+          text: `Mod Data Size: ${N2(Player.ExtensionSettings?.LITTLISH_CLUB ?? "")}KB`,
           x: 150,
           y: 240,
           fontSize: 6
@@ -20961,7 +20961,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     if (!cyberDiaperStorage?.locked) return;
     const asset = AssetGet(Player.AssetFamily, "ItemPelvis", getCyberDiaperAssetName(cyberDiaperStorage.model));
     if (!cyberDiaperItem || cyberDiaperItem.Asset?.Name !== getCyberDiaperAssetName(cyberDiaperStorage.model) || // @ts-ignore
-    !w(cyberDiaperStorage.color ?? asset.DefaultColor, cyberDiaperItem.Color ?? asset.DefaultColor)) putCyberDiaperOn();
+    !w2(cyberDiaperStorage.color ?? asset.DefaultColor, cyberDiaperItem.Color ?? asset.DefaultColor)) putCyberDiaperOn();
   }
   function loadCyberDiaper() {
     a2("ChatRoomCharacterItemUpdate", y.OBSERVE, (args, next) => {
@@ -20978,7 +20978,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     });
   }
 
-  // node_modules/.pnpm/zois-core@1.0.14/node_modules/zois-core/dist/wardrobe.js
+  // node_modules/.pnpm/zois-core@1.0.15/node_modules/zois-core/dist/wardrobe.js
   function n(e) {
     const s = AssetGroup.includes(e) ? e : Asset.includes(e) ? e.Group : e.Asset.Group;
     if (!AssetGroup.includes(s)) throw new Error("Failed to convert item to group");
@@ -21005,17 +21005,17 @@ One of mods you are using is using an old version of SDK. It will work for now b
       e.Appearance = e.Appearance.filter((o) => i2(o) || !ValidationCanRemoveItem(o, t, !!s.find((l2) => l2?.Asset?.Group?.Name === o?.Asset?.Group?.Name)) || o.Property?.LockedBy && !DialogCanUnlock(a3, o) || o.Asset.Name === "SlaveCollar" && a3.IsPlayer() ? (p.push(o.Asset.Group.Name), true) : false);
     }
     for (const t of s) {
-      if (!u3 && (!f2(a3, t.Asset.Group.Name, t.Asset) || p.includes(t.Asset.Group.Name))) continue;
+      if (!u3 && (!f(a3, t.Asset.Group.Name, t.Asset) || p.includes(t.Asset.Group.Name))) continue;
       CharacterAppearanceSetItem(e, t.Asset.Group.Name, t.Asset, t.Color);
       const o = InventoryGet(e, t.Asset.Group.Name);
       t.Craft && CraftingValidate(t.Craft, t.Asset) !== CraftingStatusType.CRITICAL_ERROR && (o.Craft = t.Craft), t.Property && (ValidationSanitizeProperties(e, t), o.Property = t.Property);
     }
     CharacterRefresh(e), e.IsNpc() || ChatRoomCharacterUpdate(e);
   }
-  function f2(e, s, r) {
+  function f(e, s, r) {
     return !ValidationIsItemBlockedOrLimited(e, Player.MemberNumber, s, r.Name) && ServerChatRoomGetAllowItem(Player, e);
   }
-  function N4(e, s) {
+  function N3(e, s) {
     return s.map((r) => ServerBundledItemToAppearanceItem(e, r));
   }
 
@@ -21050,12 +21050,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
           fontSize: 6
         });
         loadingText.style.textAlign = "center";
-        await b(() => ItemColorLayerNames.loaded);
+        await b2(() => ItemColorLayerNames.loaded);
         loadingText.remove();
       }
       if (!this.cyberDiaperSettings.color) this.cyberDiaperSettings.color = JSON.parse(JSON.stringify(asset.DefaultColor));
       this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter2");
-      this.canvasCharacter.Appearance = N4(
+      this.canvasCharacter.Appearance = N3(
         this.canvasCharacter.AssetFamily,
         ServerAppearanceBundle(InformationSheetSelection.Appearance)
       );
@@ -22504,9 +22504,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
         fontSize: 8,
         isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */),
         onClick: () => {
-          if (Player.Money < 499) return Q.error({ message: "Not enough money.", duration: 3e3 });
+          if (Player.Money < 499) return G2.error({ message: "Not enough money.", duration: 3e3 });
           CharacterChangeMoney(Player, -499);
-          Q.success({ message: "Successfully bought Cyber Diaper.", duration: 4e3 });
+          G2.success({ message: "Successfully bought Cyber Diaper.", duration: 4e3 });
           modStorage.cyberDiaper = {
             name: "Default diaper name",
             description: "Default diaper description",
@@ -22634,7 +22634,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         onClick: () => {
           if (noteInput.value.trim() === "") return;
           if (new TextEncoder().encode(noteInput.value).byteLength / 1024 > MAX_NOTE_SIZE_IN_KBYTES) {
-            return Q.error({
+            return G2.error({
               message: `That note takes up more size than the set limit. You are evil.`,
               duration: 4500
             });
@@ -22751,7 +22751,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   // src/subscreens/wardrobeMenu.ts
   var WardrobeMenu = class extends X {
     canvasCharacter;
-    currentAppearance = CANVAS_BABIES_APPEARANCES[x2(0, CANVAS_BABIES_APPEARANCES.length - 1)];
+    currentAppearance = CANVAS_BABIES_APPEARANCES[x(0, CANVAS_BABIES_APPEARANCES.length - 1)];
     includeTypes = ["Binds", "Cosplay", "Collar", "Locks"];
     requiredModsElement;
     creatorNameElement;
@@ -22864,7 +22864,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       }
     }
     refresh() {
-      const appearanceBundle = N4(
+      const appearanceBundle = N3(
         InformationSheetSelection.AssetFamily,
         JSON.parse(
           LZString.decompressFromBase64(this.currentAppearance.bundle)
@@ -23093,7 +23093,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       });
       loadingText.style.textAlign = "center";
       ServerSend("AccountQuery", { Query: "OnlineFriends" });
-      await b(() => !isLoading);
+      await b2(() => !isLoading);
       loadingText.remove();
       if (this.onlineFriendsList.length === 0) {
         return this.createText({
@@ -23111,12 +23111,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
         width: 1600,
         height: 510
       });
-      this.onlineFriendsList.toSorted().forEach((f3) => {
+      this.onlineFriendsList.toSorted().forEach((f2) => {
         const line = document.createElement("div");
         line.style.cssText = "display: flex; align-items: center; justify-content: space-between; column-gap: 1vw; width: 100%; margin-top: 1vw;";
         line.append(
           this.createText({
-            text: `<b>${f3.MemberName} (${f3.MemberNumber})</b>`,
+            text: `<b>${f2.MemberName} (${f2.MemberNumber})</b>`,
             place: false
           }),
           this.createButton({
@@ -23124,7 +23124,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
             padding: 1,
             place: false,
             onClick: async () => {
-              const spinnerId = Q.spinner({
+              const spinnerId = G2.spinner({
                 message: "Shaking the rattle..."
               });
               const res = await u2.sendRequest({
@@ -23132,19 +23132,19 @@ One of mods you are using is using an old version of SDK. It will work for now b
                 data: {
                   roomName: ChatRoomData.Name
                 },
-                target: f3.MemberNumber,
+                target: f2.MemberNumber,
                 type: "beep"
               });
-              Q.removeSpinner(spinnerId);
+              G2.removeSpinner(spinnerId);
               if (res.isError) {
-                return Q.error({
+                return G2.error({
                   title: "Summon error",
-                  message: `No response was received. Make sure ${f3.MemberName} has "Summoning rattle" rule active.`,
+                  message: `No response was received. Make sure ${f2.MemberName} has "Summoning rattle" rule active.`,
                   duration: 6e3
                 });
               }
               if (res.data?.success) {
-                Q.success({
+                G2.success({
                   message: "Summon was completed successfully",
                   duration: 4e3
                 });
@@ -23176,9 +23176,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
     load() {
       super.load();
       this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
-      const babyAppearance = N4(InformationSheetSelection.AssetFamily, JSON.parse(
+      const babyAppearance = N3(InformationSheetSelection.AssetFamily, JSON.parse(
         LZString.decompressFromBase64(
-          CANVAS_BABIES_APPEARANCES[x2(0, CANVAS_BABIES_APPEARANCES.length - 1)].bundle
+          CANVAS_BABIES_APPEARANCES[x(0, CANVAS_BABIES_APPEARANCES.length - 1)].bundle
         )
       ));
       ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, JSON.parse(
@@ -23189,7 +23189,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       I2(this.canvasCharacter, babyAppearance);
       PoseSetActive(this.canvasCharacter, "Kneel");
       CharacterRefresh(this.canvasCharacter);
-      this.circleColor = N2("Themed") ? S()?.base?.text ?? "black" : "black";
+      this.circleColor = N("Themed") ? S()?.base?.text ?? "black" : "black";
       let cloudText = `Littlish Club v${version2}
 Thanks for installing the mod!`;
       let cloudHtml = `Littlish Club <b>v${version2}</b><br>Thanks for installing the mod!`;
@@ -24088,7 +24088,7 @@ Thanks for installing the mod!`;
             if (InformationSheetSelection.IsPlayer()) {
               titles = TitleList.filter((t) => t.Requirement()).map((t) => t.Name);
             } else {
-              const spinnerId = Q.spinner({
+              const spinnerId = G2.spinner({
                 message: "Loading titles"
               });
               const res = await u2.sendRequest({
@@ -24096,9 +24096,9 @@ Thanks for installing the mod!`;
                 target: InformationSheetSelection.MemberNumber,
                 type: "packet"
               });
-              Q.removeSpinner(spinnerId);
+              G2.removeSpinner(spinnerId);
               if (res.isError) {
-                return Q.error({
+                return G2.error({
                   message: "Loading error",
                   duration: 4e3
                 });
@@ -24216,7 +24216,7 @@ Thanks for installing the mod!`;
     const conditionsValues = [];
     if (conditions?.whenInRoomWithRole) conditionsValues.push(whenInRoomWithRoleCondition);
     if (conditions?.whenInRoomWhereAbdl) conditionsValues.push(whenInRoomWhereAbdlCondition);
-    return (conditions?.type ?? "any") === "all" ? conditionsValues.every((b2) => b2) : conditionsValues.some((b2) => b2);
+    return (conditions?.type ?? "any") === "all" ? conditionsValues.every((b3) => b3) : conditionsValues.some((b3) => b3);
   }
   function isRuleEnabled(C2, ruleId) {
     if (C2.IsPlayer()) return modStorage.rules?.list?.find((r) => r.id === ruleId)?.state ?? false;
@@ -24287,7 +24287,7 @@ Thanks for installing the mod!`;
     text = text.replaceAll("hello", "hewo");
     text = text.replaceAll("so", "sho");
     const babyWords = ["ba-ba", "da-da", "ma-ma", "goo-goo", "wee", "ooh", "gu", "ga", "agu", "guga"];
-    text = text.replace(/(\w+)\b/g, (word) => word + (x2(1, text.split(" ").length) === 1 ? " " + babyWords[Math.floor(Math.random() * babyWords.length)] : ""));
+    text = text.replace(/(\w+)\b/g, (word) => word + (x(1, text.split(" ").length) === 1 ? " " + babyWords[Math.floor(Math.random() * babyWords.length)] : ""));
     return text.trim();
   }
   function chatRoomSearchCanJoinRoom(room) {
@@ -24361,7 +24361,7 @@ Thanks for installing the mod!`;
       if (getMommyOf(Player)?.id !== senderNumber && !getCaregiversOf(Player).includes(senderNumber)) return;
       if (!isRuleActive(Player, 1020 /* SUMMONING_RATTLE */)) return;
       if (typeof data?.roomName !== "string") return;
-      Q.info({
+      G2.info({
         title: "Summoning",
         message: `${senderName} summoned you, you will be moved in ${getRuleParameter2(Player, 1020 /* SUMMONING_RATTLE */, "timeout") ?? "5"}s`,
         duration: 6e3
@@ -24535,8 +24535,8 @@ Thanks for installing the mod!`;
             syncStorage();
             u2.sendLocal("You fall asleep");
             u2.sendAction(`${C(Player)} fell asleep, only spank or french kiss can wake <intensive> up`);
-          }, x2(6e3, 8e3));
-        }, x2(6e3, 1e4));
+          }, x(6e3, 8e3));
+        }, x(6e3, 1e4));
       }
       return createdItem;
     });
@@ -24657,9 +24657,12 @@ Thanks for installing the mod!`;
       for (const mutation of mutationList) {
         if (mutation.type === "childList") {
           mutation.addedNodes.forEach((node) => {
-            if (node.nodeType === Node.ELEMENT_NODE && node.tagName === "INPUT") {
-              if (node.classList.contains("checkbox")) {
-                node.classList.add("paciCheckbox");
+            if (node.nodeType === Node.ELEMENT_NODE && node.tagName === "INPUT" && node.classList.contains("checkbox")) {
+              node.classList.add("paciCheckbox");
+            }
+            for (const child of node.children ?? []) {
+              if (child.nodeType === Node.ELEMENT_NODE && child.tagName === "INPUT" && child.classList.contains("checkbox")) {
+                child.classList.add("paciCheckbox");
               }
             }
           });
@@ -24693,11 +24696,11 @@ Thanks for installing the mod!`;
     });
     a2("ChatSearchJoin", y.OVERRIDE_BEHAVIOR, (args, next) => {
       if (!isRuleActive(Player, 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */) && !isRuleActive(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */)) return next(args);
-      CommonGenerateGrid(ChatSearchResult, ChatSearchResultOffset, ChatSearchListParams, (room, x3, y2, width, height) => {
-        if (!MouseIn(x3, y2, width, height)) return false;
+      CommonGenerateGrid(ChatSearchResult, ChatSearchResultOffset, ChatSearchListParams, (room, x2, y2, width, height) => {
+        if (!MouseIn(x2, y2, width, height)) return false;
         const canJoinResult = chatRoomSearchCanJoinRoom(room);
         if (!canJoinResult[0]) {
-          Q.error({
+          G2.error({
             message: canJoinResult[1],
             duration: 5e3
           });
@@ -24715,11 +24718,11 @@ Thanks for installing the mod!`;
     a2("ChatSearchNormalDraw", y.OVERRIDE_BEHAVIOR, (args, next) => {
       if (!isRuleActive(Player, 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */) && !isRuleActive(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */)) return next(args);
       next(args);
-      CommonGenerateGrid(ChatSearchResult, ChatSearchResultOffset, ChatSearchListParams, (room, x3, y2, width, height) => {
+      CommonGenerateGrid(ChatSearchResult, ChatSearchResultOffset, ChatSearchListParams, (room, x2, y2, width, height) => {
         if (!chatRoomSearchCanJoinRoom(room)[0]) {
-          DrawButton(x3, y2, width, height, "", "#fa7db1", void 0, "Blocked by Littlish Club", true);
-          DrawTextFit((room.Friends != null && room.Friends.length > 0 ? "(" + room.Friends.length + ") " : "") + ChatSearchMuffle(room.Name) + " - " + ChatSearchMuffle(room.Creator) + " " + room.MemberCount + "/" + room.MemberLimit, x3 + 315, y2 + 25, 620, "black");
-          DrawTextFit(ChatSearchMuffle(room.Description), x3 + 315, y2 + 62, 620, "black");
+          DrawButton(x2, y2, width, height, "", "#fa7db1", void 0, "Blocked by Littlish Club", true);
+          DrawTextFit((room.Friends != null && room.Friends.length > 0 ? "(" + room.Friends.length + ") " : "") + ChatSearchMuffle(room.Name) + " - " + ChatSearchMuffle(room.Creator) + " " + room.MemberCount + "/" + room.MemberLimit, x2 + 315, y2 + 25, 620, "black");
+          DrawTextFit(ChatSearchMuffle(room.Description), x2 + 315, y2 + 62, 620, "black");
         }
         return false;
       });
@@ -25081,7 +25084,7 @@ Thanks for installing the mod!`;
     migrateModStorage();
     try {
       const bccStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.BCC));
-      if ((bccStorage?.abdl?.mommy || bccStorage?.abdl?.caretakers || bccStorage?.abdl?.notes?.list) && !N2("BCC")) bccAbdlPartSync(bccStorage.abdl);
+      if ((bccStorage?.abdl?.mommy || bccStorage?.abdl?.caretakers || bccStorage?.abdl?.notes?.list) && !N("BCC")) bccAbdlPartSync(bccStorage.abdl);
     } catch (e) {
     }
     syncStorage();
@@ -25283,13 +25286,13 @@ Thanks for installing the mod!`;
     loadUI();
     loadAccess();
     console.log(`${MOD_NAME} v${version2} loaded`);
-    Q.success({
+    G2.success({
       title: "Littlish Club loaded",
       message: `v${version2}`,
-      duration: 6e3
+      duration: 4e3
     });
     if (D2(version2, modStorage.version)) {
-      b(() => !!document.getElementById("InputChat")).then(() => {
+      b2(() => !!document.getElementById("InputChat")).then(() => {
         modStorage.version = version2;
         syncStorage();
         const text = `<div class="lcChangelog"><b>Littlish Club</b> v${version2}<br><br>Changes: <ul><li>Added 5 rules.</li><li>"Summoning rattle" feature.</li><li>Pop-up messages system.</li><li>Technical changes.</li></ul></div>`;
@@ -25301,9 +25304,9 @@ Thanks for installing the mod!`;
     a2("LoginResponse", y.OBSERVE, (args, next) => {
       next(args);
       const response = args[0];
-      if (typeof response?.Name === "string" && typeof response?.AccountName === "string") setTimeout(init, x2(3e3, 6e3));
+      if (typeof response?.Name === "string" && typeof response?.AccountName === "string") setTimeout(init, x(3e3, 6e3));
     });
-  } else setTimeout(init, x2(3e3, 6e3));
+  } else setTimeout(init, x(3e3, 6e3));
 })();
 /*! Bundled license information:
 
