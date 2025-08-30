@@ -13,13 +13,13 @@
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
     "bc-stubs": "^113.0.0",
-    "esbuild": "^0.25.6",
-    "typescript": "^5.8.3"
+    "esbuild": "^0.25.9",
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "bondage-club-mod-sdk": "^1.2.0",
     "lodash-es": "^4.17.21",
-    "zois-core": "^1.0.15"
+    "zois-core": "^1.1.2"
   },
   "pnpm": {
     "overrides": {}

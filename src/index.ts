@@ -5,7 +5,7 @@ import { initStorage, modStorage, syncStorage } from "./modules/storage";
 import { loadRules } from "./modules/rules";
 import { createApi } from "./modules/api";
 import { loadCyberDiaper } from "./modules/cyberDiaper";
-import { waitFor, registerCore, isVersionNewer, getRandomNumber } from "zois-core";
+import { waitForStart, waitFor, registerCore, isVersionNewer, getRandomNumber, injectStyles } from "zois-core";
 import { toastsManager } from "zois-core/popups";
 import { version } from "../package.json";
 import { loadUI } from "./modules/ui";
@@ -13,19 +13,17 @@ import { loadAccess } from "./modules/access";
 import { messagesManager } from "zois-core/messaging";
 
 
-registerCore({
-    name: "Littlish Club",
-    fullName: "Littlish Club",
-    key: "LC",
-    version,
-    repository: REPO_URL,
-    fontFamily: "Emilys Candy"
-});
+waitForStart(() => {
+    registerCore({
+        name: "Littlish Club",
+        fullName: "Littlish Club",
+        key: "LC",
+        version,
+        repository: REPO_URL,
+        fontFamily: "Emilys Candy"
+    });
 
-const init = () => {
-    const style = document.createElement("style");
-    style.innerHTML = styles;
-    document.head.append(style);
+    injectStyles(styles);
 
     initStorage();
     createApi();
@@ -49,16 +47,5 @@ const init = () => {
             messagesManager.sendLocal(text);
         });
     }
-};
-
-if (CurrentScreen == null || CurrentScreen === "Login") {
-    hookFunction("LoginResponse", HookPriority.OBSERVE, (args, next) => {
-        next(args);
-        const response = args[0];
-        if (
-            typeof response?.Name === "string" &&
-            typeof response?.AccountName === "string"
-        ) setTimeout(init, getRandomNumber(3000, 6000));
-    });
-} else setTimeout(init, getRandomNumber(3000, 6000));
+});
 
