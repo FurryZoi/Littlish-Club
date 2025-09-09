@@ -19913,12 +19913,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
 }`;
 
   // package.json
-  var version = "1.1.0";
+  var version = "1.1.1";
 
-  // node_modules/.pnpm/zois-core@1.1.2/node_modules/zois-core/dist/styles.css
-  var styles_default2 = '*{margin:0;padding:0;box-sizing:border-box}.zcButton{cursor:pointer;background:var(--tmd-element, white);color:var(--tmd-text, black);border:2px solid var(--tmd-accent, black);border-radius:4px}.zcButton:hover{background:var(--tmd-element-hover, #ebf7fe);border-color:var(--tmd-accent-hover, #7dd3fc);color:var(--tmd-accent-hover, #015a8c)}.zcButton .tooltip{position:absolute;color:#000;text-align:center;padding:4px;border-radius:4px;background:#ff8;border:2px solid #e7e787;width:max-content;min-height:100%;visibility:hidden;z-index:10}.zcButton .tooltip[position=left]{right:calc(100% + 1vw)}.zcButton .tooltip[position=right]{left:calc(100% + 1vw)}.zcButton:hover .tooltip{visibility:visible}.zcButton[data-zc-style=green]{background:#7cff7c;border-color:#52cc52;color:#000}.zcButton[data-zc-style=green]:hover{background:#5ec55e;color:#000}.zcButton[data-zc-style=inverted]{background:var(--tmd-accent, #303030);border:none;color:var(--tmd-text, white)}.zcButton[data-zc-style=inverted]:hover{background:var(--tmd-accent-hover, #474747)}.zcInput{background:var(--tmd-element, white);color:var(--tmd-text, black);padding:2vw;border:2px solid var(--tmd-accent, black);border-radius:4px}.zcInput::placeholder{color:var(--tmd-text, black)}.zcBackNextButton{display:flex;column-gap:2vw;justify-content:center;align-items:center;background:var(--tmd-element, white);color:var(--tmd-text, black);border:2px solid var(--tmd-accent, black);border-radius:4px}.zcBackNextButton-btnDisabled{background:#ffa590;pointer-events:none}.zcTabs{display:flex}.zcTabs button{cursor:pointer;width:100%;color:var(--tmd-text, black);background:none;border:none;border-bottom:2px solid var(--tmd-element, rgb(214, 214, 214));padding:.25em}.zcTabs button[data-opened=true]{font-weight:700;border-bottom:2px solid var(--tmd-accent, rgb(81, 81, 231))!important}.zcTabs button:hover{background:var(--tmd-element, rgb(235, 235, 235));border-bottom:2px solid var(--tmd-element-hover, rgb(149, 149, 149))}.zcCard{border:2px solid var(--tmd-accent, rgb(195, 195, 195));border-radius:.4em;background:var(--tmd-element, white);color:var(--tmd-text, black);padding:.4em 2.5em .4em .4em}.zcCard:hover{border:2px solid var(--tmd-accent-hover, rgb(170, 170, 170))}.zcCard_name{font-size:.5em;color:var(--tmd-text, rgb(100, 100, 100))}.zcCard_value{color:var(--tmd-text, black);margin-top:.4em;font-weight:700}.zcSelect{cursor:pointer;background:var(--tmd-element, white);color:var(--tmd-text, black);border:2px solid var(--tmd-accent, rgb(195, 195, 195));border-radius:.4em;padding:.45em}.zcSelect[opened=true]{border-color:var(--tmd-accent-hover, rgb(0, 96, 223))}.zcSelect[opened=false]:hover{border-color:var(--tmd-accent-hover, rgb(170, 170, 170))}.zcSelect>svg{position:absolute;right:.45em;top:50%;transform:translateY(-50%);width:1.5em;height:1.5em;color:var(--tmd-accent, rgb(0, 96, 223))}.zcSelect>div[data-zc-position=bottom]{position:absolute;top:calc(100% + .45em);left:0;width:100%;background:var(--tmd-element, #f6f6f6ed);border:2px solid var(--tmd-element-hover, rgb(235 235 235));border-radius:.4em}.zcSelect>div[data-zc-position=top]{position:absolute;bottom:calc(100% + .45em);left:0;width:100%;background:var(--tmd-element, #f6f6f6ed);border:2px solid var(--tmd-element-hover, rgb(235 235 235));border-radius:.4em}.zcSelect>div>div{color:var(--tmd-text, black);width:100%;padding:.45em;border-radius:.25em}.zcSelect>div>div>svg{width:1.25em;height:1.25em;color:var(--tmd-accent, rgb(0, 96, 223))}.zcSelect>div>div:hover{background:var(--tmd-element-hover, #ededed)}.zcToastsContainer{display:flex;flex-direction:column;gap:.25vw;cursor:pointer;position:fixed;z-index:10}@keyframes zcToast-progress{0%{width:0}to{width:100%}}@keyframes zcSlideInFromLeft{0%{transform:translate(-100%);opacity:0}to{transform:translate(0);opacity:1}}@keyframes zcSlideOutToLeft{0%{transform:translate(0);opacity:1}to{transform:translate(-100%);opacity:0}}.zcToast{max-width:25vw;animation:zcSlideInFromLeft .3s ease-out forwards}.zcToast.exiting{animation:zcSlideOutToLeft .3s ease-out forwards}.zcToast p{color:#fff}dialog[data-zc-dialog-type=choice_multiple] .zcDialogBtn:before{content:"";position:absolute;left:1vw;top:50%;transform:translateY(-50%);border:2px solid white;width:.5em;aspect-ratio:1/1;border-radius:50%}dialog[data-zc-dialog-type=choice_multiple] .zcDialogBtn[data-zc-picked=true]:before{background:#fff}.zcDialogBtn{cursor:pointer;background:#ffffff17;border:none;font-size:clamp(6px,2vw,24px);color:#fff;padding:.2em;border-radius:.5em}.zcDialogBtn:hover{background:#ffffff24}@keyframes zcSpin{0%{transform:rotate(0)}to{transform:rotate(360deg)}}@keyframes zcCursorBlink{0%{border-right-color:transparent}to{border-right-color:#2a2a2a}}.zcCursor{border-right:2px solid var(--tmd-text, rgb(42, 42, 42));width:fit-content}.zcDisabled{pointer-events:none;opacity:.6}\n';
+  // node_modules/.pnpm/zois-core@1.1.3/node_modules/zois-core/dist/styles.css
+  var styles_default2 = '*{margin:0;padding:0;box-sizing:border-box}.zcButton{cursor:pointer;background:var(--tmd-element, white);color:var(--tmd-text, black);border:2px solid var(--tmd-accent, black);border-radius:4px}.zcButton:hover{background:var(--tmd-element-hover, #ebf7fe);border-color:var(--tmd-accent-hover, #7dd3fc);color:var(--tmd-accent-hover, #015a8c)}.zcButton .tooltip{position:absolute;color:#000;text-align:center;padding:4px;border-radius:4px;background:#ff8;border:2px solid #e7e787;width:max-content;min-height:100%;visibility:hidden;z-index:10}.zcButton .tooltip[position=left]{right:calc(100% + 1vw)}.zcButton .tooltip[position=right]{left:calc(100% + 1vw)}.zcButton:hover .tooltip{visibility:visible}.zcButton[data-zc-style=green]{background:#7cff7c;border-color:#52cc52;color:#000}.zcButton[data-zc-style=green]:hover{background:#5ec55e;color:#000}.zcButton[data-zc-style=inverted]{background:var(--tmd-accent, #303030);border:none;color:var(--tmd-text, white)}.zcButton[data-zc-style=inverted]:hover{background:var(--tmd-accent-hover, #474747)}.zcInput{background:var(--tmd-element, white);color:var(--tmd-text, black);padding:2vw;border:2px solid var(--tmd-accent, black);border-radius:4px}.zcInput::placeholder{color:var(--tmd-text, black)}.zcBackNextButton{display:flex;column-gap:2vw;justify-content:center;align-items:center;background:var(--tmd-element, white);color:var(--tmd-text, black);border:2px solid var(--tmd-accent, black);border-radius:4px}.zcBackNextButton-btnDisabled{background:#ffa590;pointer-events:none}.zcTabs{display:flex}.zcTabs button{cursor:pointer;width:100%;color:var(--tmd-text, black);background:none;border:none;border-bottom:2px solid var(--tmd-element, rgb(214, 214, 214));padding:.25em}.zcTabs button[data-opened=true]{font-weight:700;border-bottom:2px solid var(--tmd-accent, rgb(81, 81, 231))!important}.zcTabs button:hover{background:var(--tmd-element, rgb(235, 235, 235));border-bottom:2px solid var(--tmd-element-hover, rgb(149, 149, 149))}.zcCard{border:2px solid var(--tmd-accent, rgb(195, 195, 195));border-radius:.4em;background:var(--tmd-element, white);color:var(--tmd-text, black);padding:.4em 2.5em .4em .4em}.zcCard:hover{border:2px solid var(--tmd-accent-hover, rgb(170, 170, 170))}.zcCard_name{font-size:.5em;color:var(--tmd-text, rgb(100, 100, 100))}.zcCard_value{color:var(--tmd-text, black);margin-top:.4em;font-weight:700}.zcSelect{cursor:pointer;background:var(--tmd-element, white);color:var(--tmd-text, black);border:2px solid var(--tmd-accent, rgb(195, 195, 195));border-radius:.4em;padding:.45em;z-index:10}.zcSelect[opened=true]{border-color:var(--tmd-accent-hover, rgb(0, 96, 223))}.zcSelect[opened=false]:hover{border-color:var(--tmd-accent-hover, rgb(170, 170, 170))}.zcSelect>svg{position:absolute;right:.45em;top:50%;transform:translateY(-50%);width:1.5em;height:1.5em;color:var(--tmd-accent, rgb(0, 96, 223))}.zcSelect>div[data-zc-position=bottom]{position:absolute;top:calc(100% + .45em);left:0;width:100%;background:var(--tmd-element, #f6f6f6);border:2px solid var(--tmd-element-hover, rgb(235 235 235));border-radius:.4em}.zcSelect>div[data-zc-position=top]{position:absolute;bottom:calc(100% + .45em);left:0;width:100%;background:var(--tmd-element, #f6f6f6ed);border:2px solid var(--tmd-element-hover, rgb(235 235 235));border-radius:.4em}.zcSelect>div>div{color:var(--tmd-text, black);width:100%;padding:.45em;border-radius:.25em}.zcSelect>div>div>svg{width:1.25em;height:1.25em;color:var(--tmd-accent, rgb(0, 96, 223))}.zcSelect>div>div:hover{background:var(--tmd-element-hover, #ededed)}.zcToastsContainer{display:flex;flex-direction:column;gap:.25vw;cursor:pointer;position:fixed;z-index:10}@keyframes zcToast-progress{0%{width:0}to{width:100%}}@keyframes zcSlideInFromLeft{0%{transform:translate(-100%);opacity:0}to{transform:translate(0);opacity:1}}@keyframes zcSlideOutToLeft{0%{transform:translate(0);opacity:1}to{transform:translate(-100%);opacity:0}}.zcToast{max-width:25vw;animation:zcSlideInFromLeft .3s ease-out forwards}.zcToast.exiting{animation:zcSlideOutToLeft .3s ease-out forwards}.zcToast p{color:#fff}dialog[data-zc-dialog-type=choice_multiple] .zcDialogBtn:before{content:"";position:absolute;left:1vw;top:50%;transform:translateY(-50%);border:2px solid white;width:.5em;aspect-ratio:1/1;border-radius:50%}dialog[data-zc-dialog-type=choice_multiple] .zcDialogBtn[data-zc-picked=true]:before{background:#fff}.zcDialogBtn{cursor:pointer;background:#ffffff17;border:none;font-size:clamp(6px,2vw,24px);color:#fff;padding:.2em;border-radius:.5em}.zcDialogBtn:hover{background:#ffffff24}@keyframes zcSpin{0%{transform:rotate(0)}to{transform:rotate(360deg)}}@keyframes zcCursorBlink{0%{border-right-color:transparent}to{border-right-color:#2a2a2a}}.zcCursor{border-right:2px solid var(--tmd-text, rgb(42, 42, 42));width:fit-content}.zcDisabled{pointer-events:none;opacity:.6}\n';
 
-  // node_modules/.pnpm/zois-core@1.1.2/node_modules/zois-core/dist/modsApi.js
+  // node_modules/.pnpm/zois-core@1.1.3/node_modules/zois-core/dist/modsApi.js
   var import_bondage_club_mod_sdk = __toESM(require_bcmodsdk());
 
   // node_modules/.pnpm/lucide@0.541.0/node_modules/lucide/dist/esm/defaultAttributes.js
@@ -19979,7 +19979,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     ["path", { d: "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" }]
   ];
 
-  // node_modules/.pnpm/zois-core@1.1.2/node_modules/zois-core/dist/modules.js
+  // node_modules/.pnpm/zois-core@1.1.3/node_modules/zois-core/dist/modules.js
   var r = class {
     overrideProperties(e, t2) {
       return e;
@@ -19990,90 +19990,90 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@1.1.2/node_modules/zois-core/dist/ui-modules/styleModule.js
+  // node_modules/.pnpm/zois-core@1.1.3/node_modules/zois-core/dist/ui-modules/styleModule.js
   var n = class extends r {
     constructor(e) {
       super();
       this.style = e;
     }
     layoutEffect(e, o) {
-      for (const t2 of Object.keys(this.style)) o.style.setProperty(t2, this.style[t2]);
+      for (const t2 of Object.keys(this.style)) o.style[t2] = this.style[t2];
     }
   };
 
-  // node_modules/.pnpm/zois-core@1.1.2/node_modules/zois-core/dist/ui.js
-  function S2(h3) {
-    return h3 * (MainCanvas.canvas.clientHeight / 1e3);
+  // node_modules/.pnpm/zois-core@1.1.3/node_modules/zois-core/dist/ui.js
+  function S2(b) {
+    return b * (MainCanvas.canvas.clientHeight / 1e3);
   }
-  function H(h3) {
-    return h3 * (MainCanvas.canvas.clientWidth / 2e3);
+  function H(b) {
+    return b * (MainCanvas.canvas.clientWidth / 2e3);
   }
-  function V(h3, e = "top") {
-    const r2 = MainCanvas.canvas.clientHeight / 1e3;
-    return e === "top" ? MainCanvas.canvas.offsetTop + h3 * r2 : window.innerHeight - (MainCanvas.canvas.offsetTop + MainCanvas.canvas.clientHeight) + h3 * r2;
+  function R(b, e = "top") {
+    const o = MainCanvas.canvas.clientHeight / 1e3;
+    return e === "top" ? MainCanvas.canvas.offsetTop + b * o : window.innerHeight - (MainCanvas.canvas.offsetTop + MainCanvas.canvas.clientHeight) + b * o;
   }
-  function W(h3, e = "left") {
-    const r2 = MainCanvas.canvas.clientWidth / 2e3;
-    return e === "left" ? MainCanvas.canvas.offsetLeft + h3 * r2 : window.innerWidth - (MainCanvas.canvas.offsetLeft + MainCanvas.canvas.clientWidth) + h3 * r2;
+  function V(b, e = "left") {
+    const o = MainCanvas.canvas.clientWidth / 2e3;
+    return e === "left" ? MainCanvas.canvas.offsetLeft + b * o : window.innerWidth - (MainCanvas.canvas.offsetLeft + MainCanvas.canvas.clientWidth) + b * o;
   }
-  function j(h3, e, r2, u = "top-left") {
-    const m3 = u === "top-left" || u === "top-right" ? "top" : "bottom", s = u === "top-left" || u === "bottom-left" ? "left" : "right", n3 = V(r2, m3), p2 = W(e, s);
-    Object.assign(h3.style, { position: "fixed", [s]: p2 + "px", [m3]: n3 + "px" });
+  function j(b, e, o, d2 = "top-left") {
+    const u = d2 === "top-left" || d2 === "top-right" ? "top" : "bottom", r2 = d2 === "top-left" || d2 === "bottom-left" ? "left" : "right", t2 = R(o, u), p2 = V(e, r2);
+    Object.assign(b.style, { position: "fixed", [r2]: p2 + "px", [u]: t2 + "px" });
   }
-  function O(h3, e) {
-    const r2 = MainCanvas.canvas.clientWidth, u = MainCanvas.canvas.clientHeight, m3 = Math.min(r2, u) / 100, s = e * m3;
-    Object.assign(h3.style, { fontSize: s + "px" });
+  function O(b, e) {
+    const o = MainCanvas.canvas.clientWidth, d2 = MainCanvas.canvas.clientHeight, u = Math.min(o, d2) / 100, r2 = e * u;
+    Object.assign(b.style, { fontSize: r2 + "px" });
   }
-  function w(h3, e) {
-    h3.style.fontFamily = e ?? "sans-serif";
+  function k(b, e) {
+    b.style.fontFamily = e ?? "sans-serif";
   }
-  function G(h3, e) {
-    const r2 = MainCanvas.canvas.clientWidth, u = MainCanvas.canvas.clientHeight, m3 = Math.min(r2, u) / 100, s = e * m3;
-    Object.assign(h3.style, { padding: s + "px" });
+  function G(b, e) {
+    const o = MainCanvas.canvas.clientWidth, d2 = MainCanvas.canvas.clientHeight, u = Math.min(o, d2) / 100, r2 = e * u;
+    Object.assign(b.style, { padding: r2 + "px" });
   }
-  function X(h3) {
+  function X(b) {
     const e = MainCanvas.canvas.clientWidth <= MainCanvas.canvas.clientHeight * 2 ? MainCanvas.canvas.clientWidth / 50 : MainCanvas.canvas.clientHeight / 25;
-    Object.assign(h3.style, { fontSize: e + "px" });
+    Object.assign(b.style, { fontSize: e + "px" });
   }
   function Y() {
     F(M);
   }
-  function F(h3) {
-    M = k, k = h3, k && k.load(), M && M.unload();
+  function F(b) {
+    M = w, w = b, w && w.load(), M && M.unload();
   }
   function K() {
-    return k;
+    return w;
   }
-  var k;
+  var w;
   var M = null;
   var Q = class {
     htmlElements = [];
     resizeEventListeners = [];
     tabHandlers = {};
-    addElement(e, { x: r2, y: u, width: m3, height: s, padding: n3, fontSize: p2 = "auto", anchor: b, place: d2, modules: l = {}, modulesMap: a3 }) {
-      w(e, m.fontFamily);
-      const o = { anchor: b, x: r2, y: u, width: m3, height: s, padding: n3, fontSize: p2, place: d2, element: e };
-      Object.keys(l)?.forEach((c4) => {
-        l[c4].forEach((f3) => {
-          const i3 = f3.overrideProperties(o, a3[c4]);
-          b = i3.anchor, r2 = i3.x, u = i3.y, m3 = i3.width, s = i3.height, n3 = i3.padding, p2 = i3.fontSize, d2 = i3.place, e = i3.element;
+    addElement(e, { x: o, y: d2, width: u, height: r2, padding: t2, fontSize: p2 = "auto", anchor: g2, place: m3, modules: l = {}, modulesMap: n3 }) {
+      k(e, m.fontFamily);
+      const i3 = { anchor: g2, x: o, y: d2, width: u, height: r2, padding: t2, fontSize: p2, place: m3, element: e };
+      Object.keys(l)?.forEach((s) => {
+        l[s].forEach((f3) => {
+          const c4 = f3.overrideProperties(i3, n3[s]);
+          g2 = c4.anchor, o = c4.x, d2 = c4.y, u = c4.width, r2 = c4.height, t2 = c4.padding, p2 = c4.fontSize, m3 = c4.place, e = c4.element;
         });
       });
-      const t2 = () => {
-        typeof r2 == "number" && typeof u == "number" && j(e, r2, u, b), p2 === "auto" ? X(e) : O(e, p2), n3 && G(e, n3), m3 && (e.style.width = H(m3) + "px"), s && (e.style.height = S2(s) + "px");
+      const a3 = () => {
+        typeof o == "number" && typeof d2 == "number" && j(e, o, d2, g2), p2 === "auto" ? X(e) : O(e, p2), t2 && G(e, t2), u && (e.style.width = H(u) + "px"), r2 && (e.style.height = S2(r2) + "px");
       };
-      t2(), window.addEventListener("resize", t2), Object.keys(l)?.forEach((c4) => {
-        l[c4].forEach((f3) => {
-          f3.layoutEffect(o, a3[c4]);
+      a3(), window.addEventListener("resize", a3), Object.keys(l)?.forEach((s) => {
+        l[s].forEach((f3) => {
+          f3.layoutEffect(i3, n3[s]);
         });
-      }), d2 && document.body.append(e), this.resizeEventListeners.push(t2), this.htmlElements.push(e), Object.keys(l)?.forEach((c4) => {
-        l[c4].forEach((f3) => {
-          f3.effect(o, a3[c4]);
+      }), m3 && document.body.append(e), this.resizeEventListeners.push(a3), this.htmlElements.push(e), Object.keys(l)?.forEach((s) => {
+        l[s].forEach((f3) => {
+          f3.effect(i3, n3[s]);
         });
       });
     }
     get currentSubscreen() {
-      return k;
+      return w;
     }
     get previousSubscreen() {
       return M;
@@ -20107,170 +20107,174 @@ One of mods you are using is using an old version of SDK. It will work for now b
     setSubscreen(e) {
       F(e);
     }
-    createButton({ text: e, x: r2, y: u, width: m3, height: s, fontSize: n3 = "auto", anchor: p2 = "top-left", padding: b, style: d2 = "default", place: l = true, icon: a3, iconAbsolutePosition: o = true, iconWidth: t2, tooltip: c4, onClick: f3, isDisabled: i3, modules: v }) {
-      let g2, C3;
+    createButton({ text: e, x: o, y: d2, width: u, height: r2, fontSize: t2 = "auto", anchor: p2 = "top-left", padding: g2, style: m3 = "default", place: l = true, icon: n3, iconAbsolutePosition: i3 = true, iconWidth: a3, tooltip: s, onClick: f3, isDisabled: c4, modules: v }) {
+      let h3, C3;
       const y = document.createElement("button");
-      if (y.classList.add("zcButton"), y.setAttribute("data-zc-style", d2), y.style.display = "flex", y.style.alignItems = "center", y.style.justifyContent = "center", y.style.columnGap = "1.25vw", w(y, m.fontFamily), a3 && (typeof a3 == "string" ? (g2 = document.createElement("img"), g2.src = a3) : g2 = a3, t2 ? g2.style.width = t2 : g2.style.height = "80%", e && o && (g2.style.position = "absolute", g2.style.left = "1vw"), e && !o && (y.style.justifyContent = ""), y.append(g2)), e && (C3 = document.createElement("span"), C3.textContent = e, a3 && !o && t2 && (C3.style.width = "100%", C3.style.marginRight = t2), y.append(C3)), c4) {
+      if (y.classList.add("zcButton"), y.setAttribute("data-zc-style", m3), y.style.display = "flex", y.style.alignItems = "center", y.style.justifyContent = "center", y.style.columnGap = "1.25vw", k(y, m.fontFamily), n3 && (typeof n3 == "string" ? (h3 = document.createElement("img"), h3.src = n3) : h3 = n3, a3 ? h3.style.width = a3 : h3.style.height = "80%", e && i3 && (h3.style.position = "absolute", h3.style.left = "1vw"), e && !i3 && (y.style.justifyContent = ""), y.append(h3)), e && (C3 = document.createElement("span"), C3.textContent = e, n3 && !i3 && a3 && (C3.style.width = "100%", C3.style.marginRight = a3), y.append(C3)), s) {
         const x2 = document.createElement("span");
-        x2.classList.add("tooltip"), x2.setAttribute("position", c4.position), x2.textContent = c4.text, y.append(x2);
+        x2.classList.add("tooltip"), x2.setAttribute("position", s.position), x2.textContent = s.text, y.append(x2);
       }
-      return typeof i3 == "function" && i3() && y.classList.add("zcDisabled"), y.addEventListener("click", () => {
-        if (typeof i3 == "function" && i3()) return y.classList.add("zcDisabled");
+      return typeof c4 == "function" && c4() && y.classList.add("zcDisabled"), y.addEventListener("click", () => {
+        if (typeof c4 == "function" && c4()) return y.classList.add("zcDisabled");
         typeof f3 == "function" && f3();
-      }), this.addElement(y, { x: r2, y: u, width: m3, height: s, anchor: p2, place: l, fontSize: n3, padding: b, modules: v, modulesMap: { base: y, text: C3, icon: g2 } }), y;
+      }), this.addElement(y, { x: o, y: d2, width: u, height: r2, anchor: p2, place: l, fontSize: t2, padding: g2, modules: v, modulesMap: { base: y, text: C3, icon: h3 } }), y;
     }
-    createText({ text: e, color: r2, x: u, y: m3, width: s, height: n3, withBackground: p2 = false, fontSize: b = "auto", anchor: d2 = "top-left", padding: l, place: a3 = true, modules: o }) {
-      const t2 = document.createElement("p");
-      return t2.innerHTML = e, t2.style.color = r2 ?? "var(--tmd-text, black)", p2 && (t2.style.background = "var(--tmd-element,rgb(239, 239, 239))"), w(t2, m.fontFamily), this.addElement(t2, { x: u, y: m3, width: s, height: n3, anchor: d2, place: a3, fontSize: b, padding: l, modules: o, modulesMap: { base: t2 } }), t2;
+    createText({ text: e, color: o, x: d2, y: u, width: r2, height: t2, withBackground: p2 = false, withBorder: g2 = false, fontSize: m3 = "auto", anchor: l = "top-left", padding: n3, place: i3 = true, modules: a3 }) {
+      const s = document.createElement("p");
+      return s.innerHTML = e, s.style.color = o ?? "var(--tmd-text, black)", p2 && (s.style.background = "var(--tmd-element,rgb(239, 239, 239))"), g2 && (s.style.border = "2px solid var(--tmd-accent, rgb(236, 236, 236))"), k(s, m.fontFamily), this.addElement(s, { x: d2, y: u, width: r2, height: t2, anchor: l, place: i3, fontSize: m3, padding: n3, modules: a3, modulesMap: { base: s } }), s;
     }
-    createInput({ value: e, placeholder: r2, x: u, y: m3, width: s, height: n3, textArea: p2 = false, fontSize: b = "auto", anchor: d2 = "top-left", padding: l, place: a3 = true, onChange: o, onInput: t2, isDisabled: c4, modules: f3 }) {
-      const i3 = document.createElement(p2 ? "textarea" : "input");
-      return i3.classList.add("zcInput"), r2 && (i3.placeholder = r2), e && (i3.value = e), w(i3, m.fontFamily), typeof c4 == "function" && c4() && i3.classList.add("zcDisabled"), i3.addEventListener("change", () => {
-        if (typeof c4 == "function" && c4()) return i3.classList.add("zcDisabled");
-        typeof o == "function" && o();
-      }), i3.addEventListener("input", () => {
-        if (typeof c4 == "function" && c4()) return i3.classList.add("zcDisabled");
-        typeof t2 == "function" && t2();
-      }), this.addElement(i3, { x: u, y: m3, width: s, height: n3, anchor: d2, place: a3, fontSize: b, padding: l, modules: f3, modulesMap: { base: i3 } }), i3;
+    createInput({ value: e, placeholder: o, x: d2, y: u, width: r2, height: t2, textArea: p2 = false, fontSize: g2 = "auto", anchor: m3 = "top-left", padding: l, place: n3 = true, onChange: i3, onInput: a3, isDisabled: s, modules: f3 }) {
+      const c4 = document.createElement(p2 ? "textarea" : "input");
+      return c4.classList.add("zcInput"), o && (c4.placeholder = o), e && (c4.value = e), k(c4, m.fontFamily), typeof s == "function" && s() && c4.classList.add("zcDisabled"), c4.addEventListener("change", () => {
+        if (typeof s == "function" && s()) return c4.classList.add("zcDisabled");
+        typeof i3 == "function" && i3();
+      }), c4.addEventListener("input", () => {
+        if (typeof s == "function" && s()) return c4.classList.add("zcDisabled");
+        typeof a3 == "function" && a3();
+      }), this.addElement(c4, { x: d2, y: u, width: r2, height: t2, anchor: m3, place: n3, fontSize: g2, padding: l, modules: f3, modulesMap: { base: c4 } }), c4;
     }
-    createCheckbox({ text: e, x: r2, y: u, isChecked: m3, width: s, modules: n3, anchor: p2 = "top-left", place: b = true, isDisabled: d2, onChange: l }) {
-      const a3 = document.createElement("div");
-      a3.style.display = "flex", a3.style.alignItems = "center", a3.style.columnGap = "1vw";
-      const o = document.createElement("input");
-      o.type = "checkbox", o.checked = m3, o.style.borderRadius = "min(0.8dvh, 0.3dvw)", o.style.aspectRatio = "1/1", o.classList.add("zcCheckbox", "checkbox");
-      const t2 = document.createElement("p");
-      return t2.textContent = e, t2.style.color = "var(--tmd-text, black)", w(t2, m.fontFamily), typeof d2 == "function" && d2() && a3.classList.add("zcDisabled"), a3.addEventListener("change", () => {
-        if (typeof d2 == "function" && d2()) return a3.classList.add("zcDisabled");
+    createCheckbox({ text: e, x: o, y: d2, isChecked: u, width: r2, modules: t2, anchor: p2 = "top-left", place: g2 = true, isDisabled: m3, onChange: l }) {
+      const n3 = document.createElement("div");
+      n3.style.display = "flex", n3.style.alignItems = "center", n3.style.columnGap = "1vw";
+      const i3 = document.createElement("input");
+      i3.type = "checkbox", i3.checked = u, i3.style.borderRadius = "min(0.8dvh, 0.3dvw)", i3.style.aspectRatio = "1/1", i3.classList.add("zcCheckbox", "checkbox");
+      const a3 = document.createElement("p");
+      return a3.textContent = e, a3.style.color = "var(--tmd-text, black)", k(a3, m.fontFamily), typeof m3 == "function" && m3() && n3.classList.add("zcDisabled"), n3.addEventListener("change", () => {
+        if (typeof m3 == "function" && m3()) return n3.classList.add("zcDisabled");
         typeof l == "function" && l();
-      }), a3.append(o, t2), this.addElement(a3, { x: r2, y: u, width: s, anchor: p2, place: b, modules: n3, modulesMap: { base: a3, checkbox: o, label: t2 } }), a3;
+      }), n3.append(i3, a3), this.addElement(n3, { x: o, y: d2, width: r2, anchor: p2, place: g2, modules: t2, modulesMap: { base: n3, checkbox: i3, label: a3 } }), n3;
     }
-    createScrollView({ scroll: e, x: r2, y: u, width: m3, height: s, anchor: n3 = "top-left", modules: p2, place: b = true }) {
-      const d2 = document.createElement("div");
-      return e === "all" && (d2.style.overflow = "scroll"), e === "x" && (d2.style.overflowX = "scroll"), e === "y" && (d2.style.overflowY = "scroll"), this.addElement(d2, { x: r2, y: u, width: m3, height: s, anchor: n3, place: b, modules: p2, modulesMap: { base: d2 } }), d2;
+    createScrollView({ scroll: e, x: o, y: d2, width: u, height: r2, anchor: t2 = "top-left", modules: p2, place: g2 = true }) {
+      const m3 = document.createElement("div");
+      return e === "all" && (m3.style.overflow = "scroll"), e === "x" && (m3.style.overflowX = "scroll"), e === "y" && (m3.style.overflowY = "scroll"), this.addElement(m3, { x: o, y: d2, width: u, height: r2, anchor: t2, place: g2, modules: p2, modulesMap: { base: m3 } }), m3;
     }
-    createInputList({ x: e, y: r2, width: u, height: m3, title: s, value: n3, modules: p2, anchor: b = "top-left", place: d2 = true, numbersOnly: l = false, isDisabled: a3, onChange: o }) {
-      const t2 = [], c4 = document.createElement("div");
-      c4.style.cssText = `
+    createInputList({ x: e, y: o, width: d2, height: u, title: r2, value: t2, modules: p2, anchor: g2 = "top-left", place: m3 = true, numbersOnly: l = false, isDisabled: n3, onChange: i3 }) {
+      const a3 = [], s = document.createElement("div");
+      s.style.cssText = `
         display: flex; flex-direction: column; gap: 1vw; border: 2px solid var(--tmd-accent, black);
         border-radius: 4px; padding: 0.75vw; background: var(--tmd-element, none);
-        `, w(c4, m.fontFamily);
+        `, k(s, m.fontFamily);
       const f3 = document.createElement("div");
       f3.style.cssText = "display: flex; justify-content: center; column-gap: 1vw; width: 100%;";
-      const i3 = document.createElement("b");
-      i3.textContent = s + ":", i3.style.cssText = "width: 100%; font-size: clamp(10px, 2.4vw, 24px); color: var(--tmd-text, black);";
+      const c4 = document.createElement("b");
+      c4.textContent = r2 + ":", c4.style.cssText = "width: 100%; font-size: clamp(10px, 2.4vw, 24px); color: var(--tmd-text, black);";
       const v = document.createElement("div");
       v.style.cssText = `display: flex; gap: 1vw; flex-wrap: wrap; align-content: flex-start;
         overflow-y: scroll;`;
-      const g2 = document.createElement("input");
-      g2.style.cssText = "border: none; outline: none; background: none; height: fit-content; flex-grow: 1; padding: 0.8vw; width: 6vw; font-size: clamp(8px, 2vw, 20px);";
+      const h3 = document.createElement("input");
+      h3.style.cssText = "border: none; outline: none; background: none; height: fit-content; flex-grow: 1; padding: 0.8vw; width: 6vw; font-size: clamp(8px, 2vw, 20px);";
       const C3 = (x2, E) => {
         const A2 = this.createButton({ icon: x2, place: false, onClick: E, style: "default", modules: { icon: [new n({ width: "70%", height: "70%" })] } });
         A2.style.width = "2em", A2.style.aspectRatio = "1/1", f3.append(A2);
       }, y = (x2) => {
         const E = document.createElement("div");
-        E.style.cssText = "cursor: pointer; background: var(--tmd-element-hover, rgb(206, 206, 206)); color: var(--tmd-text, black); height: fit-content; padding: 0.8vw; border-radius: 0.8vw; font-size: clamp(8px, 2vw, 20px);", E.textContent = x2, v.insertBefore(E, g2), E.addEventListener("click", (A2) => {
+        E.style.cssText = "cursor: pointer; background: var(--tmd-element-hover, rgb(206, 206, 206)); color: var(--tmd-text, black); height: fit-content; padding: 0.8vw; border-radius: 0.8vw; font-size: clamp(8px, 2vw, 20px);", E.textContent = x2, v.insertBefore(E, h3), E.addEventListener("click", (A2) => {
           E.style.border === "" ? E.style.border = "2px solid red" : E.style.border = "", A2.stopPropagation();
-        }), t2.push(x2);
+        }), a3.push(x2);
       };
       return C3(createElement(CircleX), () => {
-        if (typeof a3 == "function" && a3()) return c4.classList.add("zcDisabled");
-        v.innerHTML = "", t2.splice(0, t2.length), v.append(g2), n3.forEach((x2) => y(String(x2))), typeof o == "function" && o(l ? t2.map((x2) => parseInt(x2)) : t2);
+        if (typeof n3 == "function" && n3()) return s.classList.add("zcDisabled");
+        v.innerHTML = "", a3.splice(0, a3.length), v.append(h3), t2.forEach((x2) => y(String(x2))), typeof i3 == "function" && i3(l ? a3.map((x2) => parseInt(x2)) : a3);
       }), C3(createElement(Trash2), () => {
-        if (typeof a3 == "function" && a3()) return c4.classList.add("zcDisabled");
-        for (const x2 of [...v.children]) x2.getAttribute("style").includes("border: 2px solid red;") && (t2.splice(t2.indexOf(x2.textContent), 1), x2.remove());
-        typeof o == "function" && o(l ? t2.map((x2) => parseInt(x2)) : t2);
-      }), typeof a3 == "function" && a3() && c4.classList.add("zcDisabled"), g2.addEventListener("keypress", (x2) => {
-        if (document.activeElement === g2) switch (x2.key) {
+        if (typeof n3 == "function" && n3()) return s.classList.add("zcDisabled");
+        for (const x2 of [...v.children]) x2.getAttribute("style").includes("border: 2px solid red;") && (a3.splice(a3.indexOf(x2.textContent), 1), x2.remove());
+        typeof i3 == "function" && i3(l ? a3.map((x2) => parseInt(x2)) : a3);
+      }), typeof n3 == "function" && n3() && s.classList.add("zcDisabled"), h3.addEventListener("keypress", (x2) => {
+        if (document.activeElement === h3) switch (x2.key) {
           case "Enter":
-            if (l && Number.isNaN(parseInt(g2.value)) || g2.value.trim() === "") return;
-            if (typeof a3 == "function" && a3()) return c4.classList.add("zcDisabled");
-            y(g2.value), g2.value = "", typeof o == "function" && o(l ? t2.map((E) => parseInt(E)) : t2);
+            if (l && Number.isNaN(parseInt(h3.value)) || h3.value.trim() === "") return;
+            if (typeof n3 == "function" && n3()) return s.classList.add("zcDisabled");
+            y(h3.value), h3.value = "", typeof i3 == "function" && i3(l ? a3.map((E) => parseInt(E)) : a3);
             break;
         }
-      }), c4.addEventListener("click", (x2) => {
-        x2.currentTarget == c4 && g2.focus();
-      }), v.append(g2), c4.append(f3, i3, v), this.addElement(c4, { x: e, y: r2, width: u, height: m3, anchor: b, place: d2, modules: p2, modulesMap: { base: c4, input: g2 } }), n3.forEach((x2) => y(String(x2))), c4;
+      }), s.addEventListener("click", (x2) => {
+        x2.currentTarget == s && h3.focus();
+      }), v.append(h3), s.append(f3, c4, v), this.addElement(s, { x: e, y: o, width: d2, height: u, anchor: g2, place: m3, modules: p2, modulesMap: { base: s, input: h3 } }), t2.forEach((x2) => y(String(x2))), s;
     }
-    createImage({ x: e, y: r2, width: u, src: m3, place: s = true, anchor: n3 = "top-left", modules: p2 }) {
-      const b = document.createElement("img");
-      return b.style.height = "auto", b.src = m3, this.addElement(b, { x: e, y: r2, width: u, height: 0, anchor: n3, place: s, modules: p2, modulesMap: { base: b } }), b;
+    createImage({ x: e, y: o, width: d2, src: u, place: r2 = true, anchor: t2 = "top-left", modules: p2 }) {
+      const g2 = document.createElement("img");
+      return g2.style.height = "auto", g2.src = u, this.addElement(g2, { x: e, y: o, width: d2, height: 0, anchor: t2, place: r2, modules: p2, modulesMap: { base: g2 } }), g2;
     }
-    createBackNextButton({ x: e, y: r2, width: u, height: m3, items: s, currentIndex: n3, modules: p2, isBold: b = false, anchor: d2 = "top-left", place: l = true, onChange: a3, isDisabled: o }) {
-      const t2 = document.createElement("div");
-      t2.classList.add("zcBackNextButton"), w(t2, m.fontFamily);
-      const c4 = () => {
-        n3 === 0 || typeof o == "function" && o(s[n3 - 1][1]) ? f3.classList.add("zcBackNextButton-btnDisabled") : f3.classList.remove("zcBackNextButton-btnDisabled"), n3 === s.length - 1 || typeof o == "function" && o(s[n3 + 1][1]) ? i3.classList.add("zcBackNextButton-btnDisabled") : i3.classList.remove("zcBackNextButton-btnDisabled");
+    createBackNextButton({ x: e, y: o, width: d2, height: u, items: r2, currentIndex: t2, modules: p2, isBold: g2 = false, anchor: m3 = "top-left", place: l = true, onChange: n3, isDisabled: i3 }) {
+      const a3 = document.createElement("div");
+      a3.classList.add("zcBackNextButton"), k(a3, m.fontFamily);
+      const s = () => {
+        t2 === 0 || typeof i3 == "function" && i3(r2[t2 - 1][1]) ? f3.classList.add("zcBackNextButton-btnDisabled") : f3.classList.remove("zcBackNextButton-btnDisabled"), t2 === r2.length - 1 || typeof i3 == "function" && i3(r2[t2 + 1][1]) ? c4.classList.add("zcBackNextButton-btnDisabled") : c4.classList.remove("zcBackNextButton-btnDisabled");
       }, f3 = document.createElement("button");
       f3.style.cssText = `
         position: absolute; left: 1vw; font-size: 3.5vw; aspect-ratio: 1/1;
         height: 140%; background-image: url("Icons/Prev.png"); background-size: 100%;
         `, f3.classList.add("zcButton"), f3.addEventListener("click", () => {
-        if (n3 === 0 || typeof o == "function" && o(s[n3 - 1][1])) return f3.classList.add("zcDisabled");
-        n3--, v.textContent = s[n3][0], typeof a3 == "function" && a3(s[n3][1]), c4();
+        if (t2 === 0 || typeof i3 == "function" && i3(r2[t2 - 1][1])) return f3.classList.add("zcDisabled");
+        t2--, v.textContent = r2[t2][0], typeof n3 == "function" && n3(r2[t2][1]), s();
       });
-      const i3 = document.createElement("button");
-      i3.style.cssText = `
+      const c4 = document.createElement("button");
+      c4.style.cssText = `
         position: absolute; right: 1vw; font-size: 3.5vw; aspect-ratio: 1/1;
         height: 140%; background-image: url("Icons/Next.png"); background-size: 100%;
-        `, i3.classList.add("zcButton"), i3.addEventListener("click", () => {
-        if (n3 === s.length - 1 || typeof o == "function" && o(s[n3 + 1][1])) return i3.classList.add("zcDisabled");
-        n3++, v.textContent = s[n3][0], typeof a3 == "function" && a3(s[n3][1]), c4();
-      }), c4();
+        `, c4.classList.add("zcButton"), c4.addEventListener("click", () => {
+        if (t2 === r2.length - 1 || typeof i3 == "function" && i3(r2[t2 + 1][1])) return c4.classList.add("zcDisabled");
+        t2++, v.textContent = r2[t2][0], typeof n3 == "function" && n3(r2[t2][1]), s();
+      }), s();
       const v = document.createElement("p");
-      return b && (v.style.fontWeight = "bold"), v.textContent = s[n3][0], t2.append(f3, v, i3), this.addElement(t2, { x: e, y: r2, width: u, height: m3, anchor: d2, place: l, modules: p2, modulesMap: { base: t2, backButton: f3, nextButton: i3, text: v } }), t2;
+      return g2 && (v.style.fontWeight = "bold"), v.textContent = r2[t2][0], a3.append(f3, v, c4), this.addElement(a3, { x: e, y: o, width: d2, height: u, anchor: m3, place: l, modules: p2, modulesMap: { base: a3, backButton: f3, nextButton: c4, text: v } }), a3;
     }
-    createTabs({ x: e, y: r2, width: u, tabs: m3, anchor: s = "top-left", place: n3 = true, currentTabName: p2, modules: b }) {
-      let d2 = [];
+    createTabs({ x: e, y: o, width: d2, tabs: u, anchor: r2 = "top-left", place: t2 = true, currentTabName: p2, modules: g2 }) {
+      let m3 = [];
       const l = document.createElement("div");
-      return l.classList.add("zcTabs"), w(l, m.fontFamily), m3.forEach((a3) => {
-        const o = () => {
+      return l.classList.add("zcTabs"), k(l, m.fontFamily), u.forEach((n3) => {
+        const i3 = () => {
           for (const f3 of l.children) f3.removeAttribute("data-opened");
-          for (const f3 of d2) f3 instanceof Node && document.body.removeChild(f3);
-          d2 = [], t2.setAttribute("data-opened", "true");
-          const c4 = document.body.append.bind(document.body);
+          for (const f3 of m3) f3 instanceof Node && document.body.removeChild(f3);
+          m3 = [], a3.setAttribute("data-opened", "true");
+          const s = document.body.append.bind(document.body);
           document.body.append = (...f3) => {
-            d2.push(...f3), c4(...f3);
-          }, this.tabHandlers.unload?.(), this.tabHandlers.exit?.(), a3.load(), this.tabHandlers = { run: a3.run, load: a3.load, unload: a3.unload, exit: a3.exit }, document.body.append = c4;
-        }, t2 = document.createElement("button");
-        t2.textContent = a3.name, a3.name === p2 && o(), t2.addEventListener("click", o), l.append(t2);
-      }), this.addElement(l, { x: e, y: r2, width: u, anchor: s, place: n3, modules: b, modulesMap: { base: l } }), l;
+            m3.push(...f3), s(...f3);
+          }, this.tabHandlers.unload?.(), this.tabHandlers.exit?.(), n3.load(), this.tabHandlers = { run: n3.run, load: n3.load, unload: n3.unload, exit: n3.exit }, document.body.append = s;
+        }, a3 = document.createElement("button");
+        a3.textContent = n3.name, n3.name === p2 && i3(), a3.addEventListener("click", i3), l.append(a3);
+      }), this.addElement(l, { x: e, y: o, width: d2, anchor: r2, place: t2, modules: g2, modulesMap: { base: l } }), l;
     }
-    drawPolylineArrow({ points: e, strokeColor: r2 = S()?.base?.text ?? "black", lineWidth: u = 2, circleRadius: m3 = 5, circleColor: s = S()?.base?.text ?? "black" }) {
+    drawPolylineArrow({ points: e, strokeColor: o = S()?.base?.text ?? "black", lineWidth: d2 = 2, circleRadius: u = 5, circleColor: r2 = S()?.base?.text ?? "black" }) {
       if (e.length < 2) return;
-      const n3 = MainCanvas.canvas.getContext("2d");
-      n3.save(), n3.strokeStyle = r2, n3.lineWidth = u, n3.fillStyle = s, n3.beginPath(), n3.moveTo(e[0].x, e[0].y);
-      for (let p2 = 1; p2 < e.length; p2++) n3.lineTo(e[p2].x, e[p2].y);
-      n3.stroke(), n3.beginPath(), n3.arc(e[0].x, e[0].y, m3, 0, Math.PI * 2), n3.fill(), n3.beginPath(), n3.arc(e[e.length - 1].x, e[e.length - 1].y, m3, 0, Math.PI * 2), n3.fill(), n3.restore();
+      const t2 = MainCanvas.canvas.getContext("2d");
+      t2.save(), t2.strokeStyle = o, t2.lineWidth = d2, t2.fillStyle = r2, t2.beginPath(), t2.moveTo(e[0].x, e[0].y);
+      for (let p2 = 1; p2 < e.length; p2++) t2.lineTo(e[p2].x, e[p2].y);
+      t2.stroke(), t2.beginPath(), t2.arc(e[0].x, e[0].y, u, 0, Math.PI * 2), t2.fill(), t2.beginPath(), t2.arc(e[e.length - 1].x, e[e.length - 1].y, u, 0, Math.PI * 2), t2.fill(), t2.restore();
     }
-    createCard({ x: e, y: r2, name: u, value: m3, icon: s, anchor: n3 = "top-left", place: p2 = true, modules: b }) {
-      const d2 = document.createElement("div");
-      d2.classList.add("zcCard");
+    createCard({ x: e, y: o, name: d2, value: u, icon: r2, anchor: t2 = "top-left", place: p2 = true, modules: g2 }) {
+      const m3 = document.createElement("div");
+      m3.classList.add("zcCard");
       const l = document.createElement("p");
-      l.classList.add("zcCard_name"), l.textContent = u;
-      const a3 = document.createElement("p");
-      return a3.classList.add("zcCard_value"), a3.textContent = `${m3}`, s && (s.style.cssText += "position: absolute; top: 0.4em; right: 0.4em; width: 1.2em; height: 1.2em;", d2.append(s)), d2.append(l, a3), this.addElement(d2, { x: e, y: r2, anchor: n3, place: p2, modules: b, modulesMap: { name: l, value: a3, base: d2, icon: null } }), d2;
+      l.classList.add("zcCard_name"), l.textContent = d2;
+      const n3 = document.createElement("p");
+      return n3.classList.add("zcCard_value"), n3.textContent = `${u}`, r2 && (r2.style.cssText += "position: absolute; top: 0.4em; right: 0.4em; width: 1.2em; height: 1.2em;", m3.append(r2)), m3.append(l, n3), this.addElement(m3, { x: e, y: o, anchor: t2, place: p2, modules: g2, modulesMap: { name: l, value: n3, base: m3, icon: null } }), m3;
     }
-    createSelect({ x: e, y: r2, width: u, options: m3, currentOption: s, anchor: n3 = "top-left", place: p2 = true, modules: b, onChange: d2, isDisabled: l }) {
-      let a3 = false, o;
-      const t2 = document.createElement("div");
-      t2.classList.add("zcSelect"), t2.setAttribute("opened", false), t2.addEventListener("click", () => {
-        if (l && l()) return t2.classList.add("zcDisabled");
-        a3 ? (a3 = false, o.remove()) : (a3 = true, o = document.createElement("div"), o.setAttribute("data-zc-position", typeof r2 == "number" && r2 > 500 - t2.offsetHeight / 2 ? "top" : "bottom"), m3.forEach((v) => {
-          const g2 = document.createElement("div");
-          g2.style.cssText = "display: flex; align-items: center; column-gap: 0.5em;", v.icon && (v.icon.style.cssText = "color: #bcbcbc;", g2.append(v.icon)), g2.append(v.text), v.name === s && g2.append(i3), g2.addEventListener("click", () => {
-            s = v.name, c4.textContent = v.text, o.remove(), d2 && d2(v.name);
-          }), o.append(g2);
-        }), t2.append(o));
+    createSelect({ x: e, y: o, width: d2, options: u, currentOption: r2, anchor: t2 = "top-left", place: p2 = true, modules: g2, onChange: m3, isDisabled: l }) {
+      let n3 = false, i3;
+      const a3 = document.createElement("div");
+      a3.classList.add("zcSelect"), a3.setAttribute("opened", false), a3.addEventListener("click", () => {
+        if (l && l()) return a3.classList.add("zcDisabled");
+        n3 ? (n3 = false, i3.remove()) : (n3 = true, i3 = document.createElement("div"), i3.setAttribute("data-zc-position", typeof o == "number" && o > 500 - a3.offsetHeight / 2 ? "top" : "bottom"), u.forEach((v) => {
+          const h3 = document.createElement("div");
+          h3.style.cssText = "display: flex; align-items: center; column-gap: 0.5em;", v.icon && (v.icon.style.cssText = "color: #bcbcbc;", h3.append(v.icon)), h3.append(v.text), v.name === r2 && h3.append(c4), h3.addEventListener("click", () => {
+            r2 = v.name, s.textContent = v.text, i3.remove(), m3 && m3(v.name);
+          }), i3.append(h3);
+        }), a3.append(i3));
       });
-      const c4 = document.createElement("p");
-      c4.textContent = m3.find((v) => v.name === s).name;
-      const f3 = createElement(ChevronDown), i3 = createElement(Check);
-      return i3.style.cssText = "position: absolute; right: 0.25em;", t2.append(c4, f3), l && l() && t2.classList.add("zcDisabled"), this.addElement(t2, { x: e, y: r2, width: u, anchor: n3, place: p2, modules: b, modulesMap: { base: t2 } }), t2;
+      const s = document.createElement("p");
+      s.textContent = u.find((v) => v.name === r2).text;
+      const f3 = createElement(ChevronDown), c4 = createElement(Check);
+      return c4.style.cssText = "position: absolute; right: 0.25em;", a3.append(s, f3), l && l() && a3.classList.add("zcDisabled"), this.addElement(a3, { x: e, y: o, width: d2, anchor: t2, place: p2, modules: g2, modulesMap: { base: a3 } }), a3;
+    }
+    createContainer({ x: e, y: o, anchor: d2 = "top-left", place: u = true, modules: r2 }) {
+      const t2 = document.createElement("div");
+      return this.addElement(t2, { x: e, y: o, anchor: d2, place: u, modules: r2, modulesMap: { base: t2 } }), t2;
     }
   };
   var B = {};
 
-  // node_modules/.pnpm/zois-core@1.1.2/node_modules/zois-core/dist/modsApi.js
+  // node_modules/.pnpm/zois-core@1.1.3/node_modules/zois-core/dist/modsApi.js
   var a = ((o) => (o[o.OBSERVE = 0] = "OBSERVE", o[o.ADD_BEHAVIOR = 1] = "ADD_BEHAVIOR", o[o.MODIFY_BEHAVIOR = 5] = "MODIFY_BEHAVIOR", o[o.OVERRIDE_BEHAVIOR = 10] = "OVERRIDE_BEHAVIOR", o[o.TOP = 100] = "TOP", o))(a || {});
   var t;
   function h() {
@@ -20284,7 +20288,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     return !!import_bondage_club_mod_sdk.default.getModsInfo().find((n3) => n3.name === e);
   }
 
-  // node_modules/.pnpm/zois-core@1.1.2/node_modules/zois-core/dist/popups.js
+  // node_modules/.pnpm/zois-core@1.1.3/node_modules/zois-core/dist/popups.js
   var import_react4 = __toESM(require_react());
   var import_client = __toESM(require_client());
 
@@ -20452,13 +20456,13 @@ One of mods you are using is using an old version of SDK. It will work for now b
   ];
   var Info = createLucideIcon("info", __iconNode4);
 
-  // node_modules/.pnpm/zois-core@1.1.2/node_modules/zois-core/dist/popups.js
+  // node_modules/.pnpm/zois-core@1.1.3/node_modules/zois-core/dist/popups.js
   var import_jsx_runtime = __toESM(require_jsx_runtime());
   function I({ children: o }) {
     const [e, t2] = (0, import_react4.useState)({}), r2 = window.ZOISCORE.useToastsStore((s) => s.clearToasts);
     return (0, import_react4.useEffect)(() => {
       const s = () => {
-        t2({ fontFamily: CommonGetFontName(), bottom: V(5) + "px", left: W(5) + "px" });
+        t2({ fontFamily: CommonGetFontName(), bottom: R(5) + "px", left: V(5) + "px" });
       };
       return window.addEventListener("resize", s), s(), () => {
         window.removeEventListener("resize", s);
@@ -20483,7 +20487,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         return (0, import_jsx_runtime.jsx)("div", { style: { flexShrink: 0, width: "1.65em", height: "1.65em", boxSizing: "border-box", border: "2px solid", borderRadius: "100%", borderColor: `transparent ${e ? e.iconFillColor : "rgb(154 154 255)"}`, animation: "zcSpin 0.65s linear infinite" } });
     }
   };
-  function R({ title: o, message: e, type: t2, duration: r2, id: s, theme: i3 }) {
+  function R2({ title: o, message: e, type: t2, duration: r2, id: s, theme: i3 }) {
     const [n3, c4] = (0, import_react4.useState)({}), [l, m3] = (0, import_react4.useState)(false);
     return (0, import_react4.useEffect)(() => {
       const u = () => {
@@ -20556,9 +20560,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
   };
   function L() {
     const o = window.ZOISCORE.useToastsStore((t2) => t2.toasts), e = window.ZOISCORE.useDialogStore((t2) => t2.dialog);
-    return (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [(0, import_jsx_runtime.jsx)(I, { children: o.map(({ title: t2, message: r2, type: s, duration: i3, id: n3, theme: c4 }) => (0, import_jsx_runtime.jsx)(R, { id: n3, title: t2, message: r2, type: s, duration: i3, theme: c4 }, n3)) }), e && (0, import_jsx_runtime.jsx)(M2, { dialog: e })] });
+    return (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [(0, import_jsx_runtime.jsx)(I, { children: o.map(({ title: t2, message: r2, type: s, duration: i3, id: n3, theme: c4 }) => (0, import_jsx_runtime.jsx)(R2, { id: n3, title: t2, message: r2, type: s, duration: i3, theme: c4 }, n3)) }), e && (0, import_jsx_runtime.jsx)(M2, { dialog: e })] });
   }
-  var W2 = class extends HTMLElement {
+  var W = class extends HTMLElement {
     disconnectedCallback() {
       ServerShowBeep("VirtualDOM was removed, chaos is coming...", 5e3, {});
     }
@@ -20566,17 +20570,17 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var q = create((o) => ({ toasts: [], addToast: (e) => o((t2) => ({ toasts: [...t2.toasts, e] })), removeToast: (e) => o((t2) => ({ toasts: t2.toasts.filter((r2) => r2.id !== e) })), clearToasts: () => o({ toasts: [] }) }));
   var Y2 = create((o) => ({ dialog: null, setDialog: (e) => o({ dialog: e }), clearDialog: () => o({ dialog: null }) }));
   function K2() {
-    customElements.define("zc-virtual-dom", W2);
+    customElements.define("zc-virtual-dom", W);
     const o = document.createElement("zc-virtual-dom");
     document.body.append(o), import_client.default.createRoot(document.getElementsByTagName("zc-virtual-dom")[0]).render((0, import_jsx_runtime.jsx)(L, {}));
   }
   var Q2 = new F2();
   var ee = new N();
 
-  // node_modules/.pnpm/zois-core@1.1.2/node_modules/zois-core/package.json
-  var version2 = "1.1.2";
+  // node_modules/.pnpm/zois-core@1.1.3/node_modules/zois-core/package.json
+  var version2 = "1.1.3";
 
-  // node_modules/.pnpm/zois-core@1.1.2/node_modules/zois-core/dist/index.js
+  // node_modules/.pnpm/zois-core@1.1.3/node_modules/zois-core/dist/index.js
   var m;
   function C(e) {
     if (!window.ZOISCORE) {
@@ -22210,7 +22214,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   }
 
-  // node_modules/.pnpm/zois-core@1.1.2/node_modules/zois-core/dist/validation.js
+  // node_modules/.pnpm/zois-core@1.1.3/node_modules/zois-core/dist/validation.js
   async function c3(e, t2) {
     try {
       const r2 = plainToInstance(t2, e), a3 = await validate(r2);
@@ -22220,7 +22224,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   }
 
-  // node_modules/.pnpm/zois-core@1.1.2/node_modules/zois-core/dist/messaging.js
+  // node_modules/.pnpm/zois-core@1.1.3/node_modules/zois-core/dist/messaging.js
   var k2 = class {
     sendBeep(n3, e) {
       const c4 = { IsSecret: true, BeepType: "Leash", MemberNumber: e, Message: JSON.stringify({ ...n3 }) };
@@ -22243,8 +22247,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
           const l = t2[0], d2 = T(l.Sender);
           if (!d2) return a3(t2);
           if (l.Content === m.key && !d2.IsPlayer()) {
-            const y = l.Dictionary.msg, R2 = l.Dictionary.data;
-            y === "requestResponse" && R2.requestId === i3 && (r2(), s({ data: R2.data, isError: false }));
+            const y = l.Dictionary.msg, R3 = l.Dictionary.data;
+            y === "requestResponse" && R3.requestId === i3 && (r2(), s({ data: R3.data, isError: false }));
           }
           return a3(t2);
         })) : (C2.sendBeep({ type: `${m.key}_request`, requestId: i3, message: n3, data: e }, c4), r2 = c("ServerAccountBeep", a.ADD_BEHAVIOR, (t2, a3) => {
@@ -22265,7 +22269,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     sendLocal(n3) {
       if (!ServerPlayerIsInChatRoom()) return;
       const e = document.createElement("div");
-      e.setAttribute("class", "ChatMessage ChatMessageLocalMessage"), e.setAttribute("data-time", ChatRoomCurrentTime()), e.setAttribute("data-sender", `${Player.MemberNumber}`), w(e, m.fontFamily), e.style.background = m.chatMessageBackground ?? "#55edc095", e.style.color = m.chatMessageColor ?? "black", e.style.margin = "0.15em 0", typeof n3 == "string" ? e.innerHTML = n3 : e.appendChild(n3), document.querySelector("#TextAreaChatLog").appendChild(e), ElementScrollToEnd("TextAreaChatLog");
+      e.setAttribute("class", "ChatMessage ChatMessageLocalMessage"), e.setAttribute("data-time", ChatRoomCurrentTime()), e.setAttribute("data-sender", `${Player.MemberNumber}`), k(e, m.fontFamily), e.style.background = m.chatMessageBackground ?? "#55edc095", e.style.color = m.chatMessageColor ?? "black", e.style.margin = "0.15em 0", typeof n3 == "string" ? e.innerHTML = n3 : e.appendChild(n3), document.querySelector("#TextAreaChatLog").appendChild(e), ElementScrollToEnd("TextAreaChatLog");
     }
     sendChat(n3) {
       ServerSend("ChatRoomChat", { Type: "Chat", Content: n3 });
@@ -22580,15 +22584,14 @@ One of mods you are using is using an old version of SDK. It will work for now b
     load() {
       super.load();
       caregiverAccessRightsList.forEach((p2, i3) => {
-        const btn = this.createButton({
+        this.createCheckbox({
           text: p2.name,
           width: 1200,
-          x: 400,
-          y: 250 + 110 * i3,
-          padding: 2,
-          style: isCaregiverAccessRightEnabled(InformationSheetSelection, p2.id) ? "green" : "default",
+          x: 200,
+          y: 250 + 90 * i3,
+          isChecked: isCaregiverAccessRightEnabled(InformationSheetSelection, p2.id),
           isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_CAREGIVERS_ACCESS_RIGHTS" /* MANAGE_CAREGIVERS_ACCESS_RIGHTS */),
-          onClick: () => {
+          onChange: () => {
             if (InformationSheetSelection.IsPlayer()) {
               turnCaregiverAccessRight(p2.id);
               addLog(
@@ -22601,7 +22604,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
                 accessRightId: p2.id
               }, InformationSheetSelection.MemberNumber);
             }
-            btn.setAttribute("data-zc-style", btn.getAttribute("data-zc-style") === "default" ? "green" : "default");
           }
         });
       });
@@ -22787,7 +22789,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     });
   }
 
-  // node_modules/.pnpm/zois-core@1.1.2/node_modules/zois-core/dist/wardrobe.js
+  // node_modules/.pnpm/zois-core@1.1.3/node_modules/zois-core/dist/wardrobe.js
   function n2(e) {
     const s = AssetGroup.includes(e) ? e : Asset.includes(e) ? e.Group : e.Asset.Group;
     if (!AssetGroup.includes(s)) throw new Error("Failed to convert item to group");
@@ -25801,21 +25803,9 @@ Thanks for installing the mod!`;
       name: "Fall asleep after milk bottle",
       description: "Baby will fall asleep after drinking the milk (if it doesn't have another effect)"
     },
-    {
-      id: 1008,
-      name: "Decrease size",
-      description: "Decreases baby's size",
-      data: [
-        {
-          name: "multiplier",
-          text: "Size multiplier",
-          type: "number",
-          min: 0.25,
-          max: 1,
-          step: 0.01
-        }
-      ]
-    },
+    // {
+    //     id: 1008,
+    // },
     {
       id: 1009,
       name: "Disable reset settings button",
@@ -26373,24 +26363,6 @@ Thanks for installing the mod!`;
         return false;
       }
     });
-    c("CharacterAppearanceGetCurrentValue", a.ADD_BEHAVIOR, (args, next) => {
-      const [C3, Group, Type] = args;
-      if (!C3 || !(C3.LITTLISH_CLUB || C3.IsPlayer()) || Group !== "Height" || Type !== "Zoom" || (Player.VisualSettings?.ForceFullHeight ?? false)) return next(args);
-      const sizeMultiplier = getRuleParameter2(C3, 1008 /* DECREASE_SIZE */, "multiplier") ?? 1;
-      if (sizeMultiplier > 1 || sizeMultiplier < 0.25) return next(args);
-      if (isRuleActive(C3, 1008 /* DECREASE_SIZE */)) {
-        return sizeMultiplier;
-      }
-      return next(args);
-    });
-    c("CommonDrawAppearanceBuild", a.ADD_BEHAVIOR, (args, next) => {
-      args[0].HeightRatio = CharacterAppearanceGetCurrentValue(args[0], "Height", "Zoom");
-      return next(args);
-    });
-    c("DrawCharacter", a.ADD_BEHAVIOR, (args, next) => {
-      args[0].HeightRatio = CharacterAppearanceGetCurrentValue(args[0], "Height", "Zoom");
-      return next(args);
-    });
     c("DialogMenuButtonBuild", a.OVERRIDE_BEHAVIOR, (args, next) => {
       next(args);
       const C3 = args[0];
@@ -26657,6 +26629,11 @@ Thanks for installing the mod!`;
       id: 1004,
       name: "Read Logs",
       description: ""
+    },
+    {
+      id: 1005,
+      name: "Manage ABCL Settings",
+      description: ""
     }
   ];
   function isCaregiverAccessRightEnabled(C3, accessRightId) {
@@ -26706,6 +26683,8 @@ Thanks for installing the mod!`;
         return isMommyOf(C1, C22);
       case "SUMMON" /* SUMMON */:
         return isMommyOf(C1, C22) || isCaregiverOf(C1, C22);
+      case "MANAGE_ABCL_SETTINGS" /* MANAGE_ABCL_SETTINGS */:
+        return isMommyOf(C1, C22) || isCaregiverOf(C1, C22) && isCaregiverAccessRightEnabled(C22, 1005 /* MANAGE_ABCL_SETTINGS */);
     }
   }
   function loadAccess() {
@@ -27102,7 +27081,7 @@ Thanks for installing the mod!`;
       p(() => !!document.getElementById("InputChat")).then(() => {
         modStorage.version = version;
         syncStorage();
-        const text = `<div class="lcChangelog"><b>Littlish Club</b> v${version}<br><br>Changes: <ul><li>Added 5 rules.</li><li>"Summoning rattle" feature.</li><li>Pop-up messages system.</li><li>Technical changes.</li></ul></div>`;
+        const text = `<div class="lcChangelog"><b>Littlish Club</b> v${version}<br><br>Changes: <ul><li>Deleted "Decrease size" rule due to pdfiles issues.</li><li>"Manage ABCL Settings" caregivers access permission.</li></ul></div>`;
         C2.sendLocal(text);
       });
     }
