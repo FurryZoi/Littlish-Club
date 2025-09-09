@@ -15,15 +15,14 @@ export class CaregiversPermissionsMenu extends BaseSubscreen {
         super.load();
 
         caregiverAccessRightsList.forEach((p, i) => {
-            const btn = this.createButton({
+            this.createCheckbox({
                 text: p.name,
                 width: 1200,
-                x: 400,
-                y: 250 + 110 * i,
-                padding: 2,
-                style: isCaregiverAccessRightEnabled(InformationSheetSelection, p.id) ? "green" : "default",
+                x: 200,
+                y: 250 + 90 * i,
+                isChecked: isCaregiverAccessRightEnabled(InformationSheetSelection, p.id),
                 isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_CAREGIVERS_ACCESS_RIGHTS),
-                onClick: () => {
+                onChange: () => {
                     if (InformationSheetSelection.IsPlayer()) {
                         turnCaregiverAccessRight(p.id);
                         addLog(
@@ -37,7 +36,6 @@ export class CaregiversPermissionsMenu extends BaseSubscreen {
                             accessRightId: p.id
                         }, InformationSheetSelection.MemberNumber);
                     }
-                    btn.setAttribute("data-zc-style", btn.getAttribute("data-zc-style") === "default" ? "green" : "default");
                 }
             });
         });

@@ -100,7 +100,8 @@ export enum CaregiverAccessRightId {
     MANAGE_RULES = 1001,
     DELETE_NOTES = 1002,
     MANAGE_APPEARANCE = 1003,
-    READ_LOGS = 1004
+    READ_LOGS = 1004,
+    MANAGE_ABCL_SETTINGS = 1005
 }
 
 export interface CaregiverAccessRight {
@@ -121,7 +122,8 @@ export enum AccessRight {
     READ_LOGS = "READ_LOGS",
     DELETE_LOGS = "DELETE_LOGS",
     RELEASE_BABY = "RELEASE_BABY",
-    SUMMON = "SUMMON"
+    SUMMON = "SUMMON",
+    MANAGE_ABCL_SETTINGS = "MANAGE_ABCL_SETTINGS"
 }
 
 export const caregiverAccessRightsList: CaregiverAccessRight[] = [
@@ -148,6 +150,11 @@ export const caregiverAccessRightsList: CaregiverAccessRight[] = [
     {
         id: 1004,
         name: "Read Logs",
+        description: ""
+    },
+    {
+        id: 1005,
+        name: "Manage ABCL Settings",
         description: ""
     }
 ];
@@ -245,12 +252,20 @@ export function hasAccessRightTo(C1: Character, C2: Character, accessRight: Acce
             return isMommyOf(C1, C2);
         case AccessRight.SUMMON:
             return isMommyOf(C1, C2) || isCaregiverOf(C1, C2);
+        case AccessRight.MANAGE_ABCL_SETTINGS:
+            return (
+                isMommyOf(C1, C2) ||
+                (
+                    isCaregiverOf(C1, C2) &&
+                    isCaregiverAccessRightEnabled(C2, CaregiverAccessRightId.MANAGE_ABCL_SETTINGS)
+                )
+            );
     }
 }
 
 export function loadAccess(): void {
     messagesManager.onRequest("getLogs", (data, sender: Character) => {
-        if (!hasAccessRightTo(sender ,Player, AccessRight.READ_LOGS)) return;
+        if (!hasAccessRightTo(sender, Player, AccessRight.READ_LOGS)) return;
         return modStorage.logs?.list ?? [];
     });
 

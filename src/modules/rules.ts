@@ -67,21 +67,9 @@ export const rulesList: Rule[] = [
         name: "Fall asleep after milk bottle",
         description: "Baby will fall asleep after drinking the milk (if it doesn't have another effect)"
     },
-    {
-        id: 1008,
-        name: "Decrease size",
-        description: "Decreases baby's size",
-        data: [
-            {
-                name: "multiplier",
-                text: "Size multiplier",
-                type: "number",
-                min: 0.25,
-                max: 1,
-                step: 0.01
-            }
-        ]
-    },
+    // {
+    //     id: 1008,
+    // },
     {
         id: 1009,
         name: "Disable reset settings button",
@@ -285,7 +273,6 @@ export enum RuleId {
     WALK_LIKE_BABY = 1005,
     CANT_GO_SHOP_ALONE = 1006,
     FALL_SLEEP_AFTER_MILK_BOTTLE = 1007,
-    DECREASE_SIZE = 1008,
     DISABLE_RESET_SETTINGS_BUTTON = 1009,
     PACIFIER_CHECKBOXES = 1010,
     CONTROL_NICKNAME = 1011,
@@ -802,30 +789,6 @@ export function loadRules(): void {
             }
             return false;
         }
-    });
-
-    hookFunction("CharacterAppearanceGetCurrentValue", HookPriority.ADD_BEHAVIOR, (args, next) => {
-        const [C, Group, Type] = args as [Character, AssetGroupName, string];
-        if (
-            !C || !(C.LITTLISH_CLUB || C.IsPlayer()) ||
-            Group !== "Height" || Type !== "Zoom" || (Player.VisualSettings?.ForceFullHeight ?? false)
-        ) return next(args);
-        const sizeMultiplier = (getRuleParameter(C, RuleId.DECREASE_SIZE, "multiplier") ?? 1) as number;
-        if (sizeMultiplier > 1 || sizeMultiplier < 0.25) return next(args);
-        if (isRuleActive(C, RuleId.DECREASE_SIZE)) {
-            return sizeMultiplier;
-        }
-        return next(args);
-    });
-
-    hookFunction("CommonDrawAppearanceBuild", HookPriority.ADD_BEHAVIOR, (args, next) => {
-        args[0].HeightRatio = CharacterAppearanceGetCurrentValue(args[0], "Height", "Zoom");
-        return next(args);
-    });
-
-    hookFunction("DrawCharacter", HookPriority.ADD_BEHAVIOR, (args, next) => {
-        args[0].HeightRatio = CharacterAppearanceGetCurrentValue(args[0], "Height", "Zoom");
-        return next(args);
     });
 
     hookFunction("DialogMenuButtonBuild", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
