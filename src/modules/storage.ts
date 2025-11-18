@@ -108,7 +108,6 @@ export function initStorage(): void {
 function migrateModStorage(): void { }
 
 function bccAbdlPartSync(oldAbdlData: Record<string, any>): void {
-    console.log(oldAbdlData);
     if (!hasMommy(Player) && typeof oldAbdlData?.mommy?.id === "number") {
         modStorage.mommy = {
             name: oldAbdlData.mommy.name ?? "?",

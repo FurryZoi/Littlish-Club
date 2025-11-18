@@ -64,7 +64,6 @@ export class DictMenu extends BaseSubscreen {
         onSave
     }: DictMenuData) {
         super();
-        console.log(items)
         this.screenName = screenName;
         this.keyName = keyName;
         this.valueName = valueName;

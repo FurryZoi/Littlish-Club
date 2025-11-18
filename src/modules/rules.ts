@@ -518,7 +518,6 @@ export function loadRules(): void {
     messagesManager.onRequest("getValidTitles", (data, sender: Character) => {
         if (!hasAccessRightTo(sender, Player, AccessRight.MANAGE_RULES)) return;
         const titles = TitleList.filter((t) => t.Requirement()).map((t) => t.Name);
-        console.log(titles);
         return titles;
     });
 
@@ -844,7 +843,6 @@ export function loadRules(): void {
         const item = InventoryGet(C, focusGroup?.Name);
         const clickedItem = args[0];
         if (DialogMenuMode !== "items") return next(args);
-        console.log(C, clickedItem, isRuleActive(Player, RuleId.PREVENT_USING_BONDAGE_ON_OTHER));
 
         if (
             C.IsPlayer() &&
@@ -995,7 +993,6 @@ export function loadRules(): void {
         if (!args[0].startsWith("chat-search-room-join-button-")) return next(args);
         const roomOrder = parseInt(args[0].replace("chat-search-room-join-button-", ""), 10);
         const roomResult = ChatSearchResult.find((r) => r.Order === roomOrder);
-        console.log(roomResult, args[3]);
         if (!roomResult) return next(args);
         const canJoinResult = chatRoomSearchCanJoinRoom(roomResult);
         if (!canJoinResult[0]) {
@@ -1017,7 +1014,6 @@ export function loadRules(): void {
             classList: ["chat-search-room-tooltip"],
             children: [],
         });
-        console.log(args, tooltips);
         const [roomResult] = args;
         const canJoinResult = chatRoomSearchCanJoinRoom(roomResult);
         if (!canJoinResult[0]) {
