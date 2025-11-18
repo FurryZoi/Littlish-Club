@@ -43,7 +43,7 @@ waitForStart(() => {
         waitFor(() => !!document.getElementById("InputChat")).then(() => {
             modStorage.version = version;
             syncStorage();
-            const text = `<div class="lcChangelog"><b>Littlish Club</b> v${version}<br><br>Changes: <ul><li>Adapt to R122</ul></div>`;
+            const text = `<div class="lcChangelog"><b>Littlish Club</b> v${version}<br><br>Changes: <ul><li>Adapt to R122</li></ul></div>`;
             messagesManager.sendLocal(text);
         });
     }
