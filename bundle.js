@@ -27820,7 +27820,6 @@ Thanks for installing the mod!`;
       onSave
     }) {
       super();
-      console.log(items);
       this.screenName = screenName;
       this.keyName = keyName;
       this.valueName = valueName;
@@ -28312,7 +28311,6 @@ Thanks for installing the mod!`;
     g2.onRequest("getValidTitles", (data, sender) => {
       if (!hasAccessRightTo(sender, Player, "MANAGE_RULES" /* MANAGE_RULES */)) return;
       const titles = TitleList.filter((t2) => t2.Requirement()).map((t2) => t2.Name);
-      console.log(titles);
       return titles;
     });
     g2.onRequest("summon", (data, senderNumber, senderName) => {
@@ -28553,7 +28551,6 @@ Thanks for installing the mod!`;
       const item = InventoryGet(C2, focusGroup?.Name);
       const clickedItem = args[0];
       if (DialogMenuMode !== "items") return next(args);
-      console.log(C2, clickedItem, isRuleActive(Player, 1012 /* PREVENT_USING_BONDAGE_ON_OTHER */));
       if (C2.IsPlayer() && (item?.Asset?.Category?.includes("ABDL") || extendedABDLItemNames.includes(item?.Asset?.Name)) && isRuleActive(Player, 1e3 /* PREVENT_TAKING_ABDL_ITEMS_OFF */)) return;
       if (!C2.IsPlayer() && clickedItem?.Asset?.IsRestraint && isRuleActive(Player, 1012 /* PREVENT_USING_BONDAGE_ON_OTHER */)) {
         if (getRuleParameter2(Player, 1012 /* PREVENT_USING_BONDAGE_ON_OTHER */, "allowAbdlItems") && clickedItem.Asset.Category?.includes("ABDL")) return next(args);
@@ -28653,7 +28650,6 @@ Thanks for installing the mod!`;
       if (!args[0].startsWith("chat-search-room-join-button-")) return next(args);
       const roomOrder = parseInt(args[0].replace("chat-search-room-join-button-", ""), 10);
       const roomResult = ChatSearchResult.find((r2) => r2.Order === roomOrder);
-      console.log(roomResult, args[3]);
       if (!roomResult) return next(args);
       const canJoinResult = chatRoomSearchCanJoinRoom(roomResult);
       if (!canJoinResult[0]) {
@@ -28671,7 +28667,6 @@ Thanks for installing the mod!`;
         classList: ["chat-search-room-tooltip"],
         children: []
       });
-      console.log(args, tooltips);
       const [roomResult] = args;
       const canJoinResult = chatRoomSearchCanJoinRoom(roomResult);
       if (!canJoinResult[0]) {
@@ -29079,7 +29074,6 @@ Thanks for installing the mod!`;
   function migrateModStorage() {
   }
   function bccAbdlPartSync(oldAbdlData) {
-    console.log(oldAbdlData);
     if (!hasMommy(Player) && typeof oldAbdlData?.mommy?.id === "number") {
       modStorage.mommy = {
         name: oldAbdlData.mommy.name ?? "?",
