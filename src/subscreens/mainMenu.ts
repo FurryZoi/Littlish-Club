@@ -194,5 +194,7 @@ export class MainMenu extends BaseSubscreen {
     exit() {
         super.exit();
         this.setSubscreen(null);
+        InformationSheetLoad();
+        if (window.InformationSheetResize) InformationSheetResize();
     }
 }

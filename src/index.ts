@@ -43,7 +43,7 @@ waitForStart(() => {
         waitFor(() => !!document.getElementById("InputChat")).then(() => {
             modStorage.version = version;
             syncStorage();
-            const text = `<div class="lcChangelog"><b>Littlish Club</b> v${version}<br><br>Changes: <ul><li>Deleted "Decrease size" rule due to pdfiles issues.</li><li>"Manage ABCL Settings" caregivers access permission.</li></ul></div>`;
+            const text = `<div class="lcChangelog"><b>Littlish Club</b> v${version}<br><br>Changes: <ul><li>Adapt to R122</ul></div>`;
             messagesManager.sendLocal(text);
         });
     }

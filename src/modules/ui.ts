@@ -43,8 +43,12 @@ export function loadUI(): void {
             !window.MPA?.menuLoaded &&
             MouseIn(...MOD_BUTTON_POSITION)
         ) {
-            if (typeof modStorage.requestReciviedFrom?.id === "number") setSubscreen(new AcceptRequestMenu());
-            else setSubscreen(new MainMenu());
+            if (window.InformationSheetUnload) InformationSheetUnload();
+            if (typeof modStorage.requestReciviedFrom?.id === "number") {
+                setSubscreen(new AcceptRequestMenu());
+            } else {
+                setSubscreen(new MainMenu());
+            }
         }
         if (window.LITTLISH_CLUB.inModSubscreen()) {
             return getCurrentSubscreen().click();

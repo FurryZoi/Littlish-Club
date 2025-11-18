@@ -917,7 +917,7 @@ export function loadRules(): void {
             if (mutation.type === "childList") {
                 mutation.addedNodes.forEach((node: HTMLElement) => {
                     if (node.nodeType === Node.ELEMENT_NODE && node.tagName === "INPUT" && node.classList.contains("checkbox")) {
-                            node.classList.add("paciCheckbox");
+                        node.classList.add("paciCheckbox");
                     }
                     for (const child of node.children ?? []) {
                         if (child.nodeType === Node.ELEMENT_NODE && child.tagName === "INPUT" && child.classList.contains("checkbox")) {
@@ -974,40 +974,67 @@ export function loadRules(): void {
             !isRuleActive(Player, RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS) &&
             !isRuleActive(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS)
         ) return next(args);
-        CommonGenerateGrid(ChatSearchResult, ChatSearchResultOffset, ChatSearchListParams, (room, x, y, width, height) => {
-            if (!MouseIn(x, y, width, height)) return false;
-            const canJoinResult = chatRoomSearchCanJoinRoom(room);
-            if (!canJoinResult[0]) {
-                toastsManager.error({
-                    message: canJoinResult[1],
-                    duration: 5000
-                });
-                return false;
-            }
-            const RoomName = room.Name;
-            if (ChatSearchLastQueryJoin != RoomName || (ChatSearchLastQueryJoin == RoomName && ChatSearchLastQueryJoinTime + 1000 < CommonTime())) {
-                ChatSearchLastQueryJoinTime = CommonTime();
-                ChatSearchLastQueryJoin = RoomName;
-                ServerSend("ChatRoomJoin", { Name: RoomName });
-            }
-            return true;
+        const [roomName] = args;
+        const roomResult = ChatSearchResult.find((r) => r.Name === roomName);
+        if (!roomResult) return next(args);
+        const canJoinResult = chatRoomSearchCanJoinRoom(roomResult);
+        if (!canJoinResult[0]) return toastsManager.error({
+            message: canJoinResult[1],
+            duration: 5000
         });
+        return next(args);
     });
 
-    hookFunction("ChatSearchNormalDraw", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+    hookFunction("ElementButton.Create", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
         if (
             !isRuleActive(Player, RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS) &&
             !isRuleActive(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS)
         ) return next(args);
-        next(args);
-        CommonGenerateGrid(ChatSearchResult, ChatSearchResultOffset, ChatSearchListParams, (room, x, y, width, height) => {
-            if (!chatRoomSearchCanJoinRoom(room)[0]) {
-                DrawButton(x, y, width, height, "", "#fa7db1", undefined, "Blocked by Littlish Club", true);
-                DrawTextFit((room.Friends != null && room.Friends.length > 0 ? "(" + room.Friends.length + ") " : "") + ChatSearchMuffle(room.Name) + " - " + ChatSearchMuffle(room.Creator) + " " + room.MemberCount + "/" + room.MemberLimit + "", x + 315, y + 25, 620, "black");
-                DrawTextFit(ChatSearchMuffle(room.Description), x + 315, y + 62, 620, "black");
-            }
-            return false;
+        if (ChatSearchMode === "Filter") return next(args);
+        if (typeof args[0] !== "string") return next(args);
+        if (!args[0].startsWith("chat-search-room-join-button-")) return next(args);
+        const roomOrder = parseInt(args[0].replace("chat-search-room-join-button-", ""), 10);
+        const roomResult = ChatSearchResult.find((r) => r.Order === roomOrder);
+        console.log(roomResult, args[3]);
+        if (!roomResult) return next(args);
+        const canJoinResult = chatRoomSearchCanJoinRoom(roomResult);
+        if (!canJoinResult[0]) {
+            const buttonElement = next(args);
+            buttonElement.style.backgroundColor = "rgb(237 204 255)";
+            return buttonElement;
+        }
+        return next(args);
+    });
+
+    hookFunction("ChatSearchCreateGridRoomTooltip", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        if (
+            !isRuleActive(Player, RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS) &&
+            !isRuleActive(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS)
+        ) return next(args);
+        const tooltips = next(args) ?? ElementCreate({
+            tag: "div",
+            attributes: { id: `chat-search-room-tooltip-${args[1]}` },
+            classList: ["chat-search-room-tooltip"],
+            children: [],
         });
+        console.log(args, tooltips);
+        const [roomResult] = args;
+        const canJoinResult = chatRoomSearchCanJoinRoom(roomResult);
+        if (!canJoinResult[0]) {
+            tooltips.appendChild(
+                ElementCreate({
+                    tag: "span",
+                    classList: ["chat-search-room-tooltip-entry", "chat-search-room-tooltip-lc-blocked"],
+                    children: [
+                        "Blocked by Littlish Club",
+                    ],
+                    style: {
+                        "background-color": "rgb(237 204 255)",
+                    },
+                })
+            );
+        }
+        return tooltips;
     });
 
     hookFunction("TitleIsForced", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
