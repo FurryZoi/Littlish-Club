@@ -30,158 +30,158 @@
     "node_modules/.pnpm/bondage-club-mod-sdk@1.2.0/node_modules/bondage-club-mod-sdk/dist/bcmodsdk.js"(exports2) {
       var bcModSdk = (function() {
         "use strict";
-        const o = "1.2.0";
-        function e(o2) {
-          alert("Mod ERROR:\n" + o2);
-          const e2 = new Error(o2);
+        const o2 = "1.2.0";
+        function e(o3) {
+          alert("Mod ERROR:\n" + o3);
+          const e2 = new Error(o3);
           throw console.error(e2), e2;
         }
-        const t2 = new TextEncoder();
-        function n2(o2) {
-          return !!o2 && "object" == typeof o2 && !Array.isArray(o2);
+        const t = new TextEncoder();
+        function n(o3) {
+          return !!o3 && "object" == typeof o3 && !Array.isArray(o3);
         }
-        function r2(o2) {
+        function r2(o3) {
           const e2 = /* @__PURE__ */ new Set();
-          return o2.filter(((o3) => !e2.has(o3) && e2.add(o3)));
+          return o3.filter(((o4) => !e2.has(o4) && e2.add(o4)));
         }
-        const i3 = /* @__PURE__ */ new Map(), a3 = /* @__PURE__ */ new Set();
-        function c4(o2) {
-          a3.has(o2) || (a3.add(o2), console.warn(o2));
+        const i = /* @__PURE__ */ new Map(), a3 = /* @__PURE__ */ new Set();
+        function c4(o3) {
+          a3.has(o3) || (a3.add(o3), console.warn(o3));
         }
-        function s(o2) {
-          const e2 = [], t3 = /* @__PURE__ */ new Map(), n3 = /* @__PURE__ */ new Set();
+        function s2(o3) {
+          const e2 = [], t2 = /* @__PURE__ */ new Map(), n2 = /* @__PURE__ */ new Set();
           for (const r4 of f3.values()) {
-            const i5 = r4.patching.get(o2.name);
-            if (i5) {
-              e2.push(...i5.hooks);
-              for (const [e3, a4] of i5.patches.entries()) t3.has(e3) && t3.get(e3) !== a4 && c4(`ModSDK: Mod '${r4.name}' is patching function ${o2.name} with same pattern that is already applied by different mod, but with different pattern:
+            const i3 = r4.patching.get(o3.name);
+            if (i3) {
+              e2.push(...i3.hooks);
+              for (const [e3, a4] of i3.patches.entries()) t2.has(e3) && t2.get(e3) !== a4 && c4(`ModSDK: Mod '${r4.name}' is patching function ${o3.name} with same pattern that is already applied by different mod, but with different pattern:
 Pattern:
 ${e3}
 Patch1:
-${t3.get(e3) || ""}
+${t2.get(e3) || ""}
 Patch2:
-${a4}`), t3.set(e3, a4), n3.add(r4.name);
+${a4}`), t2.set(e3, a4), n2.add(r4.name);
             }
           }
-          e2.sort(((o3, e3) => e3.priority - o3.priority));
-          const r3 = (function(o3, e3) {
-            if (0 === e3.size) return o3;
-            let t4 = o3.toString().replaceAll("\r\n", "\n");
-            for (const [n4, r4] of e3.entries()) t4.includes(n4) || c4(`ModSDK: Patching ${o3.name}: Patch ${n4} not applied`), t4 = t4.replaceAll(n4, r4);
-            return (0, eval)(`(${t4})`);
-          })(o2.original, t3);
-          let i4 = function(e3) {
-            var t4, i5;
-            const a4 = null === (i5 = (t4 = m3.errorReporterHooks).hookChainExit) || void 0 === i5 ? void 0 : i5.call(t4, o2.name, n3), c5 = r3.apply(this, e3);
+          e2.sort(((o4, e3) => e3.priority - o4.priority));
+          const r3 = (function(o4, e3) {
+            if (0 === e3.size) return o4;
+            let t3 = o4.toString().replaceAll("\r\n", "\n");
+            for (const [n3, r4] of e3.entries()) t3.includes(n3) || c4(`ModSDK: Patching ${o4.name}: Patch ${n3} not applied`), t3 = t3.replaceAll(n3, r4);
+            return (0, eval)(`(${t3})`);
+          })(o3.original, t2);
+          let i2 = function(e3) {
+            var t3, i3;
+            const a4 = null === (i3 = (t3 = m2.errorReporterHooks).hookChainExit) || void 0 === i3 ? void 0 : i3.call(t3, o3.name, n2), c5 = r3.apply(this, e3);
             return null == a4 || a4(), c5;
           };
-          for (let t4 = e2.length - 1; t4 >= 0; t4--) {
-            const n4 = e2[t4], r4 = i4;
-            i4 = function(e3) {
-              var t5, i5;
-              const a4 = null === (i5 = (t5 = m3.errorReporterHooks).hookEnter) || void 0 === i5 ? void 0 : i5.call(t5, o2.name, n4.mod), c5 = n4.hook.apply(this, [e3, (o3) => {
-                if (1 !== arguments.length || !Array.isArray(e3)) throw new Error(`Mod ${n4.mod} failed to call next hook: Expected args to be array, got ${typeof o3}`);
-                return r4.call(this, o3);
+          for (let t3 = e2.length - 1; t3 >= 0; t3--) {
+            const n3 = e2[t3], r4 = i2;
+            i2 = function(e3) {
+              var t4, i3;
+              const a4 = null === (i3 = (t4 = m2.errorReporterHooks).hookEnter) || void 0 === i3 ? void 0 : i3.call(t4, o3.name, n3.mod), c5 = n3.hook.apply(this, [e3, (o4) => {
+                if (1 !== arguments.length || !Array.isArray(e3)) throw new Error(`Mod ${n3.mod} failed to call next hook: Expected args to be array, got ${typeof o4}`);
+                return r4.call(this, o4);
               }]);
               return null == a4 || a4(), c5;
             };
           }
-          return { hooks: e2, patches: t3, patchesSources: n3, enter: i4, final: r3 };
+          return { hooks: e2, patches: t2, patchesSources: n2, enter: i2, final: r3 };
         }
-        function l(o2, e2 = false) {
-          let r3 = i3.get(o2);
-          if (r3) e2 && (r3.precomputed = s(r3));
+        function l(o3, e2 = false) {
+          let r3 = i.get(o3);
+          if (r3) e2 && (r3.precomputed = s2(r3));
           else {
             let e3 = window;
-            const a4 = o2.split(".");
-            for (let t3 = 0; t3 < a4.length - 1; t3++) if (e3 = e3[a4[t3]], !n2(e3)) throw new Error(`ModSDK: Function ${o2} to be patched not found; ${a4.slice(0, t3 + 1).join(".")} is not object`);
+            const a4 = o3.split(".");
+            for (let t2 = 0; t2 < a4.length - 1; t2++) if (e3 = e3[a4[t2]], !n(e3)) throw new Error(`ModSDK: Function ${o3} to be patched not found; ${a4.slice(0, t2 + 1).join(".")} is not object`);
             const c5 = e3[a4[a4.length - 1]];
-            if ("function" != typeof c5) throw new Error(`ModSDK: Function ${o2} to be patched not found`);
-            const l2 = (function(o3) {
+            if ("function" != typeof c5) throw new Error(`ModSDK: Function ${o3} to be patched not found`);
+            const l2 = (function(o4) {
               let e4 = -1;
-              for (const n3 of t2.encode(o3)) {
-                let o4 = 255 & (e4 ^ n3);
-                for (let e5 = 0; e5 < 8; e5++) o4 = 1 & o4 ? -306674912 ^ o4 >>> 1 : o4 >>> 1;
-                e4 = e4 >>> 8 ^ o4;
+              for (const n2 of t.encode(o4)) {
+                let o5 = 255 & (e4 ^ n2);
+                for (let e5 = 0; e5 < 8; e5++) o5 = 1 & o5 ? -306674912 ^ o5 >>> 1 : o5 >>> 1;
+                e4 = e4 >>> 8 ^ o5;
               }
               return ((-1 ^ e4) >>> 0).toString(16).padStart(8, "0").toUpperCase();
-            })(c5.toString().replaceAll("\r\n", "\n")), d3 = { name: o2, original: c5, originalHash: l2 };
-            r3 = Object.assign(Object.assign({}, d3), { precomputed: s(d3), router: () => {
-            }, context: e3, contextProperty: a4[a4.length - 1] }), r3.router = /* @__PURE__ */ (function(o3) {
+            })(c5.toString().replaceAll("\r\n", "\n")), d5 = { name: o3, original: c5, originalHash: l2 };
+            r3 = Object.assign(Object.assign({}, d5), { precomputed: s2(d5), router: () => {
+            }, context: e3, contextProperty: a4[a4.length - 1] }), r3.router = /* @__PURE__ */ (function(o4) {
               return function(...e4) {
-                return o3.precomputed.enter.apply(this, [e4]);
+                return o4.precomputed.enter.apply(this, [e4]);
               };
-            })(r3), i3.set(o2, r3), e3[r3.contextProperty] = r3.router;
+            })(r3), i.set(o3, r3), e3[r3.contextProperty] = r3.router;
           }
           return r3;
         }
-        function d2() {
-          for (const o2 of i3.values()) o2.precomputed = s(o2);
+        function d4() {
+          for (const o3 of i.values()) o3.precomputed = s2(o3);
         }
-        function p2() {
-          const o2 = /* @__PURE__ */ new Map();
-          for (const [e2, t3] of i3) o2.set(e2, { name: e2, original: t3.original, originalHash: t3.originalHash, sdkEntrypoint: t3.router, currentEntrypoint: t3.context[t3.contextProperty], hookedByMods: r2(t3.precomputed.hooks.map(((o3) => o3.mod))), patchedByMods: Array.from(t3.precomputed.patchesSources) });
-          return o2;
+        function p3() {
+          const o3 = /* @__PURE__ */ new Map();
+          for (const [e2, t2] of i) o3.set(e2, { name: e2, original: t2.original, originalHash: t2.originalHash, sdkEntrypoint: t2.router, currentEntrypoint: t2.context[t2.contextProperty], hookedByMods: r2(t2.precomputed.hooks.map(((o4) => o4.mod))), patchedByMods: Array.from(t2.precomputed.patchesSources) });
+          return o3;
         }
         const f3 = /* @__PURE__ */ new Map();
-        function u(o2) {
-          f3.get(o2.name) !== o2 && e(`Failed to unload mod '${o2.name}': Not registered`), f3.delete(o2.name), o2.loaded = false, d2();
+        function u3(o3) {
+          f3.get(o3.name) !== o3 && e(`Failed to unload mod '${o3.name}': Not registered`), f3.delete(o3.name), o3.loaded = false, d4();
         }
-        function g3(o2, t3) {
-          o2 && "object" == typeof o2 || e("Failed to register mod: Expected info object, got " + typeof o2), "string" == typeof o2.name && o2.name || e("Failed to register mod: Expected name to be non-empty string, got " + typeof o2.name);
-          let r3 = `'${o2.name}'`;
-          "string" == typeof o2.fullName && o2.fullName || e(`Failed to register mod ${r3}: Expected fullName to be non-empty string, got ${typeof o2.fullName}`), r3 = `'${o2.fullName} (${o2.name})'`, "string" != typeof o2.version && e(`Failed to register mod ${r3}: Expected version to be string, got ${typeof o2.version}`), o2.repository || (o2.repository = void 0), void 0 !== o2.repository && "string" != typeof o2.repository && e(`Failed to register mod ${r3}: Expected repository to be undefined or string, got ${typeof o2.version}`), null == t3 && (t3 = {}), t3 && "object" == typeof t3 || e(`Failed to register mod ${r3}: Expected options to be undefined or object, got ${typeof t3}`);
-          const i4 = true === t3.allowReplace, a4 = f3.get(o2.name);
-          a4 && (a4.allowReplace && i4 || e(`Refusing to load mod ${r3}: it is already loaded and doesn't allow being replaced.
-Was the mod loaded multiple times?`), u(a4));
-          const c5 = (o3) => {
-            let e2 = g4.patching.get(o3.name);
-            return e2 || (e2 = { hooks: [], patches: /* @__PURE__ */ new Map() }, g4.patching.set(o3.name, e2)), e2;
-          }, s2 = (o3, t4) => (...n3) => {
-            var i5, a5;
-            const c6 = null === (a5 = (i5 = m3.errorReporterHooks).apiEndpointEnter) || void 0 === a5 ? void 0 : a5.call(i5, o3, g4.name);
+        function g3(o3, t2) {
+          o3 && "object" == typeof o3 || e("Failed to register mod: Expected info object, got " + typeof o3), "string" == typeof o3.name && o3.name || e("Failed to register mod: Expected name to be non-empty string, got " + typeof o3.name);
+          let r3 = `'${o3.name}'`;
+          "string" == typeof o3.fullName && o3.fullName || e(`Failed to register mod ${r3}: Expected fullName to be non-empty string, got ${typeof o3.fullName}`), r3 = `'${o3.fullName} (${o3.name})'`, "string" != typeof o3.version && e(`Failed to register mod ${r3}: Expected version to be string, got ${typeof o3.version}`), o3.repository || (o3.repository = void 0), void 0 !== o3.repository && "string" != typeof o3.repository && e(`Failed to register mod ${r3}: Expected repository to be undefined or string, got ${typeof o3.version}`), null == t2 && (t2 = {}), t2 && "object" == typeof t2 || e(`Failed to register mod ${r3}: Expected options to be undefined or object, got ${typeof t2}`);
+          const i2 = true === t2.allowReplace, a4 = f3.get(o3.name);
+          a4 && (a4.allowReplace && i2 || e(`Refusing to load mod ${r3}: it is already loaded and doesn't allow being replaced.
+Was the mod loaded multiple times?`), u3(a4));
+          const c5 = (o4) => {
+            let e2 = g4.patching.get(o4.name);
+            return e2 || (e2 = { hooks: [], patches: /* @__PURE__ */ new Map() }, g4.patching.set(o4.name, e2)), e2;
+          }, s3 = (o4, t3) => (...n2) => {
+            var i3, a5;
+            const c6 = null === (a5 = (i3 = m2.errorReporterHooks).apiEndpointEnter) || void 0 === a5 ? void 0 : a5.call(i3, o4, g4.name);
             g4.loaded || e(`Mod ${r3} attempted to call SDK function after being unloaded`);
-            const s3 = t4(...n3);
-            return null == c6 || c6(), s3;
-          }, p3 = { unload: s2("unload", (() => u(g4))), hookFunction: s2("hookFunction", ((o3, t4, n3) => {
-            "string" == typeof o3 && o3 || e(`Mod ${r3} failed to patch a function: Expected function name string, got ${typeof o3}`);
-            const i5 = l(o3), a5 = c5(i5);
-            "number" != typeof t4 && e(`Mod ${r3} failed to hook function '${o3}': Expected priority number, got ${typeof t4}`), "function" != typeof n3 && e(`Mod ${r3} failed to hook function '${o3}': Expected hook function, got ${typeof n3}`);
-            const s3 = { mod: g4.name, priority: t4, hook: n3 };
-            return a5.hooks.push(s3), d2(), () => {
-              const o4 = a5.hooks.indexOf(s3);
-              o4 >= 0 && (a5.hooks.splice(o4, 1), d2());
+            const s4 = t3(...n2);
+            return null == c6 || c6(), s4;
+          }, p4 = { unload: s3("unload", (() => u3(g4))), hookFunction: s3("hookFunction", ((o4, t3, n2) => {
+            "string" == typeof o4 && o4 || e(`Mod ${r3} failed to patch a function: Expected function name string, got ${typeof o4}`);
+            const i3 = l(o4), a5 = c5(i3);
+            "number" != typeof t3 && e(`Mod ${r3} failed to hook function '${o4}': Expected priority number, got ${typeof t3}`), "function" != typeof n2 && e(`Mod ${r3} failed to hook function '${o4}': Expected hook function, got ${typeof n2}`);
+            const s4 = { mod: g4.name, priority: t3, hook: n2 };
+            return a5.hooks.push(s4), d4(), () => {
+              const o5 = a5.hooks.indexOf(s4);
+              o5 >= 0 && (a5.hooks.splice(o5, 1), d4());
             };
-          })), patchFunction: s2("patchFunction", ((o3, t4) => {
-            "string" == typeof o3 && o3 || e(`Mod ${r3} failed to patch a function: Expected function name string, got ${typeof o3}`);
-            const i5 = l(o3), a5 = c5(i5);
-            n2(t4) || e(`Mod ${r3} failed to patch function '${o3}': Expected patches object, got ${typeof t4}`);
-            for (const [n3, i6] of Object.entries(t4)) "string" == typeof i6 ? a5.patches.set(n3, i6) : null === i6 ? a5.patches.delete(n3) : e(`Mod ${r3} failed to patch function '${o3}': Invalid format of patch '${n3}'`);
-            d2();
-          })), removePatches: s2("removePatches", ((o3) => {
-            "string" == typeof o3 && o3 || e(`Mod ${r3} failed to patch a function: Expected function name string, got ${typeof o3}`);
-            const t4 = l(o3);
-            c5(t4).patches.clear(), d2();
-          })), callOriginal: s2("callOriginal", ((o3, t4, n3) => {
-            "string" == typeof o3 && o3 || e(`Mod ${r3} failed to call a function: Expected function name string, got ${typeof o3}`);
-            const i5 = l(o3);
-            return Array.isArray(t4) || e(`Mod ${r3} failed to call a function: Expected args array, got ${typeof t4}`), i5.original.apply(null != n3 ? n3 : globalThis, t4);
-          })), getOriginalHash: s2("getOriginalHash", ((o3) => {
-            "string" == typeof o3 && o3 || e(`Mod ${r3} failed to get hash: Expected function name string, got ${typeof o3}`);
-            return l(o3).originalHash;
-          })) }, g4 = { name: o2.name, fullName: o2.fullName, version: o2.version, repository: o2.repository, allowReplace: i4, api: p3, loaded: true, patching: /* @__PURE__ */ new Map() };
-          return f3.set(o2.name, g4), Object.freeze(p3);
+          })), patchFunction: s3("patchFunction", ((o4, t3) => {
+            "string" == typeof o4 && o4 || e(`Mod ${r3} failed to patch a function: Expected function name string, got ${typeof o4}`);
+            const i3 = l(o4), a5 = c5(i3);
+            n(t3) || e(`Mod ${r3} failed to patch function '${o4}': Expected patches object, got ${typeof t3}`);
+            for (const [n2, i4] of Object.entries(t3)) "string" == typeof i4 ? a5.patches.set(n2, i4) : null === i4 ? a5.patches.delete(n2) : e(`Mod ${r3} failed to patch function '${o4}': Invalid format of patch '${n2}'`);
+            d4();
+          })), removePatches: s3("removePatches", ((o4) => {
+            "string" == typeof o4 && o4 || e(`Mod ${r3} failed to patch a function: Expected function name string, got ${typeof o4}`);
+            const t3 = l(o4);
+            c5(t3).patches.clear(), d4();
+          })), callOriginal: s3("callOriginal", ((o4, t3, n2) => {
+            "string" == typeof o4 && o4 || e(`Mod ${r3} failed to call a function: Expected function name string, got ${typeof o4}`);
+            const i3 = l(o4);
+            return Array.isArray(t3) || e(`Mod ${r3} failed to call a function: Expected args array, got ${typeof t3}`), i3.original.apply(null != n2 ? n2 : globalThis, t3);
+          })), getOriginalHash: s3("getOriginalHash", ((o4) => {
+            "string" == typeof o4 && o4 || e(`Mod ${r3} failed to get hash: Expected function name string, got ${typeof o4}`);
+            return l(o4).originalHash;
+          })) }, g4 = { name: o3.name, fullName: o3.fullName, version: o3.version, repository: o3.repository, allowReplace: i2, api: p4, loaded: true, patching: /* @__PURE__ */ new Map() };
+          return f3.set(o3.name, g4), Object.freeze(p4);
         }
         function h3() {
-          const o2 = [];
-          for (const e2 of f3.values()) o2.push({ name: e2.name, fullName: e2.fullName, version: e2.version, repository: e2.repository });
-          return o2;
+          const o3 = [];
+          for (const e2 of f3.values()) o3.push({ name: e2.name, fullName: e2.fullName, version: e2.version, repository: e2.repository });
+          return o3;
         }
-        let m3;
+        let m2;
         const y2 = void 0 === window.bcModSdk ? window.bcModSdk = (function() {
-          const e2 = { version: o, apiVersion: 1, registerMod: g3, getModsInfo: h3, getPatchingInfo: p2, errorReporterHooks: Object.seal({ apiEndpointEnter: null, hookEnter: null, hookChainExit: null }) };
-          return m3 = e2, Object.freeze(e2);
-        })() : (n2(window.bcModSdk) || e("Failed to init Mod SDK: Name already in use"), 1 !== window.bcModSdk.apiVersion && e(`Failed to init Mod SDK: Different version already loaded ('1.2.0' vs '${window.bcModSdk.version}')`), window.bcModSdk.version !== o && alert(`Mod SDK warning: Loading different but compatible versions ('1.2.0' vs '${window.bcModSdk.version}')
+          const e2 = { version: o2, apiVersion: 1, registerMod: g3, getModsInfo: h3, getPatchingInfo: p3, errorReporterHooks: Object.seal({ apiEndpointEnter: null, hookEnter: null, hookChainExit: null }) };
+          return m2 = e2, Object.freeze(e2);
+        })() : (n(window.bcModSdk) || e("Failed to init Mod SDK: Name already in use"), 1 !== window.bcModSdk.apiVersion && e(`Failed to init Mod SDK: Different version already loaded ('1.2.0' vs '${window.bcModSdk.version}')`), window.bcModSdk.version !== o2 && alert(`Mod SDK warning: Loading different but compatible versions ('1.2.0' vs '${window.bcModSdk.version}')
 One of mods you are using is using an old version of SDK. It will work for now but please inform author to update`), window.bcModSdk);
         return "undefined" != typeof exports2 && (Object.defineProperty(exports2, "__esModule", { value: true }), exports2.default = y2), y2;
       })();
@@ -298,7 +298,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
                 type = type._init;
                 try {
                   return getComponentNameFromType(type(innerType));
-                } catch (x3) {
+                } catch (x) {
                 }
             }
           return null;
@@ -310,7 +310,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
           try {
             var name = getComponentNameFromType(type);
             return name ? "<" + name + ">" : "<...>";
-          } catch (x3) {
+          } catch (x) {
             return "<...>";
           }
         }
@@ -486,19 +486,19 @@ One of mods you are using is using an old version of SDK. It will work for now b
           invokeCallback = 0;
           childKey = "" === nameSoFar ? "." : nameSoFar + ":";
           if (isArrayImpl(children))
-            for (var i3 = 0; i3 < children.length; i3++)
-              nameSoFar = children[i3], type = childKey + getElementKey(nameSoFar, i3), invokeCallback += mapIntoArray(
+            for (var i = 0; i < children.length; i++)
+              nameSoFar = children[i], type = childKey + getElementKey(nameSoFar, i), invokeCallback += mapIntoArray(
                 nameSoFar,
                 array,
                 escapedPrefix,
                 type,
                 callback
               );
-          else if (i3 = getIteratorFn(children), "function" === typeof i3)
-            for (i3 === children.entries && (didWarnAboutMaps || console.warn(
+          else if (i = getIteratorFn(children), "function" === typeof i)
+            for (i === children.entries && (didWarnAboutMaps || console.warn(
               "Using Maps as children is not supported. Use an array of keyed ReactElements instead."
-            ), didWarnAboutMaps = true), children = i3.call(children), i3 = 0; !(nameSoFar = children.next()).done; )
-              nameSoFar = nameSoFar.value, type = childKey + getElementKey(nameSoFar, i3++), invokeCallback += mapIntoArray(
+            ), didWarnAboutMaps = true), children = i.call(children), i = 0; !(nameSoFar = children.next()).done; )
+              nameSoFar = nameSoFar.value, type = childKey + getElementKey(nameSoFar, i++), invokeCallback += mapIntoArray(
                 nameSoFar,
                 array,
                 escapedPrefix,
@@ -631,17 +631,17 @@ One of mods you are using is using an old version of SDK. It will work for now b
         function flushActQueue(queue) {
           if (!isFlushing) {
             isFlushing = true;
-            var i3 = 0;
+            var i = 0;
             try {
-              for (; i3 < queue.length; i3++) {
-                var callback = queue[i3];
+              for (; i < queue.length; i++) {
+                var callback = queue[i];
                 do {
                   ReactSharedInternals.didUsePromise = false;
                   var continuation = callback(false);
                   if (null !== continuation) {
                     if (ReactSharedInternals.didUsePromise) {
-                      queue[i3] = callback;
-                      queue.splice(0, i3);
+                      queue[i] = callback;
+                      queue.splice(0, i);
                       return;
                     }
                     callback = continuation;
@@ -650,7 +650,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
               }
               queue.length = 0;
             } catch (error) {
-              queue.splice(0, i3 + 1), ReactSharedInternals.thrownErrors.push(error);
+              queue.splice(0, i + 1), ReactSharedInternals.thrownErrors.push(error);
             } finally {
               isFlushing = false;
             }
@@ -765,11 +765,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
             );
           },
           count: function(children) {
-            var n2 = 0;
+            var n = 0;
             mapChildren(children, function() {
-              n2++;
+              n++;
             });
-            return n2;
+            return n;
           },
           toArray: function(children) {
             return mapChildren(children, function(child) {
@@ -910,8 +910,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if (1 === propName) props.children = children;
           else if (1 < propName) {
             JSCompiler_inline_result = Array(propName);
-            for (var i3 = 0; i3 < propName; i3++)
-              JSCompiler_inline_result[i3] = arguments[i3 + 2];
+            for (var i = 0; i < propName; i++)
+              JSCompiler_inline_result[i] = arguments[i + 2];
             props.children = JSCompiler_inline_result;
           }
           props = ReactElement(
@@ -945,35 +945,35 @@ One of mods you are using is using an old version of SDK. It will work for now b
           return defaultValue;
         };
         exports2.createElement = function(type, config, children) {
-          for (var i3 = 2; i3 < arguments.length; i3++)
-            validateChildKeys(arguments[i3]);
-          i3 = {};
+          for (var i = 2; i < arguments.length; i++)
+            validateChildKeys(arguments[i]);
+          i = {};
           var key = null;
           if (null != config)
             for (propName in didWarnAboutOldJSXRuntime || !("__self" in config) || "key" in config || (didWarnAboutOldJSXRuntime = true, console.warn(
               "Your app (or one of its dependencies) is using an outdated JSX transform. Update to the modern JSX transform for faster performance: https://react.dev/link/new-jsx-transform"
             )), hasValidKey(config) && (checkKeyStringCoercion(config.key), key = "" + config.key), config)
-              hasOwnProperty11.call(config, propName) && "key" !== propName && "__self" !== propName && "__source" !== propName && (i3[propName] = config[propName]);
+              hasOwnProperty11.call(config, propName) && "key" !== propName && "__self" !== propName && "__source" !== propName && (i[propName] = config[propName]);
           var childrenLength = arguments.length - 2;
-          if (1 === childrenLength) i3.children = children;
+          if (1 === childrenLength) i.children = children;
           else if (1 < childrenLength) {
             for (var childArray = Array(childrenLength), _i = 0; _i < childrenLength; _i++)
               childArray[_i] = arguments[_i + 2];
             Object.freeze && Object.freeze(childArray);
-            i3.children = childArray;
+            i.children = childArray;
           }
           if (type && type.defaultProps)
             for (propName in childrenLength = type.defaultProps, childrenLength)
-              void 0 === i3[propName] && (i3[propName] = childrenLength[propName]);
+              void 0 === i[propName] && (i[propName] = childrenLength[propName]);
           key && defineKeyPropWarningGetter(
-            i3,
+            i,
             "function" === typeof type ? type.displayName || type.name || "Unknown" : type
           );
           var propName = 1e4 > ReactSharedInternals.recentlyCreatedOwnerStacks++;
           return ReactElement(
             type,
             key,
-            i3,
+            i,
             getOwner(),
             propName ? Error("react-stack-top-frame") : unknownOwnerDebugStack,
             propName ? createTask(getTaskName(type)) : unknownOwnerDebugTask
@@ -1720,8 +1720,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if (oldPath.length !== newPath.length)
             console.warn("copyWithRename() expects paths of the same length");
           else {
-            for (var i3 = 0; i3 < newPath.length - 1; i3++)
-              if (oldPath[i3] !== newPath[i3]) {
+            for (var i = 0; i < newPath.length - 1; i++)
+              if (oldPath[i] !== newPath[i]) {
                 console.warn(
                   "copyWithRename() expects paths to be the same except for the deepest key"
                 );
@@ -1963,7 +1963,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
                 type = type._init;
                 try {
                   return getComponentNameFromType(type(innerType));
-                } catch (x3) {
+                } catch (x) {
                 }
             }
           return null;
@@ -2025,8 +2025,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
             case 29:
               type = fiber._debugInfo;
               if (null != type) {
-                for (var i3 = type.length - 1; 0 <= i3; i3--)
-                  if ("string" === typeof type[i3].name) return type[i3].name;
+                for (var i = type.length - 1; 0 <= i; i--)
+                  if ("string" === typeof type[i].name) return type[i].name;
               }
               if (null !== fiber.return)
                 return getComponentNameFromFiber(fiber.return);
@@ -2179,10 +2179,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if (void 0 === prefix)
             try {
               throw Error();
-            } catch (x3) {
-              var match = x3.stack.trim().match(/\n( *(at )?)/);
+            } catch (x) {
+              var match = x.stack.trim().match(/\n( *(at )?)/);
               prefix = match && match[1] || "";
-              suffix = -1 < x3.stack.indexOf("\n    at") ? " (<anonymous>)" : -1 < x3.stack.indexOf("@") ? "@unknown:0:0" : "";
+              suffix = -1 < x.stack.indexOf("\n    at") ? " (<anonymous>)" : -1 < x.stack.indexOf("@") ? "@unknown:0:0" : "";
             }
           return "\n" + prefix + name + suffix;
         }
@@ -2213,8 +2213,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
                     if ("object" === typeof Reflect && Reflect.construct) {
                       try {
                         Reflect.construct(Fake, []);
-                      } catch (x3) {
-                        var control = x3;
+                      } catch (x) {
+                        var control = x;
                       }
                       Reflect.construct(fn, [], Fake);
                     } else {
@@ -2322,8 +2322,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
               info += describeFiber(workInProgress2, previous);
               var debugInfo = workInProgress2._debugInfo;
               if (debugInfo)
-                for (var i3 = debugInfo.length - 1; 0 <= i3; i3--) {
-                  var entry = debugInfo[i3];
+                for (var i = debugInfo.length - 1; 0 <= i; i--) {
+                  var entry = debugInfo[i];
                   if ("string" === typeof entry.name) {
                     var JSCompiler_temp_const = info;
                     a: {
@@ -2346,8 +2346,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
               workInProgress2 = workInProgress2.return;
             } while (workInProgress2);
             return info;
-          } catch (x3) {
-            return "\nError generating stack: " + x3.message + "\n" + x3.stack;
+          } catch (x) {
+            return "\nError generating stack: " + x.message + "\n" + x.stack;
           }
         }
         function describeFunctionComponentFrameWithoutLineNumber(fn) {
@@ -2406,8 +2406,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
                 (workInProgress2 = workInProgress2.owner) && ownerStack && (info += "\n" + formatOwnerStack(ownerStack));
               } else break;
             var JSCompiler_inline_result = info;
-          } catch (x3) {
-            JSCompiler_inline_result = "\nError generating stack: " + x3.message + "\n" + x3.stack;
+          } catch (x) {
+            JSCompiler_inline_result = "\nError generating stack: " + x.message + "\n" + x.stack;
           }
           return JSCompiler_inline_result;
         }
@@ -2493,9 +2493,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
               ));
             }
         }
-        function clz32Fallback(x3) {
-          x3 >>>= 0;
-          return 0 === x3 ? 32 : 31 - (log(x3) / LN2 | 0) | 0;
+        function clz32Fallback(x) {
+          x >>>= 0;
+          return 0 === x ? 32 : 31 - (log(x) / LN2 | 0) | 0;
         }
         function getHighestPriorityLanes(lanes) {
           var pendingSyncLanes = lanes & 42;
@@ -2616,7 +2616,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
           return lane;
         }
         function createLaneMap(initial) {
-          for (var laneMap = [], i3 = 0; 31 > i3; i3++) laneMap.push(initial);
+          for (var laneMap = [], i = 0; 31 > i; i++) laneMap.push(initial);
           return laneMap;
         }
         function markRootUpdated$1(root3, updateLane) {
@@ -3064,20 +3064,20 @@ One of mods you are using is using an old version of SDK. It will work for now b
           node = node.options;
           if (multiple) {
             multiple = {};
-            for (var i3 = 0; i3 < propValue.length; i3++)
-              multiple["$" + propValue[i3]] = true;
+            for (var i = 0; i < propValue.length; i++)
+              multiple["$" + propValue[i]] = true;
             for (propValue = 0; propValue < node.length; propValue++)
-              i3 = multiple.hasOwnProperty("$" + node[propValue].value), node[propValue].selected !== i3 && (node[propValue].selected = i3), i3 && setDefaultSelected && (node[propValue].defaultSelected = true);
+              i = multiple.hasOwnProperty("$" + node[propValue].value), node[propValue].selected !== i && (node[propValue].selected = i), i && setDefaultSelected && (node[propValue].defaultSelected = true);
           } else {
             propValue = "" + getToStringValue(propValue);
             multiple = null;
-            for (i3 = 0; i3 < node.length; i3++) {
-              if (node[i3].value === propValue) {
-                node[i3].selected = true;
-                setDefaultSelected && (node[i3].defaultSelected = true);
+            for (i = 0; i < node.length; i++) {
+              if (node[i].value === propValue) {
+                node[i].selected = true;
+                setDefaultSelected && (node[i].defaultSelected = true);
                 return;
               }
-              null !== multiple || node[i3].disabled || (multiple = node[i3]);
+              null !== multiple || node[i].disabled || (multiple = node[i]);
             }
             null !== multiple && (multiple.selected = true);
           }
@@ -3193,7 +3193,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
           return indentation(indent) + describeTextNode(clientText, maxLength) + "\n";
         }
         function objectName(object) {
-          return Object.prototype.toString.call(object).replace(/^\[object (.*)\]$/, function(m3, p0) {
+          return Object.prototype.toString.call(object).replace(/^\[object (.*)\]$/, function(m2, p0) {
             return p0;
           });
         }
@@ -3339,21 +3339,21 @@ One of mods you are using is using an old version of SDK. It will work for now b
           skipToNode = "";
           var debugInfo = node.fiber._debugInfo;
           if (debugInfo)
-            for (var i3 = 0; i3 < debugInfo.length; i3++) {
-              var serverComponentName = debugInfo[i3].name;
+            for (var i = 0; i < debugInfo.length; i++) {
+              var serverComponentName = debugInfo[i].name;
               "string" === typeof serverComponentName && (skipToNode += indentation(indent) + "<" + serverComponentName + ">\n", indent++);
             }
           debugInfo = "";
-          i3 = node.fiber.pendingProps;
+          i = node.fiber.pendingProps;
           if (6 === node.fiber.tag)
-            debugInfo = describeTextDiff(i3, node.serverProps, indent), indent++;
+            debugInfo = describeTextDiff(i, node.serverProps, indent), indent++;
           else if (serverComponentName = describeFiberType(node.fiber), null !== serverComponentName)
             if (void 0 === node.serverProps) {
               debugInfo = indent;
               var maxLength = 120 - 2 * debugInfo - serverComponentName.length - 2, content = "";
-              for (propName in i3)
-                if (i3.hasOwnProperty(propName) && "children" !== propName) {
-                  var propValue = describePropValue(i3[propName], 15);
+              for (propName in i)
+                if (i.hasOwnProperty(propName) && "children" !== propName) {
+                  var propValue = describePropValue(i[propName], 15);
                   maxLength -= propName.length + propValue.length + 2;
                   if (0 > maxLength) {
                     content += " ...";
@@ -3366,25 +3366,25 @@ One of mods you are using is using an old version of SDK. It will work for now b
             } else
               null === node.serverProps ? (debugInfo = describeExpandedElement(
                 serverComponentName,
-                i3,
+                i,
                 added(indent)
               ), indent++) : "string" === typeof node.serverProps ? console.error(
                 "Should not have matched a non HostText fiber to a Text node. This is a bug in React."
               ) : (debugInfo = describeElementDiff(
                 serverComponentName,
-                i3,
+                i,
                 node.serverProps,
                 indent
               ), indent++);
           var propName = "";
-          i3 = node.fiber.child;
-          for (serverComponentName = 0; i3 && serverComponentName < node.children.length; )
-            maxLength = node.children[serverComponentName], maxLength.fiber === i3 ? (propName += describeNode(maxLength, indent), serverComponentName++) : propName += describeSiblingFiber(i3, indent), i3 = i3.sibling;
-          i3 && 0 < node.children.length && (propName += indentation(indent) + "...\n");
-          i3 = node.serverTail;
+          i = node.fiber.child;
+          for (serverComponentName = 0; i && serverComponentName < node.children.length; )
+            maxLength = node.children[serverComponentName], maxLength.fiber === i ? (propName += describeNode(maxLength, indent), serverComponentName++) : propName += describeSiblingFiber(i, indent), i = i.sibling;
+          i && 0 < node.children.length && (propName += indentation(indent) + "...\n");
+          i = node.serverTail;
           null === node.serverProps && indent--;
-          for (node = 0; node < i3.length; node++)
-            serverComponentName = i3[node], propName = "string" === typeof serverComponentName ? propName + (removed(indent) + describeTextNode(serverComponentName, 120 - 2 * indent) + "\n") : propName + describeExpandedElement(
+          for (node = 0; node < i.length; node++)
+            serverComponentName = i[node], propName = "string" === typeof serverComponentName ? propName + (removed(indent) + describeTextNode(serverComponentName, 120 - 2 * indent) + "\n") : propName + describeExpandedElement(
               serverComponentName.type,
               serverComponentName.props,
               removed(indent)
@@ -3394,7 +3394,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         function describeDiff(rootNode) {
           try {
             return "\n\n" + describeNode(rootNode, 0);
-          } catch (x3) {
+          } catch (x) {
             return "";
           }
         }
@@ -3663,8 +3663,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
               if (prevStyles) {
                 for (var key in prevStyles)
                   if (prevStyles.hasOwnProperty(key) && !styles.hasOwnProperty(key))
-                    for (var longhands = shorthandToLonghand[key] || [key], i3 = 0; i3 < longhands.length; i3++)
-                      expandedUpdates[longhands[i3]] = key;
+                    for (var longhands = shorthandToLonghand[key] || [key], i = 0; i < longhands.length; i++)
+                      expandedUpdates[longhands[i]] = key;
               }
               for (var _key in styles)
                 if (styles.hasOwnProperty(_key) && (!prevStyles || prevStyles[_key] !== styles[_key]))
@@ -3676,12 +3676,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
                   _key[key[longhands]] = key$jscomp$0;
               key$jscomp$0 = {};
               for (var _key2 in expandedUpdates)
-                if (key = expandedUpdates[_key2], (longhands = _key[_key2]) && key !== longhands && (i3 = key + "," + longhands, !key$jscomp$0[i3])) {
-                  key$jscomp$0[i3] = true;
-                  i3 = console;
+                if (key = expandedUpdates[_key2], (longhands = _key[_key2]) && key !== longhands && (i = key + "," + longhands, !key$jscomp$0[i])) {
+                  key$jscomp$0[i] = true;
+                  i = console;
                   var value = styles[key];
-                  i3.error.call(
-                    i3,
+                  i.error.call(
+                    i,
                     "%s a style property during rerender (%s) when a conflicting property is set (%s) can lead to styling bugs. To avoid this, don't mix shorthand and non-shorthand properties for the same value; instead, replace the shorthand with separate values.",
                     null == value || "boolean" === typeof value || "" === value ? "Removing" : "Updating",
                     key,
@@ -4254,8 +4254,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if ("input" === domEventName || "change" === domEventName)
             return getInstIfValueChanged(targetInst);
         }
-        function is(x3, y2) {
-          return x3 === y2 && (0 !== x3 || 1 / x3 === 1 / y2) || x3 !== x3 && y2 !== y2;
+        function is(x, y2) {
+          return x === y2 && (0 !== x || 1 / x === 1 / y2) || x !== x && y2 !== y2;
         }
         function shallowEqual(objA, objB) {
           if (objectIs(objA, objB)) return true;
@@ -4354,8 +4354,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
           registerTwoPhaseEvent(reactName, [domEventName]);
         }
         function getArrayKind(array) {
-          for (var kind = EMPTY_ARRAY, i3 = 0; i3 < array.length; i3++) {
-            var value = array[i3];
+          for (var kind = EMPTY_ARRAY, i = 0; i < array.length; i++) {
+            var value = array[i];
             if ("object" === typeof value && null !== value)
               if (isArrayImpl(value) && 2 === value.length && "string" === typeof value[0]) {
                 if (kind !== EMPTY_ARRAY && kind !== ENTRIES_ARRAY)
@@ -4633,8 +4633,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if (supportsUserTiming) {
             var name = getComponentNameFromFiber(fiber);
             if (null !== name) {
-              for (var debugTask = null, properties = [], i3 = 0; i3 < errors.length; i3++) {
-                var capturedValue = errors[i3];
+              for (var debugTask = null, properties = [], i = 0; i < errors.length; i++) {
+                var capturedValue = errors[i];
                 null == debugTask && null !== capturedValue.source && (debugTask = capturedValue.source._debugTask);
                 capturedValue = capturedValue.value;
                 properties.push([
@@ -4669,8 +4669,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
               var name = getComponentNameFromFiber(fiber);
               if (null !== name) {
                 selfTime = [];
-                for (var i3 = 0; i3 < errors.length; i3++) {
-                  var error = errors[i3].value;
+                for (var i = 0; i < errors.length; i++) {
+                  var error = errors[i].value;
                   selfTime.push([
                     "Error",
                     "object" === typeof error && null !== error && "string" === typeof error.message ? String(error.message) : String(error)
@@ -4786,8 +4786,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
         function logRecoveredRenderPhase(startTime, endTime, lanes, recoverableErrors, hydrationFailed, debugTask) {
           if (supportsUserTiming && !(endTime <= startTime)) {
             lanes = [];
-            for (var i3 = 0; i3 < recoverableErrors.length; i3++) {
-              var error = recoverableErrors[i3].value;
+            for (var i = 0; i < recoverableErrors.length; i++) {
+              var error = recoverableErrors[i].value;
               lanes.push([
                 "Recoverable Error",
                 "object" === typeof error && null !== error && "string" === typeof error.message ? String(error.message) : String(error)
@@ -4853,8 +4853,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
         }
         function logCommitErrored(startTime, endTime, errors, passive, debugTask) {
           if (supportsUserTiming && !(endTime <= startTime)) {
-            for (var properties = [], i3 = 0; i3 < errors.length; i3++) {
-              var error = errors[i3].value;
+            for (var properties = [], i = 0; i < errors.length; i++) {
+              var error = errors[i].value;
               properties.push([
                 "Error",
                 "object" === typeof error && null !== error && "string" === typeof error.message ? String(error.message) : String(error)
@@ -4899,15 +4899,15 @@ One of mods you are using is using an old version of SDK. It will work for now b
           ));
         }
         function finishQueueingConcurrentUpdates() {
-          for (var endIndex = concurrentQueuesIndex, i3 = concurrentlyUpdatedLanes = concurrentQueuesIndex = 0; i3 < endIndex; ) {
-            var fiber = concurrentQueues[i3];
-            concurrentQueues[i3++] = null;
-            var queue = concurrentQueues[i3];
-            concurrentQueues[i3++] = null;
-            var update = concurrentQueues[i3];
-            concurrentQueues[i3++] = null;
-            var lane = concurrentQueues[i3];
-            concurrentQueues[i3++] = null;
+          for (var endIndex = concurrentQueuesIndex, i = concurrentlyUpdatedLanes = concurrentQueuesIndex = 0; i < endIndex; ) {
+            var fiber = concurrentQueues[i];
+            concurrentQueues[i++] = null;
+            var queue = concurrentQueues[i];
+            concurrentQueues[i++] = null;
+            var update = concurrentQueues[i];
+            concurrentQueues[i++] = null;
+            var lane = concurrentQueues[i];
+            concurrentQueues[i++] = null;
             if (null !== queue && null !== update) {
               var pending = queue.pending;
               null === pending ? update.next = update : (update.next = pending.next, pending.next = update);
@@ -5541,8 +5541,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
               a: for (; null !== list; ) {
                 var dependency = list;
                 list = fiber;
-                for (var i3 = 0; i3 < contexts.length; i3++)
-                  if (dependency.context === contexts[i3]) {
+                for (var i = 0; i < contexts.length; i++)
+                  if (dependency.context === contexts[i]) {
                     list.lanes |= renderLanes2;
                     dependency = list.alternate;
                     null !== dependency && (dependency.lanes |= renderLanes2);
@@ -5830,7 +5830,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
             currentEntangledListeners = null;
             currentEntangledLane = 0;
             currentEntangledActionThenable = null;
-            for (var i3 = 0; i3 < listeners.length; i3++) (0, listeners[i3])();
+            for (var i = 0; i < listeners.length; i++) (0, listeners[i])();
           }
         }
         function chainThenableValue(thenable, result) {
@@ -5846,7 +5846,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
             function() {
               thenableWithOverride.status = "fulfilled";
               thenableWithOverride.value = result;
-              for (var i3 = 0; i3 < listeners.length; i3++) (0, listeners[i3])(result);
+              for (var i = 0; i < listeners.length; i++) (0, listeners[i])(result);
             },
             function(error) {
               thenableWithOverride.status = "rejected";
@@ -5943,10 +5943,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
         function resolveLazy(lazyType) {
           try {
             return callLazyInitInDEV(lazyType);
-          } catch (x3) {
-            if (null !== x3 && "object" === typeof x3 && "function" === typeof x3.then)
-              throw suspendedThenable = x3, needsToResetSuspendedThenableDEV = true, SuspenseException;
-            throw x3;
+          } catch (x) {
+            if (null !== x && "object" === typeof x && "function" === typeof x.then)
+              throw suspendedThenable = x, needsToResetSuspendedThenableDEV = true, SuspenseException;
+            throw x;
           }
         }
         function getSuspendedThenable() {
@@ -5973,17 +5973,17 @@ One of mods you are using is using an old version of SDK. It will work for now b
         function getCurrentDebugTask() {
           var debugInfo = currentDebugInfo;
           if (null != debugInfo) {
-            for (var i3 = debugInfo.length - 1; 0 <= i3; i3--)
-              if (null != debugInfo[i3].name) {
-                var debugTask = debugInfo[i3].debugTask;
+            for (var i = debugInfo.length - 1; 0 <= i; i--)
+              if (null != debugInfo[i].name) {
+                var debugTask = debugInfo[i].debugTask;
                 if (null != debugTask) return debugTask;
               }
           }
           return null;
         }
         function validateFragmentProps(element, fiber, returnFiber) {
-          for (var keys2 = Object.keys(element.props), i3 = 0; i3 < keys2.length; i3++) {
-            var key = keys2[i3];
+          for (var keys2 = Object.keys(element.props), i = 0; i < keys2.length; i++) {
+            var key = keys2[i];
             if ("children" !== key && "key" !== key) {
               null === fiber && (fiber = createFiberFromElement(element, returnFiber.mode, 0), fiber._debugInfo = currentDebugInfo, fiber.return = returnFiber);
               runWithFiberInDEV(
@@ -6663,19 +6663,19 @@ One of mods you are using is using an old version of SDK. It will work for now b
               );
               thenableState$1 = null;
               return firstChildFiber;
-            } catch (x3) {
-              if (x3 === SuspenseException || x3 === SuspenseActionException) throw x3;
-              var fiber = createFiber(29, x3, null, returnFiber.mode);
+            } catch (x) {
+              if (x === SuspenseException || x === SuspenseActionException) throw x;
+              var fiber = createFiber(29, x, null, returnFiber.mode);
               fiber.lanes = lanes;
               fiber.return = returnFiber;
               var debugInfo = fiber._debugInfo = currentDebugInfo;
               fiber._debugOwner = returnFiber._debugOwner;
               fiber._debugTask = returnFiber._debugTask;
               if (null != debugInfo) {
-                for (var i3 = debugInfo.length - 1; 0 <= i3; i3--)
-                  if ("string" === typeof debugInfo[i3].stack) {
-                    fiber._debugOwner = debugInfo[i3];
-                    fiber._debugTask = debugInfo[i3].debugTask;
+                for (var i = debugInfo.length - 1; 0 <= i; i--)
+                  if ("string" === typeof debugInfo[i].stack) {
+                    fiber._debugOwner = debugInfo[i];
+                    fiber._debugTask = debugInfo[i].debugTask;
                     break;
                   }
               }
@@ -7005,9 +7005,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if (null !== hookTypesDev && (hookTypesUpdateIndexDev++, hookTypesDev[hookTypesUpdateIndexDev] !== hookName)) {
             var componentName2 = getComponentNameFromFiber(currentlyRenderingFiber);
             if (!didWarnAboutMismatchedHooksForComponent.has(componentName2) && (didWarnAboutMismatchedHooksForComponent.add(componentName2), null !== hookTypesDev)) {
-              for (var table = "", i3 = 0; i3 <= hookTypesUpdateIndexDev; i3++) {
-                var oldHookName = hookTypesDev[i3], newHookName = i3 === hookTypesUpdateIndexDev ? hookName : oldHookName;
-                for (oldHookName = i3 + 1 + ". " + oldHookName; 30 > oldHookName.length; )
+              for (var table = "", i = 0; i <= hookTypesUpdateIndexDev; i++) {
+                var oldHookName = hookTypesDev[i], newHookName = i === hookTypesUpdateIndexDev ? hookName : oldHookName;
+                for (oldHookName = i + 1 + ". " + oldHookName; 30 > oldHookName.length; )
                   oldHookName += " ";
                 oldHookName += newHookName + "\n";
                 table += oldHookName;
@@ -7052,8 +7052,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
             "[" + prevDeps.join(", ") + "]",
             "[" + nextDeps.join(", ") + "]"
           );
-          for (var i3 = 0; i3 < prevDeps.length && i3 < nextDeps.length; i3++)
-            if (!objectIs(nextDeps[i3], prevDeps[i3])) return false;
+          for (var i = 0; i < prevDeps.length && i < nextDeps.length; i++)
+            if (!objectIs(nextDeps[i], prevDeps[i])) return false;
           return true;
         }
         function renderWithHooks(current2, workInProgress2, Component, props, secondArg, nextRenderLanes) {
@@ -7677,7 +7677,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         }
         function notifyActionListeners(actionNode) {
           actionNode = actionNode.listeners;
-          for (var i3 = 0; i3 < actionNode.length; i3++) (0, actionNode[i3])();
+          for (var i = 0; i < actionNode.length; i++) (0, actionNode[i])();
         }
         function actionStateReducer(oldState, newState) {
           return newState;
@@ -7779,9 +7779,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if ("object" === typeof currentStateHook && null !== currentStateHook && "function" === typeof currentStateHook.then)
             try {
               var state = useThenable(currentStateHook);
-            } catch (x3) {
-              if (x3 === SuspenseException) throw SuspenseActionException;
-              throw x3;
+            } catch (x) {
+              if (x === SuspenseException) throw SuspenseActionException;
+              throw x;
             }
           else state = currentStateHook;
           currentStateHook = updateWorkInProgressHook();
@@ -10840,10 +10840,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
                   addendum = null === lastEffect ? " You returned null. If your effect does not require clean up, return undefined (or nothing)." : "function" === typeof lastEffect.then ? "\n\nIt looks like you wrote " + hookName + "(async () => ...) or returned a Promise. Instead, write the async function inside your effect and call it immediately:\n\n" + hookName + "(() => {\n  async function fetchData() {\n    // You can await here\n    const response = await MyAPI.getData(someId);\n    // ...\n  }\n  fetchData();\n}, [someId]); // Or [] if effect doesn't need props or state\n\nLearn more about data fetching with Hooks: https://react.dev/link/hooks-data-fetching" : " You returned: " + lastEffect;
                   runWithFiberInDEV(
                     finishedWork,
-                    function(n2, a3) {
+                    function(n, a3) {
                       console.error(
                         "%s must not return anything besides a function, which is used for clean-up.%s",
-                        n2,
+                        n,
                         a3
                       );
                     },
@@ -11770,8 +11770,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
         function recursivelyTraverseMutationEffects(root$jscomp$0, parentFiber) {
           var deletions = parentFiber.deletions;
           if (null !== deletions)
-            for (var i3 = 0; i3 < deletions.length; i3++) {
-              var root3 = root$jscomp$0, returnFiber = parentFiber, deletedFiber = deletions[i3], prevEffectStart = pushComponentEffectStart(), parent = returnFiber;
+            for (var i = 0; i < deletions.length; i++) {
+              var root3 = root$jscomp$0, returnFiber = parentFiber, deletedFiber = deletions[i], prevEffectStart = pushComponentEffectStart(), parent = returnFiber;
               a: for (; null !== parent; ) {
                 switch (parent.tag) {
                   case 27:
@@ -11883,9 +11883,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
                               existingHiddenCallbacks
                             ).get(flags + (current2.href || ""));
                             if (maybeNodes) {
-                              for (var i3 = 0; i3 < maybeNodes.length; i3++)
-                                if (currentResource = maybeNodes[i3], currentResource.getAttribute("href") === (null == current2.href || "" === current2.href ? null : current2.href) && currentResource.getAttribute("rel") === (null == current2.rel ? null : current2.rel) && currentResource.getAttribute("title") === (null == current2.title ? null : current2.title) && currentResource.getAttribute("crossorigin") === (null == current2.crossOrigin ? null : current2.crossOrigin)) {
-                                  maybeNodes.splice(i3, 1);
+                              for (var i = 0; i < maybeNodes.length; i++)
+                                if (currentResource = maybeNodes[i], currentResource.getAttribute("href") === (null == current2.href || "" === current2.href ? null : current2.href) && currentResource.getAttribute("rel") === (null == current2.rel ? null : current2.rel) && currentResource.getAttribute("title") === (null == current2.title ? null : current2.title) && currentResource.getAttribute("crossorigin") === (null == current2.crossOrigin ? null : current2.crossOrigin)) {
+                                  maybeNodes.splice(i, 1);
                                   break b;
                                 }
                             }
@@ -11901,12 +11901,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
                               "content",
                               existingHiddenCallbacks
                             ).get(flags + (current2.content || ""))) {
-                              for (i3 = 0; i3 < maybeNodes.length; i3++)
-                                if (currentResource = maybeNodes[i3], checkAttributeStringCoercion(
+                              for (i = 0; i < maybeNodes.length; i++)
+                                if (currentResource = maybeNodes[i], checkAttributeStringCoercion(
                                   current2.content,
                                   "content"
                                 ), currentResource.getAttribute("content") === (null == current2.content ? null : "" + current2.content) && currentResource.getAttribute("name") === (null == current2.name ? null : current2.name) && currentResource.getAttribute("property") === (null == current2.property ? null : current2.property) && currentResource.getAttribute("http-equiv") === (null == current2.httpEquiv ? null : current2.httpEquiv) && currentResource.getAttribute("charset") === (null == current2.charSet ? null : current2.charSet)) {
-                                  maybeNodes.splice(i3, 1);
+                                  maybeNodes.splice(i, 1);
                                   break b;
                                 }
                             }
@@ -12123,10 +12123,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
                     if (null === current2) {
                       wasHidden = root3;
                       try {
-                        i3 = wasHidden.stateNode, existingHiddenCallbacks ? runWithFiberInDEV(
+                        i = wasHidden.stateNode, existingHiddenCallbacks ? runWithFiberInDEV(
                           wasHidden,
                           hideDehydratedBoundary,
-                          i3
+                          i
                         ) : runWithFiberInDEV(
                           wasHidden,
                           unhideDehydratedBoundary,
@@ -12880,8 +12880,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
           var deletions = parentFiber.deletions;
           if (0 !== (parentFiber.flags & 16)) {
             if (null !== deletions)
-              for (var i3 = 0; i3 < deletions.length; i3++) {
-                var childToDelete = deletions[i3], prevEffectStart = pushComponentEffectStart();
+              for (var i = 0; i < deletions.length; i++) {
+                var childToDelete = deletions[i], prevEffectStart = pushComponentEffectStart();
                 nextEffect = childToDelete;
                 commitPassiveUnmountEffectsInsideOfDeletedTree_begin(
                   childToDelete,
@@ -12952,8 +12952,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
           var deletions = parentFiber.deletions;
           if (0 !== (parentFiber.flags & 16)) {
             if (null !== deletions)
-              for (var i3 = 0; i3 < deletions.length; i3++) {
-                var childToDelete = deletions[i3], prevEffectStart = pushComponentEffectStart();
+              for (var i = 0; i < deletions.length; i++) {
+                var childToDelete = deletions[i], prevEffectStart = pushComponentEffectStart();
                 nextEffect = childToDelete;
                 commitPassiveUnmountEffectsInsideOfDeletedTree_begin(
                   childToDelete,
@@ -13455,8 +13455,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
           for (var node = finishedWork; ; ) {
             var tag = node.tag;
             if ((0 === tag || 11 === tag || 15 === tag) && node.flags & 16384 && (tag = node.updateQueue, null !== tag && (tag = tag.stores, null !== tag)))
-              for (var i3 = 0; i3 < tag.length; i3++) {
-                var check = tag[i3], getSnapshot = check.getSnapshot;
+              for (var i = 0; i < tag.length; i++) {
+                var check = tag[i], getSnapshot = check.getSnapshot;
                 check = check.value;
                 try {
                   if (!objectIs(getSnapshot(), check)) return false;
@@ -15048,8 +15048,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
         }
         function processDispatchQueue(dispatchQueue, eventSystemFlags) {
           eventSystemFlags = 0 !== (eventSystemFlags & 4);
-          for (var i3 = 0; i3 < dispatchQueue.length; i3++) {
-            var _dispatchQueue$i = dispatchQueue[i3];
+          for (var i = 0; i < dispatchQueue.length; i++) {
+            var _dispatchQueue$i = dispatchQueue[i];
             a: {
               var previousInstance = void 0, event = _dispatchQueue$i.event;
               _dispatchQueue$i = _dispatchQueue$i.listeners;
@@ -16498,8 +16498,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
         function getStylesObjectFromElement(domElement) {
           var serverValueInObjectForm = {};
           domElement = domElement.style;
-          for (var i3 = 0; i3 < domElement.length; i3++) {
-            var styleName = domElement[i3];
+          for (var i = 0; i < domElement.length; i++) {
+            var styleName = domElement[i];
             serverValueInObjectForm[styleName] = domElement.getPropertyValue(styleName);
           }
           return serverValueInObjectForm;
@@ -16635,8 +16635,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
           warnForPropDifference(propKey, domElement, value, serverDifferences);
         }
         function diffHydratedProperties(domElement, tag, props, hostContext) {
-          for (var serverDifferences = {}, extraAttributes = /* @__PURE__ */ new Set(), attributes = domElement.attributes, i3 = 0; i3 < attributes.length; i3++)
-            switch (attributes[i3].name.toLowerCase()) {
+          for (var serverDifferences = {}, extraAttributes = /* @__PURE__ */ new Set(), attributes = domElement.attributes, i = 0; i < attributes.length; i++)
+            switch (attributes[i].name.toLowerCase()) {
               case "value":
                 break;
               case "checked":
@@ -16644,7 +16644,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
               case "selected":
                 break;
               default:
-                extraAttributes.add(attributes[i3].name);
+                extraAttributes.add(attributes[i].name);
             }
           if (isCustomElement(tag))
             for (var propKey in props) {
@@ -16947,11 +16947,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
                     case "capture":
                     case "download":
                       a: {
-                        i3 = domElement;
+                        i = domElement;
                         var attributeName = attributes = value, serverDifferences$jscomp$0 = serverDifferences;
                         extraAttributes.delete(attributeName);
-                        i3 = i3.getAttribute(attributeName);
-                        if (null === i3)
+                        i = i.getAttribute(attributeName);
+                        if (null === i)
                           switch (typeof propKey) {
                             case "undefined":
                             case "function":
@@ -16966,15 +16966,15 @@ One of mods you are using is using an old version of SDK. It will work for now b
                             case "symbol":
                               break;
                             case "boolean":
-                              if (true === propKey && "" === i3) break a;
+                              if (true === propKey && "" === i) break a;
                               break;
                             default:
-                              if (checkAttributeStringCoercion(propKey, attributes), i3 === "" + propKey)
+                              if (checkAttributeStringCoercion(propKey, attributes), i === "" + propKey)
                                 break a;
                           }
                         warnForPropDifference(
                           attributes,
-                          i3,
+                          i,
                           propKey,
                           serverDifferences$jscomp$0
                         );
@@ -16985,12 +16985,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
                     case "size":
                     case "span":
                       a: {
-                        i3 = domElement;
+                        i = domElement;
                         attributeName = attributes = value;
                         serverDifferences$jscomp$0 = serverDifferences;
                         extraAttributes.delete(attributeName);
-                        i3 = i3.getAttribute(attributeName);
-                        if (null === i3)
+                        i = i.getAttribute(attributeName);
+                        if (null === i)
                           switch (typeof propKey) {
                             case "undefined":
                             case "function":
@@ -17007,12 +17007,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
                             case "boolean":
                               break;
                             default:
-                              if (!(isNaN(propKey) || 1 > propKey) && (checkAttributeStringCoercion(propKey, attributes), i3 === "" + propKey))
+                              if (!(isNaN(propKey) || 1 > propKey) && (checkAttributeStringCoercion(propKey, attributes), i === "" + propKey))
                                 break a;
                           }
                         warnForPropDifference(
                           attributes,
-                          i3,
+                          i,
                           propKey,
                           serverDifferences$jscomp$0
                         );
@@ -17154,21 +17154,21 @@ One of mods you are using is using an old version of SDK. It will work for now b
                       continue;
                     default:
                       if (!(2 < value.length) || "o" !== value[0] && "O" !== value[0] || "n" !== value[1] && "N" !== value[1]) {
-                        i3 = getAttributeAlias(value);
+                        i = getAttributeAlias(value);
                         attributes = false;
-                        hostContext.context === HostContextNamespaceNone && "svg" !== tag && "math" !== tag ? extraAttributes.delete(i3.toLowerCase()) : (attributeName = value.toLowerCase(), attributeName = possibleStandardNames.hasOwnProperty(
+                        hostContext.context === HostContextNamespaceNone && "svg" !== tag && "math" !== tag ? extraAttributes.delete(i.toLowerCase()) : (attributeName = value.toLowerCase(), attributeName = possibleStandardNames.hasOwnProperty(
                           attributeName
-                        ) ? possibleStandardNames[attributeName] || null : null, null !== attributeName && attributeName !== value && (attributes = true, extraAttributes.delete(attributeName)), extraAttributes.delete(i3));
-                        a: if (attributeName = domElement, serverDifferences$jscomp$0 = i3, i3 = propKey, isAttributeNameSafe(serverDifferences$jscomp$0))
+                        ) ? possibleStandardNames[attributeName] || null : null, null !== attributeName && attributeName !== value && (attributes = true, extraAttributes.delete(attributeName)), extraAttributes.delete(i));
+                        a: if (attributeName = domElement, serverDifferences$jscomp$0 = i, i = propKey, isAttributeNameSafe(serverDifferences$jscomp$0))
                           if (attributeName.hasAttribute(serverDifferences$jscomp$0))
                             attributeName = attributeName.getAttribute(
                               serverDifferences$jscomp$0
                             ), checkAttributeStringCoercion(
-                              i3,
+                              i,
                               serverDifferences$jscomp$0
-                            ), i3 = attributeName === "" + i3 ? i3 : attributeName;
+                            ), i = attributeName === "" + i ? i : attributeName;
                           else {
-                            switch (typeof i3) {
+                            switch (typeof i) {
                               case "function":
                               case "symbol":
                                 break a;
@@ -17176,12 +17176,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
                                 if (attributeName = serverDifferences$jscomp$0.toLowerCase().slice(0, 5), "data-" !== attributeName && "aria-" !== attributeName)
                                   break a;
                             }
-                            i3 = void 0 === i3 ? void 0 : null;
+                            i = void 0 === i ? void 0 : null;
                           }
-                        else i3 = void 0;
+                        else i = void 0;
                         attributes || warnForPropDifference(
                           value,
-                          i3,
+                          i,
                           propKey,
                           serverDifferences
                         );
@@ -17219,18 +17219,18 @@ One of mods you are using is using an old version of SDK. It will work for now b
         }
         function estimateBandwidth() {
           if ("function" === typeof performance.getEntriesByType) {
-            for (var count = 0, bits = 0, resourceEntries = performance.getEntriesByType("resource"), i3 = 0; i3 < resourceEntries.length; i3++) {
-              var entry = resourceEntries[i3], transferSize = entry.transferSize, initiatorType = entry.initiatorType, duration = entry.duration;
+            for (var count = 0, bits = 0, resourceEntries = performance.getEntriesByType("resource"), i = 0; i < resourceEntries.length; i++) {
+              var entry = resourceEntries[i], transferSize = entry.transferSize, initiatorType = entry.initiatorType, duration = entry.duration;
               if (transferSize && duration && isLikelyStaticResource(initiatorType)) {
                 initiatorType = 0;
                 duration = entry.responseEnd;
-                for (i3 += 1; i3 < resourceEntries.length; i3++) {
-                  var overlapEntry = resourceEntries[i3], overlapStartTime = overlapEntry.startTime;
+                for (i += 1; i < resourceEntries.length; i++) {
+                  var overlapEntry = resourceEntries[i], overlapStartTime = overlapEntry.startTime;
                   if (overlapStartTime > duration) break;
                   var overlapTransferSize = overlapEntry.transferSize, overlapInitiatorType = overlapEntry.initiatorType;
                   overlapTransferSize && isLikelyStaticResource(overlapInitiatorType) && (overlapEntry = overlapEntry.responseEnd, initiatorType += overlapTransferSize * (overlapEntry < duration ? 1 : (duration - overlapStartTime) / (overlapEntry - overlapStartTime)));
                 }
-                --i3;
+                --i;
                 bits += 8 * (transferSize + initiatorType) / (entry.duration / 1e3);
                 count++;
                 if (10 < count) break;
@@ -17529,8 +17529,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
         }
         function describeHydratableInstanceForDevWarnings(instance) {
           if (1 === instance.nodeType) {
-            for (var JSCompiler_temp_const = instance.nodeName.toLowerCase(), serverDifferences = {}, attributes = instance.attributes, i3 = 0; i3 < attributes.length; i3++) {
-              var attr = attributes[i3];
+            for (var JSCompiler_temp_const = instance.nodeName.toLowerCase(), serverDifferences = {}, attributes = instance.attributes, i = 0; i < attributes.length; i++) {
+              var attr = attributes[i];
               serverDifferences[getPropNameFromAttributeName(attr.name)] = "style" === attr.name.toLowerCase() ? getStylesObjectFromElement(instance) : attr.value;
             }
             return { type: JSCompiler_temp_const, props: serverDifferences };
@@ -17830,8 +17830,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
         function insertStylesheet(instance, precedence, root3) {
           for (var nodes = root3.querySelectorAll(
             'link[rel="stylesheet"][data-precedence],style[data-precedence]'
-          ), last = nodes.length ? nodes[nodes.length - 1] : null, prior = last, i3 = 0; i3 < nodes.length; i3++) {
-            var node = nodes[i3];
+          ), last = nodes.length ? nodes[nodes.length - 1] : null, prior = last, i = 0; i < nodes.length; i++) {
+            var node = nodes[i];
             if (node.dataset.precedence === precedence) prior = node;
             else if (prior !== last) break;
           }
@@ -18042,8 +18042,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
               precedencesByRoot.set(root3, precedences);
               for (var nodes = root3.querySelectorAll(
                 "link[data-precedence],style[data-precedence]"
-              ), i3 = 0; i3 < nodes.length; i3++) {
-                var node = nodes[i3];
+              ), i = 0; i < nodes.length; i++) {
+                var node = nodes[i];
                 if ("LINK" === node.nodeName || "not all" !== node.getAttribute("media"))
                   precedences.set(node.dataset.precedence, node), last = node;
               }
@@ -18051,14 +18051,14 @@ One of mods you are using is using an old version of SDK. It will work for now b
             }
             nodes = resource.instance;
             node = nodes.getAttribute("data-precedence");
-            i3 = precedences.get(node) || last;
-            i3 === last && precedences.set(LAST_PRECEDENCE, nodes);
+            i = precedences.get(node) || last;
+            i === last && precedences.set(LAST_PRECEDENCE, nodes);
             precedences.set(node, nodes);
             this.count++;
             last = onUnsuspend.bind(this);
             nodes.addEventListener("load", last);
             nodes.addEventListener("error", last);
-            i3 ? i3.parentNode.insertBefore(nodes, i3.nextSibling) : (root3 = 9 === root3.nodeType ? root3.head : root3, root3.insertBefore(nodes, root3.firstChild));
+            i ? i.parentNode.insertBefore(nodes, i.nextSibling) : (root3 = 9 === root3.nodeType ? root3.head : root3, root3.insertBefore(nodes, root3.firstChild));
             resource.state.loading |= Inserted;
           }
         }
@@ -18559,14 +18559,14 @@ One of mods you are using is using an old version of SDK. It will work for now b
             Scheduler.unstable_NormalPriority,
             function() {
               lastScheduledReplayQueue === formReplayingQueue && (lastScheduledReplayQueue = null);
-              for (var i3 = 0; i3 < formReplayingQueue.length; i3 += 3) {
-                var form = formReplayingQueue[i3], submitterOrAction = formReplayingQueue[i3 + 1], formData = formReplayingQueue[i3 + 2];
+              for (var i = 0; i < formReplayingQueue.length; i += 3) {
+                var form = formReplayingQueue[i], submitterOrAction = formReplayingQueue[i + 1], formData = formReplayingQueue[i + 2];
                 if ("function" !== typeof submitterOrAction)
                   if (null === findInstanceBlockingTarget(submitterOrAction || form))
                     continue;
                   else break;
                 var formInst = getInstanceFromNode(form);
-                null !== formInst && (formReplayingQueue.splice(i3, 3), i3 -= 3, form = {
+                null !== formInst && (formReplayingQueue.splice(i, 3), i -= 3, form = {
                   pending: true,
                   data: formData,
                   method: form.method,
@@ -18590,18 +18590,18 @@ One of mods you are using is using an old version of SDK. It will work for now b
           null !== queuedMouse && scheduleCallbackIfUnblocked(queuedMouse, unblocked);
           queuedPointers.forEach(unblock);
           queuedPointerCaptures.forEach(unblock);
-          for (var i3 = 0; i3 < queuedExplicitHydrationTargets.length; i3++) {
-            var queuedTarget = queuedExplicitHydrationTargets[i3];
+          for (var i = 0; i < queuedExplicitHydrationTargets.length; i++) {
+            var queuedTarget = queuedExplicitHydrationTargets[i];
             queuedTarget.blockedOn === unblocked && (queuedTarget.blockedOn = null);
           }
-          for (; 0 < queuedExplicitHydrationTargets.length && (i3 = queuedExplicitHydrationTargets[0], null === i3.blockedOn); )
-            attemptExplicitHydrationTarget(i3), null === i3.blockedOn && queuedExplicitHydrationTargets.shift();
-          i3 = (unblocked.ownerDocument || unblocked).$$reactFormReplay;
-          if (null != i3)
-            for (queuedTarget = 0; queuedTarget < i3.length; queuedTarget += 3) {
-              var form = i3[queuedTarget], submitterOrAction = i3[queuedTarget + 1], formProps = form[internalPropsKey] || null;
+          for (; 0 < queuedExplicitHydrationTargets.length && (i = queuedExplicitHydrationTargets[0], null === i.blockedOn); )
+            attemptExplicitHydrationTarget(i), null === i.blockedOn && queuedExplicitHydrationTargets.shift();
+          i = (unblocked.ownerDocument || unblocked).$$reactFormReplay;
+          if (null != i)
+            for (queuedTarget = 0; queuedTarget < i.length; queuedTarget += 3) {
+              var form = i[queuedTarget], submitterOrAction = i[queuedTarget + 1], formProps = form[internalPropsKey] || null;
               if ("function" === typeof submitterOrAction)
-                formProps || scheduleReplayQueueIfNeeded(i3);
+                formProps || scheduleReplayQueueIfNeeded(i);
               else if (formProps) {
                 var action = null;
                 if (submitterOrAction && submitterOrAction.hasAttribute("formAction"))
@@ -18611,8 +18611,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
                     if (null !== findInstanceBlockingTarget(form)) continue;
                   }
                 else action = formProps.action;
-                "function" === typeof action ? i3[queuedTarget + 1] = action : (i3.splice(queuedTarget, 3), queuedTarget -= 3);
-                scheduleReplayQueueIfNeeded(i3);
+                "function" === typeof action ? i[queuedTarget + 1] = action : (i.splice(queuedTarget, 3), queuedTarget -= 3);
+                scheduleReplayQueueIfNeeded(i);
               }
             }
         }
@@ -21151,8 +21151,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
         var didWarnAboutUpdateInRenderForAnotherComponent = /* @__PURE__ */ new Set();
         var fakeActCallbackNode$1 = {}, firstScheduledRoot = null, lastScheduledRoot = null, didScheduleMicrotask = false, didScheduleMicrotask_act = false, mightHavePendingSyncWork = false, isFlushingWork = false, currentEventTransitionLane = 0, fakeActCallbackNode = {};
         (function() {
-          for (var i3 = 0; i3 < simpleEventPluginEvents.length; i3++) {
-            var eventName = simpleEventPluginEvents[i3], domEventName = eventName.toLowerCase();
+          for (var i = 0; i < simpleEventPluginEvents.length; i++) {
+            var eventName = simpleEventPluginEvents[i], domEventName = eventName.toLowerCase();
             eventName = eventName[0].toUpperCase() + eventName.slice(1);
             registerSimpleEvent(domEventName, "on" + eventName);
           }
@@ -21466,9 +21466,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if (target) {
             var updatePriority = resolveUpdatePriority();
             target = { blockedOn: null, target, priority: updatePriority };
-            for (var i3 = 0; i3 < queuedExplicitHydrationTargets.length && 0 !== updatePriority && updatePriority < queuedExplicitHydrationTargets[i3].priority; i3++) ;
-            queuedExplicitHydrationTargets.splice(i3, 0, target);
-            0 === i3 && attemptExplicitHydrationTarget(target);
+            for (var i = 0; i < queuedExplicitHydrationTargets.length && 0 !== updatePriority && updatePriority < queuedExplicitHydrationTargets[i].priority; i++) ;
+            queuedExplicitHydrationTargets.splice(i, 0, target);
+            0 === i && attemptExplicitHydrationTarget(target);
           }
         };
         (function() {
@@ -21658,7 +21658,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
                 type = type._init;
                 try {
                   return getComponentNameFromType(type(innerType));
-                } catch (x3) {
+                } catch (x) {
                 }
             }
           return null;
@@ -21692,7 +21692,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
           try {
             var name = getComponentNameFromType(type);
             return name ? "<" + name + ">" : "<...>";
-          } catch (x3) {
+          } catch (x) {
             return "<...>";
           }
         }
@@ -21787,8 +21787,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
             else validateChildKeys(children);
           if (hasOwnProperty11.call(config, "key")) {
             children = getComponentNameFromType(type);
-            var keys2 = Object.keys(config).filter(function(k2) {
-              return "key" !== k2;
+            var keys2 = Object.keys(config).filter(function(k3) {
+              return "key" !== k3;
             });
             isStaticChildren = 0 < keys2.length ? "{key: someKey, " + keys2.join(": ..., ") + ": ...}" : "{key: someKey}";
             didWarnAboutKeySpread[children + isStaticChildren] || (keys2 = 0 < keys2.length ? "{" + keys2.join(": ..., ") + ": ...}" : "{}", console.error(
@@ -22048,10 +22048,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
   // package.json
   var version = "1.1.2";
 
-  // node_modules/.pnpm/zois-core@1.1.7/node_modules/zois-core/dist/styles.css
-  var styles_default2 = '*{margin:0;padding:0;box-sizing:border-box}.zcButton{cursor:pointer;background:var(--tmd-element, white);color:var(--tmd-text, black);border:2px solid var(--tmd-accent, black);border-radius:4px}.zcButton:hover{background:var(--tmd-element-hover, #ebf7fe);border-color:var(--tmd-accent-hover, #7dd3fc);color:var(--tmd-accent-hover, #015a8c)}.zcButton .tooltip{position:absolute;color:#000;text-align:center;padding:4px;border-radius:4px;background:#ff8;border:2px solid #e7e787;width:max-content;min-height:100%;visibility:hidden;z-index:10}.zcButton .tooltip[position=left]{right:calc(100% + 1vw)}.zcButton .tooltip[position=right]{left:calc(100% + 1vw)}.zcButton:hover .tooltip{visibility:visible}.zcButton[data-zc-style=green]{background:#7cff7c;border-color:#52cc52;color:#000}.zcButton[data-zc-style=green]:hover{background:#5ec55e;color:#000}.zcButton[data-zc-style=inverted]{background:var(--tmd-accent, #303030);border:none;color:var(--tmd-text, white)}.zcButton[data-zc-style=inverted]:hover{background:var(--tmd-accent-hover, #474747)}.zcInput{background:var(--tmd-element, white);color:var(--tmd-text, black);padding:2vw;border:2px solid var(--tmd-accent, black);border-radius:4px}.zcInput::placeholder{color:var(--tmd-text, black)}.zcBackNextButton{display:flex;column-gap:2vw;justify-content:center;align-items:center;background:var(--tmd-element, white);color:var(--tmd-text, black);border:2px solid var(--tmd-accent, black);border-radius:4px}.zcBackNextButton-btnDisabled{background:#ffa590;pointer-events:none}.zcTabs{display:flex}.zcTabs button{cursor:pointer;width:100%;color:var(--tmd-text, black);background:none;border:none;border-bottom:2px solid var(--tmd-element, rgb(214, 214, 214));padding:.25em}.zcTabs button[data-opened=true]{font-weight:700;border-bottom:2px solid var(--tmd-accent, rgb(81, 81, 231))!important}.zcTabs button:hover{background:var(--tmd-element, rgb(235, 235, 235));border-bottom:2px solid var(--tmd-element-hover, rgb(149, 149, 149))}.zcCard{border:2px solid var(--tmd-accent, rgb(195, 195, 195));border-radius:.4em;background:var(--tmd-element, white);color:var(--tmd-text, black);padding:.4em 2.5em .4em .4em}.zcCard:hover{border:2px solid var(--tmd-accent-hover, rgb(170, 170, 170))}.zcCard_name{font-size:.5em;color:var(--tmd-text, rgb(100, 100, 100))}.zcCard_value{color:var(--tmd-text, black);margin-top:.4em;font-weight:700}.zcSelect{cursor:pointer;background:var(--tmd-element, white);color:var(--tmd-text, black);border:2px solid var(--tmd-accent, rgb(195, 195, 195));border-radius:.4em;padding:.45em;z-index:10}.zcSelect[opened=true]{border-color:var(--tmd-accent-hover, rgb(0, 96, 223))}.zcSelect[opened=false]:hover{border-color:var(--tmd-accent-hover, rgb(170, 170, 170))}.zcSelect>svg{position:absolute;right:.45em;top:50%;transform:translateY(-50%);width:1.5em;height:1.5em;color:var(--tmd-accent, rgb(0, 96, 223))}.zcSelect>div[data-zc-position=bottom]{position:absolute;top:calc(100% + .45em);left:0;width:100%;background:var(--tmd-element, #f6f6f6);border:2px solid var(--tmd-element-hover, rgb(235 235 235));border-radius:.4em}.zcSelect>div[data-zc-position=top]{position:absolute;bottom:calc(100% + .45em);left:0;width:100%;background:var(--tmd-element, #f6f6f6ed);border:2px solid var(--tmd-element-hover, rgb(235 235 235));border-radius:.4em}.zcSelect>div>div{color:var(--tmd-text, black);width:100%;padding:.45em;border-radius:.25em}.zcSelect>div>div>svg{width:1.25em;height:1.25em;color:var(--tmd-accent, rgb(0, 96, 223))}.zcSelect>div>div:hover{background:var(--tmd-element-hover, #ededed)}.zcToastsContainer{display:flex;flex-direction:column;gap:.25vw;cursor:pointer;position:fixed;z-index:10}@keyframes zcToast-progress{0%{width:0}to{width:100%}}@keyframes zcSlideInFromLeft{0%{transform:translate(-100%);opacity:0}to{transform:translate(0);opacity:1}}@keyframes zcSlideOutToLeft{0%{transform:translate(0);opacity:1}to{transform:translate(-100%);opacity:0}}.zcToast{max-width:25vw;animation:zcSlideInFromLeft .3s ease-out forwards}.zcToast.exiting{animation:zcSlideOutToLeft .3s ease-out forwards}.zcToast p{color:#fff}dialog[data-zc-dialog-type=choice_multiple] .zcDialogBtn:before{content:"";position:absolute;left:1vw;top:50%;transform:translateY(-50%);border:2px solid white;width:.5em;aspect-ratio:1/1;border-radius:50%}dialog[data-zc-dialog-type=choice_multiple] .zcDialogBtn[data-zc-picked=true]:before{background:#fff}.zcDialogBtn{cursor:pointer;background:#ffffff17;border:none;font-size:clamp(6px,2vw,24px);color:#fff;padding:.2em;border-radius:.5em}.zcDialogBtn:hover{background:#ffffff24}@keyframes zcSpin{0%{transform:rotate(0)}to{transform:rotate(360deg)}}@keyframes zcCursorBlink{0%{border-right-color:transparent}to{border-right-color:#2a2a2a}}.zcCursor{border-right:2px solid var(--tmd-text, rgb(42, 42, 42));width:fit-content}.zcDisabled{pointer-events:none;opacity:.6}\n';
+  // node_modules/.pnpm/zois-core@1.1.8/node_modules/zois-core/dist/styles.css
+  var styles_default2 = '*{margin:0;padding:0;box-sizing:border-box}.zcButton{cursor:pointer;background:var(--tmd-element, white);color:var(--tmd-text, black);border:2px solid var(--tmd-accent, black);border-radius:4px}.zcButton:hover{background:var(--tmd-element-hover, #ebf7fe);border-color:var(--tmd-accent-hover, #7dd3fc);color:var(--tmd-accent-hover, #015a8c)}.zcButton .tooltip{position:absolute;color:#000;text-align:center;padding:4px;border-radius:4px;background:#ff8;border:2px solid #e7e787;width:max-content;min-height:100%;visibility:hidden;z-index:10}.zcButton .tooltip[position=left]{right:calc(100% + 1vw)}.zcButton .tooltip[position=right]{left:calc(100% + 1vw)}.zcButton:hover .tooltip{visibility:visible}.zcButton[data-zc-style=green]{background:#7cff7c;border-color:#52cc52;color:#000}.zcButton[data-zc-style=green]:hover{background:#5ec55e;color:#000}.zcButton[data-zc-style=inverted]{background:var(--tmd-accent, #303030);border:none;color:var(--tmd-text, white)}.zcButton[data-zc-style=inverted]:hover{background:var(--tmd-accent-hover, #474747)}.zcInput{background:var(--tmd-element, white);color:var(--tmd-text, black);padding:2vw;border:2px solid var(--tmd-accent, black);border-radius:4px}.zcInput::placeholder{color:var(--tmd-text, black)}.zcBackNextButton{display:flex;column-gap:2vw;justify-content:center;align-items:center;background:var(--tmd-element, white);color:var(--tmd-text, black);border:2px solid var(--tmd-accent, black);border-radius:4px}.zcBackNextButton-btnDisabled{background:#ffa590;pointer-events:none}.zcTabs{display:flex}.zcTabs button{cursor:pointer;width:100%;color:var(--tmd-text, black);background:none;border:none;border-bottom:2px solid var(--tmd-element, rgb(214, 214, 214));padding:.25em}.zcTabs button[data-opened=true]{font-weight:700;border-bottom:2px solid var(--tmd-accent, rgb(81, 81, 231))!important}.zcTabs button:hover{background:var(--tmd-element, rgb(235, 235, 235));border-bottom:2px solid var(--tmd-element-hover, rgb(149, 149, 149))}.zcCard{border:2px solid var(--tmd-accent, rgb(195, 195, 195));border-radius:.4em;background:var(--tmd-element, white);color:var(--tmd-text, black);padding:.4em 2.5em .4em .4em}.zcCard:hover{border:2px solid var(--tmd-accent-hover, rgb(170, 170, 170))}.zcCard_name{font-size:.5em;color:var(--tmd-text, rgb(100, 100, 100))}.zcCard_value{color:var(--tmd-text, black);margin-top:.4em;font-weight:700}.zcSelect{cursor:pointer;background:var(--tmd-element, white);color:var(--tmd-text, black);border:2px solid var(--tmd-accent, rgb(195, 195, 195));border-radius:.4em;padding:.45em;z-index:10}.zcSelect[opened=true]{border-color:var(--tmd-accent-hover, rgb(0, 96, 223))}.zcSelect[opened=false]:hover{border-color:var(--tmd-accent-hover, rgb(170, 170, 170))}.zcSelect>svg{position:absolute;right:.45em;top:50%;transform:translateY(-50%);width:1.5em;height:1.5em;color:var(--tmd-accent, rgb(0, 96, 223))}.zcSelect>div[data-zc-position=bottom]{position:absolute;top:calc(100% + .45em);left:0;width:100%;background:var(--tmd-element, #f6f6f6);border:2px solid var(--tmd-element-hover, rgb(235 235 235));border-radius:.4em}.zcSelect>div[data-zc-position=top]{position:absolute;bottom:calc(100% + .45em);left:0;width:100%;background:var(--tmd-element, #f6f6f6ed);border:2px solid var(--tmd-element-hover, rgb(235 235 235));border-radius:.4em}.zcSelect>div>div{color:var(--tmd-text, black);width:100%;padding:.45em;border-radius:.25em}.zcSelect>div>div>svg{width:1.25em;height:1.25em;color:var(--tmd-accent, rgb(0, 96, 223))}.zcSelect>div>div:hover{background:var(--tmd-element-hover, #ededed)}.zcToastsContainer{display:flex;flex-direction:column;gap:.25vw;cursor:pointer;position:fixed;z-index:30}@keyframes zcToast-progress{0%{width:0}to{width:100%}}@keyframes zcSlideInFromLeft{0%{transform:translate(-100%);opacity:0}to{transform:translate(0);opacity:1}}@keyframes zcSlideOutToLeft{0%{transform:translate(0);opacity:1}to{transform:translate(-100%);opacity:0}}.zcToast{max-width:25vw;animation:zcSlideInFromLeft .3s ease-out forwards}.zcToast.exiting{animation:zcSlideOutToLeft .3s ease-out forwards}.zcToast p{color:#fff}dialog[data-zc-dialog-type=choice_multiple] .zcDialogBtn:before{content:"";position:absolute;left:1vw;top:50%;transform:translateY(-50%);border:2px solid white;width:.5em;aspect-ratio:1/1;border-radius:50%}dialog[data-zc-dialog-type=choice_multiple] .zcDialogBtn[data-zc-picked=true]:before{background:#fff}.zcDialogBtn{cursor:pointer;background:#ffffff17;border:none;font-size:clamp(6px,2vw,24px);color:#fff;padding:.2em;border-radius:.5em}.zcDialogBtn:hover{background:#ffffff24}@keyframes zcSpin{0%{transform:rotate(0)}to{transform:rotate(360deg)}}@keyframes zcCursorBlink{0%{border-right-color:transparent}to{border-right-color:#2a2a2a}}.zcCursor{border-right:2px solid var(--tmd-text, rgb(42, 42, 42));width:fit-content}.zcDisabled{pointer-events:none;opacity:.6}\n';
 
-  // node_modules/.pnpm/zois-core@1.1.7/node_modules/zois-core/dist/modsApi.js
+  // node_modules/.pnpm/zois-core@1.1.8/node_modules/zois-core/dist/modsApi.js
   var import_bondage_club_mod_sdk = __toESM(require_bcmodsdk());
 
   // node_modules/.pnpm/lucide@0.541.0/node_modules/lucide/dist/esm/defaultAttributes.js
@@ -22112,107 +22112,107 @@ One of mods you are using is using an old version of SDK. It will work for now b
     ["path", { d: "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" }]
   ];
 
-  // node_modules/.pnpm/zois-core@1.1.7/node_modules/zois-core/dist/modules.js
+  // node_modules/.pnpm/zois-core@1.1.8/node_modules/zois-core/dist/modules.js
   var r = class {
-    overrideProperties(e, t2) {
+    overrideProperties(e, t) {
       return e;
     }
-    layoutEffect(e, t2) {
+    layoutEffect(e, t) {
     }
-    effect(e, t2) {
+    effect(e, t) {
     }
   };
 
-  // node_modules/.pnpm/zois-core@1.1.7/node_modules/zois-core/dist/ui-modules/styleModule.js
-  var y = class extends r {
-    constructor(o) {
+  // node_modules/.pnpm/zois-core@1.1.8/node_modules/zois-core/dist/ui-modules/styleModule.js
+  var u = class extends r {
+    constructor(o2) {
       super();
-      this.style = o;
+      this.style = o2;
     }
-    applyStyle(o, t2) {
-      for (const e of Object.keys(t2)) !isNaN(e) || typeof t2[e] == "function" || (o.style[e] = t2[e]);
+    applyStyle(o2, t) {
+      for (const e of Object.keys(t)) !isNaN(e) || typeof t[e] == "function" || (o2.style[e] = t[e]);
     }
-    layoutEffect(o, t2) {
-      this.applyStyle(t2, this.style);
+    layoutEffect(o2, t) {
+      this.applyStyle(t, this.style);
     }
   };
 
-  // node_modules/.pnpm/zois-core@1.1.7/node_modules/zois-core/dist/ui.js
-  function N(g3) {
-    return g3 * (MainCanvas.canvas.clientHeight / 1e3);
+  // node_modules/.pnpm/zois-core@1.1.8/node_modules/zois-core/dist/ui.js
+  function D(b) {
+    return b * (MainCanvas.canvas.clientHeight / 1e3);
   }
-  function D(g3) {
-    return g3 * (MainCanvas.canvas.clientWidth / 2e3);
+  function P(b) {
+    return b * (MainCanvas.canvas.clientWidth / 2e3);
   }
-  function W(g3, e = "top") {
-    const o = MainCanvas.canvas.clientHeight / 1e3;
-    return e === "top" ? MainCanvas.canvas.offsetTop + g3 * o : window.innerHeight - (MainCanvas.canvas.offsetTop + MainCanvas.canvas.clientHeight) + g3 * o;
+  function V(b, e = "top") {
+    const o2 = MainCanvas.canvas.clientHeight / 1e3;
+    return e === "top" ? MainCanvas.canvas.offsetTop + b * o2 : window.innerHeight - (MainCanvas.canvas.offsetTop + MainCanvas.canvas.clientHeight) + b * o2;
   }
-  function V(g3, e = "left") {
-    const o = MainCanvas.canvas.clientWidth / 2e3;
-    return e === "left" ? MainCanvas.canvas.offsetLeft + g3 * o : window.innerWidth - (MainCanvas.canvas.offsetLeft + MainCanvas.canvas.clientWidth) + g3 * o;
+  function R(b, e = "left") {
+    const o2 = MainCanvas.canvas.clientWidth / 2e3;
+    return e === "left" ? MainCanvas.canvas.offsetLeft + b * o2 : window.innerWidth - (MainCanvas.canvas.offsetLeft + MainCanvas.canvas.clientWidth) + b * o2;
   }
-  function O(g3, e, o, l = "top-left") {
-    const i3 = l === "top-left" || l === "top-right" ? "top" : "bottom", s = l === "top-left" || l === "bottom-left" ? "left" : "right", t2 = W(o, i3), f3 = V(e, s);
-    Object.assign(g3.style, { position: "fixed", [s]: f3 + "px", [i3]: t2 + "px" });
+  function O(b, e, o2, l = "top-left") {
+    const i = l === "top-left" || l === "top-right" ? "top" : "bottom", n = l === "top-left" || l === "bottom-left" ? "left" : "right", t = V(o2, i), m2 = R(e, n);
+    Object.assign(b.style, { position: "fixed", [n]: m2 + "px", [i]: t + "px" });
   }
-  function j(g3, e) {
-    const o = MainCanvas.canvas.clientWidth, l = MainCanvas.canvas.clientHeight, i3 = Math.min(o, l) / 100, s = e * i3;
-    Object.assign(g3.style, { fontSize: s + "px" });
+  function j(b, e) {
+    const o2 = MainCanvas.canvas.clientWidth, l = MainCanvas.canvas.clientHeight, i = Math.min(o2, l) / 100, n = e * i;
+    Object.assign(b.style, { fontSize: n + "px" });
   }
-  function k(g3, e) {
-    g3.style.fontFamily = e ?? "sans-serif";
+  function L(b, e) {
+    b.style.fontFamily = e ?? "sans-serif";
   }
-  function G(g3, e) {
-    const o = MainCanvas.canvas.clientWidth, l = MainCanvas.canvas.clientHeight, i3 = Math.min(o, l) / 100, s = e * i3;
-    Object.assign(g3.style, { padding: s + "px" });
+  function G(b, e) {
+    const o2 = MainCanvas.canvas.clientWidth, l = MainCanvas.canvas.clientHeight, i = Math.min(o2, l) / 100, n = e * i;
+    Object.assign(b.style, { padding: n + "px" });
   }
-  function X(g3) {
+  function X(b) {
     const e = MainCanvas.canvas.clientWidth <= MainCanvas.canvas.clientHeight * 2 ? MainCanvas.canvas.clientWidth / 50 : MainCanvas.canvas.clientHeight / 25;
-    Object.assign(g3.style, { fontSize: e + "px" });
+    Object.assign(b.style, { fontSize: e + "px" });
   }
   function U() {
-    R(M);
+    $(w);
   }
-  function R(g3) {
-    M = A, A = g3, A && A.load(), M && M.unload();
+  function $(b) {
+    w = k, k = b, k && k.load(), w && w.unload();
   }
   function ee() {
-    return A;
+    return k;
   }
-  var A;
-  var M = null;
+  var k;
+  var w = null;
   var te = class {
     htmlElements = [];
     resizeEventListeners = [];
     tabHandlers = {};
-    addElement(e, { x: o, y: l, width: i3, height: s, padding: t2, fontSize: f3 = "auto", anchor: h3, place: m3, modules: d2 = {}, modulesMap: r2 }) {
-      k(e, m.fontFamily);
-      const c4 = { anchor: h3, x: o, y: l, width: i3, height: s, padding: t2, fontSize: f3, place: m3, element: e };
-      Object.keys(d2)?.forEach((a3) => {
-        d2[a3].forEach((p2) => {
-          const u = p2.overrideProperties(c4, r2[a3]);
-          h3 = u.anchor, o = u.x, l = u.y, i3 = u.width, s = u.height, t2 = u.padding, f3 = u.fontSize, m3 = u.place, e = u.element;
+    addElement(e, { x: o2, y: l, width: i, height: n, padding: t, fontSize: m2 = "auto", anchor: h3, place: f3, modules: d4 = {}, modulesMap: r2 }) {
+      L(e, c.fontFamily);
+      const c4 = { anchor: h3, x: o2, y: l, width: i, height: n, padding: t, fontSize: m2, place: f3, element: e };
+      Object.keys(d4)?.forEach((s2) => {
+        d4[s2].forEach((p3) => {
+          const u3 = p3.overrideProperties(c4, r2[s2]);
+          h3 = u3.anchor, o2 = u3.x, l = u3.y, i = u3.width, n = u3.height, t = u3.padding, m2 = u3.fontSize, f3 = u3.place, e = u3.element;
         });
       });
-      const n2 = () => {
-        typeof o == "number" && typeof l == "number" && O(e, o, l, h3), f3 === "auto" ? X(e) : j(e, f3), t2 && G(e, t2), i3 && (e.style.width = D(i3) + "px"), s && (e.style.height = N(s) + "px");
+      const a3 = () => {
+        typeof o2 == "number" && typeof l == "number" && O(e, o2, l, h3), m2 === "auto" ? X(e) : j(e, m2), t && G(e, t), i && (e.style.width = P(i) + "px"), n && (e.style.height = D(n) + "px");
       };
-      n2(), window.addEventListener("resize", n2), Object.keys(d2)?.forEach((a3) => {
-        d2[a3].forEach((p2) => {
-          p2.layoutEffect(c4, r2[a3]);
+      a3(), window.addEventListener("resize", a3), Object.keys(d4)?.forEach((s2) => {
+        d4[s2].forEach((p3) => {
+          p3.layoutEffect(c4, r2[s2]);
         });
-      }), m3 && document.body.append(e), this.resizeEventListeners.push(n2), this.htmlElements.push(e), Object.keys(d2)?.forEach((a3) => {
-        d2[a3].forEach((p2) => {
-          p2.effect(c4, r2[a3]);
+      }), f3 && document.body.append(e), this.resizeEventListeners.push(a3), this.htmlElements.push(e), Object.keys(d4)?.forEach((s2) => {
+        d4[s2].forEach((p3) => {
+          p3.effect(c4, r2[s2]);
         });
       });
     }
     get currentSubscreen() {
-      return A;
+      return k;
     }
     get previousSubscreen() {
-      return M;
+      return w;
     }
     get name() {
       return "";
@@ -22221,7 +22221,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       this.tabHandlers.run?.();
     }
     load() {
-      this.createButton({ x: 1815, y: 75, width: 90, height: 90, icon: "Icons/Exit.png", modules: { base: [new y({ zIndex: "10" })] } }).addEventListener("click", () => this.exit()), this.name && (this.createText({ text: this.name, x: 100, y: 60, fontSize: 8 }).style.cssText += "max-width: 85%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0.1em;"), T[this.constructor.name] && T[this.name].forEach((e) => e(this));
+      this.createButton({ x: 1815, y: 75, width: 90, height: 90, icon: "Icons/Exit.png", modules: { base: [new u({ zIndex: "10" })] } }).addEventListener("click", () => this.exit()), this.name && (this.createText({ text: this.name, x: 100, y: 60, fontSize: 8 }).style.cssText += "max-width: 85%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0.1em;"), M[this.constructor.name] && M[this.name].forEach((e) => e(this));
     }
     unload() {
       this.tabHandlers.unload?.(), this.htmlElements.forEach((e) => {
@@ -22241,203 +22241,206 @@ One of mods you are using is using an old version of SDK. It will work for now b
       U();
     }
     setSubscreen(e) {
-      R(e);
+      $(e);
     }
-    createButton({ text: e, x: o, y: l, width: i3, height: s, fontSize: t2 = "auto", anchor: f3 = "top-left", padding: h3, style: m3 = "default", place: d2 = true, icon: r2, iconAbsolutePosition: c4 = true, tooltip: n2, onClick: a3, isDisabled: p2, modules: u }) {
-      let b, v;
+    createButton({ text: e, x: o2, y: l, width: i, height: n, fontSize: t = "auto", anchor: m2 = "top-left", padding: h3, style: f3 = "default", place: d4 = true, icon: r2, iconAbsolutePosition: c4 = true, tooltip: a3, onClick: s2, isDisabled: p3, modules: u3 }) {
+      let g3, v2;
       const y2 = document.createElement("button");
-      if (y2.classList.add("zcButton"), y2.setAttribute("data-zc-style", m3), y2.style.display = "flex", y2.style.alignItems = "center", y2.style.justifyContent = "center", y2.style.columnGap = "1.25vw", k(y2, m.fontFamily), r2 && (typeof r2 == "string" ? (b = document.createElement("img"), b.src = r2) : b = r2, b.style.height = "80%", b.style.width = "auto", e && c4 && (b.style.position = "absolute", b.style.left = "1vw"), e && !c4 && (y2.style.justifyContent = ""), y2.append(b)), e && (v = document.createElement("span"), v.textContent = e, y2.append(v)), n2) {
-        const L2 = document.createElement("span");
-        L2.classList.add("tooltip"), L2.setAttribute("position", n2.position), L2.textContent = n2.text, y2.append(L2);
+      if (y2.classList.add("zcButton"), y2.setAttribute("data-zc-style", f3), y2.style.display = "flex", y2.style.alignItems = "center", y2.style.justifyContent = "center", y2.style.columnGap = "1.25vw", L(y2, c.fontFamily), r2 && (typeof r2 == "string" ? (g3 = document.createElement("img"), g3.src = r2) : g3 = r2, g3.style.height = "80%", g3.style.width = "auto", e && c4 && (g3.style.position = "absolute", g3.style.left = "1vw"), e && !c4 && (y2.style.justifyContent = ""), y2.append(g3)), e && (v2 = document.createElement("span"), v2.textContent = e, y2.append(v2)), a3) {
+        const S2 = document.createElement("span");
+        S2.classList.add("tooltip"), S2.setAttribute("position", a3.position), S2.textContent = a3.text, y2.append(S2);
       }
-      return typeof p2 == "function" && p2() && y2.classList.add("zcDisabled"), y2.addEventListener("click", () => {
-        if (typeof p2 == "function" && p2()) return y2.classList.add("zcDisabled");
-        typeof a3 == "function" && a3();
-      }), this.addElement(y2, { x: o, y: l, width: i3, height: s, anchor: f3, place: d2, fontSize: t2, padding: h3, modules: u, modulesMap: { base: y2, text: v, icon: b } }), y2;
+      return typeof p3 == "function" && p3() && y2.classList.add("zcDisabled"), y2.addEventListener("click", () => {
+        if (typeof p3 == "function" && p3()) return y2.classList.add("zcDisabled");
+        typeof s2 == "function" && s2();
+      }), this.addElement(y2, { x: o2, y: l, width: i, height: n, anchor: m2, place: d4, fontSize: t, padding: h3, modules: u3, modulesMap: { base: y2, text: v2, icon: g3 } }), y2;
     }
-    createText({ text: e, color: o, x: l, y: i3, width: s, height: t2, withBackground: f3 = false, withBorder: h3 = false, fontSize: m3 = "auto", anchor: d2 = "top-left", padding: r2, place: c4 = true, modules: n2 }) {
-      const a3 = document.createElement("p");
-      return a3.innerHTML = e, a3.style.color = o ?? "var(--tmd-text, black)", f3 && (a3.style.background = "var(--tmd-element,rgb(239, 239, 239))"), h3 && (a3.style.border = "2px solid var(--tmd-accent, rgb(236, 236, 236))"), k(a3, m.fontFamily), this.addElement(a3, { x: l, y: i3, width: s, height: t2, anchor: d2, place: c4, fontSize: m3, padding: r2, modules: n2, modulesMap: { base: a3 } }), a3;
+    createText({ text: e, color: o2, x: l, y: i, width: n, height: t, withBackground: m2 = false, withBorder: h3 = false, fontSize: f3 = "auto", anchor: d4 = "top-left", padding: r2, place: c4 = true, modules: a3 }) {
+      const s2 = document.createElement("p");
+      return s2.innerHTML = e, s2.style.color = o2 ?? "var(--tmd-text, black)", m2 && (s2.style.background = "var(--tmd-element,rgb(239, 239, 239))"), h3 && (s2.style.border = "2px solid var(--tmd-accent, rgb(236, 236, 236))"), L(s2, c.fontFamily), this.addElement(s2, { x: l, y: i, width: n, height: t, anchor: d4, place: c4, fontSize: f3, padding: r2, modules: a3, modulesMap: { base: s2 } }), s2;
     }
-    createInput({ value: e, placeholder: o, x: l, y: i3, width: s, height: t2, textArea: f3 = false, fontSize: h3 = "auto", anchor: m3 = "top-left", padding: d2, place: r2 = true, onChange: c4, onInput: n2, isDisabled: a3, modules: p2 }) {
-      const u = document.createElement(f3 ? "textarea" : "input");
-      return u.classList.add("zcInput"), o && (u.placeholder = o), e && (u.value = e), k(u, m.fontFamily), typeof a3 == "function" && a3() && u.classList.add("zcDisabled"), u.addEventListener("change", () => {
-        if (typeof a3 == "function" && a3()) return u.classList.add("zcDisabled");
+    createInput({ value: e, placeholder: o2, x: l, y: i, width: n, height: t, textArea: m2 = false, fontSize: h3 = "auto", anchor: f3 = "top-left", padding: d4, place: r2 = true, onChange: c4, onInput: a3, isDisabled: s2, modules: p3 }) {
+      const u3 = document.createElement(m2 ? "textarea" : "input");
+      return u3.classList.add("zcInput"), o2 && (u3.placeholder = o2), e && (u3.value = e), L(u3, c.fontFamily), typeof s2 == "function" && s2() && u3.classList.add("zcDisabled"), u3.addEventListener("change", () => {
+        if (typeof s2 == "function" && s2()) return u3.classList.add("zcDisabled");
         typeof c4 == "function" && c4();
-      }), u.addEventListener("input", () => {
-        if (typeof a3 == "function" && a3()) return u.classList.add("zcDisabled");
-        typeof n2 == "function" && n2();
-      }), this.addElement(u, { x: l, y: i3, width: s, height: t2, anchor: m3, place: r2, fontSize: h3, padding: d2, modules: p2, modulesMap: { base: u } }), u;
+      }), u3.addEventListener("input", () => {
+        if (typeof s2 == "function" && s2()) return u3.classList.add("zcDisabled");
+        typeof a3 == "function" && a3();
+      }), this.addElement(u3, { x: l, y: i, width: n, height: t, anchor: f3, place: r2, fontSize: h3, padding: d4, modules: p3, modulesMap: { base: u3 } }), u3;
     }
-    createCheckbox({ text: e, x: o, y: l, isChecked: i3, width: s, modules: t2, anchor: f3 = "top-left", place: h3 = true, isDisabled: m3, onChange: d2 }) {
+    createCheckbox({ text: e, x: o2, y: l, isChecked: i, width: n, modules: t, anchor: m2 = "top-left", place: h3 = true, isDisabled: f3, onChange: d4 }) {
       const r2 = document.createElement("div");
       r2.style.display = "flex", r2.style.alignItems = "center", r2.style.columnGap = "1vw";
       const c4 = document.createElement("input");
-      c4.type = "checkbox", c4.checked = i3, c4.style.borderRadius = "min(0.8dvh, 0.3dvw)", c4.style.aspectRatio = "1/1", c4.classList.add("zcCheckbox", "checkbox");
-      const n2 = document.createElement("p");
-      return n2.textContent = e, n2.style.color = "var(--tmd-text, black)", k(n2, m.fontFamily), typeof m3 == "function" && m3() && r2.classList.add("zcDisabled"), r2.addEventListener("change", () => {
-        if (typeof m3 == "function" && m3()) return r2.classList.add("zcDisabled");
-        typeof d2 == "function" && d2();
-      }), r2.append(c4, n2), this.addElement(r2, { x: o, y: l, width: s, anchor: f3, place: h3, modules: t2, modulesMap: { base: r2, checkbox: c4, label: n2 } }), r2;
+      c4.type = "checkbox", c4.checked = i, c4.style.borderRadius = "min(0.8dvh, 0.3dvw)", c4.style.aspectRatio = "1/1", c4.classList.add("zcCheckbox", "checkbox");
+      const a3 = document.createElement("p");
+      return a3.textContent = e, a3.style.color = "var(--tmd-text, black)", L(a3, c.fontFamily), typeof f3 == "function" && f3() && r2.classList.add("zcDisabled"), r2.addEventListener("change", () => {
+        if (typeof f3 == "function" && f3()) return r2.classList.add("zcDisabled");
+        typeof d4 == "function" && d4();
+      }), r2.append(c4, a3), this.addElement(r2, { x: o2, y: l, width: n, anchor: m2, place: h3, modules: t, modulesMap: { base: r2, checkbox: c4, label: a3 } }), r2;
     }
-    createScrollView({ scroll: e, x: o, y: l, width: i3, height: s, anchor: t2 = "top-left", modules: f3, place: h3 = true }) {
-      const m3 = document.createElement("div");
-      return e === "all" && (m3.style.overflow = "scroll"), e === "x" && (m3.style.overflowX = "scroll"), e === "y" && (m3.style.overflowY = "scroll"), this.addElement(m3, { x: o, y: l, width: i3, height: s, anchor: t2, place: h3, modules: f3, modulesMap: { base: m3 } }), m3;
+    createScrollView({ scroll: e, x: o2, y: l, width: i, height: n, anchor: t = "top-left", modules: m2, place: h3 = true }) {
+      const f3 = document.createElement("div");
+      return e === "all" && (f3.style.overflow = "scroll"), e === "x" && (f3.style.overflowX = "scroll"), e === "y" && (f3.style.overflowY = "scroll"), this.addElement(f3, { x: o2, y: l, width: i, height: n, anchor: t, place: h3, modules: m2, modulesMap: { base: f3 } }), f3;
     }
-    createInputList({ x: e, y: o, width: l, height: i3, title: s, value: t2, modules: f3, anchor: h3 = "top-left", place: m3 = true, numbersOnly: d2 = false, isDisabled: r2, onChange: c4 }) {
-      const n2 = [], a3 = document.createElement("div");
-      a3.style.cssText = `
+    createInputList({ x: e, y: o2, width: l, height: i, title: n, value: t, modules: m2, anchor: h3 = "top-left", place: f3 = true, numbersOnly: d4 = false, isDisabled: r2, onChange: c4 }) {
+      const a3 = [], s2 = document.createElement("div");
+      s2.style.cssText = `
         display: flex; flex-direction: column; gap: 1vw; border: 2px solid var(--tmd-accent, black);
         border-radius: 4px; padding: 0.75vw; background: var(--tmd-element, none);
-        `, k(a3, m.fontFamily);
-      const p2 = document.createElement("div");
-      p2.style.cssText = "display: flex; justify-content: center; column-gap: 1vw; width: 100%;";
-      const u = document.createElement("b");
-      u.textContent = s + ":", u.style.cssText = "width: 100%; font-size: clamp(10px, 2.4vw, 24px); color: var(--tmd-text, black);";
-      const b = document.createElement("div");
-      b.style.cssText = `display: flex; gap: 1vw; flex-wrap: wrap; align-content: flex-start;
+        `, L(s2, c.fontFamily);
+      const p3 = document.createElement("div");
+      p3.style.cssText = "display: flex; justify-content: center; column-gap: 1vw; width: 100%;";
+      const u3 = document.createElement("b");
+      u3.textContent = n + ":", u3.style.cssText = "width: 100%; font-size: clamp(10px, 2.4vw, 24px); color: var(--tmd-text, black);";
+      const g3 = document.createElement("div");
+      g3.style.cssText = `display: flex; gap: 1vw; flex-wrap: wrap; align-content: flex-start;
         overflow-y: scroll;`;
-      const v = document.createElement("input");
-      v.style.cssText = "border: none; outline: none; background: none; height: fit-content; flex-grow: 1; padding: 0.8vw; width: 6vw; font-size: clamp(8px, 2vw, 20px);";
-      const y2 = (x3, E) => {
-        const w3 = this.createButton({ icon: x3, place: false, onClick: E, style: "default", modules: { icon: [new y({ width: "70%", height: "70%" })] } });
-        w3.style.width = "2em", w3.style.aspectRatio = "1/1", p2.append(w3);
-      }, L2 = (x3) => {
-        const E = document.createElement("div");
-        E.style.cssText = "cursor: pointer; background: var(--tmd-element-hover, rgb(206, 206, 206)); color: var(--tmd-text, black); height: fit-content; padding: 0.8vw; border-radius: 0.8vw; font-size: clamp(8px, 2vw, 20px);", E.textContent = x3, b.insertBefore(E, v), E.addEventListener("click", (w3) => {
-          E.style.border === "" ? E.style.border = "2px solid red" : E.style.border = "", w3.stopPropagation();
-        }), n2.push(x3);
+      const v2 = document.createElement("input");
+      v2.style.cssText = "border: none; outline: none; background: none; height: fit-content; flex-grow: 1; padding: 0.8vw; width: 6vw; font-size: clamp(8px, 2vw, 20px);";
+      const y2 = (x, E2) => {
+        const A2 = this.createButton({ icon: x, place: false, onClick: E2, style: "default", modules: { icon: [new u({ width: "70%", height: "70%" })] } });
+        A2.style.width = "2em", A2.style.aspectRatio = "1/1", p3.append(A2);
+      }, S2 = (x) => {
+        const E2 = document.createElement("div");
+        E2.style.cssText = "cursor: pointer; background: var(--tmd-element-hover, rgb(206, 206, 206)); color: var(--tmd-text, black); height: fit-content; padding: 0.8vw; border-radius: 0.8vw; font-size: clamp(8px, 2vw, 20px);", E2.textContent = x, g3.insertBefore(E2, v2), E2.addEventListener("click", (A2) => {
+          E2.style.border === "" ? E2.style.border = "2px solid red" : E2.style.border = "", A2.stopPropagation();
+        }), a3.push(x);
       };
       return y2(createElement(CircleX), () => {
-        if (typeof r2 == "function" && r2()) return a3.classList.add("zcDisabled");
-        b.innerHTML = "", n2.splice(0, n2.length), b.append(v), t2.forEach((x3) => L2(String(x3))), typeof c4 == "function" && c4(d2 ? n2.map((x3) => parseInt(x3)) : n2);
+        if (typeof r2 == "function" && r2()) return s2.classList.add("zcDisabled");
+        g3.innerHTML = "", a3.splice(0, a3.length), g3.append(v2), t.forEach((x) => S2(String(x))), typeof c4 == "function" && c4(d4 ? a3.map((x) => parseInt(x)) : a3);
       }), y2(createElement(Trash2), () => {
-        if (typeof r2 == "function" && r2()) return a3.classList.add("zcDisabled");
-        for (const x3 of [...b.children]) x3.getAttribute("style").includes("border: 2px solid red;") && (n2.splice(n2.indexOf(x3.textContent), 1), x3.remove());
-        typeof c4 == "function" && c4(d2 ? n2.map((x3) => parseInt(x3)) : n2);
-      }), typeof r2 == "function" && r2() && a3.classList.add("zcDisabled"), v.addEventListener("keypress", (x3) => {
-        if (document.activeElement === v) switch (x3.key) {
+        if (typeof r2 == "function" && r2()) return s2.classList.add("zcDisabled");
+        for (const x of [...g3.children]) x.getAttribute("style").includes("border: 2px solid red;") && (a3.splice(a3.indexOf(x.textContent), 1), x.remove());
+        typeof c4 == "function" && c4(d4 ? a3.map((x) => parseInt(x)) : a3);
+      }), typeof r2 == "function" && r2() && s2.classList.add("zcDisabled"), v2.addEventListener("keypress", (x) => {
+        if (document.activeElement === v2) switch (x.key) {
           case "Enter":
-            if (d2 && Number.isNaN(parseInt(v.value)) || v.value.trim() === "") return;
-            if (typeof r2 == "function" && r2()) return a3.classList.add("zcDisabled");
-            L2(v.value), v.value = "", typeof c4 == "function" && c4(d2 ? n2.map((E) => parseInt(E)) : n2);
+            if (d4 && Number.isNaN(parseInt(v2.value)) || v2.value.trim() === "") return;
+            if (typeof r2 == "function" && r2()) return s2.classList.add("zcDisabled");
+            S2(v2.value), v2.value = "", typeof c4 == "function" && c4(d4 ? a3.map((E2) => parseInt(E2)) : a3);
             break;
         }
-      }), a3.addEventListener("click", (x3) => {
-        x3.currentTarget == a3 && v.focus();
-      }), b.append(v), a3.append(p2, u, b), this.addElement(a3, { x: e, y: o, width: l, height: i3, anchor: h3, place: m3, modules: f3, modulesMap: { base: a3, input: v } }), t2.forEach((x3) => L2(String(x3))), a3;
+      }), s2.addEventListener("click", (x) => {
+        x.currentTarget == s2 && v2.focus();
+      }), g3.append(v2), s2.append(p3, u3, g3), this.addElement(s2, { x: e, y: o2, width: l, height: i, anchor: h3, place: f3, modules: m2, modulesMap: { base: s2, input: v2 } }), t.forEach((x) => S2(String(x))), s2;
     }
-    createImage({ x: e, y: o, width: l, src: i3, place: s = true, anchor: t2 = "top-left", modules: f3 }) {
+    createImage({ x: e, y: o2, width: l, src: i, place: n = true, anchor: t = "top-left", modules: m2 }) {
       const h3 = document.createElement("img");
-      return h3.style.height = "auto", h3.src = i3, this.addElement(h3, { x: e, y: o, width: l, height: 0, anchor: t2, place: s, modules: f3, modulesMap: { base: h3 } }), h3;
+      return h3.style.height = "auto", h3.src = i, this.addElement(h3, { x: e, y: o2, width: l, height: 0, anchor: t, place: n, modules: m2, modulesMap: { base: h3 } }), h3;
     }
-    createSvg({ x: e, y: o, size: l, dataurl: i3, place: s = true, anchor: t2 = "top-left", fill: f3 = "var(--tmd-accent, black)", stroke: h3 = "var(--tmd-accent-hover, black)", strokeWidth: m3 = "2px", modules: d2 }) {
-      function r2(a3) {
-        const p2 = a3.replace("data:image/svg+xml,", ""), u = decodeURIComponent(p2), b = document.createElement("div");
-        return b.innerHTML = u, b.firstElementChild;
+    createSvg({ x: e, y: o2, size: l, dataurl: i, place: n = true, anchor: t = "top-left", fill: m2 = "var(--tmd-accent, black)", stroke: h3 = "var(--tmd-accent-hover, black)", strokeWidth: f3 = "2px", modules: d4 }) {
+      function r2(s2) {
+        const p3 = s2.replace("data:image/svg+xml,", ""), u3 = decodeURIComponent(p3), g3 = document.createElement("div");
+        return g3.innerHTML = u3, g3.firstElementChild;
       }
-      function c4(a3, { fill: p2, stroke: u }) {
-        return a3.querySelectorAll("*").forEach((v) => {
-          v.getAttribute("fill") !== "none" && v.setAttribute("fill", p2), v.getAttribute("stroke") !== "none" && v.setAttribute("stroke", u);
-        }), a3.getAttribute("fill") !== "none" && a3.setAttribute("fill", p2), a3.getAttribute("stroke") !== "none" && a3.setAttribute("stroke", u), a3;
+      function c4(s2, { fill: p3, stroke: u3 }) {
+        return s2.querySelectorAll("*").forEach((v2) => {
+          v2.getAttribute("fill") !== "none" && v2.setAttribute("fill", p3), v2.getAttribute("stroke") !== "none" && v2.setAttribute("stroke", u3);
+        }), s2.getAttribute("fill") !== "none" && s2.setAttribute("fill", p3), s2.getAttribute("stroke") !== "none" && s2.setAttribute("stroke", u3), s2;
       }
-      const n2 = r2(i3);
-      return c4(n2, { fill: f3, stroke: h3 }), n2.setAttribute("stroke-width", m3), this.addElement(n2, { x: e, y: o, width: l, height: l, anchor: t2, place: s, modules: d2, modulesMap: { base: n2 } }), n2;
+      const a3 = r2(i);
+      return c4(a3, { fill: m2, stroke: h3 }), a3.setAttribute("stroke-width", f3), this.addElement(a3, { x: e, y: o2, width: l, height: l, anchor: t, place: n, modules: d4, modulesMap: { base: a3 } }), a3;
     }
-    createBackNextButton({ x: e, y: o, width: l, height: i3, items: s, currentIndex: t2, modules: f3, isBold: h3 = false, anchor: m3 = "top-left", place: d2 = true, onChange: r2, isDisabled: c4 }) {
-      const n2 = document.createElement("div");
-      n2.classList.add("zcBackNextButton"), k(n2, m.fontFamily);
-      const a3 = () => {
-        t2 === 0 || typeof c4 == "function" && c4(s[t2 - 1][1]) ? p2.classList.add("zcBackNextButton-btnDisabled") : p2.classList.remove("zcBackNextButton-btnDisabled"), t2 === s.length - 1 || typeof c4 == "function" && c4(s[t2 + 1][1]) ? u.classList.add("zcBackNextButton-btnDisabled") : u.classList.remove("zcBackNextButton-btnDisabled");
-      }, p2 = document.createElement("button");
-      p2.style.cssText = `
+    createBackNextButton({ x: e, y: o2, width: l, height: i, items: n, currentIndex: t, modules: m2, isBold: h3 = false, anchor: f3 = "top-left", place: d4 = true, onChange: r2, isDisabled: c4 }) {
+      const a3 = document.createElement("div");
+      a3.classList.add("zcBackNextButton"), L(a3, c.fontFamily);
+      const s2 = () => {
+        t === 0 || typeof c4 == "function" && c4(n[t - 1][1]) ? p3.classList.add("zcBackNextButton-btnDisabled") : p3.classList.remove("zcBackNextButton-btnDisabled"), t === n.length - 1 || typeof c4 == "function" && c4(n[t + 1][1]) ? u3.classList.add("zcBackNextButton-btnDisabled") : u3.classList.remove("zcBackNextButton-btnDisabled");
+      }, p3 = document.createElement("button");
+      p3.style.cssText = `
         position: absolute; left: 1vw; font-size: 3.5vw; aspect-ratio: 1/1;
         height: 140%; background-image: url("Icons/Prev.png"); background-size: 100%;
-        `, p2.classList.add("zcButton"), p2.addEventListener("click", () => {
-        if (t2 === 0 || typeof c4 == "function" && c4(s[t2 - 1][1])) return p2.classList.add("zcDisabled");
-        t2--, b.textContent = s[t2][0], typeof r2 == "function" && r2(s[t2][1]), a3();
+        `, p3.classList.add("zcButton"), p3.addEventListener("click", () => {
+        if (t === 0 || typeof c4 == "function" && c4(n[t - 1][1])) return p3.classList.add("zcDisabled");
+        t--, g3.textContent = n[t][0], typeof r2 == "function" && r2(n[t][1]), s2();
       });
-      const u = document.createElement("button");
-      u.style.cssText = `
+      const u3 = document.createElement("button");
+      u3.style.cssText = `
         position: absolute; right: 1vw; font-size: 3.5vw; aspect-ratio: 1/1;
         height: 140%; background-image: url("Icons/Next.png"); background-size: 100%;
-        `, u.classList.add("zcButton"), u.addEventListener("click", () => {
-        if (t2 === s.length - 1 || typeof c4 == "function" && c4(s[t2 + 1][1])) return u.classList.add("zcDisabled");
-        t2++, b.textContent = s[t2][0], typeof r2 == "function" && r2(s[t2][1]), a3();
-      }), a3();
-      const b = document.createElement("p");
-      return h3 && (b.style.fontWeight = "bold"), b.textContent = s[t2][0], n2.append(p2, b, u), this.addElement(n2, { x: e, y: o, width: l, height: i3, anchor: m3, place: d2, modules: f3, modulesMap: { base: n2, backButton: p2, nextButton: u, text: b } }), n2;
+        `, u3.classList.add("zcButton"), u3.addEventListener("click", () => {
+        if (t === n.length - 1 || typeof c4 == "function" && c4(n[t + 1][1])) return u3.classList.add("zcDisabled");
+        t++, g3.textContent = n[t][0], typeof r2 == "function" && r2(n[t][1]), s2();
+      }), s2();
+      const g3 = document.createElement("p");
+      return h3 && (g3.style.fontWeight = "bold"), g3.textContent = n[t][0], a3.append(p3, g3, u3), this.addElement(a3, { x: e, y: o2, width: l, height: i, anchor: f3, place: d4, modules: m2, modulesMap: { base: a3, backButton: p3, nextButton: u3, text: g3 } }), a3;
     }
-    createTabs({ x: e, y: o, width: l, tabs: i3, anchor: s = "top-left", place: t2 = true, currentTabName: f3, modules: h3 }) {
-      let m3 = [];
-      const d2 = document.createElement("div");
-      return d2.classList.add("zcTabs"), k(d2, m.fontFamily), i3.forEach((r2) => {
+    createTabs({ x: e, y: o2, width: l, tabs: i, anchor: n = "top-left", place: t = true, currentTabName: m2, modules: h3 }) {
+      let f3 = [];
+      const d4 = document.createElement("div");
+      return d4.classList.add("zcTabs"), L(d4, c.fontFamily), i.forEach((r2) => {
         const c4 = () => {
-          for (const p2 of d2.children) p2.removeAttribute("data-opened");
-          for (const p2 of m3) p2 instanceof Node && document.body.removeChild(p2);
-          m3 = [], n2.setAttribute("data-opened", "true");
-          const a3 = document.body.append.bind(document.body);
-          document.body.append = (...p2) => {
-            m3.push(...p2), a3(...p2);
-          }, this.tabHandlers.unload?.(), this.tabHandlers.exit?.(), r2.load(), this.tabHandlers = { run: r2.run, load: r2.load, unload: r2.unload, exit: r2.exit }, document.body.append = a3;
-        }, n2 = document.createElement("button");
-        n2.textContent = r2.name, r2.name === f3 && c4(), n2.addEventListener("click", c4), d2.append(n2);
-      }), this.addElement(d2, { x: e, y: o, width: l, anchor: s, place: t2, modules: h3, modulesMap: { base: d2 } }), d2;
+          for (const p3 of d4.children) p3.removeAttribute("data-opened");
+          for (const p3 of f3) p3 instanceof Node && document.body.removeChild(p3);
+          f3 = [], a3.setAttribute("data-opened", "true");
+          const s2 = document.body.append.bind(document.body);
+          document.body.append = (...p3) => {
+            f3.push(...p3), s2(...p3);
+          }, this.tabHandlers.unload?.(), this.tabHandlers.exit?.(), r2.load(), this.tabHandlers = { run: r2.run, load: r2.load, unload: r2.unload, exit: r2.exit }, document.body.append = s2;
+        }, a3 = document.createElement("button");
+        a3.textContent = r2.name, r2.name === m2 && c4(), a3.addEventListener("click", c4), d4.append(a3);
+      }), this.addElement(d4, { x: e, y: o2, width: l, anchor: n, place: t, modules: h3, modulesMap: { base: d4 } }), d4;
     }
-    drawPolylineArrow({ points: e, strokeColor: o = S()?.base?.text ?? "black", lineWidth: l = 2, circleRadius: i3 = 5, circleColor: s = S()?.base?.text ?? "black" }) {
+    drawPolylineArrow({ points: e, strokeColor: o2 = S()?.base?.text ?? "black", lineWidth: l = 2, circleRadius: i = 5, circleColor: n = S()?.base?.text ?? "black" }) {
       if (e.length < 2) return;
-      const t2 = MainCanvas.canvas.getContext("2d");
-      t2.save(), t2.strokeStyle = o, t2.lineWidth = l, t2.fillStyle = s, t2.beginPath(), t2.moveTo(e[0].x, e[0].y);
-      for (let f3 = 1; f3 < e.length; f3++) t2.lineTo(e[f3].x, e[f3].y);
-      t2.stroke(), t2.beginPath(), t2.arc(e[0].x, e[0].y, i3, 0, Math.PI * 2), t2.fill(), t2.beginPath(), t2.arc(e[e.length - 1].x, e[e.length - 1].y, i3, 0, Math.PI * 2), t2.fill(), t2.restore();
+      const t = MainCanvas.canvas.getContext("2d");
+      t.save(), t.strokeStyle = o2, t.lineWidth = l, t.fillStyle = n, t.beginPath(), t.moveTo(e[0].x, e[0].y);
+      for (let m2 = 1; m2 < e.length; m2++) t.lineTo(e[m2].x, e[m2].y);
+      t.stroke(), t.beginPath(), t.arc(e[0].x, e[0].y, i, 0, Math.PI * 2), t.fill(), t.beginPath(), t.arc(e[e.length - 1].x, e[e.length - 1].y, i, 0, Math.PI * 2), t.fill(), t.restore();
     }
-    createCard({ x: e, y: o, name: l, value: i3, icon: s, anchor: t2 = "top-left", place: f3 = true, modules: h3 }) {
-      const m3 = document.createElement("div");
-      m3.classList.add("zcCard");
-      const d2 = document.createElement("p");
-      d2.classList.add("zcCard_name"), d2.textContent = l;
+    createCard({ x: e, y: o2, name: l, value: i, icon: n, anchor: t = "top-left", place: m2 = true, modules: h3 }) {
+      const f3 = document.createElement("div");
+      f3.classList.add("zcCard");
+      const d4 = document.createElement("p");
+      d4.classList.add("zcCard_name"), d4.textContent = l;
       const r2 = document.createElement("p");
-      return r2.classList.add("zcCard_value"), r2.textContent = `${i3}`, s && (s.style.cssText += "position: absolute; top: 0.4em; right: 0.4em; width: 1.2em; height: 1.2em;", m3.append(s)), m3.append(d2, r2), this.addElement(m3, { x: e, y: o, anchor: t2, place: f3, modules: h3, modulesMap: { name: d2, value: r2, base: m3, icon: null } }), m3;
+      return r2.classList.add("zcCard_value"), r2.textContent = `${i}`, n && (n.style.cssText += "position: absolute; top: 0.4em; right: 0.4em; width: 1.2em; height: 1.2em;", f3.append(n)), f3.append(d4, r2), this.addElement(f3, { x: e, y: o2, anchor: t, place: m2, modules: h3, modulesMap: { name: d4, value: r2, base: f3, icon: null } }), f3;
     }
-    createSelect({ x: e, y: o, width: l, options: i3, currentOption: s, anchor: t2 = "top-left", place: f3 = true, modules: h3, onChange: m3, isDisabled: d2 }) {
+    createSelect({ x: e, y: o2, width: l, options: i, currentOption: n, anchor: t = "top-left", place: m2 = true, modules: h3, onChange: f3, isDisabled: d4 }) {
       let r2 = false, c4;
-      const n2 = document.createElement("div");
-      n2.classList.add("zcSelect"), n2.setAttribute("opened", false), n2.addEventListener("click", () => {
-        if (d2 && d2()) return n2.classList.add("zcDisabled");
-        r2 ? (r2 = false, c4.remove()) : (r2 = true, c4 = document.createElement("div"), c4.setAttribute("data-zc-position", typeof o == "number" && o > 500 - n2.offsetHeight / 2 ? "top" : "bottom"), i3.forEach((b) => {
-          const v = document.createElement("div");
-          v.style.cssText = "display: flex; align-items: center; column-gap: 0.5em;", b.icon && (b.icon.style.cssText = "color: #bcbcbc;", v.append(b.icon)), v.append(b.text), b.name === s && v.append(u), v.addEventListener("click", () => {
-            s = b.name, a3.textContent = b.text, c4.remove(), m3 && m3(b.name);
-          }), c4.append(v);
-        }), n2.append(c4));
+      const a3 = document.createElement("div");
+      a3.classList.add("zcSelect"), a3.setAttribute("opened", false), a3.addEventListener("click", () => {
+        if (d4 && d4()) return a3.classList.add("zcDisabled");
+        r2 ? (r2 = false, c4.remove()) : (r2 = true, c4 = document.createElement("div"), c4.setAttribute("data-zc-position", typeof o2 == "number" && o2 > 500 - a3.offsetHeight / 2 ? "top" : "bottom"), i.forEach((g3) => {
+          const v2 = document.createElement("div");
+          v2.style.cssText = "display: flex; align-items: center; column-gap: 0.5em;", g3.icon && (g3.icon.style.cssText = "color: #bcbcbc;", v2.append(g3.icon)), v2.append(g3.text), g3.name === n && v2.append(u3), v2.addEventListener("click", () => {
+            n = g3.name, s2.textContent = g3.text, c4.remove(), f3 && f3(g3.name);
+          }), c4.append(v2);
+        }), a3.append(c4));
       });
-      const a3 = document.createElement("p");
-      a3.textContent = i3.find((b) => b.name === s).text;
-      const p2 = createElement(ChevronDown), u = createElement(Check);
-      return u.style.cssText = "position: absolute; right: 0.25em;", n2.append(a3, p2), d2 && d2() && n2.classList.add("zcDisabled"), this.addElement(n2, { x: e, y: o, width: l, anchor: t2, place: f3, modules: h3, modulesMap: { base: n2 } }), n2;
+      const s2 = document.createElement("p");
+      s2.textContent = i.find((g3) => g3.name === n).text;
+      const p3 = createElement(ChevronDown), u3 = createElement(Check);
+      return u3.style.cssText = "position: absolute; right: 0.25em;", a3.append(s2, p3), d4 && d4() && a3.classList.add("zcDisabled"), this.addElement(a3, { x: e, y: o2, width: l, anchor: t, place: m2, modules: h3, modulesMap: { base: a3 } }), a3;
     }
-    createContainer({ x: e, y: o, anchor: l = "top-left", place: i3 = true, modules: s }) {
-      const t2 = document.createElement("div");
-      return this.addElement(t2, { x: e, y: o, anchor: l, place: i3, modules: s, modulesMap: { base: t2 } }), t2;
+    createContainer({ x: e, y: o2, anchor: l = "top-left", place: i = true, modules: n }) {
+      const t = document.createElement("div");
+      return this.addElement(t, { x: e, y: o2, anchor: l, place: i, modules: n, modulesMap: { base: t } }), t;
     }
   };
-  var T = {};
+  var M = {};
 
-  // node_modules/.pnpm/zois-core@1.1.7/node_modules/zois-core/dist/modsApi.js
-  var a = ((o) => (o[o.OBSERVE = 0] = "OBSERVE", o[o.ADD_BEHAVIOR = 1] = "ADD_BEHAVIOR", o[o.MODIFY_BEHAVIOR = 5] = "MODIFY_BEHAVIOR", o[o.OVERRIDE_BEHAVIOR = 10] = "OVERRIDE_BEHAVIOR", o[o.TOP = 100] = "TOP", o))(a || {});
-  var t;
-  function h() {
-    t = import_bondage_club_mod_sdk.default.registerMod({ name: m.name, fullName: m.fullName, version: m.version, repository: m.repository }), c("GameKeyDown", 1, (e, n2) => CommonKey.IsPressed(e[0], "Escape") && ee() ? ee().exit() : n2(e));
+  // node_modules/.pnpm/zois-core@1.1.8/node_modules/zois-core/dist/modsApi.js
+  var d = ((n) => (n[n.OBSERVE = 0] = "OBSERVE", n[n.ADD_BEHAVIOR = 1] = "ADD_BEHAVIOR", n[n.MODIFY_BEHAVIOR = 5] = "MODIFY_BEHAVIOR", n[n.OVERRIDE_BEHAVIOR = 10] = "OVERRIDE_BEHAVIOR", n[n.TOP = 100] = "TOP", n))(d || {});
+  var o;
+  function T() {
+    o = import_bondage_club_mod_sdk.default.registerMod({ name: c.name, fullName: c.fullName, version: c.version, repository: c.repository }), c2("GameKeyDown", 1, (e, t) => {
+      const r2 = ee();
+      return CommonKey.IsPressed(e[0], "Escape") && r2 ? (r2.exit(), false) : t(e);
+    });
   }
-  function c(e, n2, d2) {
-    if (!t) throw new Error("zois-core is not registered");
-    return t.hookFunction(e, n2, d2);
+  function c2(e, t, r2) {
+    if (!o) throw new Error("zois-core is not registered");
+    return o.hookFunction(e, t, r2);
   }
-  function x(e) {
-    return !!import_bondage_club_mod_sdk.default.getModsInfo().find((n2) => n2.name === e);
+  function E(e) {
+    return !!import_bondage_club_mod_sdk.default.getModsInfo().find((t) => t.name === e);
   }
 
-  // node_modules/.pnpm/zois-core@1.1.7/node_modules/zois-core/dist/popups.js
+  // node_modules/.pnpm/zois-core@1.1.8/node_modules/zois-core/dist/popups.js
   var import_react4 = __toESM(require_react());
   var import_client = __toESM(require_client());
 
@@ -22492,7 +22495,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
   var toCamelCase = (string) => string.replace(
     /^([A-Z])|[\s-_]+(\w)/g,
-    (match, p1, p2) => p2 ? p2.toUpperCase() : p1.toLowerCase()
+    (match, p1, p22) => p22 ? p22.toUpperCase() : p1.toLowerCase()
   );
   var toPascalCase = (string) => {
     const camelCase = toCamelCase(string);
@@ -22605,25 +22608,25 @@ One of mods you are using is using an old version of SDK. It will work for now b
   ];
   var Info = createLucideIcon("info", __iconNode4);
 
-  // node_modules/.pnpm/zois-core@1.1.7/node_modules/zois-core/dist/popups.js
+  // node_modules/.pnpm/zois-core@1.1.8/node_modules/zois-core/dist/popups.js
   var import_jsx_runtime = __toESM(require_jsx_runtime());
-  function I({ children: o }) {
-    const [e, t2] = (0, import_react4.useState)({}), r2 = window.ZOISCORE.useToastsStore((s) => s.clearToasts);
+  function I({ children: o2 }) {
+    const [e, t] = (0, import_react4.useState)({}), r2 = window.ZOISCORE.useToastsStore((s2) => s2.clearToasts);
     return (0, import_react4.useEffect)(() => {
-      const s = () => {
-        t2({ fontFamily: CommonGetFontName(), bottom: W(5) + "px", left: V(5) + "px" });
+      const s2 = () => {
+        t({ fontFamily: CommonGetFontName(), bottom: V(5) + "px", left: R(5) + "px" });
       };
-      return window.addEventListener("resize", s), s(), () => {
-        window.removeEventListener("resize", s);
+      return window.addEventListener("resize", s2), s2(), () => {
+        window.removeEventListener("resize", s2);
       };
     }, []), (0, import_jsx_runtime.jsx)("div", { className: "zcToastsContainer", style: e, onClick: () => {
-      document.querySelectorAll(".zcToast").forEach((s) => {
-        s.classList.add("exiting");
+      document.querySelectorAll(".zcToast").forEach((s2) => {
+        s2.classList.add("exiting");
       }), setTimeout(r2, 300);
-    }, children: o });
+    }, children: o2 });
   }
-  var P = ({ type: o, theme: e }) => {
-    switch (o) {
+  var P2 = ({ type: o2, theme: e }) => {
+    switch (o2) {
       case "info":
         return (0, import_jsx_runtime.jsx)(Info, { style: { flexShrink: 0, width: "1.65em", height: "1.65em", fill: e ? e.iconFillColor : "#addbff", stroke: e ? e.iconStrokeColor : "#385073" } });
       case "success":
@@ -22636,153 +22639,156 @@ One of mods you are using is using an old version of SDK. It will work for now b
         return (0, import_jsx_runtime.jsx)("div", { style: { flexShrink: 0, width: "1.65em", height: "1.65em", boxSizing: "border-box", border: "2px solid", borderRadius: "100%", borderColor: `transparent ${e ? e.iconFillColor : "rgb(154 154 255)"}`, animation: "zcSpin 0.65s linear infinite" } });
     }
   };
-  function R2({ title: o, message: e, type: t2, duration: r2, id: s, theme: i3 }) {
-    const [n2, c4] = (0, import_react4.useState)({}), [l, m3] = (0, import_react4.useState)(false);
+  function R2({ title: o2, message: e, type: t, duration: r2, id: s2, theme: i }) {
+    const [n, c4] = (0, import_react4.useState)({}), [l, m2] = (0, import_react4.useState)(false);
     return (0, import_react4.useEffect)(() => {
-      const u = () => {
-        const h3 = MainCanvas.canvas.clientWidth, b = MainCanvas.canvas.clientHeight, v = Math.min(h3, b) / 100;
-        c4({ position: "relative", width: "100%", borderRadius: "0.1em", fontSize: 3 * v + "px", padding: 1.5 * v + "px", background: i3 ? i3.backgroundColor : t2 === "success" ? "#3ece7e" : t2 === "warning" ? "#debf72" : t2 === "error" ? "rgb(212, 46, 107)" : "rgb(80, 80, 223)" });
+      const u3 = () => {
+        const h3 = MainCanvas.canvas.clientWidth, b = MainCanvas.canvas.clientHeight, v2 = Math.min(h3, b) / 100;
+        c4({ position: "relative", width: "100%", borderRadius: "0.1em", fontSize: 3 * v2 + "px", padding: 1.5 * v2 + "px", background: i ? i.backgroundColor : t === "success" ? "#3ece7e" : t === "warning" ? "#debf72" : t === "error" ? "rgb(212, 46, 107)" : "rgb(80, 80, 223)" });
       };
-      window.addEventListener("resize", u), u();
-      const S2 = setTimeout(() => m3(true), r2);
+      window.addEventListener("resize", u3), u3();
+      const S2 = setTimeout(() => m2(true), r2);
       return () => {
-        clearTimeout(S2), window.removeEventListener("resize", u);
+        clearTimeout(S2), window.removeEventListener("resize", u3);
       };
-    }, []), (0, import_jsx_runtime.jsxs)("div", { className: `zcToast ${l && "exiting"}`, "data-zc-toast-type": t2, style: n2, children: [(0, import_jsx_runtime.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: "1vw", position: "relative", zIndex: 5 }, children: [(0, import_jsx_runtime.jsx)(P, { type: t2, theme: i3 }), (0, import_jsx_runtime.jsxs)("div", { children: [o && e && (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [(0, import_jsx_runtime.jsx)("p", { style: { color: i3 ? i3.titleColor : "white" }, children: o }), (0, import_jsx_runtime.jsx)("p", { style: { color: i3 ? i3.messageColor : t2 === "info" || t2 === "spinner" ? "#b8b8ff" : t2 === "success" ? "#c7f9c7" : t2 === "error" ? "#f8bcbc" : "#ffeec5", fontSize: "70%", overflowWrap: "anywhere", marginTop: "0.25em" }, children: e })] }), (!o && e || o && !e) && (0, import_jsx_runtime.jsx)("p", { style: { position: "relative", zIndex: 5 }, children: o || e })] })] }), t2 !== "spinner" && (0, import_jsx_runtime.jsx)("div", { className: "zcToast-ProgressBar", style: { animation: `zcToast-progress ${r2}ms linear 0s 1 alternate none`, position: "absolute", top: 0, left: 0, height: "100%", background: i3 ? i3.progressBarColor : t2 === "info" ? "rgb(103, 103, 234)" : t2 === "success" ? "#34bc71" : t2 === "warning" ? "#d0af5e" : "rgb(183, 40, 92)" } })] });
+    }, []), (0, import_jsx_runtime.jsxs)("div", { className: `zcToast ${l && "exiting"}`, "data-zc-toast-type": t, style: n, children: [(0, import_jsx_runtime.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: "1vw", position: "relative", zIndex: 5 }, children: [(0, import_jsx_runtime.jsx)(P2, { type: t, theme: i }), (0, import_jsx_runtime.jsxs)("div", { children: [o2 && e && (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [(0, import_jsx_runtime.jsx)("p", { style: { color: i ? i.titleColor : "white" }, children: o2 }), (0, import_jsx_runtime.jsx)("p", { style: { color: i ? i.messageColor : t === "info" || t === "spinner" ? "#b8b8ff" : t === "success" ? "#c7f9c7" : t === "error" ? "#f8bcbc" : "#ffeec5", fontSize: "70%", overflowWrap: "anywhere", marginTop: "0.25em" }, children: e })] }), (!o2 && e || o2 && !e) && (0, import_jsx_runtime.jsx)("p", { style: { position: "relative", zIndex: 5 }, children: o2 || e })] })] }), t !== "spinner" && (0, import_jsx_runtime.jsx)("div", { className: "zcToast-ProgressBar", style: { animation: `zcToast-progress ${r2}ms linear 0s 1 alternate none`, position: "absolute", top: 0, left: 0, height: "100%", background: i ? i.progressBarColor : t === "info" ? "rgb(103, 103, 234)" : t === "success" ? "#34bc71" : t === "warning" ? "#d0af5e" : "rgb(183, 40, 92)" } })] });
   }
-  function M2({ dialog: o }) {
-    const e = window.ZOISCORE.useDialogStore((n2) => n2.clearDialog), [t2, r2] = (0, import_react4.useState)({}), [s, i3] = (0, import_react4.useState)([]);
+  function M2({ dialog: o2 }) {
+    const e = window.ZOISCORE.useDialogStore((n) => n.clearDialog), [t, r2] = (0, import_react4.useState)({}), [s2, i] = (0, import_react4.useState)([]);
     return (0, import_react4.useEffect)(() => {
-      const n2 = () => {
-        const c4 = MainCanvas.canvas.clientWidth, l = MainCanvas.canvas.clientHeight, m3 = Math.min(c4, l) / 100;
-        r2({ width: D(o.width), position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", background: "rgba(36, 36, 36, 0.96)", zIndex: 20, fontFamily: CommonGetFontName(), border: "none", padding: 2 * m3 });
+      const n = () => {
+        const c4 = MainCanvas.canvas.clientWidth, l = MainCanvas.canvas.clientHeight, m2 = Math.min(c4, l) / 100;
+        r2({ width: P(o2.width), position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", background: "rgba(36, 36, 36, 0.96)", zIndex: 20, fontFamily: CommonGetFontName(), border: "none", padding: 2 * m2 });
       };
-      return window.addEventListener("resize", n2), n2(), () => {
-        window.removeEventListener("resize", n2);
+      return window.addEventListener("resize", n), n(), () => {
+        window.removeEventListener("resize", n);
       };
-    }, []), (0, import_jsx_runtime.jsxs)("dialog", { open: Object.keys(t2).length > 0, "data-zc-dialog-type": o.type, style: t2, children: [o.title && (0, import_jsx_runtime.jsx)("p", { style: { position: "absolute", top: 0, left: 0, fontWeight: "bold", color: "white", fontSize: "clamp(6px, 2vw, 24px)", padding: "0.25em", background: "#2d2d2d", width: "100%" }, children: o.title }), (0, import_jsx_runtime.jsx)("p", { style: { padding: "1em", marginTop: "2vw", fontSize: "clamp(6px, 2vw, 24px)", color: "white" }, children: o.body }), (0, import_jsx_runtime.jsx)("div", { style: { display: "flex", flexDirection: o.buttons.direction, justifyContent: "center", gap: "0.5vw" }, children: o.buttons?.list?.map((n2, c4) => (0, import_jsx_runtime.jsx)("button", { className: "zcDialogBtn", "data-zc-picked": s.includes(c4), style: { width: "100%", position: "relative" }, onClick: () => {
-      o.type === "choice_one" ? (e(), o.promise.resolve(n2.value)) : s.includes(c4) ? i3(s.filter((l) => l !== c4)) : i3([...s, c4]);
-    }, children: n2.text })) }), o.type === "choice_multiple" && (0, import_jsx_runtime.jsx)("button", { style: { cursor: "pointer", color: "white", background: "#4d4d4d", border: "none", marginTop: "1vw", fontSize: "clamp(8px,2.5vw,28px)", padding: "0.2em", borderRadius: "4px" }, onClick: () => {
-      e(), o.promise.resolve(o.buttons.list.filter((n2, c4) => s.includes(c4)).map((n2) => n2.value));
+    }, []), (0, import_jsx_runtime.jsxs)("dialog", { open: Object.keys(t).length > 0, "data-zc-dialog-type": o2.type, style: t, children: [o2.title && (0, import_jsx_runtime.jsx)("p", { style: { position: "absolute", top: 0, left: 0, fontWeight: "bold", color: "white", fontSize: "clamp(6px, 2vw, 24px)", padding: "0.25em", background: "#2d2d2d", width: "100%" }, children: o2.title }), (0, import_jsx_runtime.jsx)("p", { style: { padding: "1em", marginTop: "2vw", fontSize: "clamp(6px, 2vw, 24px)", color: "white" }, children: o2.body }), (0, import_jsx_runtime.jsx)("div", { style: { display: "flex", flexDirection: o2.buttons.direction, justifyContent: "center", gap: "0.5vw" }, children: o2.buttons?.list?.map((n, c4) => (0, import_jsx_runtime.jsx)("button", { className: "zcDialogBtn", "data-zc-picked": s2.includes(c4), style: { width: "100%", position: "relative" }, onClick: () => {
+      o2.type === "choice_one" ? (e(), o2.promise.resolve(n.value)) : s2.includes(c4) ? i(s2.filter((l) => l !== c4)) : i([...s2, c4]);
+    }, children: n.text })) }), o2.type === "choice_multiple" && (0, import_jsx_runtime.jsx)("button", { style: { cursor: "pointer", color: "white", background: "#4d4d4d", border: "none", marginTop: "1vw", fontSize: "clamp(8px,2.5vw,28px)", padding: "0.2em", borderRadius: "4px" }, onClick: () => {
+      e(), o2.promise.resolve(o2.buttons.list.filter((n, c4) => s2.includes(c4)).map((n) => n.value));
     }, children: "Confirm" })] });
   }
   var F = class {
     generateToastId() {
       return crypto.randomUUID();
     }
-    process({ title: e, message: t2, duration: r2, type: s, id: i3, theme: n2 }) {
+    process({ title: e, message: t, duration: r2, type: s2, id: i, theme: n }) {
       const { addToast: c4, removeToast: l } = window.ZOISCORE.useToastsStore.getState();
-      c4({ id: i3, title: e, message: t2, duration: r2, type: s, theme: n2 }), setTimeout(() => l(i3), r2 + 300);
+      c4({ id: i, title: e, message: t, duration: r2, type: s2, theme: n }), setTimeout(() => l(i), r2 + 300);
     }
-    info({ title: e, message: t2, duration: r2 }) {
-      const s = this.generateToastId(), i3 = m.singleToastsTheme;
-      this.process({ title: e, message: t2, duration: r2, type: "info", id: s, theme: i3 });
+    info({ title: e, message: t, duration: r2 }) {
+      const s2 = this.generateToastId(), i = c.singleToastsTheme;
+      this.process({ title: e, message: t, duration: r2, type: "info", id: s2, theme: i });
     }
-    success({ title: e, message: t2, duration: r2 }) {
-      const s = this.generateToastId(), i3 = m.singleToastsTheme;
-      this.process({ title: e, message: t2, duration: r2, type: "success", id: s, theme: i3 });
+    success({ title: e, message: t, duration: r2 }) {
+      const s2 = this.generateToastId(), i = c.singleToastsTheme;
+      this.process({ title: e, message: t, duration: r2, type: "success", id: s2, theme: i });
     }
-    warn({ title: e, message: t2, duration: r2 }) {
-      const s = this.generateToastId(), i3 = m.singleToastsTheme;
-      this.process({ title: e, message: t2, duration: r2, type: "warning", id: s, theme: i3 });
+    warn({ title: e, message: t, duration: r2 }) {
+      const s2 = this.generateToastId(), i = c.singleToastsTheme;
+      this.process({ title: e, message: t, duration: r2, type: "warning", id: s2, theme: i });
     }
-    error({ title: e, message: t2, duration: r2 }) {
-      const s = this.generateToastId(), i3 = m.singleToastsTheme;
-      this.process({ title: e, message: t2, duration: r2, type: "error", id: s, theme: i3 });
+    error({ title: e, message: t, duration: r2 }) {
+      const s2 = this.generateToastId(), i = c.singleToastsTheme;
+      this.process({ title: e, message: t, duration: r2, type: "error", id: s2, theme: i });
     }
-    spinner({ title: e, message: t2 }) {
-      const r2 = this.generateToastId(), s = m.singleToastsTheme;
-      return this.process({ title: e, message: t2, duration: 1e6, type: "spinner", id: r2, theme: s }), r2;
+    spinner({ title: e, message: t }) {
+      const r2 = this.generateToastId(), s2 = c.singleToastsTheme;
+      return this.process({ title: e, message: t, duration: 1e6, type: "spinner", id: r2, theme: s2 }), r2;
     }
     removeSpinner(e) {
-      const { removeToast: t2 } = window.ZOISCORE.useToastsStore.getState();
-      t2(e);
+      const { removeToast: t } = window.ZOISCORE.useToastsStore.getState();
+      t(e);
     }
   };
-  var N2 = class {
-    showDialog({ type: e, title: t2, body: r2, buttons: s, width: i3 }) {
-      const { setDialog: n2 } = window.ZOISCORE.useDialogStore.getState();
+  var N = class {
+    showDialog({ type: e, title: t, body: r2, buttons: s2, width: i }) {
+      const { setDialog: n } = window.ZOISCORE.useDialogStore.getState();
       return new Promise((c4, l) => {
-        n2({ width: i3, type: e, title: t2, body: r2, buttons: s, promise: { resolve: c4, reject: l } });
+        n({ width: i, type: e, title: t, body: r2, buttons: s2, promise: { resolve: c4, reject: l } });
       });
     }
   };
-  function L() {
-    const o = window.ZOISCORE.useToastsStore((t2) => t2.toasts), e = window.ZOISCORE.useDialogStore((t2) => t2.dialog);
-    return (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [(0, import_jsx_runtime.jsx)(I, { children: o.map(({ title: t2, message: r2, type: s, duration: i3, id: n2, theme: c4 }) => (0, import_jsx_runtime.jsx)(R2, { id: n2, title: t2, message: r2, type: s, duration: i3, theme: c4 }, n2)) }), e && (0, import_jsx_runtime.jsx)(M2, { dialog: e })] });
+  function L2() {
+    const o2 = window.ZOISCORE.useToastsStore((t) => t.toasts), e = window.ZOISCORE.useDialogStore((t) => t.dialog);
+    return (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [(0, import_jsx_runtime.jsx)(I, { children: o2.map(({ title: t, message: r2, type: s2, duration: i, id: n, theme: c4 }) => (0, import_jsx_runtime.jsx)(R2, { id: n, title: t, message: r2, type: s2, duration: i, theme: c4 }, n)) }), e && (0, import_jsx_runtime.jsx)(M2, { dialog: e })] });
   }
-  var W2 = class extends HTMLElement {
+  var W = class extends HTMLElement {
     disconnectedCallback() {
       ServerShowBeep("VirtualDOM was removed, chaos is coming...", 5e3, {});
     }
   };
-  var q = create((o) => ({ toasts: [], addToast: (e) => o((t2) => ({ toasts: [...t2.toasts, e] })), removeToast: (e) => o((t2) => ({ toasts: t2.toasts.filter((r2) => r2.id !== e) })), clearToasts: () => o({ toasts: [] }) }));
-  var Y = create((o) => ({ dialog: null, setDialog: (e) => o({ dialog: e }), clearDialog: () => o({ dialog: null }) }));
+  var q = create((o2) => ({ toasts: [], addToast: (e) => o2((t) => ({ toasts: [...t.toasts, e] })), removeToast: (e) => o2((t) => ({ toasts: t.toasts.filter((r2) => r2.id !== e) })), clearToasts: () => o2({ toasts: [] }) }));
+  var Y = create((o2) => ({ dialog: null, setDialog: (e) => o2({ dialog: e }), clearDialog: () => o2({ dialog: null }) }));
   function K() {
-    customElements.define("zc-virtual-dom", W2);
-    const o = document.createElement("zc-virtual-dom");
-    document.body.append(o), import_client.default.createRoot(document.getElementsByTagName("zc-virtual-dom")[0]).render((0, import_jsx_runtime.jsx)(L, {}));
+    customElements.define("zc-virtual-dom", W);
+    const o2 = document.createElement("zc-virtual-dom");
+    document.body.append(o2), import_client.default.createRoot(document.getElementsByTagName("zc-virtual-dom")[0]).render((0, import_jsx_runtime.jsx)(L2, {}));
   }
   var Q2 = new F();
-  var ee2 = new N2();
+  var ee2 = new N();
 
-  // node_modules/.pnpm/zois-core@1.1.7/node_modules/zois-core/package.json
-  var version2 = "1.1.7";
+  // node_modules/.pnpm/zois-core@1.1.8/node_modules/zois-core/package.json
+  var version2 = "1.1.8";
 
-  // node_modules/.pnpm/zois-core@1.1.7/node_modules/zois-core/dist/index.js
-  var m;
+  // node_modules/.pnpm/zois-core@1.1.8/node_modules/zois-core/dist/index.js
+  var c;
   function C(e) {
     if (!window.ZOISCORE) {
-      const t2 = document.createElement("style");
-      t2.innerHTML = styles_default2, document.head.append(t2), window.ZOISCORE = Object.freeze({ loaded: true, useToastsStore: q, useDialogStore: Y }), K();
+      const t = document.createElement("style");
+      t.innerHTML = styles_default2, document.head.append(t), window.ZOISCORE = Object.freeze({ loaded: true, useToastsStore: q, useDialogStore: Y }), K();
     }
-    m = { ...e }, h();
+    c = { ...e }, T();
   }
-  function c2(e) {
-    return new Promise((t2) => setTimeout(t2, e));
+  function p(e) {
+    return new Promise((t) => setTimeout(t, e));
   }
-  async function p(e, t2 = () => false) {
+  async function h(e, t = () => false) {
     for (; !e(); ) {
-      if (t2()) return false;
-      await c2(10);
+      if (t()) return false;
+      await p(10);
     }
     return true;
   }
-  function h2(e, t2) {
-    return e = Math.ceil(e), t2 = Math.floor(t2), Math.floor(Math.random() * (t2 - e + 1)) + e;
+  function y(e, t) {
+    return e = Math.ceil(e), t = Math.floor(t), Math.floor(Math.random() * (t - e + 1)) + e;
   }
-  function x2(e, t2) {
-    const r2 = e.split("."), o = t2.split(".");
-    for (let n2 = 0; n2 < Math.max(r2.length, o.length); n2++) {
-      const i3 = parseInt(r2[n2] || "0", 10), s = parseInt(o[n2] || "0", 10);
-      if (i3 > s) return true;
-      if (i3 < s) return false;
+  function w3(e, t) {
+    const r2 = e.split("."), o2 = t.split(".");
+    for (let n = 0; n < Math.max(r2.length, o2.length); n++) {
+      const i = parseInt(r2[n] || "0", 10), s2 = parseInt(o2[n] || "0", 10);
+      if (i > s2) return true;
+      if (i < s2) return false;
     }
     return false;
   }
-  function w2(e, t2) {
-    return !e && !t2 || !e && t2 === "Default" || !t2 && e === "Default" || e === "Default" && Array.isArray(t2) && t2.filter((r2) => r2 === "Default").length === t2.length || t2 === "Default" && Array.isArray(e) && e.filter((r2) => r2 === "Default").length === e.length ? true : JSON.stringify(e) === JSON.stringify(t2);
-  }
-  function D3(e) {
-    return typeof e == "string" ? Math.round(new TextEncoder().encode(e).byteLength / 100) / 10 : Math.round(new TextEncoder().encode(JSON.stringify(e)).byteLength / 100) / 10;
+  function D3(e, t) {
+    return !e && !t || !e && t === "Default" || !t && e === "Default" || e === "Default" && Array.isArray(t) && t.filter((r2) => r2 === "Default").length === t.length || t === "Default" && Array.isArray(e) && e.filter((r2) => r2 === "Default").length === e.length ? true : JSON.stringify(e) === JSON.stringify(t);
   }
   function T2(e) {
-    if (e) return ChatRoomCharacter.find((t2) => t2.MemberNumber == e || t2.Name.toLowerCase() === e || t2.Nickname?.toLowerCase() === e);
+    return typeof e == "string" ? Math.round(new TextEncoder().encode(e).byteLength / 100) / 10 : Math.round(new TextEncoder().encode(JSON.stringify(e)).byteLength / 100) / 10;
   }
-  function N3(e) {
+  function N2(e) {
+    if (e) return ChatRoomCharacter.find((t) => t.MemberNumber == e || t.Name.toLowerCase() === e || t.Nickname?.toLowerCase() === e);
+  }
+  function O2(e) {
     return CharacterNickname(e);
   }
   function S() {
-    if (!x("Themed")) return null;
+    if (!E("Themed")) return null;
     const e = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.Themed ?? ""));
     return !e?.GlobalModule?.themedEnabled || !e?.GlobalModule?.doVanillaGuiOverhaul ? null : e.ColorsModule;
   }
-  function O2(e) {
-    const t2 = document.createElement("style");
-    t2.innerHTML = e, document.head.append(t2);
+  function k2(e) {
+    const t = document.createElement("style");
+    t.innerHTML = e, document.head.append(t);
   }
-  function P2(e) {
-    p(() => typeof window.Player?.MemberNumber == "number").then(() => setTimeout(e, h2(3e3, 6e3)));
+  function P3(e) {
+    h(() => typeof window.Player?.MemberNumber == "number").then(() => setTimeout(e, y(3e3, 6e3)));
+  }
+  function a2(e) {
+    return typeof e != "object" || e === null ? e : Array.isArray(e) ? e.map(a2).sort() : Object.keys(e).sort().reduce((t, r2) => (t[r2] = a2(e[r2]), t), {});
   }
 
   // node_modules/.pnpm/class-transformer@0.5.1/node_modules/class-transformer/esm5/enums/transformation-type.enum.js
@@ -23010,16 +23016,16 @@ One of mods you are using is using an old version of SDK. It will work for now b
   }
 
   // node_modules/.pnpm/class-transformer@0.5.1/node_modules/class-transformer/esm5/utils/is-promise.util.js
-  function isPromise(p2) {
-    return p2 !== null && typeof p2 === "object" && typeof p2.then === "function";
+  function isPromise(p3) {
+    return p3 !== null && typeof p3 === "object" && typeof p3.then === "function";
   }
 
   // node_modules/.pnpm/class-transformer@0.5.1/node_modules/class-transformer/esm5/TransformOperationExecutor.js
   var __spreadArray = function(to, from, pack) {
-    if (pack || arguments.length === 2) for (var i3 = 0, l = from.length, ar; i3 < l; i3++) {
-      if (ar || !(i3 in from)) {
-        if (!ar) ar = Array.prototype.slice.call(from, 0, i3);
-        ar[i3] = from[i3];
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+      if (ar || !(i in from)) {
+        if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+        ar[i] = from[i];
       }
     }
     return to.concat(ar || Array.prototype.slice.call(from));
@@ -23429,13 +23435,13 @@ One of mods you are using is using an old version of SDK. It will work for now b
 
   // node_modules/.pnpm/class-transformer@0.5.1/node_modules/class-transformer/esm5/ClassTransformer.js
   var __assign = function() {
-    __assign = Object.assign || function(t2) {
-      for (var s, i3 = 1, n2 = arguments.length; i3 < n2; i3++) {
-        s = arguments[i3];
-        for (var p2 in s) if (Object.prototype.hasOwnProperty.call(s, p2))
-          t2[p2] = s[p2];
+    __assign = Object.assign || function(t) {
+      for (var s2, i = 1, n = arguments.length; i < n; i++) {
+        s2 = arguments[i];
+        for (var p3 in s2) if (Object.prototype.hasOwnProperty.call(s2, p3))
+          t[p3] = s2[p3];
       }
-      return t2;
+      return t;
     };
     return __assign.apply(this, arguments);
   };
@@ -23575,33 +23581,33 @@ One of mods you are using is using an old version of SDK. It will work for now b
   }
 
   // node_modules/.pnpm/class-validator@0.14.2/node_modules/class-validator/esm5/utils/is-promise.util.js
-  function isPromise2(p2) {
-    return p2 !== null && typeof p2 === "object" && typeof p2.then === "function";
+  function isPromise2(p3) {
+    return p3 !== null && typeof p3 === "object" && typeof p3.then === "function";
   }
 
   // node_modules/.pnpm/class-validator@0.14.2/node_modules/class-validator/esm5/metadata/MetadataStorage.js
-  var __values = function(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m3 = s && o[s], i3 = 0;
-    if (m3) return m3.call(o);
-    if (o && typeof o.length === "number") return {
+  var __values = function(o2) {
+    var s2 = typeof Symbol === "function" && Symbol.iterator, m2 = s2 && o2[s2], i = 0;
+    if (m2) return m2.call(o2);
+    if (o2 && typeof o2.length === "number") return {
       next: function() {
-        if (o && i3 >= o.length) o = void 0;
-        return { value: o && o[i3++], done: !o };
+        if (o2 && i >= o2.length) o2 = void 0;
+        return { value: o2 && o2[i++], done: !o2 };
       }
     };
-    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+    throw new TypeError(s2 ? "Object is not iterable." : "Symbol.iterator is not defined.");
   };
-  var __read = function(o, n2) {
-    var m3 = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m3) return o;
-    var i3 = m3.call(o), r2, ar = [], e;
+  var __read = function(o2, n) {
+    var m2 = typeof Symbol === "function" && o2[Symbol.iterator];
+    if (!m2) return o2;
+    var i = m2.call(o2), r2, ar = [], e;
     try {
-      while ((n2 === void 0 || n2-- > 0) && !(r2 = i3.next()).done) ar.push(r2.value);
+      while ((n === void 0 || n-- > 0) && !(r2 = i.next()).done) ar.push(r2.value);
     } catch (error) {
       e = { error };
     } finally {
       try {
-        if (r2 && !r2.done && (m3 = i3["return"])) m3.call(i3);
+        if (r2 && !r2.done && (m2 = i["return"])) m2.call(i);
       } finally {
         if (e) throw e.error;
       }
@@ -23609,10 +23615,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
     return ar;
   };
   var __spreadArray2 = function(to, from, pack) {
-    if (pack || arguments.length === 2) for (var i3 = 0, l = from.length, ar; i3 < l; i3++) {
-      if (ar || !(i3 in from)) {
-        if (!ar) ar = Array.prototype.slice.call(from, 0, i3);
-        ar[i3] = from[i3];
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+      if (ar || !(i in from)) {
+        if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+        ar[i] = from[i];
       }
     }
     return to.concat(ar || Array.prototype.slice.call(from));
@@ -23860,17 +23866,17 @@ One of mods you are using is using an old version of SDK. It will work for now b
   );
 
   // node_modules/.pnpm/class-validator@0.14.2/node_modules/class-validator/esm5/validation/ValidationExecutor.js
-  var __read2 = function(o, n2) {
-    var m3 = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m3) return o;
-    var i3 = m3.call(o), r2, ar = [], e;
+  var __read2 = function(o2, n) {
+    var m2 = typeof Symbol === "function" && o2[Symbol.iterator];
+    if (!m2) return o2;
+    var i = m2.call(o2), r2, ar = [], e;
     try {
-      while ((n2 === void 0 || n2-- > 0) && !(r2 = i3.next()).done) ar.push(r2.value);
+      while ((n === void 0 || n-- > 0) && !(r2 = i.next()).done) ar.push(r2.value);
     } catch (error) {
       e = { error };
     } finally {
       try {
-        if (r2 && !r2.done && (m3 = i3["return"])) m3.call(i3);
+        if (r2 && !r2.done && (m2 = i["return"])) m2.call(i);
       } finally {
         if (e) throw e.error;
       }
@@ -24170,13 +24176,13 @@ One of mods you are using is using an old version of SDK. It will work for now b
   );
 
   // node_modules/.pnpm/class-validator@0.14.2/node_modules/class-validator/esm5/validation/Validator.js
-  var __awaiter = function(thisArg, _arguments, P3, generator) {
+  var __awaiter = function(thisArg, _arguments, P4, generator) {
     function adopt(value) {
-      return value instanceof P3 ? value : new P3(function(resolve) {
+      return value instanceof P4 ? value : new P4(function(resolve) {
         resolve(value);
       });
     }
-    return new (P3 || (P3 = Promise))(function(resolve, reject) {
+    return new (P4 || (P4 = Promise))(function(resolve, reject) {
       function fulfilled(value) {
         try {
           step(generator.next(value));
@@ -24199,26 +24205,26 @@ One of mods you are using is using an old version of SDK. It will work for now b
   };
   var __generator = function(thisArg, body) {
     var _ = { label: 0, sent: function() {
-      if (t2[0] & 1) throw t2[1];
-      return t2[1];
-    }, trys: [], ops: [] }, f3, y2, t2, g3;
+      if (t[0] & 1) throw t[1];
+      return t[1];
+    }, trys: [], ops: [] }, f3, y2, t, g3;
     return g3 = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g3[Symbol.iterator] = function() {
       return this;
     }), g3;
-    function verb(n2) {
-      return function(v) {
-        return step([n2, v]);
+    function verb(n) {
+      return function(v2) {
+        return step([n, v2]);
       };
     }
     function step(op) {
       if (f3) throw new TypeError("Generator is already executing.");
       while (g3 && (g3 = 0, op[0] && (_ = 0)), _) try {
-        if (f3 = 1, y2 && (t2 = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t2 = y2["return"]) && t2.call(y2), 0) : y2.next) && !(t2 = t2.call(y2, op[1])).done) return t2;
-        if (y2 = 0, t2) op = [op[0] & 2, t2.value];
+        if (f3 = 1, y2 && (t = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t = y2["return"]) && t.call(y2), 0) : y2.next) && !(t = t.call(y2, op[1])).done) return t;
+        if (y2 = 0, t) op = [op[0] & 2, t.value];
         switch (op[0]) {
           case 0:
           case 1:
-            t2 = op;
+            t = op;
             break;
           case 4:
             _.label++;
@@ -24233,25 +24239,25 @@ One of mods you are using is using an old version of SDK. It will work for now b
             _.trys.pop();
             continue;
           default:
-            if (!(t2 = _.trys, t2 = t2.length > 0 && t2[t2.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
               _ = 0;
               continue;
             }
-            if (op[0] === 3 && (!t2 || op[1] > t2[0] && op[1] < t2[3])) {
+            if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
               _.label = op[1];
               break;
             }
-            if (op[0] === 6 && _.label < t2[1]) {
-              _.label = t2[1];
-              t2 = op;
+            if (op[0] === 6 && _.label < t[1]) {
+              _.label = t[1];
+              t = op;
               break;
             }
-            if (t2 && _.label < t2[2]) {
-              _.label = t2[2];
+            if (t && _.label < t[2]) {
+              _.label = t[2];
               _.ops.push(op);
               break;
             }
-            if (t2[2]) _.ops.pop();
+            if (t[2]) _.ops.pop();
             _.trys.pop();
             continue;
         }
@@ -24260,7 +24266,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         op = [6, e];
         y2 = 0;
       } finally {
-        f3 = t2 = 0;
+        f3 = t = 0;
       }
       if (op[0] & 5) throw op[1];
       return { value: op[0] ? op[1] : void 0, done: true };
@@ -24363,117 +24369,117 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   }
 
-  // node_modules/.pnpm/zois-core@1.1.7/node_modules/zois-core/dist/validation.js
-  async function c3(e, t2) {
+  // node_modules/.pnpm/zois-core@1.1.8/node_modules/zois-core/dist/validation.js
+  async function c3(e, t) {
     try {
-      const r2 = plainToInstance(t2, e), a3 = await validate(r2);
-      return a3.length > 0 ? { isValid: false, errors: a3.flatMap((s) => Object.values(s.constraints || {})) } : { isValid: true, validatedData: r2 };
+      const r2 = plainToInstance(t, e), a3 = await validate(r2);
+      return a3.length > 0 ? { isValid: false, errors: a3.flatMap((s2) => Object.values(s2.constraints || {})) } : { isValid: true, validatedData: r2 };
     } catch (r2) {
       return { isValid: false, errors: ["Validation error: " + r2.message] };
     }
   }
 
-  // node_modules/.pnpm/zois-core@1.1.7/node_modules/zois-core/dist/messaging.js
+  // node_modules/.pnpm/zois-core@1.1.8/node_modules/zois-core/dist/messaging.js
   var q2 = class {
-    sendBeep(n2, e) {
-      const u = { IsSecret: true, BeepType: "Leash", MemberNumber: e, Message: JSON.stringify({ ...n2 }) };
-      ServerSend("AccountBeep", u);
+    sendBeep(n, e) {
+      const u3 = { IsSecret: true, BeepType: "Leash", MemberNumber: e, Message: JSON.stringify({ ...n }) };
+      ServerSend("AccountBeep", u3);
     }
-    sendPacket(n2, e, u) {
-      const r2 = { Content: m.key, Dictionary: { msg: n2 }, Type: "Hidden" };
-      e && (r2.Dictionary.data = e), u && (r2.Target = u), ServerSend("ChatRoomChat", r2);
+    sendPacket(n, e, u3) {
+      const r2 = { Content: c.key, Dictionary: { msg: n }, Type: "Hidden" };
+      e && (r2.Dictionary.data = e), u3 && (r2.Target = u3), ServerSend("ChatRoomChat", r2);
     }
-    sendAction(n2, e = void 0, u = []) {
-      if (!n2 || !ServerPlayerIsInChatRoom()) return;
-      const r2 = CharacterPronounDescription(Player) === "She/Her", i3 = r2 ? "Her" : "His", p2 = r2 ? "Her" : "Him", c4 = r2 ? "Herself" : "Himself", t2 = r2 ? "She" : "He";
-      n2 = n2.replaceAll("<Possessive>", i3).replaceAll("<possessive>", i3.toLocaleLowerCase()).replaceAll("<Intensive>", p2).replaceAll("<intensive>", p2.toLocaleLowerCase()).replaceAll("<SelfIntensive>", c4).replaceAll("<selfIntensive>", c4.toLocaleLowerCase()).replaceAll("<Pronoun>", t2).replaceAll("<pronoun>", t2.toLocaleLowerCase()), ServerSend("ChatRoomChat", { Content: "ZC_CUSTOM_ACTION", Type: "Action", Target: e ?? void 0, Dictionary: [{ Tag: 'MISSING TEXT IN "Interface.csv": ZC_CUSTOM_ACTION', Text: n2 }, ...u] });
+    sendAction(n, e = void 0, u3 = []) {
+      if (!n || !ServerPlayerIsInChatRoom()) return;
+      const r2 = CharacterPronounDescription(Player) === "She/Her", i = r2 ? "Her" : "His", p3 = r2 ? "Her" : "Him", c4 = r2 ? "Herself" : "Himself", t = r2 ? "She" : "He";
+      n = n.replaceAll("<Possessive>", i).replaceAll("<possessive>", i.toLocaleLowerCase()).replaceAll("<Intensive>", p3).replaceAll("<intensive>", p3.toLocaleLowerCase()).replaceAll("<SelfIntensive>", c4).replaceAll("<selfIntensive>", c4.toLocaleLowerCase()).replaceAll("<Pronoun>", t).replaceAll("<pronoun>", t.toLocaleLowerCase()), ServerSend("ChatRoomChat", { Content: "ZC_CUSTOM_ACTION", Type: "Action", Target: e ?? void 0, Dictionary: [{ Tag: 'MISSING TEXT IN "Interface.csv": ZC_CUSTOM_ACTION', Text: n }, ...u3] });
     }
-    sendRequest({ message: n2, data: e = {}, target: u, type: r2 = "packet" }) {
-      const i3 = crypto.randomUUID();
-      return new Promise((p2) => {
+    sendRequest({ message: n, data: e = {}, target: u3, type: r2 = "packet" }) {
+      const i = crypto.randomUUID();
+      return new Promise((p3) => {
         let c4;
-        r2 === "packet" ? (g2.sendPacket("request", { requestId: i3, message: n2, data: e }, u), c4 = c("ChatRoomMessage", a.ADD_BEHAVIOR, (t2, o) => {
-          const a3 = t2[0], s = T2(a3.Sender);
-          if (!s) return o(t2);
-          if (a3.Content === m.key && !s.IsPlayer()) {
-            const m3 = a3.Dictionary.msg, l = a3.Dictionary.data;
-            m3 === "requestResponse" && l.requestId === i3 && (c4(), p2({ data: l.data, isError: false }));
+        r2 === "packet" ? (g2.sendPacket("request", { requestId: i, message: n, data: e }, u3), c4 = c2("ChatRoomMessage", d.ADD_BEHAVIOR, (t, o2) => {
+          const a3 = t[0], s2 = N2(a3.Sender);
+          if (!s2) return o2(t);
+          if (a3.Content === c.key && !s2.IsPlayer()) {
+            const m2 = a3.Dictionary.msg, l = a3.Dictionary.data;
+            m2 === "requestResponse" && l.requestId === i && (c4(), p3({ data: l.data, isError: false }));
           }
-          return o(t2);
-        })) : (g2.sendBeep({ type: `${m.key}_request`, requestId: i3, message: n2, data: e }, u), c4 = c("ServerAccountBeep", a.ADD_BEHAVIOR, (t2, o) => {
-          const a3 = t2[0];
-          if (a3.BeepType !== "Leash") return o(t2);
-          let s;
+          return o2(t);
+        })) : (g2.sendBeep({ type: `${c.key}_request`, requestId: i, message: n, data: e }, u3), c4 = c2("ServerAccountBeep", d.ADD_BEHAVIOR, (t, o2) => {
+          const a3 = t[0];
+          if (a3.BeepType !== "Leash") return o2(t);
+          let s2;
           try {
-            s = JSON.parse(a3.Message);
+            s2 = JSON.parse(a3.Message);
           } catch {
-            return o(t2);
+            return o2(t);
           }
-          return s.type === `${m.key}_requestResponse` && s.requestId === i3 && (c4(), p2({ data: s.data, isError: false })), o(t2);
+          return s2.type === `${c.key}_requestResponse` && s2.requestId === i && (c4(), p3({ data: s2.data, isError: false })), o2(t);
         })), setTimeout(() => {
-          c4(), p2({ isError: true });
+          c4(), p3({ isError: true });
         }, 6e3);
       });
     }
-    sendLocal(n2) {
+    sendLocal(n) {
       if (!ServerPlayerIsInChatRoom()) return;
       const e = document.createElement("div");
-      e.setAttribute("class", "ChatMessage ChatMessageLocalMessage"), e.setAttribute("data-time", ChatRoomCurrentTime()), e.setAttribute("data-sender", `${Player.MemberNumber}`), k(e, m.fontFamily), e.style.background = m.chatMessageBackground ?? "#55edc095", e.style.color = m.chatMessageColor ?? "black", e.style.margin = "0.15em 0", typeof n2 == "string" ? e.innerHTML = n2 : e.appendChild(n2), document.querySelector("#TextAreaChatLog").appendChild(e), ElementScrollToEnd("TextAreaChatLog");
+      e.setAttribute("class", "ChatMessage ChatMessageLocalMessage"), e.setAttribute("data-time", ChatRoomCurrentTime()), e.setAttribute("data-sender", `${Player.MemberNumber}`), L(e, c.fontFamily), e.style.background = c.chatMessageBackground ?? "#55edc095", e.style.color = c.chatMessageColor ?? "black", e.style.margin = "0.15em 0", typeof n == "string" ? e.innerHTML = n : e.appendChild(n), document.querySelector("#TextAreaChatLog").appendChild(e), ElementScrollToEnd("TextAreaChatLog");
     }
-    sendChat(n2) {
-      ServerSend("ChatRoomChat", { Type: "Chat", Content: n2 });
+    sendChat(n) {
+      ServerSend("ChatRoomChat", { Type: "Chat", Content: n });
     }
-    onRequest(n2, e, u) {
-      let r2, i3;
-      typeof e == "function" && e.prototype?.constructor == e ? (i3 = e, r2 = u) : r2 = e;
-      const p2 = c("ChatRoomMessage", a.ADD_BEHAVIOR, async (t2, o) => {
-        const a3 = t2[0], s = T2(a3.Sender);
-        if (!s) return o(t2);
-        if (a3.Content === m.key && !s.IsPlayer()) {
-          const m3 = a3.Dictionary?.msg, l = a3.Dictionary?.data;
-          if (m3 === "request" && l.message === n2) {
+    onRequest(n, e, u3) {
+      let r2, i;
+      typeof e == "function" && e.prototype?.constructor == e ? (i = e, r2 = u3) : r2 = e;
+      const p3 = c2("ChatRoomMessage", d.ADD_BEHAVIOR, async (t, o2) => {
+        const a3 = t[0], s2 = N2(a3.Sender);
+        if (!s2) return o2(t);
+        if (a3.Content === c.key && !s2.IsPlayer()) {
+          const m2 = a3.Dictionary?.msg, l = a3.Dictionary?.data;
+          if (m2 === "request" && l.message === n) {
             if (typeof l.requestId != "string" || typeof l.message != "string") return;
-            const h3 = await c3(l.data, i3);
-            if (i3 && !h3.isValid) return console.warn(`${m.name} DTO Failure:`, h3), o(t2);
-            const k2 = r2(l.data, s);
-            k2 !== void 0 && g2.sendPacket("requestResponse", { requestId: l.requestId, message: l.message, data: k2 }, s.MemberNumber);
+            const h3 = await c3(l.data, i);
+            if (i && !h3.isValid) return console.warn(`${c.name} DTO Failure:`, h3), o2(t);
+            const k3 = r2(l.data, s2);
+            k3 !== void 0 && g2.sendPacket("requestResponse", { requestId: l.requestId, message: l.message, data: k3 }, s2.MemberNumber);
           }
         }
-        return o(t2);
-      }), c4 = c("ServerAccountBeep", a.ADD_BEHAVIOR, async (t2, o) => {
-        const a3 = t2[0];
-        if (a3.BeepType !== "Leash") return o(t2);
-        let s;
+        return o2(t);
+      }), c4 = c2("ServerAccountBeep", d.ADD_BEHAVIOR, async (t, o2) => {
+        const a3 = t[0];
+        if (a3.BeepType !== "Leash") return o2(t);
+        let s2;
         try {
-          s = JSON.parse(a3.Message);
+          s2 = JSON.parse(a3.Message);
         } catch {
-          return o(t2);
+          return o2(t);
         }
-        if (s.type === `${m.key}_request` && s.message === n2) {
-          if (typeof s.requestId != "string") return;
-          const m3 = await c3(s.data, i3);
-          if (i3 && !m3.isValid) return console.warn(`${m.name} DTO Failure:`, m3), o(t2);
-          const l = r2(s.data, a3.MemberNumber, a3.MemberName);
-          l !== void 0 && g2.sendBeep({ type: `${m.key}_requestResponse`, requestId: s.requestId, message: s.message, data: l }, a3.MemberNumber);
+        if (s2.type === `${c.key}_request` && s2.message === n) {
+          if (typeof s2.requestId != "string") return;
+          const m2 = await c3(s2.data, i);
+          if (i && !m2.isValid) return console.warn(`${c.name} DTO Failure:`, m2), o2(t);
+          const l = r2(s2.data, a3.MemberNumber, a3.MemberName);
+          l !== void 0 && g2.sendBeep({ type: `${c.key}_requestResponse`, requestId: s2.requestId, message: s2.message, data: l }, a3.MemberNumber);
         }
-        return o(t2);
+        return o2(t);
       });
       return () => {
-        p2(), c4();
+        p3(), c4();
       };
     }
-    onPacket(n2, e, u) {
-      return c("ChatRoomMessage", a.ADD_BEHAVIOR, async (r2, i3) => {
-        let p2, c4;
-        typeof e == "function" && e.prototype?.constructor == e ? (c4 = e, p2 = u) : p2 = e;
-        const t2 = r2[0], o = T2(t2.Sender);
-        if (!o) return i3(r2);
-        if (t2.Content === m.key && t2.Dictionary.msg === n2 && !o.IsPlayer()) {
-          const a3 = await c3(t2.Dictionary.data, c4);
-          if (c4 && !a3.isValid) return console.warn(`${m.name} DTO Failure:`, a3), i3(r2);
-          p2(t2.Dictionary.data, o);
+    onPacket(n, e, u3) {
+      return c2("ChatRoomMessage", d.ADD_BEHAVIOR, async (r2, i) => {
+        let p3, c4;
+        typeof e == "function" && e.prototype?.constructor == e ? (c4 = e, p3 = u3) : p3 = e;
+        const t = r2[0], o2 = N2(t.Sender);
+        if (!o2) return i(r2);
+        if (t.Content === c.key && t.Dictionary.msg === n && !o2.IsPlayer()) {
+          const a3 = await c3(t.Dictionary.data, c4);
+          if (c4 && !a3.isValid) return console.warn(`${c.name} DTO Failure:`, a3), i(r2);
+          p3(t.Dictionary.data, o2);
         }
-        return i3(r2);
+        return i(r2);
       });
     }
   };
@@ -24674,7 +24680,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       super.load();
       if (InformationSheetSelection.IsPlayer()) {
         this.createText({
-          text: `Mod Data Size: ${D3(Player.ExtensionSettings?.LITTLISH_CLUB ?? "")}KB`,
+          text: `Mod Data Size: ${T2(Player.ExtensionSettings?.LITTLISH_CLUB ?? "")}KB`,
           x: 150,
           y: 240,
           fontSize: 6
@@ -24740,25 +24746,25 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
     load() {
       super.load();
-      caregiverAccessRightsList.forEach((p2, i3) => {
+      caregiverAccessRightsList.forEach((p3, i) => {
         this.createCheckbox({
-          text: p2.name,
+          text: p3.name,
           width: 1200,
           x: 200,
-          y: 250 + 90 * i3,
-          isChecked: isCaregiverAccessRightEnabled(InformationSheetSelection, p2.id),
+          y: 250 + 90 * i,
+          isChecked: isCaregiverAccessRightEnabled(InformationSheetSelection, p3.id),
           isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_CAREGIVERS_ACCESS_RIGHTS" /* MANAGE_CAREGIVERS_ACCESS_RIGHTS */),
           onChange: () => {
             if (InformationSheetSelection.IsPlayer()) {
-              turnCaregiverAccessRight(p2.id);
+              turnCaregiverAccessRight(p3.id);
               addLog(
-                `${N3(Player)} (${Player.MemberNumber}) turned ${isCaregiverAccessRightEnabled(Player, p2.id) ? "on" : "off"} caregiver access right "${p2.name}"`,
+                `${O2(Player)} (${Player.MemberNumber}) turned ${isCaregiverAccessRightEnabled(Player, p3.id) ? "on" : "off"} caregiver access right "${p3.name}"`,
                 false
               );
               syncStorage();
             } else {
               g2.sendPacket("turnCaregiversAccessRight", {
-                accessRightId: p2.id
+                accessRightId: p3.id
               }, InformationSheetSelection.MemberNumber);
             }
           }
@@ -24819,7 +24825,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
             if (!modStorage.caregivers) modStorage.caregivers = {};
             modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
             addLog(
-              `${N3(Player)} (${Player.MemberNumber}) ${modStorage.caregivers.canChangeList ? "allowed" : "forbade"} ${N3(Player)} to change caregivers list`,
+              `${O2(Player)} (${Player.MemberNumber}) ${modStorage.caregivers.canChangeList ? "allowed" : "forbade"} ${O2(Player)} to change caregivers list`,
               false
             );
           } else {
@@ -24835,7 +24841,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         if (InformationSheetSelection.IsPlayer()) {
           if (!modStorage.caregivers) modStorage.caregivers = {};
           modStorage.caregivers.list = newCaregiversList;
-          addLog(`${N3(Player)} (${Player.MemberNumber}) changed caregivers list`, false);
+          addLog(`${O2(Player)} (${Player.MemberNumber}) changed caregivers list`, false);
         } else {
           g2.sendPacket("changeCaregiversList", {
             list: newCaregiversList
@@ -24867,9 +24873,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
     "CAREGIVERS" /* CAREGIVERS */,
     "MOMMY" /* MOMMY */
   ];
-  function getNextCyberDiaperChangePermission(p2) {
-    if (cyberDiaperChangePermissionsHierarchy.indexOf(p2) === cyberDiaperChangePermissionsHierarchy.length - 1) return cyberDiaperChangePermissionsHierarchy[0];
-    return cyberDiaperChangePermissionsHierarchy[cyberDiaperChangePermissionsHierarchy.indexOf(p2) + 1];
+  function getNextCyberDiaperChangePermission(p3) {
+    if (cyberDiaperChangePermissionsHierarchy.indexOf(p3) === cyberDiaperChangePermissionsHierarchy.length - 1) return cyberDiaperChangePermissionsHierarchy[0];
+    return cyberDiaperChangePermissionsHierarchy[cyberDiaperChangePermissionsHierarchy.indexOf(p3) + 1];
   }
   function getCyberDiaperModelName(model) {
     switch (model) {
@@ -24929,62 +24935,102 @@ One of mods you are using is using an old version of SDK. It will work for now b
     if (!cyberDiaperStorage?.locked) return;
     const asset = AssetGet(Player.AssetFamily, "ItemPelvis", getCyberDiaperAssetName(cyberDiaperStorage.model));
     if (!cyberDiaperItem || cyberDiaperItem.Asset?.Name !== getCyberDiaperAssetName(cyberDiaperStorage.model) || // @ts-ignore
-    !w2(cyberDiaperStorage.color ?? asset.DefaultColor, cyberDiaperItem.Color ?? asset.DefaultColor)) putCyberDiaperOn();
+    !D3(cyberDiaperStorage.color ?? asset.DefaultColor, cyberDiaperItem.Color ?? asset.DefaultColor)) putCyberDiaperOn();
   }
   function loadCyberDiaper() {
-    c("ChatRoomCharacterItemUpdate", a.OBSERVE, (args, next) => {
+    c2("ChatRoomCharacterItemUpdate", d.OBSERVE, (args, next) => {
       next(args);
       checkCyberDiaper();
     });
-    c("ChatRoomSyncItem", a.OBSERVE, (args, next) => {
+    c2("ChatRoomSyncItem", d.OBSERVE, (args, next) => {
       next(args);
       checkCyberDiaper();
     });
-    c("ChatRoomSyncSingle", a.OBSERVE, (args, next) => {
+    c2("ChatRoomSyncSingle", d.OBSERVE, (args, next) => {
       next(args);
       checkCyberDiaper();
     });
   }
 
-  // node_modules/.pnpm/zois-core@1.1.7/node_modules/zois-core/dist/wardrobe.js
-  function n(e) {
-    const s = AssetGroup.includes(e) ? e : Asset.includes(e) ? e.Group : e.Asset.Group;
-    if (!AssetGroup.includes(s)) throw new Error("Failed to convert item to group");
-    return s;
+  // node_modules/.pnpm/zois-core@1.1.8/node_modules/zois-core/dist/wardrobe.js
+  var m = class {
+    seedsCache = /* @__PURE__ */ new Map();
+    getSeed(e) {
+      const r2 = a2(ServerAppearanceBundle(e)), o2 = JSON.stringify(r2);
+      return this.seedsCache.has(o2) || this.seedsCache.set(o2, this.generateSeed(o2)), this.seedsCache.get(o2);
+    }
+    generateSeed(e) {
+      let r2 = 0;
+      for (let o2 = 0; o2 < e.length; o2++) {
+        const a3 = e.charCodeAt(o2);
+        r2 = (r2 << 5) - r2 + a3, r2 = r2 & r2;
+      }
+      return r2;
+    }
+    compare(e, r2) {
+      return this.getSeed(e) === this.getSeed(r2);
+    }
+    getDifference(e, r2) {
+      const o2 = { added: [], modified: [], removed: [] };
+      if (this.compare(e, r2)) return o2;
+      const a3 = ServerBuildAppearanceDiff("Female3DCG", e, ServerAppearanceBundle(r2));
+      for (const [i, s2] of Object.entries(a3)) {
+        if (s2[0] === null && s2[1] !== null) {
+          o2.added.push(s2[1].Asset.Description);
+          continue;
+        }
+        if (s2[0] !== null && s2[1] === null) {
+          o2.removed.push(s2[0].Asset.Description);
+          continue;
+        }
+        if (s2[0].Asset.Name !== s2[1].Asset.Name) {
+          o2.removed.push(s2[0].Asset.Description), o2.added.push(s2[1].Asset.Description);
+          continue;
+        }
+        this.compare([s2[0]], [s2[1]]) || o2.modified.push(s2[0].Asset.Description);
+      }
+      return o2;
+    }
+  };
+  var I2 = new m();
+  function p2(t) {
+    const e = AssetGroup.includes(t) ? t : Asset.includes(t) ? t.Group : t.Asset.Group;
+    if (!AssetGroup.includes(e)) throw new Error("Failed to convert item to group");
+    return e;
   }
-  function m2(e) {
-    const s = n(e);
-    return s.Category === "Appearance" && s.AllowNone && s.Clothing && s.BodyCosplay;
+  function f2(t) {
+    const e = p2(t);
+    return e.Category === "Appearance" && e.AllowNone && e.Clothing && e.BodyCosplay;
   }
-  function i2(e) {
-    const s = n(e);
-    return s.Category === "Appearance" && !s.Clothing;
+  function u2(t) {
+    const e = p2(t);
+    return e.Category === "Appearance" && !e.Clothing;
   }
-  function A2(e, s = ["ItemNeck", "ItemNeckAccessories", "ItemNeckRestraints"]) {
-    const r2 = n(e);
-    return r2.Category !== "Item" || r2.BodyCosplay ? false : !s.includes(r2.Name);
+  function A(t, e = ["ItemNeck", "ItemNeckAccessories", "ItemNeckRestraints"]) {
+    const r2 = p2(t);
+    return r2.Category !== "Item" || r2.BodyCosplay ? false : !e.includes(r2.Name);
   }
-  function I2(e, s, r2 = ["Cosplay", "Binds", "Collar", "Locks"], a3 = e, u = false) {
-    s = s.filter((t2) => !!t2 && !i2(t2)), r2.includes("Cosplay") || (s = s.filter((t2) => !m2(t2))), r2.includes("Binds") || (s = s.filter((t2) => !A2(t2))), r2.includes("Collar") || (s = s.filter((t2) => t2.Asset.Group.Name !== "ItemNeck")), r2.includes("Locks") || (s = s.map((t2) => (t2.Property?.LockedBy && delete t2.Property.LockedBy, t2)));
-    const p2 = [];
-    if (u) e.Appearance = e.Appearance.filter((t2) => i2(t2));
+  function h2(t, e, r2 = ["Cosplay", "Binds", "Collar", "Locks"], o2 = t, a3 = false) {
+    e = e.filter((s2) => !!s2 && !u2(s2)), r2.includes("Cosplay") || (e = e.filter((s2) => !f2(s2))), r2.includes("Binds") || (e = e.filter((s2) => !A(s2))), r2.includes("Collar") || (e = e.filter((s2) => s2.Asset.Group.Name !== "ItemNeck")), r2.includes("Locks") || (e = e.map((s2) => (s2.Property?.LockedBy && delete s2.Property.LockedBy, s2)));
+    const i = [];
+    if (a3) t.Appearance = t.Appearance.filter((s2) => u2(s2));
     else {
-      const t2 = ValidationCreateDiffParams(a3, Player.MemberNumber);
-      e.Appearance = e.Appearance.filter((o) => i2(o) || !ValidationCanRemoveItem(o, t2, !!s.find((l) => l?.Asset?.Group?.Name === o?.Asset?.Group?.Name)) || o.Property?.LockedBy && !DialogCanUnlock(a3, o) || o.Asset.Name === "SlaveCollar" && a3.IsPlayer() ? (p2.push(o.Asset.Group.Name), true) : false);
+      const s2 = ValidationCreateDiffParams(o2, Player.MemberNumber);
+      t.Appearance = t.Appearance.filter((n) => u2(n) || !ValidationCanRemoveItem(n, s2, !!e.find((c4) => c4?.Asset?.Group?.Name === n?.Asset?.Group?.Name)) || n.Property?.LockedBy && !DialogCanUnlock(o2, n) || n.Asset.Name === "SlaveCollar" && o2.IsPlayer() ? (i.push(n.Asset.Group.Name), true) : false);
     }
-    for (const t2 of s) {
-      if (!u && (!f2(a3, t2.Asset.Group.Name, t2.Asset) || p2.includes(t2.Asset.Group.Name))) continue;
-      CharacterAppearanceSetItem(e, t2.Asset.Group.Name, t2.Asset, t2.Color);
-      const o = InventoryGet(e, t2.Asset.Group.Name);
-      t2.Craft && CraftingValidate(t2.Craft, t2.Asset) !== CraftingStatusType.CRITICAL_ERROR && (o.Craft = t2.Craft), t2.Property && (ValidationSanitizeProperties(e, t2), o.Property = t2.Property);
+    for (const s2 of e) {
+      if (!a3 && (!d3(o2, s2.Asset.Group.Name, s2.Asset) || i.includes(s2.Asset.Group.Name))) continue;
+      CharacterAppearanceSetItem(t, s2.Asset.Group.Name, s2.Asset, s2.Color);
+      const n = InventoryGet(t, s2.Asset.Group.Name);
+      s2.Craft && CraftingValidate(s2.Craft, s2.Asset) !== CraftingStatusType.CRITICAL_ERROR && (n.Craft = s2.Craft), s2.Property && (ValidationSanitizeProperties(t, s2), n.Property = s2.Property);
     }
-    CharacterRefresh(e), e.IsNpc() || ChatRoomCharacterUpdate(e);
+    CharacterRefresh(t), t.IsNpc() || ChatRoomCharacterUpdate(t);
   }
-  function f2(e, s, r2) {
-    return !ValidationIsItemBlockedOrLimited(e, Player.MemberNumber, s, r2.Name) && ServerChatRoomGetAllowItem(Player, e);
+  function d3(t, e, r2) {
+    return !ValidationIsItemBlockedOrLimited(t, Player.MemberNumber, e, r2.Name) && ServerChatRoomGetAllowItem(Player, t);
   }
-  function N4(e, s) {
-    return s.map((r2) => ServerBundledItemToAppearanceItem(e, r2));
+  function v(t, e) {
+    return e.map((r2) => ServerBundledItemToAppearanceItem(t, r2));
   }
 
   // src/subscreens/cyberDiaperChangeColorMenu.ts
@@ -25018,12 +25064,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
           fontSize: 6
         });
         loadingText.style.textAlign = "center";
-        await p(() => ItemColorLayerNames.loaded);
+        await h(() => ItemColorLayerNames.loaded);
         loadingText.remove();
       }
       if (!this.cyberDiaperSettings.color) this.cyberDiaperSettings.color = JSON.parse(JSON.stringify(asset.DefaultColor));
       this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter2");
-      this.canvasCharacter.Appearance = N4(
+      this.canvasCharacter.Appearance = v(
         this.canvasCharacter.AssetFamily,
         ServerAppearanceBundle(InformationSheetSelection.Appearance)
       );
@@ -25032,7 +25078,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       let layerN = 0;
       asset.Layer.forEach((l) => {
         if (!l.AllowColorize || !ItemColorLayerNames.cache[`${asset.Group.Name}${asset.Name}${l.Name}`]) return;
-        const n2 = layerN;
+        const n = layerN;
         const layerName = this.createButton({
           text: ItemColorLayerNames.cache[`${asset.Group.Name}${asset.Name}${l.Name}`],
           x: 100,
@@ -25041,11 +25087,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
           height: 80,
           isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */),
           onClick: () => {
-            const defaultColor = JSON.parse(JSON.stringify(asset.DefaultColor[n2]));
-            InventoryGet(this.canvasCharacter, asset.Group.Name).Color[n2] = defaultColor;
+            const defaultColor = JSON.parse(JSON.stringify(asset.DefaultColor[n]));
+            InventoryGet(this.canvasCharacter, asset.Group.Name).Color[n] = defaultColor;
             CharacterRefresh(this.canvasCharacter);
-            this.cyberDiaperSettings.color[n2] = defaultColor;
-            layerColor.value = asset.DefaultColor[n2];
+            this.cyberDiaperSettings.color[n] = defaultColor;
+            layerColor.value = asset.DefaultColor[n];
           }
         });
         const layerColor = this.createInput({
@@ -25057,9 +25103,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
           padding: 1,
           isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */),
           onInput: () => {
-            InventoryGet(this.canvasCharacter, asset.Group.Name).Color[n2] = layerColor.value;
+            InventoryGet(this.canvasCharacter, asset.Group.Name).Color[n] = layerColor.value;
             CharacterRefresh(this.canvasCharacter);
-            this.cyberDiaperSettings.color[n2] = layerColor.value;
+            this.cyberDiaperSettings.color[n] = layerColor.value;
           }
         });
         layerColor.setAttribute("type", "color");
@@ -25367,9 +25413,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var isPrototype_default = isPrototype;
 
   // node_modules/.pnpm/lodash-es@4.17.21/node_modules/lodash-es/_baseTimes.js
-  function baseTimes(n2, iteratee) {
-    var index = -1, result = Array(n2);
-    while (++index < n2) {
+  function baseTimes(n, iteratee) {
+    var index = -1, result = Array(n);
+    while (++index < n) {
       result[index] = iteratee(index);
     }
     return result;
@@ -26329,7 +26375,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         y: 260,
         width: 900,
         height: 80,
-        items: Object.values(CyberDiaperModel).map((i3) => [getCyberDiaperModelName(i3), i3]),
+        items: Object.values(CyberDiaperModel).map((i) => [getCyberDiaperModelName(i), i]),
         isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_DIAPER" /* MANAGE_DIAPER */),
         onChange: (model) => {
           this.cyberDiaperSettings.model = model;
@@ -26419,7 +26465,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
           if (InformationSheetSelection.IsPlayer()) {
             modStorage.cyberDiaper = this.cyberDiaperSettings;
             updateDiaperItem();
-            addLog(`${N3(Player)} (${Player.MemberNumber}) changed settings of cyber diaper`, false);
+            addLog(`${O2(Player)} (${Player.MemberNumber}) changed settings of cyber diaper`, false);
             syncStorage();
           } else {
             g2.sendPacket(
@@ -26527,7 +26573,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         onClick: () => {
           if (InformationSheetSelection.IsPlayer()) {
             const [note] = modStorage.notes.list.splice(this.key - 1, 1);
-            addLog(`${N3(Player)} (${Player.MemberNumber}) deleted note: "${note.text}"`, false);
+            addLog(`${O2(Player)} (${Player.MemberNumber}) deleted note: "${note.text}"`, false);
             this.exit();
           } else {
             g2.sendPacket("deleteNote", {
@@ -26583,8 +26629,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
       scrollView.style.alignItems = "center";
       scrollView.style.rowGap = "1vw";
       this.scrollView = scrollView;
-      notesList.forEach((note, i3) => {
-        addNote(note, this, scrollView, i3 + 1);
+      notesList.forEach((note, i) => {
+        addNote(note, this, scrollView, i + 1);
       });
       const noteInput = this.createInput({
         placeholder: "Type note here",
@@ -26620,7 +26666,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
             if (!modStorage.notes) modStorage.notes = {};
             if (!modStorage.notes.list) modStorage.notes.list = [];
             modStorage.notes.list.push(note);
-            addLog(`${N3(Player)} (${Player.MemberNumber}) added note: "${note.text}" at ${new Date(note.ts).toUTCString()}`, false);
+            addLog(`${O2(Player)} (${Player.MemberNumber}) added note: "${note.text}" at ${new Date(note.ts).toUTCString()}`, false);
           } else {
             g2.sendPacket("addNote", {
               text: noteInput.value
@@ -26634,8 +26680,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
     update() {
       this.scrollView.innerHTML = "";
       const notesList = InformationSheetSelection.IsPlayer() ? modStorage.notes?.list ?? [] : InformationSheetSelection.LITTLISH_CLUB?.notes?.list ?? [];
-      notesList.forEach((note, i3) => {
-        addNote(note, this, this.scrollView, i3 + 1);
+      notesList.forEach((note, i) => {
+        addNote(note, this, this.scrollView, i + 1);
       });
     }
     exit() {
@@ -26719,7 +26765,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   // src/subscreens/wardrobeMenu.ts
   var WardrobeMenu = class extends te {
     canvasCharacter;
-    currentAppearance = CANVAS_BABIES_APPEARANCES[h2(0, CANVAS_BABIES_APPEARANCES.length - 1)];
+    currentAppearance = CANVAS_BABIES_APPEARANCES[y(0, CANVAS_BABIES_APPEARANCES.length - 1)];
     includeTypes = ["Binds", "Cosplay", "Collar", "Locks"];
     requiredModsElement;
     creatorNameElement;
@@ -26754,15 +26800,15 @@ One of mods you are using is using an old version of SDK. It will work for now b
         width: 425
       });
       this.creatorNameElement.style.textAlign = "center";
-      this.includeTypes.forEach((d2, i3) => {
+      this.includeTypes.forEach((d4, i) => {
         this.createCheckbox({
-          text: d2,
+          text: d4,
           x: 1500,
-          y: 360 + 80 * i3,
+          y: 360 + 80 * i,
           isChecked: true,
           onChange: () => {
-            if (this.includeTypes.includes(d2)) this.includeTypes.splice(this.includeTypes.indexOf(d2), 1);
-            else this.includeTypes.push(d2);
+            if (this.includeTypes.includes(d4)) this.includeTypes.splice(this.includeTypes.indexOf(d4), 1);
+            else this.includeTypes.push(d4);
             this.refresh();
           }
         });
@@ -26813,7 +26859,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         style: "inverted",
         isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, "MANAGE_APPEARANCE" /* MANAGE_APPEARANCE */) || this.isViewingMode,
         onClick: () => {
-          I2(InformationSheetSelection, this.canvasCharacter.Appearance, this.includeTypes);
+          h2(InformationSheetSelection, this.canvasCharacter.Appearance, this.includeTypes);
           this.exit();
         }
       });
@@ -26822,7 +26868,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     loadRequiredModsWarning() {
       if (Array.isArray(this.currentAppearance.requiredMods) && this.currentAppearance.requiredMods.length > 0) {
         this.requiredModsElement = this.createText({
-          text: `Required mods: ${this.currentAppearance.requiredMods.map((d2) => `<b>${d2}</b>`).join(", ")}`,
+          text: `Required mods: ${this.currentAppearance.requiredMods.map((d4) => `<b>${d4}</b>`).join(", ")}`,
           x: 1400,
           y: 810,
           width: 525,
@@ -26832,7 +26878,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       }
     }
     refresh() {
-      const appearanceBundle = N4(
+      const appearanceBundle = v(
         InformationSheetSelection.AssetFamily,
         JSON.parse(
           LZString.decompressFromBase64(this.currentAppearance.bundle)
@@ -26843,7 +26889,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         this.canvasCharacter.AssetFamily,
         ServerAppearanceBundle(InformationSheetSelection.Appearance)
       );
-      I2(this.canvasCharacter, appearanceBundle, this.includeTypes, InformationSheetSelection, this.isViewingMode);
+      h2(this.canvasCharacter, appearanceBundle, this.includeTypes, InformationSheetSelection, this.isViewingMode);
       this.creatorNameElement.innerHTML = `<b>Creator:</b> ${this.currentAppearance.creator}`;
       if (typeof this.requiredModsElement !== "undefined") this.requiredModsElement.remove();
       this.loadRequiredModsWarning();
@@ -26942,9 +26988,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
               c4.setAttribute("style", style.replaceAll("border: 2px solid red;", ""));
             }
           }
-          for (let i3 = 0; i3 < parseInt(deleteLogsInput.value); i3++) {
-            const style = scrollView.children[i3].getAttribute("style");
-            scrollView.children[i3].setAttribute("style", style + "border: 2px solid red;");
+          for (let i = 0; i < parseInt(deleteLogsInput.value); i++) {
+            const style = scrollView.children[i].getAttribute("style");
+            scrollView.children[i].setAttribute("style", style + "border: 2px solid red;");
           }
         }
       });
@@ -26960,10 +27006,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
           const count = parseInt(deleteLogsInput.value);
           if (count === 0 || Number.isNaN(count)) return;
           const children = [...scrollView.children];
-          for (let i3 = 0; i3 < count; i3++) children[i3].remove();
+          for (let i = 0; i < count; i++) children[i].remove();
           deleteLogsInput.value = "";
           if (InformationSheetSelection.IsPlayer()) {
-            const logObject = addLog(`${N3(Player)} (${Player.MemberNumber}) deleted log entries (${count})`, false);
+            const logObject = addLog(`${O2(Player)} (${Player.MemberNumber}) deleted log entries (${count})`, false);
             this.createLogButton(logObject);
             modStorage.logs.list.splice(0, count);
             syncStorage();
@@ -26972,7 +27018,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
               count
             }, InformationSheetSelection.MemberNumber);
             this.createLogButton({
-              message: `${N3(Player)} (${Player.MemberNumber}) deleted log entries (${count})`,
+              message: `${O2(Player)} (${Player.MemberNumber}) deleted log entries (${count})`,
               ts: Date.now()
             });
           }
@@ -27043,7 +27089,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         padding: 1
       });
       let isLoading = true;
-      const removeHook = c("ServerAccountQueryResult", a.OBSERVE, (args, next) => {
+      const removeHook = c2("ServerAccountQueryResult", d.OBSERVE, (args, next) => {
         const [data] = args;
         if (data.Query === "OnlineFriends") {
           this.onlineFriendsList = data.Result;
@@ -27061,7 +27107,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       });
       loadingText.style.textAlign = "center";
       ServerSend("AccountQuery", { Query: "OnlineFriends" });
-      await p(() => !isLoading);
+      await h(() => !isLoading);
       loadingText.remove();
       if (this.onlineFriendsList.length === 0) {
         return this.createText({
@@ -27144,9 +27190,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
     load() {
       super.load();
       this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
-      const babyAppearance = N4(InformationSheetSelection.AssetFamily, JSON.parse(
+      const babyAppearance = v(InformationSheetSelection.AssetFamily, JSON.parse(
         LZString.decompressFromBase64(
-          CANVAS_BABIES_APPEARANCES[h2(0, CANVAS_BABIES_APPEARANCES.length - 1)].bundle
+          CANVAS_BABIES_APPEARANCES[y(0, CANVAS_BABIES_APPEARANCES.length - 1)].bundle
         )
       ));
       ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, JSON.parse(
@@ -27154,10 +27200,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
           MY_APPEARANCE_BUNDLE
         )
       ));
-      I2(this.canvasCharacter, babyAppearance);
+      h2(this.canvasCharacter, babyAppearance);
       PoseSetActive(this.canvasCharacter, "Kneel");
       CharacterRefresh(this.canvasCharacter);
-      this.circleColor = x("Themed") ? S()?.base?.text ?? "black" : "black";
+      this.circleColor = E("Themed") ? S()?.base?.text ?? "black" : "black";
       let cloudText = `Littlish Club v${version}
 Thanks for installing the mod!`;
       let cloudHtml = `Littlish Club <b>v${version}</b><br>Thanks for installing the mod!`;
@@ -27260,19 +27306,19 @@ Thanks for installing the mod!`;
         new CyberDiaperMenu(),
         new NotesMenu(),
         new LogsMenu()
-      ].forEach((m3, i3) => {
+      ].forEach((m2, i) => {
         const btn = this.createButton({
-          text: m3.name,
+          text: m2.name,
           x: 150,
-          y: (InformationSheetSelection.IsPlayer() && isExploringModeEnabled() ? 225 : 150) + 115 * i3,
+          y: (InformationSheetSelection.IsPlayer() && isExploringModeEnabled() ? 225 : 150) + 115 * i,
           width: 600,
           height: 100,
-          icon: m3.icon ?? null,
+          icon: m2.icon ?? null,
           onClick: () => {
             const storage = InformationSheetSelection.IsPlayer() ? modStorage : InformationSheetSelection.LITTLISH_CLUB;
-            if (m3.name === "Cyber Diaper" && storage.cyberDiaper) {
+            if (m2.name === "Cyber Diaper" && storage.cyberDiaper) {
               this.setSubscreen(new CyberDiaperSettingsMenu());
-            } else this.setSubscreen(m3);
+            } else this.setSubscreen(m2);
           }
         });
         btn.style.fontWeight = "bold";
@@ -27737,16 +27783,16 @@ Thanks for installing the mod!`;
           if (InformationSheetSelection.IsPlayer()) {
             if (!modStorage.rules) modStorage.rules = {};
             if (!modStorage.rules.list) modStorage.rules.list = [];
-            let r2 = modStorage.rules.list.find((d2) => d2.id === this.rule.id);
+            let r2 = modStorage.rules.list.find((d4) => d4.id === this.rule.id);
             if (r2) {
-              for (let i3 in r2) delete r2[i3];
-              for (let i3 in this.ruleSettings) r2[i3] = this.ruleSettings[i3];
+              for (let i in r2) delete r2[i];
+              for (let i in this.ruleSettings) r2[i] = this.ruleSettings[i];
               r2.changedBy = Player.MemberNumber;
               r2.ts = Date.now();
             } else {
               modStorage.rules.list.push({ ...this.ruleSettings, changedBy: Player.MemberNumber, ts: Date.now() });
             }
-            addLog(`${N3(Player)} (${Player.MemberNumber}) changed settings of "${this.rule.name}" rule`, false);
+            addLog(`${O2(Player)} (${Player.MemberNumber}) changed settings of "${this.rule.name}" rule`, false);
             syncStorage();
           } else {
             let dataToSend = {
@@ -28043,7 +28089,7 @@ Thanks for installing the mod!`;
           get: async (rule, ruleSettings) => {
             let titles;
             if (InformationSheetSelection.IsPlayer()) {
-              titles = TitleList.filter((t2) => t2.Requirement()).map((t2) => t2.Name);
+              titles = TitleList.filter((t) => t.Requirement()).map((t) => t.Name);
             } else {
               const spinnerId = Q2.spinner({
                 message: "Loading titles"
@@ -28062,28 +28108,28 @@ Thanks for installing the mod!`;
               }
               titles = res.data;
             }
-            R(
+            $(
               new ItemListMenu({
                 screenName: "Pick title you want to force",
-                items: titles.map((t2) => {
+                items: titles.map((t) => {
                   return {
-                    text: TextGet("Title" + t2),
-                    value: t2
+                    text: TextGet("Title" + t),
+                    value: t
                   };
                 }),
                 columns: "1fr 1fr 1fr",
                 onExit: () => {
-                  R(new RuleSettingsMenu(rule, ruleSettings));
+                  $(new RuleSettingsMenu(rule, ruleSettings));
                 },
                 onClick: (title) => {
                   if (!ruleSettings.data) ruleSettings.data = {};
                   ruleSettings.data.title = title;
-                  R(new RuleSettingsMenu(rule, ruleSettings));
+                  $(new RuleSettingsMenu(rule, ruleSettings));
                 }
               })
             );
           },
-          validate: (value) => typeof value === "string" && !!TitleList.find((t2) => t2.Name === value)
+          validate: (value) => typeof value === "string" && !!TitleList.find((t) => t.Name === value)
         }
       ]
     },
@@ -28097,7 +28143,7 @@ Thanks for installing the mod!`;
           text: "Custom names",
           type: "extended",
           get: (rule, ruleSettings) => {
-            R(
+            $(
               new DictMenu({
                 screenName: "Enter custom names",
                 keyName: "Member number",
@@ -28106,18 +28152,18 @@ Thanks for installing the mod!`;
                 valueNumberOnly: false,
                 items: ruleSettings.data?.customNames ?? {},
                 onExit: () => {
-                  R(new RuleSettingsMenu(rule, ruleSettings));
+                  $(new RuleSettingsMenu(rule, ruleSettings));
                 },
                 onSave: (customNames) => {
                   if (!ruleSettings.data) ruleSettings.data = {};
                   ruleSettings.data.customNames = customNames;
-                  R(new RuleSettingsMenu(rule, ruleSettings));
+                  $(new RuleSettingsMenu(rule, ruleSettings));
                 }
               })
             );
           },
           validate: (value) => {
-            return Object.keys(value)?.every((d2) => !Number.isNaN(parseInt(d2))) && Object.values(value)?.every((d2) => typeof d2 === "string");
+            return Object.keys(value)?.every((d4) => !Number.isNaN(parseInt(d4))) && Object.values(value)?.every((d4) => typeof d4 === "string");
           }
         }
       ]
@@ -28244,7 +28290,7 @@ Thanks for installing the mod!`;
     text = text.replaceAll("hello", "hewo");
     text = text.replaceAll("so", "sho");
     const babyWords = ["ba-ba", "da-da", "ma-ma", "goo-goo", "wee", "ooh", "gu", "ga", "agu", "guga"];
-    text = text.replace(/(\w+)\b/g, (word) => word + (h2(1, text.split(" ").length) === 1 ? " " + babyWords[Math.floor(Math.random() * babyWords.length)] : ""));
+    text = text.replace(/(\w+)\b/g, (word) => word + (y(1, text.split(" ").length) === 1 ? " " + babyWords[Math.floor(Math.random() * babyWords.length)] : ""));
     return text.trim();
   }
   function chatRoomSearchCanJoinRoom(room) {
@@ -28255,7 +28301,7 @@ Thanks for installing the mod!`;
       ];
     }
     if (!isRuleActive(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */)) return [true, ""];
-    const roomNames = (getRuleParameter2(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */, "roomNames") ?? []).map((n2) => n2.trim().toLowerCase());
+    const roomNames = (getRuleParameter2(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */, "roomNames") ?? []).map((n) => n.trim().toLowerCase());
     const whitelistMode = getRuleParameter2(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */, "whitelistMode");
     if (whitelistMode ? !roomNames.includes(room.Name.toLowerCase()) : roomNames.includes(room.Name.toLowerCase())) {
       return [
@@ -28310,7 +28356,7 @@ Thanks for installing the mod!`;
     );
     g2.onRequest("getValidTitles", (data, sender) => {
       if (!hasAccessRightTo(sender, Player, "MANAGE_RULES" /* MANAGE_RULES */)) return;
-      const titles = TitleList.filter((t2) => t2.Requirement()).map((t2) => t2.Name);
+      const titles = TitleList.filter((t) => t.Requirement()).map((t) => t.Name);
       return titles;
     });
     g2.onRequest("summon", (data, senderNumber, senderName) => {
@@ -28336,26 +28382,26 @@ Thanks for installing the mod!`;
         success: true
       };
     });
-    c("Player.CanChangeToPose", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("Player.CanChangeToPose", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) && !Player.Effect.includes("OnBed") || isSleeping(Player)) return false;
       return next(args);
     });
-    c("PoseCanChangeUnaidedStatus", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("PoseCanChangeUnaidedStatus", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (!args[0].IsPlayer()) return next(args);
       if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) && !Player.Effect.includes("OnBed") || isSleeping(Player)) return PoseChangeStatus.NEVER;
       return next(args);
     });
-    c("ChatRoomCanAttemptStand", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("ChatRoomCanAttemptStand", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (isRuleActive(Player, 1005 /* WALK_LIKE_BABY */) && !Player.Effect.includes("OnBed") || isSleeping(Player)) return false;
       return next(args);
     });
-    c("ChatAdminCanEdit", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("ChatAdminCanEdit", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (isRuleActive(Player, 1001 /* PREVENT_USING_ADMIN_POWERS */) && CurrentScreen === "ChatAdmin" && next(args) === true) {
         return ChatAdminMode === "create";
       }
       return next(args);
     });
-    c("ServerSend", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("ServerSend", d.OVERRIDE_BEHAVIOR, (args, next) => {
       const message = args[0];
       const params = args[1];
       if (message === "ChatRoomChat" && ["Chat", "Whisper"].includes(params.Type) && params.Content[0] !== "(") {
@@ -28370,7 +28416,7 @@ Thanks for installing the mod!`;
       }
       return next(args);
     });
-    c("DialogInventoryAdd", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("DialogInventoryAdd", d.OVERRIDE_BEHAVIOR, (args, next) => {
       const [C2, item, isWorn, sortOrder] = args;
       const asset = item.Asset;
       if (DialogMenuMode !== "permissions") {
@@ -28378,7 +28424,7 @@ Thanks for installing the mod!`;
       }
       next(args);
     });
-    c("ShopLoad", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("ShopLoad", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (!isRuleActive(Player, 1006 /* CANT_GO_SHOP_ALONE */)) return next(args);
       window.ShopLCLeave = () => {
         CommonSetScreen("Room", "MainHall");
@@ -28392,14 +28438,14 @@ Thanks for installing the mod!`;
       CharacterSetCurrent(ShopVendor);
       DialogChangeMode("dialog");
     });
-    c("ShopRun", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("ShopRun", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (!isRuleActive(Player, 1006 /* CANT_GO_SHOP_ALONE */)) return next(args);
       DrawCharacter(Player, 0, 0, 1);
       DrawCharacter(ShopVendor, 500, 0, 1);
       DrawButton(1885, 25, 90, 90, "", "White", "Icons/Exit.png");
       DrawButton(1885, 145, 90, 90, "", "White", "Icons/Character.png");
     });
-    c("CharacterBuildDialog", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("CharacterBuildDialog", d.OVERRIDE_BEHAVIOR, (args, next) => {
       const C2 = args[0];
       if (C2.CharacterID === "NPC_Shop_Vendor" && isRuleActive(Player, 1006 /* CANT_GO_SHOP_ALONE */)) {
         const stage1 = "LC_BabyCantShopAlone1";
@@ -28438,39 +28484,39 @@ Thanks for installing the mod!`;
       }
       return next(args);
     });
-    c("Player.CanChangeOwnClothes", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("Player.CanChangeOwnClothes", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (isSleeping(Player)) return false;
       return next(args);
     });
-    c("Player.IsDeaf", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("Player.IsDeaf", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (isSleeping(Player)) return true;
       return next(args);
     });
-    c("Player.IsBlind", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("Player.IsBlind", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (isSleeping(Player)) return true;
       return next(args);
     });
-    c("Player.GetDeafLevel", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("Player.GetDeafLevel", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (isSleeping(Player)) return 4;
       return next(args);
     });
-    c("Player.GetBlindLevel", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("Player.GetBlindLevel", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (isSleeping(Player)) return 3;
       return next(args);
     });
-    c("Player.CanInteract", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("Player.CanInteract", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (isSleeping(Player)) return false;
       return next(args);
     });
-    c("InventoryGroupIsBlockedForCharacter", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("InventoryGroupIsBlockedForCharacter", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (isSleeping(Player)) return true;
       return next(args);
     });
-    c("DialogClickExpressionMenu", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("DialogClickExpressionMenu", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (isSleeping(Player)) return false;
       return next(args);
     });
-    c("CharacterAppearanceSetItem", a.OBSERVE, (args, next) => {
+    c2("CharacterAppearanceSetItem", d.OBSERVE, (args, next) => {
       const createdItem = next(args);
       const [C2, Group, ItemAsset] = args;
       if (C2.IsPlayer() && ["ItemMouth", "ItemMouth2", "itemMouth3"].includes(Group) && ItemAsset.Name === "MilkBottle" && isRuleActive(Player, 1007 /* FALL_SLEEP_AFTER_MILK_BOTTLE */) && !isSleeping(Player)) {
@@ -28490,9 +28536,9 @@ Thanks for installing the mod!`;
             modStorage.sleepState = true;
             syncStorage();
             g2.sendLocal("You fall asleep");
-            g2.sendAction(`${N3(Player)} fell asleep, only spank or french kiss can wake <intensive> up`);
-          }, h2(6e3, 8e3));
-        }, h2(6e3, 1e4));
+            g2.sendAction(`${O2(Player)} fell asleep, only spank or french kiss can wake <intensive> up`);
+          }, y(6e3, 8e3));
+        }, y(6e3, 1e4));
       }
       return createdItem;
     });
@@ -28504,7 +28550,7 @@ Thanks for installing the mod!`;
           const activityName = data.Dictionary.find((e) => {
             return !!e.ActivityName;
           })?.ActivityName;
-          const target = T2(
+          const target = N2(
             data.Dictionary.find((e) => {
               return !!e.TargetCharacter;
             })?.TargetCharacter
@@ -28520,7 +28566,7 @@ Thanks for installing the mod!`;
         return false;
       }
     });
-    c("DialogMenuButtonBuild", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("DialogMenuButtonBuild", d.OVERRIDE_BEHAVIOR, (args, next) => {
       next(args);
       const C2 = args[0];
       const item = InventoryGet(C2, C2?.FocusGroup?.Name);
@@ -28545,7 +28591,7 @@ Thanks for installing the mod!`;
         }
       }
     });
-    c("DialogItemClick", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("DialogItemClick", d.OVERRIDE_BEHAVIOR, (args, next) => {
       const C2 = CharacterGetCurrent();
       const focusGroup = C2?.FocusGroup;
       const item = InventoryGet(C2, focusGroup?.Name);
@@ -28558,23 +28604,23 @@ Thanks for installing the mod!`;
       }
       return next(args);
     });
-    c("InterfaceTextGet", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("InterfaceTextGet", d.OVERRIDE_BEHAVIOR, (args, next) => {
       const label = buttonLabels.get(args[0]?.replace("DialogMenu", ""));
       if (label) return label;
       return next(args);
     });
-    c("DrawGetImage", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("DrawGetImage", d.OVERRIDE_BEHAVIOR, (args, next) => {
       const redirect = imageRedirects.get(args[0]);
       if (redirect) {
         args[0] = redirect;
       }
       return next(args);
     });
-    c("DialogIsMenuButtonDisabled", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("DialogIsMenuButtonDisabled", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (args[0]?.startsWith("LC_")) return true;
       return next(args);
     });
-    c("DialogMenuButtonClick", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("DialogMenuButtonClick", d.OVERRIDE_BEHAVIOR, (args, next) => {
       const C2 = CharacterGetCurrent();
       for (let I3 = 0; I3 < DialogMenuButton.length; I3++) {
         if (MouseIn(1885 - I3 * 110, 15, 90, 90) && C2) {
@@ -28584,7 +28630,7 @@ Thanks for installing the mod!`;
       }
       return next(args);
     });
-    c("DrawButton", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("DrawButton", d.OVERRIDE_BEHAVIOR, (args, next) => {
       const [Left, Top, Width, Height, Label, Color, Image] = args;
       if (isRuleActive(Player, 1010 /* PACIFIER_CHECKBOXES */) && Width === Height && Width === 64 && Image === "Icons/Checked.png") args[6] = pacifier_default;
       return next(args);
@@ -28607,7 +28653,7 @@ Thanks for installing the mod!`;
       }
     });
     observer.observe(document.body, { attributes: true, childList: true, subtree: true });
-    c("TimerProcess", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("TimerProcess", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (timerLastRulesCycleCall + 2e3 <= CommonTime()) {
         if (isRuleActive(Player, 1011 /* CONTROL_NICKNAME */) && Player.Nickname !== (getRuleParameter2(Player, 1011 /* CONTROL_NICKNAME */, "nickname") ?? "")) {
           const status = CharacterSetNickname(Player, getRuleParameter2(Player, 1011 /* CONTROL_NICKNAME */, "nickname") ?? "");
@@ -28631,7 +28677,7 @@ Thanks for installing the mod!`;
       }
       return next(args);
     });
-    c("ChatSearchJoin", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("ChatSearchJoin", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (!isRuleActive(Player, 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */) && !isRuleActive(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */)) return next(args);
       const [roomName] = args;
       const roomResult = ChatSearchResult.find((r2) => r2.Name === roomName);
@@ -28643,7 +28689,7 @@ Thanks for installing the mod!`;
       });
       return next(args);
     });
-    c("ElementButton.Create", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("ElementButton.Create", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (!isRuleActive(Player, 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */) && !isRuleActive(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */)) return next(args);
       if (ChatSearchMode === "Filter") return next(args);
       if (typeof args[0] !== "string") return next(args);
@@ -28659,7 +28705,7 @@ Thanks for installing the mod!`;
       }
       return next(args);
     });
-    c("ChatSearchCreateGridRoomTooltip", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("ChatSearchCreateGridRoomTooltip", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (!isRuleActive(Player, 1013 /* PREVENT_jOINING_ABDL_BLOCKED_ROOMS */) && !isRuleActive(Player, 1015 /* PREVENT_JOINING_CERTAIN_ROOMS */)) return next(args);
       const tooltips = next(args) ?? ElementCreate({
         tag: "div",
@@ -28685,17 +28731,17 @@ Thanks for installing the mod!`;
       }
       return tooltips;
     });
-    c("TitleIsForced", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("TitleIsForced", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (!!InformationSheetSelection && isRuleActive(InformationSheetSelection, 1016 /* FORCE_TITLE */)) return true;
       return next(args);
     });
-    c("CommandExecute", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("CommandExecute", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (!isRuleActive(Player, 1019 /* PREVENT_USING_CERTAIN_CHAT_COMMANDS */)) return next(args);
       let trigger = false;
       (getRuleParameter2(Player, 1019 /* PREVENT_USING_CERTAIN_CHAT_COMMANDS */, "commands") ?? []).forEach((c4) => {
         if (args[0].startsWith(c4)) {
           g2.sendAction(
-            `${N3(
+            `${O2(
               Player
             )} tried to use blocked command ${c4}`
           );
@@ -28706,7 +28752,7 @@ Thanks for installing the mod!`;
       if (trigger) return false;
       return next(args);
     });
-    c("CharacterNickname", a.OVERRIDE_BEHAVIOR, (args, next) => {
+    c2("CharacterNickname", d.OVERRIDE_BEHAVIOR, (args, next) => {
       if (!isRuleActive(Player, 1017 /* SHOW_CUSTOM_NAMES */)) return next(args);
       if (typeof getRuleParameter2(Player, 1017 /* SHOW_CUSTOM_NAMES */, "customNames")?.[args[0].MemberNumber] === "string") {
         return getRuleParameter2(Player, 1017 /* SHOW_CUSTOM_NAMES */, "customNames")?.[args[0].MemberNumber];
@@ -28741,18 +28787,18 @@ Thanks for installing the mod!`;
   function validateRuleData(r2, data) {
     const ruleParams = rulesList.find((g3) => g3.id === r2.id).data ?? [];
     for (const param of ruleParams) {
-      const p2 = data.data?.[param.name];
-      if (param.type === "number" && typeof p2 !== "number") continue;
-      if (param.type === "text" && typeof p2 !== "string") continue;
-      if (param.type === "checkbox" && typeof p2 !== "boolean") continue;
-      if (param.type === "color" && typeof p2 !== "string") continue;
+      const p3 = data.data?.[param.name];
+      if (param.type === "number" && typeof p3 !== "number") continue;
+      if (param.type === "text" && typeof p3 !== "string") continue;
+      if (param.type === "checkbox" && typeof p3 !== "boolean") continue;
+      if (param.type === "color" && typeof p3 !== "string") continue;
       if (param.type === "list") {
-        if (param.listNumbersOnly && (!Array.isArray(p2) || !p2.every((a3) => typeof a3 === "number"))) continue;
-        if (!param.listNumbersOnly && (!Array.isArray(p2) || !p2.every((a3) => typeof a3 === "string" || typeof a3 === "number"))) continue;
+        if (param.listNumbersOnly && (!Array.isArray(p3) || !p3.every((a3) => typeof a3 === "number"))) continue;
+        if (!param.listNumbersOnly && (!Array.isArray(p3) || !p3.every((a3) => typeof a3 === "string" || typeof a3 === "number"))) continue;
       }
-      if (param.type === "extended" && !param.validate(p2)) continue;
+      if (param.type === "extended" && !param.validate(p3)) continue;
       if (!r2.data) r2.data = {};
-      r2.data[param.name] = p2;
+      r2.data[param.name] = p3;
     }
   }
   function isExploringModeEnabled() {
@@ -28876,14 +28922,14 @@ Thanks for installing the mod!`;
         id: sender.MemberNumber
       };
       syncStorage();
-      g2.sendLocal(`${N3(sender)} (${sender.MemberNumber}) wants to become your mommy, open Littlish Club menu`);
+      g2.sendLocal(`${O2(sender)} (${sender.MemberNumber}) wants to become your mommy, open Littlish Club menu`);
     });
     g2.onPacket("turnCanChangeCaregiversList", (data, sender) => {
       if (!hasAccessRightTo(sender, Player, "TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST" /* TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST */)) return;
       if (!modStorage.caregivers) modStorage.caregivers = {};
       modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
       addLog(
-        `${N3(sender)} (${sender.MemberNumber}) ${modStorage.caregivers.canChangeList ? "allowed" : "forbade"} ${N3(Player)} to change caregivers list`,
+        `${O2(sender)} (${sender.MemberNumber}) ${modStorage.caregivers.canChangeList ? "allowed" : "forbade"} ${O2(Player)} to change caregivers list`,
         false
       );
       syncStorage();
@@ -28893,9 +28939,9 @@ Thanks for installing the mod!`;
       if (!Array.isArray(data?.list)) return;
       if (!modStorage.caregivers) modStorage.caregivers = {};
       modStorage.caregivers.list = data.list;
-      g2.sendLocal(`${N3(sender)} (${sender.MemberNumber}) changed your caregivers list`);
+      g2.sendLocal(`${O2(sender)} (${sender.MemberNumber}) changed your caregivers list`);
       addLog(
-        `${N3(sender)} (${sender.MemberNumber}) changed caregivers list`,
+        `${O2(sender)} (${sender.MemberNumber}) changed caregivers list`,
         false
       );
       syncStorage();
@@ -28904,7 +28950,7 @@ Thanks for installing the mod!`;
       if (!hasAccessRightTo(sender, Player, "MANAGE_CAREGIVERS_ACCESS_RIGHTS" /* MANAGE_CAREGIVERS_ACCESS_RIGHTS */)) return;
       if (!caregiverAccessRightsList.find((r2) => r2.id === data?.accessRightId)) return;
       turnCaregiverAccessRight(data.accessRightId);
-      const _message = `${N3(sender)} (${sender.MemberNumber}) turned ${isCaregiverAccessRightEnabled(Player, data.accessRightId) ? "on" : "off"} caregiver access right "${caregiverAccessRightsList.find((r2) => r2.id === data.accessRightId).name}"`;
+      const _message = `${O2(sender)} (${sender.MemberNumber}) turned ${isCaregiverAccessRightEnabled(Player, data.accessRightId) ? "on" : "off"} caregiver access right "${caregiverAccessRightsList.find((r2) => r2.id === data.accessRightId).name}"`;
       addLog(
         _message,
         false
@@ -28918,7 +28964,7 @@ Thanks for installing the mod!`;
       if (isRuleStrict(Player, data.id) && !isMommyOf(sender, Player)) return;
       if (!modStorage.rules) modStorage.rules = {};
       if (!modStorage.rules.list) modStorage.rules.list = [];
-      let r2 = modStorage.rules.list.find((d2) => d2.id === data.id);
+      let r2 = modStorage.rules.list.find((d4) => d4.id === data.id);
       if (r2) {
         if (typeof data.state === "boolean") r2.state = data.state;
         if (typeof data.strict === "boolean" && hasAccessRightTo(sender, Player, "TURN_RULE_STRICT_MODE" /* TURN_RULE_STRICT_MODE */)) {
@@ -28929,18 +28975,18 @@ Thanks for installing the mod!`;
         r2.changedBy = sender.MemberNumber;
         r2.ts = Date.now();
       } else {
-        let d2 = {
+        let d4 = {
           id: data.id,
           state: typeof data.state === "boolean" ? data.state : false,
           strict: typeof data.strict === "boolean" && hasAccessRightTo(sender, Player, "TURN_RULE_STRICT_MODE" /* TURN_RULE_STRICT_MODE */) ? data.strict : false,
           changedBy: sender.MemberNumber,
           ts: Date.now()
         };
-        validateRuleData(d2, data);
-        validateRuleConditions(d2, data);
-        modStorage.rules.list.push(d2);
+        validateRuleData(d4, data);
+        validateRuleConditions(d4, data);
+        modStorage.rules.list.push(d4);
       }
-      const _message = `${N3(sender)} (${sender.MemberNumber}) changed settings of "${rulesList.find((r3) => r3.id === data?.id).name}" rule`;
+      const _message = `${O2(sender)} (${sender.MemberNumber}) changed settings of "${rulesList.find((r3) => r3.id === data?.id).name}" rule`;
       addLog(
         _message,
         false
@@ -28952,7 +28998,7 @@ Thanks for installing the mod!`;
       if (typeof data?.text !== "string" || data.text.trim() === "") return;
       if (new TextEncoder().encode(data.text).byteLength / 1024 > MAX_NOTE_SIZE_IN_KBYTES) {
         return g2.sendLocal(
-          `${N3(sender)} (${sender.MemberNumber}) tried to add note that takes up more size than the set limit. Probably it was attempt to break the account.`
+          `${O2(sender)} (${sender.MemberNumber}) tried to add note that takes up more size than the set limit. Probably it was attempt to break the account.`
         );
       }
       ;
@@ -28967,18 +29013,18 @@ Thanks for installing the mod!`;
         ts: Date.now()
       };
       modStorage.notes.list.push(note);
-      const _message = `${N3(sender)} (${sender.MemberNumber}) added note "${data.text}"`;
+      const _message = `${O2(sender)} (${sender.MemberNumber}) added note "${data.text}"`;
       addLog(_message, false);
       syncStorage();
       g2.sendLocal(_message);
     });
     g2.onPacket("deleteNote", (data, sender) => {
       if (typeof data?.key !== "number") return;
-      const note = modStorage.notes?.list?.find((n2, i3) => i3 === data.key - 1);
+      const note = modStorage.notes?.list?.find((n, i) => i === data.key - 1);
       if (!note) return;
       if (note.author.id !== sender.MemberNumber && !hasAccessRightTo(sender, Player, "DELETE_NOTES" /* DELETE_NOTES */)) return;
       modStorage.notes.list.splice(data.key - 1, 1);
-      const _message = `${N3(sender)} (${sender.MemberNumber}) deleted note "${note.text}"`;
+      const _message = `${O2(sender)} (${sender.MemberNumber}) deleted note "${note.text}"`;
       addLog(_message, false);
       syncStorage();
       g2.sendLocal(_message);
@@ -28998,7 +29044,7 @@ Thanks for installing the mod!`;
       } = data;
       if (!modStorage.cyberDiaper) {
         modStorage.cyberDiaper = {};
-        g2.sendLocal(`${N3(sender)} bought cyber diaper for you`);
+        g2.sendLocal(`${O2(sender)} bought cyber diaper for you`);
       }
       if (typeof name === "string") modStorage.cyberDiaper.name = name;
       if (typeof description === "string") modStorage.cyberDiaper.description = description;
@@ -29009,7 +29055,7 @@ Thanks for installing the mod!`;
       if (typeof property === "string") modStorage.cyberDiaper.property = property;
       if (typeRecord) modStorage.cyberDiaper.typeRecord = typeRecord;
       if (drawingPriority) modStorage.cyberDiaper.drawingPriority = drawingPriority;
-      const _message = `${N3(sender)} (${sender.MemberNumber}) changed cyber diaper's settings`;
+      const _message = `${O2(sender)} (${sender.MemberNumber}) changed cyber diaper's settings`;
       addLog(_message, false);
       syncStorage();
       updateDiaperItem();
@@ -29019,12 +29065,12 @@ Thanks for installing the mod!`;
       if (!hasAccessRightTo(sender, Player, "RELEASE_BABY" /* RELEASE_BABY */)) return;
       delete modStorage.mommy;
       syncStorage();
-      g2.sendLocal(`${N3(sender)} (${sender.MemberNumber}) released you`);
+      g2.sendLocal(`${O2(sender)} (${sender.MemberNumber}) released you`);
     });
     g2.onPacket("deleteLogs", (data, sender) => {
       if (!hasAccessRightTo(sender, Player, "DELETE_LOGS" /* DELETE_LOGS */)) return;
       if (typeof data.count !== "number") return;
-      const _message = `${N3(sender)} (${sender.MemberNumber}) deleted log entries (${data.count})`;
+      const _message = `${O2(sender)} (${sender.MemberNumber}) deleted log entries (${data.count})`;
       modStorage.logs.list.splice(0, data.count);
       addLog(_message, false);
       g2.sendLocal(_message);
@@ -29049,11 +29095,11 @@ Thanks for installing the mod!`;
     migrateModStorage();
     try {
       const bccStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.BCC));
-      if ((bccStorage?.abdl?.mommy || bccStorage?.abdl?.caretakers || bccStorage?.abdl?.notes?.list) && !x("BCC")) bccAbdlPartSync(bccStorage.abdl);
+      if ((bccStorage?.abdl?.mommy || bccStorage?.abdl?.caretakers || bccStorage?.abdl?.notes?.list) && !E("BCC")) bccAbdlPartSync(bccStorage.abdl);
     } catch (e) {
     }
     syncStorage();
-    c("ChatRoomSync", a.ADD_BEHAVIOR, (args, next) => {
+    c2("ChatRoomSync", d.ADD_BEHAVIOR, (args, next) => {
       next(args);
       g2.sendPacket("syncStorage", {
         storage: deleteProtectedProperties(modStorage)
@@ -29197,7 +29243,7 @@ Thanks for installing the mod!`;
 
   // src/modules/ui.ts
   function loadUI() {
-    c("InformationSheetRun", a.TOP, (args, next) => {
+    c2("InformationSheetRun", d.TOP, (args, next) => {
       if ((InformationSheetSelection.IsPlayer() || InformationSheetSelection.LITTLISH_CLUB) && !(window.bcx?.inBcxSubscreen && window.bcx.inBcxSubscreen()) && !window.LSCG_REMOTE_WINDOW_OPEN && !window.LITTLISH_CLUB.inModSubscreen() && !window.MPA?.menuLoaded) {
         DrawButton(
           ...MOD_BUTTON_POSITION,
@@ -29212,13 +29258,13 @@ Thanks for installing the mod!`;
       }
       next(args);
     });
-    c("InformationSheetClick", a.OBSERVE, (args, next) => {
+    c2("InformationSheetClick", d.OBSERVE, (args, next) => {
       if ((InformationSheetSelection.IsPlayer() || InformationSheetSelection.LITTLISH_CLUB) && !(window.bcx?.inBcxSubscreen && window.bcx.inBcxSubscreen()) && !window.LSCG_REMOTE_WINDOW_OPEN && !window.LITTLISH_CLUB.inModSubscreen() && !window.MPA?.menuLoaded && MouseIn(...MOD_BUTTON_POSITION)) {
         if (window.InformationSheetUnload) InformationSheetUnload();
         if (typeof modStorage.requestReciviedFrom?.id === "number") {
-          R(new AcceptRequestMenu());
+          $(new AcceptRequestMenu());
         } else {
-          R(new MainMenu());
+          $(new MainMenu());
         }
       }
       if (window.LITTLISH_CLUB.inModSubscreen()) {
@@ -29226,7 +29272,7 @@ Thanks for installing the mod!`;
       }
       next(args);
     });
-    c("InformationSheetExit", a.OBSERVE, (args, next) => {
+    c2("InformationSheetExit", d.OBSERVE, (args, next) => {
       if (window.LITTLISH_CLUB.inModSubscreen()) {
         return ee().exit();
       }
@@ -29235,7 +29281,7 @@ Thanks for installing the mod!`;
   }
 
   // src/index.ts
-  P2(() => {
+  P3(() => {
     C({
       name: "Littlish Club",
       fullName: "Littlish Club",
@@ -29244,7 +29290,7 @@ Thanks for installing the mod!`;
       repository: REPO_URL,
       fontFamily: "Emilys Candy"
     });
-    O2(styles_default);
+    k2(styles_default);
     initStorage();
     createApi();
     loadRules();
@@ -29257,8 +29303,8 @@ Thanks for installing the mod!`;
       message: `v${version}`,
       duration: 4e3
     });
-    if (x2(version, modStorage.version)) {
-      p(() => !!document.getElementById("InputChat")).then(() => {
+    if (w3(version, modStorage.version)) {
+      h(() => !!document.getElementById("InputChat")).then(() => {
         modStorage.version = version;
         syncStorage();
         const text = `<div class="lcChangelog"><b>Littlish Club</b> v${version}<br><br>Changes: <ul><li>Adapt to R122</li></ul></div>`;
