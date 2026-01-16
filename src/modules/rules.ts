@@ -722,7 +722,7 @@ export function loadRules(): void {
         return next(args);
     });
 
-    hookFunction("DialogClickExpressionMenu", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+    hookFunction("DialogSelfMenuMapping.Expression.Click", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
         if (isSleeping(Player)) return false;
         return next(args);
     });
@@ -767,15 +767,15 @@ export function loadRules(): void {
             if (!sender) return false;
             if (data.Type === "Activity" && !!data.Dictionary?.find) {
                 const activityName = data.Dictionary.find((e) => {
-                    // @ts-ignore
+                    // @ts-expect-error
                     return !!e.ActivityName;
-                    // @ts-ignore
+                    // @ts-expect-error
                 })?.ActivityName;
                 const target = getPlayer(
                     data.Dictionary.find((e) => {
-                        // @ts-ignore
+                        // @ts-expect-error
                         return !!e.TargetCharacter;
-                        // @ts-ignore
+                        // @ts-expect-error
                     })?.TargetCharacter
                 );
                 if (target?.IsPlayer() && ["Spank", "FrenchKiss"].includes(activityName) && isSleeping(Player)) {
