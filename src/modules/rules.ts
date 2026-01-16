@@ -607,7 +607,7 @@ export function loadRules(): void {
     });
 
     hookFunction("DialogInventoryAdd", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
-        const [C, item, isWorn, sortOrder] = args as [Character, Item, boolean, DialogSortOrder];
+        const [C, item, isWorn, sortOrder] = args;
         const asset = item.Asset;
 
         if (DialogMenuMode !== "permissions") {
@@ -729,7 +729,7 @@ export function loadRules(): void {
 
     hookFunction("CharacterAppearanceSetItem", HookPriority.OBSERVE, (args, next) => {
         const createdItem: Item | null = next(args);
-        const [C, Group, ItemAsset] = args as [Character, AssetGroupName, Asset | null];
+        const [C, Group, ItemAsset] = args;
         if (
             C.IsPlayer() &&
             ["ItemMouth", "ItemMouth2", "itemMouth3"].includes(Group) &&
@@ -899,7 +899,7 @@ export function loadRules(): void {
     });
 
     hookFunction("DrawButton", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
-        const [Left, Top, Width, Height, Label, Color, Image] = args as [number, number, number, number, string, string, string];
+        const [Left, Top, Width, Height, Label, Color, Image] = args;
         if (
             isRuleActive(Player, RuleId.PACIFIER_CHECKBOXES) &&
             Width === Height &&
