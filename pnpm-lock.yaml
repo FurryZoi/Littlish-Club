@@ -12,8 +12,8 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0
       lodash-es:
-        specifier: ^4.17.22
-        version: 4.17.22
+        specifier: ^4.17.23
+        version: 4.17.23
       zois-core:
         specifier: ^1.1.8
         version: 1.1.8
@@ -22,8 +22,8 @@ importers:
         specifier: ^4.17.12
         version: 4.17.12
       bc-stubs:
-        specifier: 124.0.0-Beta.2
-        version: 124.0.0-Beta.2
+        specifier: 124.0.0
+        version: 124.0.0
       esbuild:
         specifier: ^0.27.2
         version: 0.27.2
@@ -201,8 +201,8 @@ packages:
   '@types/validator@13.15.10':
     resolution: {integrity: sha512-T8L6i7wCuyoK8A/ZeLYt1+q0ty3Zb9+qbSSvrIVitzT3YjZqkTZ40IbRsPanlB4h1QB3JVL1SYCdR6ngtFYcuA==}
 
-  bc-stubs@124.0.0-Beta.2:
-    resolution: {integrity: sha512-iCPineyfq0XO5Rk5/LiWmBXVY3lSKB0Vnxd3R2ZA+R798vlRI6ix36pXRwr+X3hpqNHBLzrwvOP/VACVi9jvfw==}
+  bc-stubs@124.0.0:
+    resolution: {integrity: sha512-fu7rGoyBHFjk2xzd3tKoYVdKsqlFm9Lvap8PM6ZuWhgDTEF+Cke9gZB8FcErn3OzxNKmliZCDaCi/34zaNAC0g==}
 
   bondage-club-mod-sdk@1.2.0:
     resolution: {integrity: sha512-S+li+PgX7Qo5yccS/R/eAXC4Opq8lc5AdhTPjC2XhWxDGTieUQKj3QJ4ZLgL8x0ySnK7h+DvlkRZd8+OT5JErQ==}
@@ -246,8 +246,8 @@ packages:
   libphonenumber-js@1.12.34:
     resolution: {integrity: sha512-v/Ip8k8eYdp7bINpzqDh46V/PaQ8sK+qi97nMQgjZzFlb166YFqlR/HVI+MzsI9JqcyyVWCOipmmretiaSyQyw==}
 
-  lodash-es@4.17.22:
-    resolution: {integrity: sha512-XEawp1t0gxSi9x01glktRZ5HDy0HXqrM0x5pXQM98EaI0NxO6jVM7omDOxsuEo5UIASAnm2bRp1Jt/e0a2XU8Q==}
+  lodash-es@4.17.23:
+    resolution: {integrity: sha512-kVI48u3PZr38HdYz98UmfPnXl2DXrpdctLrFLCd3kOx1xUkOmpFPx7gCWWM5MPkL/fD8zb+Ph0QzjGFs4+hHWg==}
 
   lucide-react@0.542.0:
     resolution: {integrity: sha512-w3hD8/SQB7+lzU2r4VdFyzzOzKnUjTZIF/MQJGSSvni7Llewni4vuViRppfRAa2guOsY5k4jZyxw/i9DQHv+dw==}
@@ -419,7 +419,7 @@ snapshots:
 
   '@types/validator@13.15.10': {}
 
-  bc-stubs@124.0.0-Beta.2:
+  bc-stubs@124.0.0:
     dependencies:
       socket.io-client: 4.6.1
     transitivePeerDependencies:
@@ -490,7 +490,7 @@ snapshots:
 
   libphonenumber-js@1.12.34: {}
 
-  lodash-es@4.17.22: {}
+  lodash-es@4.17.23: {}
 
   lucide-react@0.542.0(react@19.2.3):
     dependencies:
