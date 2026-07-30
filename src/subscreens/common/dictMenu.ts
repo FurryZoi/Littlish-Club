@@ -15,30 +15,28 @@ interface DictMenuData {
 function addItemToDict(subscreen: DictMenu, view: HTMLDivElement, item: [string | number, string | number]) {
     const dictLine = document.createElement("div");
     dictLine.style.cssText = "display: flex; align-items: center; column-gap: 1vw; margin-top: 1vw;";
-    dictLine.append(
-        subscreen.createButton({
-            text: String(item[0]),
-            place: false,
-            width: 855,
-            padding: 2,
-        }),
-        subscreen.createButton({
-            text: String(item[1]),
-            place: false,
-            width: 855,
-            padding: 2,
-        }),
-        subscreen.createButton({
-            place: false,
-            width: 90,
-            height: 90,
-            icon: "Icons/Cancel.png",
-            onClick: () => {
-                dictLine.remove();
-                delete subscreen.items[item[0]];
-            }
-        }),
-    );
+    subscreen.createButton({
+        text: String(item[0]),
+        parent: dictLine,
+        width: 855,
+        padding: 2,
+    });
+    subscreen.createButton({
+        text: String(item[1]),
+        parent: dictLine,
+        width: 855,
+        padding: 2,
+    });
+    subscreen.createButton({
+        parent: dictLine,
+        width: 90,
+        height: 90,
+        icon: "Icons/Cancel.png",
+        onClick: () => {
+            dictLine.remove();
+            delete subscreen.items[item[0]];
+        }
+    });
     view.append(dictLine);
 }
 
@@ -97,7 +95,7 @@ export class DictMenu extends BaseSubscreen {
             width: 855
         }).style.textAlign = "center";
 
-        const view = this.createScrollView({
+        const view = this.createContainer({
             scroll: "y",
             x: 100,
             y: 260,
@@ -149,7 +147,7 @@ export class DictMenu extends BaseSubscreen {
             y: 850,
             width: 500,
             padding: 3,
-            style: "inverted",
+            variant: "filled",
             onClick: () => {
                 this.onSave(this.items);
             }

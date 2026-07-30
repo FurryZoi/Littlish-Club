@@ -75,7 +75,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
         });
         description.style.overflowY = "scroll";
 
-        const paramsView = this.createScrollView({
+        const paramsView = this.createContainer({
             x: 850,
             y: 360,
             width: 1050,
@@ -94,10 +94,9 @@ export class RuleSettingsMenu extends BaseSubscreen {
                 const paramText = this.createText({
                     text: param.text + ":",
                     fontSize: 4,
-                    place: false
+                    parent: paramBlock
                 });
                 paramText.style.whiteSpace = "nowrap";
-                paramBlock.append(paramText);
             }
 
             if (param.type === "number") {
@@ -106,7 +105,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
                     placeholder: param.type,
                     width: 500,
                     height: 70,
-                    place: false,
+                    parent: paramBlock,
                     isDisabled: () => !this.canChangeSettings(),
                     onChange: () => {
                         if (param.min && parseFloat(input.value) < param.min) return;
@@ -120,14 +119,13 @@ export class RuleSettingsMenu extends BaseSubscreen {
                 if (param.min) input.setAttribute("min", param.min);
                 if (param.max) input.setAttribute("max", param.max);
                 if (param.step) input.setAttribute("step", param.step);
-                paramBlock.append(input);
             } else if (param.type === "text") {
                 const input = this.createInput({
                     value: this.ruleSettings.data?.[param.name]?.toString() ?? "",
                     placeholder: param.type,
                     width: 500,
                     height: 70,
-                    place: false,
+                    parent: paramBlock,
                     isDisabled: () => !this.canChangeSettings(),
                     onChange: () => {
                         if (!this.ruleSettings.data) this.ruleSettings.data = {};
@@ -136,27 +134,25 @@ export class RuleSettingsMenu extends BaseSubscreen {
                 });
                 input.style.width = "100%";
                 input.setAttribute("type", param.type);
-                paramBlock.append(input);
             } else if (param.type === "checkbox") {
                 const checkbox = this.createCheckbox({
                     width: 800,
                     isChecked: !!this.ruleSettings.data?.[param.name],
                     text: param.text,
-                    place: false,
+                    parent: paramBlock,
                     isDisabled: () => !this.canChangeSettings(),
                     onChange: () => {
                         if (!this.ruleSettings.data) this.ruleSettings.data = {};
                         this.ruleSettings.data[param.name] = !this.ruleSettings.data[param.name];
                     }
                 });
-                paramBlock.append(checkbox);
             } else if (param.type === "color") {
                 const input = this.createInput({
                     width: 500,
                     height: 70,
                     value: this.ruleSettings.data?.[param.name]?.toString(),
                     padding: 1,
-                    place: false,
+                    parent: paramBlock,
                     isDisabled: () => !this.canChangeSettings(),
                     onChange: () => {
                         if (!this.ruleSettings.data) this.ruleSettings.data = {};
@@ -165,37 +161,33 @@ export class RuleSettingsMenu extends BaseSubscreen {
                 });
                 input.style.width = "100%";
                 input.setAttribute("type", param.type);
-                paramBlock.append(input);
             } else if (param.type === "list") {
-                paramBlock.append(
-                    this.createInputList({
-                        title: param.text,
-                        width: 1050,
-                        height: 400,
-                        value: (this.ruleSettings.data?.[param.name] ?? []) as [],
-                        numbersOnly: param.listNumbersOnly,
-                        place: false,
-                        padding: 1,
-                        isDisabled: () => !this.canChangeSettings(),
-                        onChange: (value) => {
-                            if (!this.ruleSettings.data) this.ruleSettings.data = {};
-                            this.ruleSettings.data[param.name] = value;
-                        }
-                    })
-                );
+                this.createInputList({
+                    title: param.text,
+                    width: 1050,
+                    height: 400,
+                    value: (this.ruleSettings.data?.[param.name] ?? []) as [],
+                    numbersOnly: param.listNumbersOnly,
+                    parent: paramBlock,
+                    padding: 1,
+                    isDisabled: () => !this.canChangeSettings(),
+                    onChange: (value) => {
+                        if (!this.ruleSettings.data) this.ruleSettings.data = {};
+                        this.ruleSettings.data[param.name] = value;
+                    }
+                });
             } else if (param.type === "extended") {
-                const btn = this.createButton({
+                this.createButton({
                     text: this.ruleSettings.data?.[param.name] ?
                         "Assigned"
                         : "Not assigned",
-                    place: false,
+                    parent: paramBlock,
                     padding: 1,
                     isDisabled: () => !this.canChangeSettings(),
                     onClick: () => {
                         param.get(this.rule, this.ruleSettings);
                     }
                 });
-                paramBlock.append(btn);
             }
             paramsView.append(paramBlock);
         });
@@ -379,7 +371,6 @@ export class RuleSettingsMenu extends BaseSubscreen {
             y: 790,
             width: 400,
             height: 150,
-            style: "green",
             isDisabled: () => !this.canChangeSettings(),
             onClick: () => {
                 if (InformationSheetSelection.IsPlayer()) {

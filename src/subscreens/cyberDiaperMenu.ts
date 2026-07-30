@@ -3,7 +3,7 @@ import { CyberDiaperSettingsMenu } from "./cyberDiaperSettingsMenu";
 import { modStorage, syncStorage } from "@/modules/storage";
 import { CyberDiaperModel } from "@/modules/cyberDiaper";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
-import { toastsManager } from "zois-core/popups";
+import { toastsManager } from "zois-core/toasts";
 
 export class CyberDiaperMenu extends BaseSubscreen {
     get name() {

@@ -78,7 +78,7 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             y: 780,
             width: 800,
             height: 140,
-            style: "inverted",
+            variant: "filled",
             isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
             onClick: () => {
                 this.cyberDiaperSettings.locked = !this.cyberDiaperSettings.locked;
@@ -195,7 +195,6 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             y: 790,
             width: 360,
             height: 140,
-            style: "green",
             isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
             onClick: () => {
                 if (InformationSheetSelection.IsPlayer()) {

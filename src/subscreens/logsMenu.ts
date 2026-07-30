@@ -58,7 +58,7 @@ export class LogsMenu extends BaseSubscreen {
 
         if (logs.length === 0) return;
 
-        const scrollView = this.createScrollView({
+        const scrollView = this.createContainer({
             scroll: "y",
             x: 150,
             y: 240,
@@ -131,12 +131,11 @@ export class LogsMenu extends BaseSubscreen {
     createLogButton(log: Log) {
         const btn = this.createButton({
             text: `${log.message} at (${new Date(log.ts).toUTCString()})`,
-            place: false,
+            parent: this.scrollView,
             padding: 2
         });
         btn.style.wordBreak = "break-all";
         btn.style.width = "98%";
-        this.scrollView.append(btn);
         this.scrollView.scrollTo(0, this.scrollView.scrollHeight);
     }
 

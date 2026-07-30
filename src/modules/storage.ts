@@ -1,6 +1,6 @@
 import { version } from "@/../package.json";
 import { messagesManager } from "zois-core/messaging";
-import { findModByName, hookFunction, HookPriority } from "zois-core/modsApi";
+import { findModByName, hookFunction, HookPriority } from "zois-core/mod-sdk";
 import { getNickname, getPlayer } from "zois-core";
 import { isRuleStrict, rulesList, StorageRule } from "./rules";
 import { AccessRight, caregiverAccessRightsList, getCaregiversOf, hasAccessRightTo, hasMommy, isCaregiverAccessRightEnabled, isCaregiverOf, isMommyOf, turnCaregiverAccessRight } from "./access";

@@ -46,7 +46,7 @@ export class OneButtonMenu extends BaseSubscreen {
             x: 100,
             y: 800,
             padding: 4,
-            style: "inverted",
+            variant: "filled",
             onClick: () => {
                 this.onClick();
                 this.exit();

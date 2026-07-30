@@ -51,7 +51,7 @@ export class ItemListMenu extends BaseSubscreen {
         //     fontSize: 8
         // }).style.textAlign = "center";
 
-        const view = this.createScrollView({
+        const view = this.createContainer({
             scroll: "y",
             x: 200,
             y: 220,
@@ -63,16 +63,14 @@ export class ItemListMenu extends BaseSubscreen {
         view.style.gap = "1vw";
 
         this.items.forEach((item) => {
-            view.append(
-                this.createButton({
-                    text: item.text,
-                    place: false,
-                    padding: 2,
-                    onClick: () => {
-                        this.onClick(item.value);
-                    }
-                })
-            );
+            this.createButton({
+                text: item.text,
+                parent: view,
+                padding: 2,
+                onClick: () => {
+                    this.onClick(item.value);
+                }
+            });
         });
     }
 

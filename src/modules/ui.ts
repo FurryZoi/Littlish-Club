@@ -1,4 +1,4 @@
-import { hookFunction, HookPriority } from "zois-core/modsApi";
+import { hookFunction, HookPriority } from "zois-core/mod-sdk";
 import milkBottle from "@/images/milk-bottle.png";
 import { MOD_BUTTON_POSITION, MOD_NAME } from "@/constants";
 import { getCurrentSubscreen, setPreviousSubscreen, setSubscreen } from "zois-core/ui";

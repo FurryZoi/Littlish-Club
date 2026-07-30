@@ -4,6 +4,7 @@ import { isRuleActive, isRuleEnabled, isRuleStrict, rulesList } from "@/modules/
 import { RuleSettingsMenu } from "./ruleSettingsMenu";
 import { MainMenu } from "./mainMenu";
 import { RulesMarkingMenu } from "./introductions/rulesMarkingMenu";
+import { DynamicClassModule, StyleModule } from "zois-core/shard-modules";
 
 
 let scrollTop: number | null = null;
@@ -44,7 +45,7 @@ export class RulesMenu extends BaseSubscreen {
         });
         searchInput.addEventListener("input", (e) => this.refreshRules((e.target as HTMLInputElement).value));
 
-        this.rulesBlock = this.createScrollView({
+        this.rulesBlock = this.createContainer({
             scroll: "y",
             x: 200,
             y: 300,
@@ -66,12 +67,25 @@ export class RulesMenu extends BaseSubscreen {
             if (searchFilter && !rule.name.toLowerCase().includes(searchFilter.toLowerCase())) return;
             const ruleBtn = this.createButton({
                 text: rule.name,
-                padding: 3,
-                style: isRuleEnabled(InformationSheetSelection, rule.id) ? "green" : "default",
-                place: false,
-                icon: isRuleStrict(InformationSheetSelection, rule.id) ? "Icons/Management.png" : null,
+                padding: 2,
+                parent: this.rulesBlock,
+                icon: isRuleStrict(InformationSheetSelection, rule.id) ? "Icons/Management.png" : undefined,
                 iconAbsolutePosition: false,
-                iconWidth: "12.5%"
+                modules: {
+                    base: [
+                        ...(isRuleEnabled(InformationSheetSelection, rule.id) ? [new DynamicClassModule({
+                            base: {
+                                background: "#cbffc0 !important",
+                                borderColor: "#6bbd18 !important",
+                            }
+                        })] : [])
+                    ],
+                    icon: [
+                        new StyleModule({
+                            width: "12.5%"
+                        })
+                    ]
+                }
             });
             if (isRuleEnabled(InformationSheetSelection, rule.id) && !isRuleActive(InformationSheetSelection, rule.id)) {
                 ruleBtn.style.color = "red";
@@ -83,7 +97,6 @@ export class RulesMenu extends BaseSubscreen {
                 scrollTop = this.rulesBlock.scrollTop;
                 this.setSubscreen(new RuleSettingsMenu(rule));
             });
-            this.rulesBlock.append(ruleBtn);
         });
     }
 

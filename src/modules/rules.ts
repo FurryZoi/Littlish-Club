@@ -1,5 +1,5 @@
 import { messagesManager } from "zois-core/messaging";
-import { hookFunction, HookPriority } from "zois-core/modsApi";
+import { hookFunction, HookPriority } from "zois-core/mod-sdk";
 import { ModStorage, modStorage, syncStorage } from "./storage";
 import { extendedABDLItemNames, MOD_NAME } from "@/constants";
 import { getRandomNumber } from "zois-core";
@@ -8,7 +8,7 @@ import paciferImage from "@/images/pacifier.png";
 import { setSubscreen } from "zois-core/ui";
 import { ItemListMenu } from "@/subscreens/common/itemListMenu";
 import { RuleSettingsMenu } from "@/subscreens/ruleSettingsMenu";
-import { toastsManager } from "zois-core/popups";
+import { toastsManager } from "zois-core/toasts";
 import { AccessRight, getCaregiversOf, getMommyOf, hasAccessRightTo } from "./access";
 import { DictMenu } from "@/subscreens/common/dictMenu";
 

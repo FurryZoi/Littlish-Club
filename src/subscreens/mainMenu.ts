@@ -1,10 +1,10 @@
 import { CANVAS_BABIES_APPEARANCES, DISCORD_SERVER_INVITE_LINK, MOD_NAME, MY_APPEARANCE_BUNDLE } from "@/constants";
 import { version } from "@/../package.json";
-import { BaseSubscreen } from "zois-core/ui";
+import { BaseSubscreen, cssVar } from "zois-core/ui";
 import { GlobalMenu } from "./globalMenu";
 import { FamilyMenu } from "./familyMenu";
 import { RulesMenu } from "./rulesMenu";
-import { getRandomNumber, getThemedColorsModule } from "zois-core";
+import { getRandomNumber } from "zois-core";
 import { CyberDiaperMenu } from "./cyberDiaperMenu";
 import { NotesMenu } from "./notesMenu";
 import { AddBabyMenu } from "./addBabyMenu";
@@ -19,7 +19,7 @@ import rattleIcon from "@/images/rattle.png";
 import { importAppearance, serverAppearanceBundleToAppearance } from "zois-core/wardrobe";
 import { AttributionsMenu } from "./attributionsMenu";
 import { SummoningRattleMenu } from "./summoningRattleMenu";
-import { findModByName } from "zois-core/modsApi";
+import { findModByName } from "zois-core/mod-sdk";
 
 export class MainMenu extends BaseSubscreen {
     private canvasCharacter: Character;
@@ -51,7 +51,7 @@ export class MainMenu extends BaseSubscreen {
         PoseSetActive(this.canvasCharacter, "Kneel");
         CharacterRefresh(this.canvasCharacter);
 
-        this.circleColor = findModByName("Themed") ? getThemedColorsModule()?.base?.text ?? "black" : "black";
+        this.circleColor = cssVar("--tmd-text", "black");
 
         let cloudText = `Littlish Club v${version}\nThanks for installing the mod!`;
         let cloudHtml = `Littlish Club <b>v${version}</b><br>Thanks for installing the mod!`;
@@ -74,7 +74,7 @@ export class MainMenu extends BaseSubscreen {
                 y: 820,
                 width: 550,
                 height: 115,
-                style: "inverted",
+                variant: "filled",
                 onClick: () => {
                     this.setSubscreen(new AddBabyMenu());
                 }
@@ -191,10 +191,10 @@ export class MainMenu extends BaseSubscreen {
         }
     }
 
-    exit() {
+    public override async exit() {
         super.exit();
         this.setSubscreen(null);
-        InformationSheetLoad();
-        if (window.InformationSheetResize) InformationSheetResize();
+        await InformationSheetLoad();
+        InformationSheetResize();
     }
 }

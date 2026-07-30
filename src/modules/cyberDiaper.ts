@@ -1,5 +1,5 @@
 import { colorsEqual } from "zois-core";
-import { hookFunction, HookPriority } from "zois-core/modsApi";
+import { hookFunction, HookPriority } from "zois-core/mod-sdk";
 import { modStorage } from "./storage";
 
 export interface StorageCyberDiaper {

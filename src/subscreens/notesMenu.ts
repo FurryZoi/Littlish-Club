@@ -1,5 +1,5 @@
 import { modStorage, Note, syncStorage } from "@/modules/storage";
-import { BaseSubscreen } from "zois-core/ui";
+import { BaseSubscreen, setSubscreen } from "zois-core/ui";
 import { NoteSettingsMenu } from "./noteSettingsMenu";
 import { MainMenu } from "./mainMenu";
 import { messagesManager } from "zois-core/messaging";
@@ -7,17 +7,17 @@ import { addLog } from "@/modules/logs";
 import { getNickname } from "zois-core";
 import { AddNoteMessageData } from "@/types/messages";
 import { MAX_NOTE_SIZE_IN_KBYTES } from "@/constants";
-import { toastsManager } from "zois-core/popups";
+import { toastsManager } from "zois-core/toasts";
 
 
 function addNote(note: Note, subscreen: NotesMenu, scrollView: HTMLDivElement, key: number, pending = false): void {
     const btn = subscreen.createButton({
         text: `${note.author.name} (${note.author.id}) added note "${note.text}" at ${new Date(note.ts).toUTCString()}`,
-        place: false,
+        parent: scrollView,
         padding: 2,
         isDisabled: () => pending,
         onClick: () => {
-            subscreen.setSubscreen(new NoteSettingsMenu(note, key));
+            setSubscreen(new NoteSettingsMenu(note, key));
         }
     });
     btn.style.wordBreak = "break-all";
@@ -43,7 +43,7 @@ export class NotesMenu extends BaseSubscreen {
             (modStorage.notes?.list ?? [])
             : (InformationSheetSelection.LITTLISH_CLUB?.notes?.list ?? []);
 
-        const scrollView = this.createScrollView({
+        const scrollView = this.createContainer({
             scroll: "y",
             x: 150,
             y: 260,

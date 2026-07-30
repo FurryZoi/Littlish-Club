@@ -62,6 +62,7 @@ export class GlobalMenu extends BaseSubscreen {
             y: 825,
             width: 500,
             height: 110,
+            padding: 2,
             icon: "Icons/Cancel.png",
             isDisabled: () => (
                 !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.RELEASE_BABY) ||

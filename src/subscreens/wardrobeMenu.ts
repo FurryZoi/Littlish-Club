@@ -85,7 +85,7 @@ export class WardrobeMenu extends BaseSubscreen {
             }
         });
 
-        const scrollView = this.createScrollView({
+        const scrollView = this.createContainer({
             scroll: "y",
             x: 160,
             y: 260,
@@ -102,7 +102,7 @@ export class WardrobeMenu extends BaseSubscreen {
                 text: a.name,
                 padding: 2.5,
                 icon: "Icons/Rectangle/Dress.png",
-                place: false,
+                parent: scrollView,
                 onClick: () => {
                     this.currentAppearance = a;
                     this.refresh();
@@ -110,7 +110,6 @@ export class WardrobeMenu extends BaseSubscreen {
             });
             btn.style.width = "95%";
             btn.style.position = "relative";
-            scrollView.append(btn);
         });
 
         const applyBtn = this.createButton({
@@ -119,7 +118,7 @@ export class WardrobeMenu extends BaseSubscreen {
             y: 800,
             width: 750,
             padding: 3,
-            style: "inverted",
+            variant: "filled",
             isDisabled: () => (
                 !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_APPEARANCE) ||
                 this.isViewingMode

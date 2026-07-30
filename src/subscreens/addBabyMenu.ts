@@ -12,22 +12,22 @@ export class AddBabyMenu extends BaseSubscreen {
     load() {
         super.load();
 
-        const scrollView = this.createScrollView({
+        const container = this.createContainer({
             scroll: "y",
             x: 150,
             y: 200,
             width: 1700,
             height: 700
         });
-        scrollView.style.display = "flex";
-        scrollView.style.flexDirection = "column";
-        scrollView.style.alignItems = "center";
-        scrollView.style.rowGap = "1vw";
+        container.style.display = "flex";
+        container.style.flexDirection = "column";
+        container.style.alignItems = "center";
+        container.style.rowGap = "1vw";
 
         ChatRoomCharacter?.forEach((C) => {
             const btn = this.createButton({
                 text: isRequestedByPlayer(C) ? `${CharacterNickname(C)} (${C.MemberNumber}) [ Pending... ]` : `${CharacterNickname(C)} (${C.MemberNumber})`,
-                place: false,
+                parent: container,
                 padding: 2,
                 isDisabled: () => !C.LITTLISH_CLUB || C.IsPlayer() || hasMommy(C) || isRequestedByPlayer(C),
                 onClick: () => {
@@ -37,7 +37,6 @@ export class AddBabyMenu extends BaseSubscreen {
             });
             btn.style.wordBreak = "break-all";
             btn.style.width = "98%";
-            scrollView.append(btn);
         });
     }
 }

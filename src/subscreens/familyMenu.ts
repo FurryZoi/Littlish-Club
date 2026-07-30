@@ -58,7 +58,7 @@ export class FamilyMenu extends BaseSubscreen {
             text: "Prevent baby from changing caregivers list",
             x: 150,
             y: 400,
-            width: 600,
+            width: 800,
             isChecked: InformationSheetSelection.IsPlayer() ?
                 !modStorage.caregivers?.canChangeList
                 : !InformationSheetSelection.LITTLISH_CLUB?.caregivers?.canChangeList,
