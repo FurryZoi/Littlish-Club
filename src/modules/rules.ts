@@ -173,7 +173,7 @@ export const rulesList: Rule[] = [
                             screenName: "Pick title you want to force",
                             items: titles.map((t) => {
                                 return {
-                                    text: TextGet("Title" + t),
+                                    text: TextGetInScope("Screens/Character/Title/Text_Title.csv", "Title" + t),
                                     value: t
                                 };
                             }),
