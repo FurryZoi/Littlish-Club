@@ -11,6 +11,7 @@ import { RuleSettingsMenu } from "@/subscreens/ruleSettingsMenu";
 import { toastsManager } from "zois-core/toasts";
 import { AccessRight, getCaregiversOf, getMommyOf, hasAccessRightTo } from "./access";
 import { DictMenu } from "@/subscreens/common/dictMenu";
+import { logger } from "zois-core/logging";
 
 
 const dialogMenuButtonClickHooks = new Map<string, ((C: Character) => void)[]>();
@@ -933,24 +934,15 @@ export function loadRules(): void {
         return next(args);
     });
 
-    const observer = new MutationObserver((mutationList, observer) => {
-        if (!isRuleActive(Player, RuleId.PACIFIER_CHECKBOXES)) return;
-        for (const mutation of mutationList) {
-            if (mutation.type === "childList") {
-                mutation.addedNodes.forEach((node: HTMLElement) => {
-                    if (node.nodeType === Node.ELEMENT_NODE && node.tagName === "INPUT" && node.classList.contains("checkbox")) {
-                        node.classList.add("paciCheckbox");
-                    }
-                    for (const child of node.children ?? []) {
-                        if (child.nodeType === Node.ELEMENT_NODE && child.tagName === "INPUT" && child.classList.contains("checkbox")) {
-                            child.classList.add("paciCheckbox");
-                        }
-                    }
-                });
-            }
-        }
+    hookFunction("ElementCreate", HookPriority.OBSERVE, (args, next) => {
+        const [options] = args;
+        if (!isRuleActive(Player, RuleId.PACIFIER_CHECKBOXES)) return next(args);
+        if (options.tag !== "input" || options.attributes?.type !== "checkbox") return next(args);
+        logger.debug("ElementCreate", options);
+        const el = next(args);
+        el.classList.add("paciCheckbox");
+        return el;
     });
-    observer.observe(document.body, { attributes: true, childList: true, subtree: true });
 
     hookFunction("TimerProcess", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
         if (timerLastRulesCycleCall + 2000 <= CommonTime()) {
