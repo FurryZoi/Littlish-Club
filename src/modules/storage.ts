@@ -52,24 +52,16 @@ export type PublicModStorage = Omit<ModStorage, "logs">;
 export let modStorage: ModStorage;
 
 export function initStorage(): void {
-    const data = {
-        version
-    };
-
     if (typeof Player.ExtensionSettings.LITTLISH_CLUB === "string") {
-        modStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.LITTLISH_CLUB)) ?? data;
-    } else modStorage = data
+        modStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.LITTLISH_CLUB) ?? "{}") ?? { version };
+    } else modStorage = { version }
 
-    Object.keys(data).forEach((key) => {
-        if (modStorage[key] === undefined) {
-            modStorage[key] = data[key];
-        }
-    });
+    modStorage.version = version
 
     migrateModStorage();
 
     try {
-        const bccStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.BCC));
+        const bccStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.BCC) ?? "{}");
         if (
             (
                 bccStorage?.abdl?.mommy || bccStorage?.abdl?.caretakers || bccStorage?.abdl?.notes?.list
@@ -79,8 +71,8 @@ export function initStorage(): void {
 
     syncStorage();
 
-    hookFunction("ChatRoomSync", HookPriority.ADD_BEHAVIOR, (args, next) => {
-        next(args);
+    hookFunction("ChatRoomSync", HookPriority.ADD_BEHAVIOR, async (args, next) => {
+        await next(args);
         messagesManager.sendPacket<SyncStorageMessageData>("syncStorage", {
             storage: deleteProtectedProperties(modStorage),
         });
@@ -98,7 +90,7 @@ export function initStorage(): void {
             InformationSheetSelection.MemberNumber === sender.MemberNumber &&
             window.LITTLISH_CLUB.inModSubscreen()
         ) {
-            getCurrentSubscreen().update();
+            getCurrentSubscreen()?.update();
         }
     });
 
@@ -143,7 +135,7 @@ function bccAbdlPartSync(oldAbdlData: Record<string, any>): void {
         }
     }
 
-    let bccStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.BCC))
+    let bccStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.BCC) ?? "{}");
     delete bccStorage.abdl;
     Player.ExtensionSettings.BCC = LZString.compressToBase64(JSON.stringify(bccStorage));
     ServerPlayerExtensionSettingsSync("BCC");

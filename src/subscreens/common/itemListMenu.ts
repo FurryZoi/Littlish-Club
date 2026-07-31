@@ -13,6 +13,10 @@ interface ItemListMenuData {
 }
 
 export class ItemListMenu extends BaseSubscreen {
+    public override get name(): string {
+        return this.screenName;
+    }
+
     private screenName: ItemListMenuData["screenName"];
     private items: ItemListMenuData["items"];
     private columns: ItemListMenuData["columns"];
@@ -34,14 +38,14 @@ export class ItemListMenu extends BaseSubscreen {
         this.onClick = onClick;
     }
 
-    load() {
+    public override load() {
         super.load();
-        this.createText({
-            text: this.screenName,
-            x: 100,
-            y: 60,
-            fontSize: 10
-        });
+        // this.createText({
+        //     text: this.screenName,
+        //     x: 100,
+        //     y: 60,
+        //     fontSize: 10
+        // });
 
         // this.createText({
         //     text: this.content,
@@ -74,7 +78,7 @@ export class ItemListMenu extends BaseSubscreen {
         });
     }
 
-    exit() {
+    public override exit() {
         super.exit();
         this.onExit();
     }

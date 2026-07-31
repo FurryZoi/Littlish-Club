@@ -7,10 +7,11 @@ import { messagesManager } from "zois-core/messaging";
 import { addLog } from "@/modules/logs";
 import { getNickname } from "zois-core";
 import { ChangeCaregiversListMessageData } from "@/types/messages";
+import { logger } from "zois-core/logging";
 
 export class FamilyMenu extends BaseSubscreen {
-    private caregiversInputValue: number[];
-    private oldCaregiversList: number[];
+    private caregiversInputValue: number[] = [];
+    private oldCaregiversList: number[] = [];
 
     get name() {
         return "Family";
@@ -20,8 +21,14 @@ export class FamilyMenu extends BaseSubscreen {
         return `Assets/Female3DCG/Emoticon/Hearts/Icon.png`;
     }
 
-    load() {
+    public override load() {
         super.load();
+        
+        if (InformationSheetSelection === null) {
+            logger.error("InformationSheetSelection is null at FamilyMenu loading");
+            return;
+        }
+
         this.oldCaregiversList = getCaregiversOf(InformationSheetSelection);
         this.caregiversInputValue = this.oldCaregiversList;
 
@@ -33,7 +40,7 @@ export class FamilyMenu extends BaseSubscreen {
             width: 850,
             height: 600,
             numbersOnly: true,
-            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST),
+            isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST),
             onChange: (value) => this.caregiversInputValue = value as number[]
         });
 
@@ -49,7 +56,7 @@ export class FamilyMenu extends BaseSubscreen {
         });
 
         this.createText({
-            text: `Mommy: ${hasMommy(InformationSheetSelection) ? `${getMommyOf(InformationSheetSelection).name} (${getMommyOf(InformationSheetSelection).id})` : "-"}`,
+            text: `Mommy: ${hasMommy(InformationSheetSelection) ? `${getMommyOf(InformationSheetSelection)!.name} (${getMommyOf(InformationSheetSelection)!.id})` : "-"}`,
             x: 150,
             y: 300
         }).style.fontWeight = "bold";
@@ -62,8 +69,9 @@ export class FamilyMenu extends BaseSubscreen {
             isChecked: InformationSheetSelection.IsPlayer() ?
                 !modStorage.caregivers?.canChangeList
                 : !InformationSheetSelection.LITTLISH_CLUB?.caregivers?.canChangeList,
-            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST),
+            isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST),
             onChange: () => {
+                if (InformationSheetSelection === null) return;
                 if (InformationSheetSelection.IsPlayer()) {
                     if (!modStorage.caregivers) modStorage.caregivers = {};
                     modStorage.caregivers.canChangeList = !modStorage.caregivers.canChangeList;
@@ -79,11 +87,12 @@ export class FamilyMenu extends BaseSubscreen {
         });
     }
 
-    exit() {
+    public override exit() {
         super.exit();
         const newCaregiversList = this.caregiversInputValue;
         if (
             this.oldCaregiversList.join(",") !== newCaregiversList.join(",") &&
+            InformationSheetSelection !== null &&
             hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST)
         ) {
             if (InformationSheetSelection.IsPlayer()) {

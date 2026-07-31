@@ -22,10 +22,14 @@ import { SummoningRattleMenu } from "./summoningRattleMenu";
 import { findModByName } from "zois-core/mod-sdk";
 
 export class MainMenu extends BaseSubscreen {
-    private canvasCharacter: Character;
-    private circleColor: string;
+    private canvasCharacter!: Character;
+    private circleColor!: string;
 
-    run() {
+    get name() {
+        return "";
+    }
+
+    public override run() {
         DrawCharacter(this.canvasCharacter, 1500, 350, 0.6, false);
         DrawCircle(1550, 575, 6, 2, this.circleColor);
         DrawCircle(1525, 550, 8, 2, this.circleColor);
@@ -34,19 +38,21 @@ export class MainMenu extends BaseSubscreen {
         if (!MouseIn(1580, 500, 150, 180) && document.body.style.cursor != "") document.body.style.cursor = "";
     }
 
-    load() {
+    public override load() {
         super.load();
+        const selection = InformationSheetSelection;
+        if (selection === null) return;
+
         this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
-        const babyAppearance = serverAppearanceBundleToAppearance(InformationSheetSelection.AssetFamily, JSON.parse(
-            LZString.decompressFromBase64(
-                CANVAS_BABIES_APPEARANCES[getRandomNumber(0, CANVAS_BABIES_APPEARANCES.length - 1)].bundle
-            )
-        ));
-        ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, JSON.parse(
-            LZString.decompressFromBase64(
-                MY_APPEARANCE_BUNDLE
-            )
-        ));
+        const babyBundle = LZString.decompressFromBase64(
+            CANVAS_BABIES_APPEARANCES[getRandomNumber(0, CANVAS_BABIES_APPEARANCES.length - 1)].bundle
+        );
+        if (!babyBundle) return;
+        const babyAppearance = serverAppearanceBundleToAppearance(selection.AssetFamily, JSON.parse(babyBundle));
+
+        const myAppearanceBundle = LZString.decompressFromBase64(MY_APPEARANCE_BUNDLE);
+        if (!myAppearanceBundle) return;
+        ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, JSON.parse(myAppearanceBundle));
         importAppearance(this.canvasCharacter, babyAppearance);
         PoseSetActive(this.canvasCharacter, "Kneel");
         CharacterRefresh(this.canvasCharacter);
@@ -67,7 +73,7 @@ export class MainMenu extends BaseSubscreen {
         cloudBtn.style.borderRadius = "4vw";
         cloudBtn.style.display = "block";
 
-        if (InformationSheetSelection.IsPlayer()) {
+        if (selection.IsPlayer()) {
             const addBabyBtn = this.createButton({
                 text: "Add Baby",
                 x: 900,
@@ -113,7 +119,7 @@ export class MainMenu extends BaseSubscreen {
             }
         });
 
-        if (InformationSheetSelection.IsPlayer()) {
+        if (selection.IsPlayer()) {
             this.createButton({
                 icon: rattleIcon,
                 width: 90,
@@ -133,7 +139,7 @@ export class MainMenu extends BaseSubscreen {
             fontSize: 14
         });
 
-        if (InformationSheetSelection.IsPlayer() && isExploringModeEnabled()) {
+        if (selection.IsPlayer() && isExploringModeEnabled()) {
             this.createText({
                 text: "You are currently in Exploring mode!",
                 x: 150,
@@ -163,13 +169,13 @@ export class MainMenu extends BaseSubscreen {
             const btn = this.createButton({
                 text: m.name,
                 x: 150,
-                y: ((InformationSheetSelection.IsPlayer() && isExploringModeEnabled()) ? 225 : 150) + 115 * i,
+                y: ((selection.IsPlayer() && isExploringModeEnabled()) ? 225 : 150) + 115 * i,
                 width: 600,
                 height: 100,
                 icon: m.icon ?? null,
                 onClick: () => {
-                    const storage = InformationSheetSelection.IsPlayer() ? modStorage : InformationSheetSelection.LITTLISH_CLUB;
-                    if (m.name === "Cyber Diaper" && storage.cyberDiaper) {
+                    const storage = selection.IsPlayer() ? modStorage : selection.LITTLISH_CLUB;
+                    if (m.name === "Cyber Diaper" && storage?.cyberDiaper) {
                         this.setSubscreen(new CyberDiaperSettingsMenu());
                     } else this.setSubscreen(m);
                 }

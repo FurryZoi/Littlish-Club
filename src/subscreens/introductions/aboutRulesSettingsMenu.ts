@@ -16,7 +16,7 @@ export class AboutRulesSettingsMenu extends BaseSubscreen {
         this.ruleSettings = ruleSettings;
     }
 
-    load() {
+    public override load() {
         super.load();
 
         this.createButton({
@@ -70,7 +70,7 @@ export class AboutRulesSettingsMenu extends BaseSubscreen {
         });
     }
 
-    exit() {
+    public override exit() {
         super.exit();
         this.setSubscreen(new RuleSettingsMenu(this.rule, this.ruleSettings));
     }

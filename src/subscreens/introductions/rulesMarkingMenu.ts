@@ -6,7 +6,7 @@ export class RulesMarkingMenu extends BaseSubscreen {
         return "Rules > Marking";
     }
 
-    load() {
+    public override load() {
         super.load();
 
         this.createImage({

@@ -14,6 +14,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
     private rule: Readonly<Rule>;
     private ruleSettings: StorageRule;
     private canChangeSettings() {
+        if (InformationSheetSelection === null) return false;
         return (
             hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_RULES)
             && (
@@ -36,19 +37,19 @@ export class RuleSettingsMenu extends BaseSubscreen {
         this.rule = rule;
         if (ruleSettings) this.ruleSettings = ruleSettings;
         else {
-            const storage = InformationSheetSelection.IsPlayer() ? modStorage : InformationSheetSelection.LITTLISH_CLUB;
-            this.ruleSettings = storage.rules?.list?.find((r) => r.id === this.rule.id) ?? {
+            const storage = InformationSheetSelection?.IsPlayer() ? modStorage : InformationSheetSelection?.LITTLISH_CLUB;
+            this.ruleSettings = storage?.rules?.list?.find((r) => r.id === this.rule.id) ?? {
                 id: this.rule.id,
                 state: false,
                 strict: false,
-                changedBy: null,
-                ts: null
+                changedBy: -1,
+                ts: -1
             };
             this.ruleSettings = JSON.parse(JSON.stringify(this.ruleSettings));
         }
     }
 
-    load() {
+    public override load() {
         super.load();
 
         const openIntroBtn = this.createButton({
@@ -185,7 +186,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
                     padding: 1,
                     isDisabled: () => !this.canChangeSettings(),
                     onClick: () => {
-                        param.get(this.rule, this.ruleSettings);
+                        param.get?.(this.rule, this.ruleSettings);
                     }
                 });
             }
@@ -193,7 +194,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
         });
 
         const lastTimeWasChanged = this.createText({
-            text: `Last time it was changed by ${this.ruleSettings.changedBy ?? "-"} at ${this.ruleSettings.ts ? new Date(this.ruleSettings.ts).toUTCString() : "-"}`,
+            text: `Last time it was changed by ${this.ruleSettings.changedBy === -1 ? "-" : this.ruleSettings.changedBy} at ${this.ruleSettings.ts === -1 ? "-" : new Date(this.ruleSettings.ts).toUTCString()}`,
             x: 150,
             y: 215,
             width: 600,
@@ -224,7 +225,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
             y: 490,
             width: 600,
             padding: 2,
-            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.TURN_RULE_STRICT_MODE),
+            isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.TURN_RULE_STRICT_MODE),
             onClick: () => {
                 this.ruleSettings.strict = !this.ruleSettings.strict;
                 turnStrictBtn.textContent = this.ruleSettings.strict ? "Strict: Yes" : "Strict: No";
@@ -256,23 +257,21 @@ export class RuleSettingsMenu extends BaseSubscreen {
             isChecked: !!this.ruleSettings.conditions?.whenInRoomWithRole,
             isDisabled: () => !this.canChangeSettings(),
             onChange: () => {
-                if (this.ruleSettings.conditions?.whenInRoomWithRole) {
-                    delete this.ruleSettings.conditions.whenInRoomWithRole;
+                const whenRole = this.ruleSettings.conditions?.whenInRoomWithRole;
+                if (whenRole) {
+                    delete this.ruleSettings.conditions!.whenInRoomWithRole;
                 } else {
                     if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
-                    // @ts-ignore
-                    this.ruleSettings.conditions.whenInRoomWithRole = {};
-                    if (typeof this.ruleSettings.conditions.whenInRoomWithRole.inRoom !== "boolean") {
-                        this.ruleSettings.conditions.whenInRoomWithRole.inRoom = true;
-                    }
-                    if (typeof this.ruleSettings.conditions.whenInRoomWithRole.role !== "string") {
-                        this.ruleSettings.conditions.whenInRoomWithRole.role = "caregiver";
-                    }
+                    this.ruleSettings.conditions.whenInRoomWithRole = {
+                        inRoom: true,
+                        role: "caregiver"
+                    };
                 }
-                inRoomBtn.textContent = (this.ruleSettings.conditions?.whenInRoomWithRole?.inRoom ?? true) ? "in room" : "not in room";
-                inRoomBtn.classList.toggle("zcDisabled", !this.canChangeSettings() || !this.ruleSettings.conditions?.whenInRoomWithRole);
-                withRoleBtn.textContent = this.ruleSettings.conditions?.whenInRoomWithRole?.role ?? "caregiver";
-                withRoleBtn.classList.toggle("zcDisabled", !this.canChangeSettings() || !this.ruleSettings.conditions?.whenInRoomWithRole);
+                const updatedWhenRole = this.ruleSettings.conditions?.whenInRoomWithRole;
+                inRoomBtn.textContent = (updatedWhenRole?.inRoom ?? true) ? "in room" : "not in room";
+                inRoomBtn.classList.toggle("zcDisabled", !this.canChangeSettings() || !updatedWhenRole);
+                withRoleBtn.textContent = updatedWhenRole?.role ?? "caregiver";
+                withRoleBtn.classList.toggle("zcDisabled", !this.canChangeSettings() || !updatedWhenRole);
             }
         });
 
@@ -286,9 +285,9 @@ export class RuleSettingsMenu extends BaseSubscreen {
             isDisabled: () => !this.canChangeSettings() || !this.ruleSettings.conditions?.whenInRoomWithRole,
             onClick: () => {
                 if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
-                // @ts-ignore
-                if (!this.ruleSettings.conditions.whenInRoomWithRole) this.ruleSettings.conditions.whenInRoomWithRole = {};
-                this.ruleSettings.conditions.whenInRoomWithRole.inRoom = !(this.ruleSettings.conditions.whenInRoomWithRole.inRoom ?? true);
+                const whenRole = this.ruleSettings.conditions.whenInRoomWithRole ?? { inRoom: true, role: "caregiver" };
+                this.ruleSettings.conditions.whenInRoomWithRole = whenRole;
+                whenRole.inRoom = !(whenRole.inRoom ?? true);
                 inRoomBtn.textContent = (this.ruleSettings.conditions?.whenInRoomWithRole?.inRoom ?? true) ? "in room" : "not in room";
             }
         });
@@ -310,11 +309,9 @@ export class RuleSettingsMenu extends BaseSubscreen {
             isDisabled: () => !this.canChangeSettings() || !this.ruleSettings.conditions?.whenInRoomWithRole,
             onClick: () => {
                 if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
-                // @ts-ignore
-                if (!this.ruleSettings.conditions.whenInRoomWithRole) this.ruleSettings.conditions.whenInRoomWithRole = {};
-                this.ruleSettings.conditions.whenInRoomWithRole.role = (this.ruleSettings.conditions.whenInRoomWithRole.role ?? "caregiver") === "caregiver" ?
-                    "mommy"
-                    : "caregiver";
+                const whenRole = this.ruleSettings.conditions.whenInRoomWithRole ?? { inRoom: true, role: "caregiver" };
+                this.ruleSettings.conditions.whenInRoomWithRole = whenRole;
+                whenRole.role = (whenRole.role ?? "caregiver") === "caregiver" ? "mommy" : "caregiver";
                 withRoleBtn.textContent = this.ruleSettings.conditions?.whenInRoomWithRole?.role ?? "caregiver";
             }
         });
@@ -333,18 +330,16 @@ export class RuleSettingsMenu extends BaseSubscreen {
             isChecked: !!this.ruleSettings.conditions?.whenInRoomWhereAbdl,
             isDisabled: () => !this.canChangeSettings(),
             onChange: () => {
-                if (this.ruleSettings.conditions.whenInRoomWhereAbdl) {
-                    delete this.ruleSettings.conditions.whenInRoomWhereAbdl
+                const whereAbdl = this.ruleSettings.conditions?.whenInRoomWhereAbdl;
+                if (whereAbdl) {
+                    delete this.ruleSettings.conditions!.whenInRoomWhereAbdl;
                 } else {
                     if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
-                    // @ts-ignore
-                    if (!this.ruleSettings.conditions.whenInRoomWhereAbdl) this.ruleSettings.conditions.whenInRoomWhereAbdl = {};
-                    if (typeof this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked !== "boolean") {
-                        this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked = true;
-                    }
+                    this.ruleSettings.conditions.whenInRoomWhereAbdl = { blocked: true };
                 }
-                isBlockedBtn.textContent = (this.ruleSettings.conditions?.whenInRoomWhereAbdl?.blocked ?? true) ? "blocked" : "not blocked";
-                isBlockedBtn.classList.toggle("zcDisabled", !this.canChangeSettings() || !this.ruleSettings.conditions.whenInRoomWhereAbdl)
+                const updatedWhereAbdl = this.ruleSettings.conditions?.whenInRoomWhereAbdl;
+                isBlockedBtn.textContent = (updatedWhereAbdl?.blocked ?? true) ? "blocked" : "not blocked";
+                isBlockedBtn.classList.toggle("zcDisabled", !this.canChangeSettings() || !updatedWhereAbdl);
             }
         });
 
@@ -358,9 +353,9 @@ export class RuleSettingsMenu extends BaseSubscreen {
             isDisabled: () => !this.canChangeSettings() || !this.ruleSettings.conditions?.whenInRoomWhereAbdl,
             onClick: () => {
                 if (!this.ruleSettings.conditions) this.ruleSettings.conditions = {};
-                // @ts-ignore
-                if (!this.ruleSettings.conditions.whenInRoomWhereAbdl) this.ruleSettings.conditions.whenInRoomWhereAbdl = {};
-                this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked = !(this.ruleSettings.conditions.whenInRoomWhereAbdl.blocked ?? true);
+                const whereAbdl = this.ruleSettings.conditions.whenInRoomWhereAbdl ?? { blocked: true };
+                this.ruleSettings.conditions.whenInRoomWhereAbdl = whereAbdl;
+                whereAbdl.blocked = !(whereAbdl.blocked ?? true);
                 isBlockedBtn.textContent = (this.ruleSettings.conditions?.whenInRoomWhereAbdl?.blocked ?? true) ? "blocked" : "not blocked";
             }
         });
@@ -373,15 +368,16 @@ export class RuleSettingsMenu extends BaseSubscreen {
             height: 150,
             isDisabled: () => !this.canChangeSettings(),
             onClick: () => {
+                if (InformationSheetSelection === null) return;
                 if (InformationSheetSelection.IsPlayer()) {
                     if (!modStorage.rules) modStorage.rules = {};
                     if (!modStorage.rules.list) modStorage.rules.list = [];
                     let r = modStorage.rules.list.find((d) => d.id === this.rule.id);
                     if (r) {
-                        for (let i in r) delete r[i];
-                        for (let i in this.ruleSettings) r[i] = this.ruleSettings[i];
-                        r.changedBy = Player.MemberNumber;
-                        r.ts = Date.now();
+                        Object.assign(r, this.ruleSettings, {
+                            changedBy: Player.MemberNumber,
+                            ts: Date.now()
+                        });
                     } else {
                         modStorage.rules.list.push({ ...this.ruleSettings, changedBy: Player.MemberNumber, ts: Date.now() });
                     }
@@ -403,7 +399,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
         saveChangesBtn.style.fontWeight = "bold";
     }
 
-    exit() {
+    public override exit() {
         super.exit();
         this.setSubscreen(new RulesMenu());
     }

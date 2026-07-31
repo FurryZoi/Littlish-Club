@@ -1,6 +1,6 @@
 import { messagesManager } from "zois-core/messaging";
 import { hookFunction, HookPriority } from "zois-core/mod-sdk";
-import { ModStorage, modStorage, syncStorage } from "./storage";
+import { ModStorage, modStorage, PublicModStorage, syncStorage } from "./storage";
 import { extendedABDLItemNames, MOD_NAME } from "@/constants";
 import { getRandomNumber } from "zois-core";
 import { getNickname, getPlayer } from "zois-core";
@@ -13,9 +13,9 @@ import { AccessRight, getCaregiversOf, getMommyOf, hasAccessRightTo } from "./ac
 import { DictMenu } from "@/subscreens/common/dictMenu";
 
 
-const dialogMenuButtonClickHooks = new Map();
-const buttonLabels = new Map();
-const imageRedirects = new Map();
+const dialogMenuButtonClickHooks = new Map<string, ((C: Character) => void)[]>();
+const buttonLabels = new Map<string, string>();
+const imageRedirects = new Map<string, string>();
 let timerLastRulesCycleCall = 0;
 
 
@@ -147,8 +147,8 @@ export const rulesList: Rule[] = [
                 type: "extended",
                 text: "Title",
                 get: async (rule, ruleSettings) => {
-                    let titles: TitleName[];
-                    if (InformationSheetSelection.IsPlayer()) {
+                    let titles: TitleName[] = [];
+                    if (InformationSheetSelection?.IsPlayer()) {
                         titles = TitleList.filter((t) => t.Requirement()).map((t) => t.Name);
                     } else {
                         const spinnerId = toastsManager.spinner({
@@ -156,7 +156,7 @@ export const rulesList: Rule[] = [
                         });
                         const res = await messagesManager.sendRequest<TitleName[]>({
                             message: "getValidTitles",
-                            target: InformationSheetSelection.MemberNumber,
+                            target: InformationSheetSelection?.MemberNumber ?? -1,
                             type: "packet"
                         });
                         toastsManager.removeSpinner(spinnerId);
@@ -166,7 +166,7 @@ export const rulesList: Rule[] = [
                                 duration: 4000
                             });
                         }
-                        titles = res.data;
+                        if (res.data) titles = res.data;
                     }
                     setSubscreen(
                         new ItemListMenu({
@@ -181,7 +181,7 @@ export const rulesList: Rule[] = [
                             onExit: () => {
                                 setSubscreen(new RuleSettingsMenu(rule, ruleSettings));
                             },
-                            onClick: (title: string) => {
+                            onClick: (title) => {
                                 if (!ruleSettings.data) ruleSettings.data = {};
                                 ruleSettings.data.title = title;
                                 setSubscreen(new RuleSettingsMenu(rule, ruleSettings));
@@ -210,7 +210,7 @@ export const rulesList: Rule[] = [
                             valueName: "Custom name",
                             keyNumberOnly: true,
                             valueNumberOnly: false,
-                            items: ruleSettings.data?.customNames ?? {},
+                            items: ruleSettings.data?.customNames as Record<number, string> ?? {},
                             onExit: () => {
                                 setSubscreen(new RuleSettingsMenu(rule, ruleSettings));
                             },
@@ -224,6 +224,7 @@ export const rulesList: Rule[] = [
                 },
                 validate: (value) => {
                     return (
+                        typeof value === "object" && value !== null &&
                         Object.keys(value)?.every((d) => !Number.isNaN(parseInt(d))) &&
                         Object.values(value)?.every((d) => typeof d === "string")
                     );
@@ -380,17 +381,17 @@ export function isSleeping(C: Character): boolean {
 }
 
 export function inRoomWithCaregiver(C: Character): boolean {
-    let storage: ModStorage;
+    let storage: ModStorage | PublicModStorage | undefined;
     if (C.IsPlayer()) storage = modStorage;
     else storage = C.LITTLISH_CLUB;
     for (const c of ChatRoomCharacter) {
-        if (storage?.caregivers?.list?.includes(c.MemberNumber)) return true;
+        if (storage?.caregivers?.list?.includes(c.MemberNumber ?? -1)) return true;
     }
     return false;
 }
 
 export function inRoomWithMommy(C: Character): boolean {
-    let storage: ModStorage;
+    let storage: ModStorage | PublicModStorage | undefined;
     if (C.IsPlayer()) storage = modStorage;
     else storage = C.LITTLISH_CLUB;
     for (const c of ChatRoomCharacter) {
@@ -400,21 +401,17 @@ export function inRoomWithMommy(C: Character): boolean {
 }
 
 export function inRoomWhereAbdlIsBlocked(): boolean {
-    return ChatRoomData?.BlockCategory?.includes("ABDL");
+    return ChatRoomData?.BlockCategory?.includes("ABDL") ?? false;
 }
 
 function registerButton(name: string, label: string, icon: string, fn: () => void): void {
     imageRedirects.set(`Icons/${name}.png`, icon);
     buttonLabels.set(name, label);
 
-    let hooks = dialogMenuButtonClickHooks.get(name);
-    if (!hooks) {
-        hooks = [];
-        dialogMenuButtonClickHooks.set(name, hooks);
-    }
-    if (!hooks.includes(fn)) {
-        hooks.push(fn);
-    }
+    const hooks = dialogMenuButtonClickHooks.get(name) ?? [];
+    hooks.push(fn);
+    dialogMenuButtonClickHooks.set(name, hooks);
+
 }
 
 function alternativeBabyTalk(text: string): string {
@@ -444,7 +441,7 @@ function chatRoomSearchCanJoinRoom(room: ChatRoomSearchResult): [boolean, string
     if (isRuleActive(Player, RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS) && room?.BlockCategory?.includes("ABDL")) {
         return [
             false,
-            `Rule "${rulesList.find((r) => r.id === RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS).name}" prevented you from joining that room`
+            `Rule "${rulesList.find((r) => r.id === RuleId.PREVENT_jOINING_ABDL_BLOCKED_ROOMS)!.name}" prevented you from joining that room`
         ];
     }
     if (!isRuleActive(Player, RuleId.PREVENT_JOINING_CERTAIN_ROOMS)) return [true, ""];
@@ -458,7 +455,7 @@ function chatRoomSearchCanJoinRoom(room: ChatRoomSearchResult): [boolean, string
     ) {
         return [
             false,
-            `Rule "${rulesList.find((r) => r.id === RuleId.PREVENT_JOINING_CERTAIN_ROOMS).name}" prevented you from joining that room`
+            `Rule "${rulesList.find((r) => r.id === RuleId.PREVENT_JOINING_CERTAIN_ROOMS)!.name}" prevented you from joining that room`
         ];
     }
     return [true, ""];
@@ -515,13 +512,16 @@ export function loadRules(): void {
         attempt
     );
 
-    messagesManager.onRequest("getValidTitles", (data, sender: Character) => {
-        if (!hasAccessRightTo(sender, Player, AccessRight.MANAGE_RULES)) return;
+    messagesManager.onRequest("getValidTitles", (data, sender) => {
+        const senderC = typeof sender === "number" ? getPlayer(sender) : sender;
+        if (senderC === null) return;
+        if (!hasAccessRightTo(senderC, Player, AccessRight.MANAGE_RULES)) return;
         const titles = TitleList.filter((t) => t.Requirement()).map((t) => t.Name);
         return titles;
     });
 
-    messagesManager.onRequest("summon", (data, senderNumber: MemberNumber, senderName) => {
+    messagesManager.onRequest("summon", (data, sender, senderName) => {
+        const senderNumber = typeof sender === "number" ? sender : sender.MemberNumber ?? -1;
         if (getMommyOf(Player)?.id !== senderNumber && !getCaregiversOf(Player).includes(senderNumber)) return;
         if (!isRuleActive(Player, RuleId.SUMMONING_RATTLE)) return;
         if (typeof data?.roomName !== "string") return;
@@ -539,7 +539,7 @@ export function loadRules(): void {
             ChatSearchLastQueryJoinTime = CommonTime();
             ChatSearchLastQueryJoin = data.roomName;
             ServerSend("ChatRoomJoin", { Name: data.roomName });
-        }, (getRuleParameter(Player, RuleId.SUMMONING_RATTLE, "timeout") ?? 5) as number * 1000);
+        }, (getRuleParameter<number>(Player, RuleId.SUMMONING_RATTLE, "timeout") ?? 5) * 1000);
         return {
             success: true
         };
@@ -620,7 +620,7 @@ export function loadRules(): void {
         next(args);
     });
 
-    hookFunction("ShopLoad", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+    hookFunction("ShopLoad", HookPriority.OVERRIDE_BEHAVIOR, async (args, next) => {
         if (!isRuleActive(Player, RuleId.CANT_GO_SHOP_ALONE)) return next(args);
         // @ts-ignore
         window.ShopLCLeave = () => {
@@ -630,7 +630,7 @@ export function loadRules(): void {
             delete window.ShopLeave;
         };
 
-        window.ShopVendor = CharacterLoadNPC("NPC_Shop_Vendor");
+        ShopVendor = CharacterLoadNPC("NPC_Shop_Vendor");
         InventoryWear(ShopVendor, "H1000", "Height", "Default");
         ShopVendor.Stage = "LC_BabyCantShopAlone1";
         ShopVendor.CurrentDialog = "Oh? Cutie, aren't you lost? Where are your parents?";
@@ -641,7 +641,7 @@ export function loadRules(): void {
     hookFunction("ShopRun", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
         if (!isRuleActive(Player, RuleId.CANT_GO_SHOP_ALONE)) return next(args);
         DrawCharacter(Player, 0, 0, 1);
-        DrawCharacter(ShopVendor, 500, 0, 1);
+        DrawCharacter(ShopVendor!, 500, 0, 1);
         DrawButton(1885, 25, 90, 90, "", "White", "Icons/Exit.png");
         DrawButton(1885, 145, 90, 90, "", "White", "Icons/Character.png");
     });
@@ -658,28 +658,51 @@ export function loadRules(): void {
                     Stage: stage1,
                     NextStage: stage2,
                     Option: "Huh? I am adult!",
-                    Result: "(She starts laughing)"
+                    Result: "(She starts laughing)",
+                    Function: null,
+                    Prerequisite: null,
+                    Group: null,
+                    Trait: null
                 },
                 {
                     Stage: stage1,
+                    NextStage: null,
                     Option: "(Leave shop)",
-                    Function: "LCLeave();"
+                    Function: "LCLeave();",
+                    Prerequisite: null,
+                    Group: null,
+                    Trait: null,
+                    Result: null
                 },
                 {
                     Stage: stage2,
                     NextStage: stage3,
                     Option: "I'm old enough to go to the shop!",
-                    Result: "Baby, please leave this shop, it's for adults only."
+                    Result: "Baby, please leave this shop, it's for adults only.",
+                    Function: null,
+                    Prerequisite: null,
+                    Group: null,
+                    Trait: null
                 },
                 {
                     Stage: stage2,
+                    NextStage: null,
                     Option: "(Leave shop)",
-                    Function: "LCLeave();"
+                    Function: "LCLeave();",
+                    Prerequisite: null,
+                    Group: null,
+                    Trait: null,
+                    Result: null
                 },
                 {
                     Stage: stage3,
+                    NextStage: null,
                     Option: "(Leave shop)",
-                    Function: "LCLeave();"
+                    Function: "LCLeave();",
+                    Prerequisite: null,
+                    Group: null,
+                    Trait: null,
+                    Result: null
                 }
             );
             return;
@@ -728,12 +751,12 @@ export function loadRules(): void {
     });
 
     hookFunction("CharacterAppearanceSetItem", HookPriority.OBSERVE, (args, next) => {
-        const createdItem: Item | null = next(args);
+        const createdItem = next(args);
         const [C, Group, ItemAsset] = args;
         if (
             C.IsPlayer() &&
             ["ItemMouth", "ItemMouth2", "itemMouth3"].includes(Group) &&
-            ItemAsset.Name === "MilkBottle" &&
+            ItemAsset?.Name === "MilkBottle" &&
             isRuleActive(Player, RuleId.FALL_SLEEP_AFTER_MILK_BOTTLE) &&
             !isSleeping(Player)
         ) {
@@ -746,7 +769,7 @@ export function loadRules(): void {
                 CharacterSetFacialExpression(Player, "Eyebrows", null);
                 ChatRoomCharacterUpdate(Player);
                 setTimeout(() => {
-                    document.body.style.filter = null;
+                    document.body.style.filter = "";
                     PoseSetActive(Player, "Kneel");
                     CharacterSetFacialExpression(Player, "Emoticon", "Sleep");
                     CharacterSetFacialExpression(Player, "Eyes", "Closed");
@@ -839,7 +862,8 @@ export function loadRules(): void {
 
     hookFunction("DialogItemClick", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
         const C = CharacterGetCurrent();
-        const focusGroup = C?.FocusGroup;
+        if (C === null) return next(args);
+        const focusGroup = C.FocusGroup;
         const item = InventoryGet(C, focusGroup?.Name);
         const clickedItem = args[0];
         if (DialogMenuMode !== "items") return next(args);
@@ -848,7 +872,7 @@ export function loadRules(): void {
             C.IsPlayer() &&
             (
                 item?.Asset?.Category?.includes("ABDL") ||
-                extendedABDLItemNames.includes(item?.Asset?.Name)
+                (item?.Asset?.Name && extendedABDLItemNames.includes(item.Asset.Name))
             ) &&
             isRuleActive(Player, RuleId.PREVENT_TAKING_ABDL_ITEMS_OFF)
         ) return;
@@ -936,7 +960,7 @@ export function loadRules(): void {
             ) {
                 const status = CharacterSetNickname(Player, getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "nickname") ?? "");
                 if (typeof status === "string") {
-                    modStorage.rules.list.find((r) => r.id === RuleId.CONTROL_NICKNAME).data.nickname = CharacterNickname(Player);
+                    modStorage.rules!.list!.find((r) => r.id === RuleId.CONTROL_NICKNAME)!.data!.nickname = CharacterNickname(Player);
                     syncStorage();
                 }
             }
@@ -944,8 +968,8 @@ export function loadRules(): void {
                 isRuleActive(Player, RuleId.CONTROL_NICKNAME) &&
                 Player.LabelColor !== (getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "color") ?? Player.LabelColor)
             ) {
-                Player.LabelColor = getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "color");
-                ServerAccountUpdate.QueueData({ LabelColor: getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "color") });
+                Player.LabelColor = getRuleParameter(Player, RuleId.CONTROL_NICKNAME, "color") ?? Player.LabelColor;
+                ServerAccountUpdate.QueueData({ LabelColor: Player.LabelColor });
             }
             if (
                 isRuleActive(Player, RuleId.WALK_LIKE_BABY) &&
@@ -956,11 +980,13 @@ export function loadRules(): void {
                 PoseSetActive(Player, "Kneel", true);
                 ChatRoomCharacterUpdate(Player);
             }
+            const titleName = getRuleParameter<TitleName>(Player, RuleId.FORCE_TITLE, "title");
             if (
                 isRuleActive(Player, RuleId.FORCE_TITLE) &&
-                Player.Title !== (getRuleParameter(Player, RuleId.FORCE_TITLE, "title") ?? Player.Title)
+                titleName !== null &&
+                Player.Title !== titleName
             ) {
-                TitleSet(getRuleParameter(Player, RuleId.FORCE_TITLE, "title"));
+                TitleSet(titleName);
             }
             timerLastRulesCycleCall = CommonTime();
         }
@@ -1057,9 +1083,11 @@ export function loadRules(): void {
     });
 
     hookFunction("CharacterNickname", HookPriority.OVERRIDE_BEHAVIOR, (args, next) => {
+        const [C] = args;
         if (!isRuleActive(Player, RuleId.SHOW_CUSTOM_NAMES)) return next(args);
-        if (typeof getRuleParameter(Player, RuleId.SHOW_CUSTOM_NAMES, "customNames")?.[args[0].MemberNumber] === "string") {
-            return getRuleParameter(Player, RuleId.SHOW_CUSTOM_NAMES, "customNames")?.[args[0].MemberNumber];
+        const customNames = getRuleParameter<Record<number, string>>(Player, RuleId.SHOW_CUSTOM_NAMES, "customNames");
+        if (typeof customNames?.[C.MemberNumber ?? -1] === "string") {
+            return customNames[C.MemberNumber ?? -1];
         }
         return next(args);
     });

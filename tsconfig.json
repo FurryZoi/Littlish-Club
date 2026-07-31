@@ -12,16 +12,15 @@
         "allowJs": false,
         "removeComments": true,
         "sourceMap": true,
-        "alwaysStrict": false,
+        "alwaysStrict": true,
         "skipLibCheck": true,
         "allowSyntheticDefaultImports": true,
         "noEmit": true,
-        "baseUrl": "src",
         "ignoreDeprecations": "6.0",
         "paths": {
             "@/*": [
-                "*"
+                "./src/*"
             ]
         }
-    },
+    }
 }

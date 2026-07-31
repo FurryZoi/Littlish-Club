@@ -1,7 +1,7 @@
 import { hookFunction, HookPriority } from "zois-core/mod-sdk";
 import milkBottle from "@/images/milk-bottle.png";
 import { MOD_BUTTON_POSITION, MOD_NAME } from "@/constants";
-import { getCurrentSubscreen, setPreviousSubscreen, setSubscreen } from "zois-core/ui";
+import { getCurrentSubscreen, setSubscreen } from "zois-core/ui";
 import { MainMenu } from "@/subscreens/mainMenu";
 import { modStorage } from "./storage";
 import { AcceptRequestMenu } from "@/subscreens/acceptRequestMenu";
@@ -11,8 +11,8 @@ export function loadUI(): void {
     hookFunction("InformationSheetRun", HookPriority.TOP, (args, next) => {
         if (
             (
-                InformationSheetSelection.IsPlayer() ||
-                InformationSheetSelection.LITTLISH_CLUB
+                InformationSheetSelection?.IsPlayer() ||
+                InformationSheetSelection?.LITTLISH_CLUB
             ) &&
             !(window.bcx?.inBcxSubscreen && window.bcx.inBcxSubscreen()) &&
             !window.LSCG_REMOTE_WINDOW_OPEN &&
@@ -26,7 +26,7 @@ export function loadUI(): void {
             );
         }
         if (window.LITTLISH_CLUB.inModSubscreen()) {
-            return getCurrentSubscreen().run();
+            return getCurrentSubscreen()?.run();
         }
         next(args);
     });
@@ -34,8 +34,8 @@ export function loadUI(): void {
     hookFunction("InformationSheetClick", HookPriority.OBSERVE, (args, next) => {
         if (
             (
-                InformationSheetSelection.IsPlayer() ||
-                InformationSheetSelection.LITTLISH_CLUB
+                InformationSheetSelection?.IsPlayer() ||
+                InformationSheetSelection?.LITTLISH_CLUB
             ) &&
             !(window.bcx?.inBcxSubscreen && window.bcx.inBcxSubscreen()) &&
             !window.LSCG_REMOTE_WINDOW_OPEN &&
@@ -43,7 +43,7 @@ export function loadUI(): void {
             !window.MPA?.menuLoaded &&
             MouseIn(...MOD_BUTTON_POSITION)
         ) {
-            if (window.InformationSheetUnload) InformationSheetUnload();
+            InformationSheetUnload();
             if (typeof modStorage.requestReciviedFrom?.id === "number") {
                 setSubscreen(new AcceptRequestMenu());
             } else {
@@ -51,14 +51,14 @@ export function loadUI(): void {
             }
         }
         if (window.LITTLISH_CLUB.inModSubscreen()) {
-            return getCurrentSubscreen().click();
+            return getCurrentSubscreen()?.click();
         }
         next(args);
     });
 
     hookFunction("InformationSheetExit", HookPriority.OBSERVE, (args, next) => {
         if (window.LITTLISH_CLUB.inModSubscreen()) {
-            return getCurrentSubscreen().exit();
+            return getCurrentSubscreen()?.exit();
         }
         next(args);
     });

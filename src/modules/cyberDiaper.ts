@@ -1,13 +1,14 @@
 import { colorsEqual } from "zois-core";
 import { hookFunction, HookPriority } from "zois-core/mod-sdk";
 import { modStorage } from "./storage";
+import { logger } from "zois-core/logging";
 
 export interface StorageCyberDiaper {
     name: string
     description: string
     model: CyberDiaperModel
     locked?: boolean
-    color?: string[]
+    color?: ItemColor | null
     typeRecord?: TypeRecord
     property?: CraftingPropertyType
     drawingPriority?: AssetLayerOverridePriority
@@ -35,8 +36,8 @@ export const cyberDiaperChangePermissionsHierarchy: CyberDiaperChangePermission[
 ];
 
 export function getNextCyberDiaperChangePermission(p: CyberDiaperChangePermission): CyberDiaperChangePermission {
-	if (cyberDiaperChangePermissionsHierarchy.indexOf(p) === cyberDiaperChangePermissionsHierarchy.length - 1) return cyberDiaperChangePermissionsHierarchy[0];
-	return cyberDiaperChangePermissionsHierarchy[cyberDiaperChangePermissionsHierarchy.indexOf(p) + 1];
+    if (cyberDiaperChangePermissionsHierarchy.indexOf(p) === cyberDiaperChangePermissionsHierarchy.length - 1) return cyberDiaperChangePermissionsHierarchy[0];
+    return cyberDiaperChangePermissionsHierarchy[cyberDiaperChangePermissionsHierarchy.indexOf(p) + 1];
 }
 
 export function getCyberDiaperModelName(model: CyberDiaperModel): string {
@@ -67,15 +68,25 @@ export function getCyberDiaperAssetName(model: CyberDiaperModel): string {
 
 export function putCyberDiaperOn(): void {
     const cyberDiaper = modStorage.cyberDiaper;
+    if (cyberDiaper === undefined) return;
     const asset = AssetGet(Player.AssetFamily, "ItemPelvis", getCyberDiaperAssetName(cyberDiaper.model));
+    if (!asset) {
+        logger.error("Diaper asset not found");
+        return;
+    }
+    const color = cyberDiaper.color ?? asset.DefaultColor;
+    const colorString = Array.isArray(color)
+        ? (color as BCColor[]).join(",")
+        : color as string;
     InventoryWear(Player, getCyberDiaperAssetName(cyberDiaper.model), "ItemPelvis", cyberDiaper.color, 10, 0, {
         Name: cyberDiaper.name ?? "[No Name]",
         Description: cyberDiaper.description ?? "[No Description]",
         MemberName: "Littlish Club Production",
         MemberNumber: 133997,
         Property: cyberDiaper.property ?? "Comfy",
-        Color: (cyberDiaper.color ?? asset.DefaultColor).join(","),
+        Color: colorString,
         Lock: "",
+        Effects: {},
         Item: getCyberDiaperAssetName(cyberDiaper.model),
         Private: true,
         TypeRecord: cyberDiaper.typeRecord ?? null,
@@ -92,7 +103,7 @@ export function takeCyberDiaperOff(): void {
 }
 
 export function updateDiaperItem(): void {
-    if (modStorage.cyberDiaper.locked) putCyberDiaperOn();
+    if (modStorage.cyberDiaper?.locked) putCyberDiaperOn();
     else takeCyberDiaperOff();
 }
 
@@ -104,7 +115,7 @@ export function checkCyberDiaper(): void {
     if (
         !cyberDiaperItem ||
         cyberDiaperItem.Asset?.Name !== getCyberDiaperAssetName(cyberDiaperStorage.model) ||
-        // @ts-ignore
+        //@ts-expect-error
         !colorsEqual(cyberDiaperStorage.color ?? asset.DefaultColor, cyberDiaperItem.Color ?? asset.DefaultColor)
     ) putCyberDiaperOn();
 }

@@ -7,6 +7,7 @@ import { AccessRight, hasAccessRightTo, hasMommy } from "@/modules/access";
 import { messagesManager } from "zois-core/messaging";
 import { getSizeInKbytes, version as zcVersion } from "zois-core";
 import { version } from "@/../package.json";
+import { logger } from "zois-core/logging";
 
 export class GlobalMenu extends BaseSubscreen {
     get name() {
@@ -17,8 +18,13 @@ export class GlobalMenu extends BaseSubscreen {
         return `Icons/General.png`;
     }
 
-    load() {
+    public override load() {
         super.load();
+
+        if (InformationSheetSelection === null) {
+            logger.error("InformationSheetSelection is null at GlobalMenu loading");
+            return;
+        }
 
         if (InformationSheetSelection.IsPlayer()) {
             this.createText({
@@ -65,6 +71,7 @@ export class GlobalMenu extends BaseSubscreen {
             padding: 2,
             icon: "Icons/Cancel.png",
             isDisabled: () => (
+                InformationSheetSelection === null ||
                 !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.RELEASE_BABY) ||
                 !hasMommy(InformationSheetSelection)
             ),
@@ -75,6 +82,7 @@ export class GlobalMenu extends BaseSubscreen {
                         content: "Are you sure you want to release baby?",
                         buttonText: "Release Baby",
                         onClick: () => {
+                            if (InformationSheetSelection === null) return;
                             messagesManager.sendPacket("releaseBaby", null, InformationSheetSelection.MemberNumber);
                         }
                     })
@@ -83,7 +91,7 @@ export class GlobalMenu extends BaseSubscreen {
         });
     }
 
-    exit() {
+    public override exit() {
         super.exit();
         this.setSubscreen(new MainMenu());
     }

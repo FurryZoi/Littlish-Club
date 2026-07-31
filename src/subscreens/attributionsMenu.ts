@@ -5,7 +5,7 @@ export class AttributionsMenu extends BaseSubscreen {
         return "Attributions";
     }
 
-    load() {
+    public override load() {
         super.load();
         
         this.createButton({

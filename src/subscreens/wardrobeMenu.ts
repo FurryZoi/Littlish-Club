@@ -8,11 +8,11 @@ import { MainMenu } from "./mainMenu";
 import { importAppearance, IncludeType } from "zois-core/wardrobe";
 
 export class WardrobeMenu extends BaseSubscreen {
-    private canvasCharacter: Character;
+    private canvasCharacter!: Character;
     private currentAppearance = CANVAS_BABIES_APPEARANCES[getRandomNumber(0, CANVAS_BABIES_APPEARANCES.length - 1)];
     private includeTypes: IncludeType[] = ["Binds", "Cosplay", "Collar", "Locks"];
-    private requiredModsElement: HTMLParagraphElement;
-    private creatorNameElement: HTMLParagraphElement;
+    private requiredModsElement!: HTMLParagraphElement;
+    private creatorNameElement!: HTMLParagraphElement;
     private isViewingMode: boolean = false;
 
     get name() {
@@ -29,11 +29,11 @@ export class WardrobeMenu extends BaseSubscreen {
         if (currentAppearance) this.currentAppearance = currentAppearance;
     }
 
-    run() {
+    public override run() {
         DrawCharacter(this.canvasCharacter, 1000, 100, 0.8, false);
     }
 
-    load() {
+    public override load() {
         super.load();
 
         this.createButton({
@@ -79,6 +79,7 @@ export class WardrobeMenu extends BaseSubscreen {
             onChange: () => {
                 this.isViewingMode = !this.isViewingMode;
                 if (
+                    InformationSheetSelection !== null &&
                     hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_APPEARANCE)
                 ) applyBtn.classList.toggle("zcDisabled");
                 this.refresh();
@@ -120,10 +121,12 @@ export class WardrobeMenu extends BaseSubscreen {
             padding: 3,
             variant: "filled",
             isDisabled: () => (
+                InformationSheetSelection == null ||
                 !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_APPEARANCE) ||
                 this.isViewingMode
             ),
             onClick: () => {
+                if (InformationSheetSelection === null) return;
                 importAppearance(InformationSheetSelection, this.canvasCharacter.Appearance, this.includeTypes);
                 this.exit();
             }
@@ -132,7 +135,7 @@ export class WardrobeMenu extends BaseSubscreen {
         this.refresh();
     }
 
-    loadRequiredModsWarning() {
+    private loadRequiredModsWarning() {
         if (
             Array.isArray(this.currentAppearance.requiredMods) &&
             this.currentAppearance.requiredMods.length > 0
@@ -148,11 +151,12 @@ export class WardrobeMenu extends BaseSubscreen {
         }
     }
 
-    refresh() {
+    private refresh() {
+        if (InformationSheetSelection === null) return;
         const appearanceBundle = serverAppearanceBundleToAppearance(
             InformationSheetSelection.AssetFamily,
             JSON.parse(
-                LZString.decompressFromBase64(this.currentAppearance.bundle)
+                LZString.decompressFromBase64(this.currentAppearance.bundle) ?? "[]"
             )
         );
         ServerAppearanceLoadFromBundle(
@@ -165,7 +169,7 @@ export class WardrobeMenu extends BaseSubscreen {
         this.loadRequiredModsWarning();
     }
 
-    exit() {
+    public override exit() {
         super.exit();
         this.setSubscreen(new MainMenu());
     }

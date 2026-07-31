@@ -27,7 +27,7 @@ function addNote(note: Note, subscreen: NotesMenu, scrollView: HTMLDivElement, k
 }
 
 export class NotesMenu extends BaseSubscreen {
-    private scrollView: HTMLDivElement;
+    private scrollView!: HTMLDivElement;
 
     get name() {
         return "Notes";
@@ -37,11 +37,14 @@ export class NotesMenu extends BaseSubscreen {
         return `Icons/WinkNone.png`;
     }
 
-    load() {
+    public override load() {
         super.load();
-        const notesList: Readonly<Note[]> = InformationSheetSelection.IsPlayer() ?
+        const selection = InformationSheetSelection;
+        if (selection === null) return;
+
+        const notesList: Readonly<Note[]> = selection.IsPlayer() ?
             (modStorage.notes?.list ?? [])
-            : (InformationSheetSelection.LITTLISH_CLUB?.notes?.list ?? []);
+            : (selection.LITTLISH_CLUB?.notes?.list ?? []);
 
         const scrollView = this.createContainer({
             scroll: "y",
@@ -90,7 +93,7 @@ export class NotesMenu extends BaseSubscreen {
                     },
                     ts: Date.now()
                 };
-                if (InformationSheetSelection.IsPlayer()) {
+                if (selection.IsPlayer()) {
                     if (!modStorage.notes) modStorage.notes = {};
                     if (!modStorage.notes.list) modStorage.notes.list = [];
                     modStorage.notes.list.push(note);
@@ -98,25 +101,28 @@ export class NotesMenu extends BaseSubscreen {
                 } else {
                     messagesManager.sendPacket<AddNoteMessageData>("addNote", {
                         text: noteInput.value
-                    }, InformationSheetSelection.MemberNumber);
+                    }, selection.MemberNumber);
                 }
-                addNote(note, this, scrollView, scrollView.children.length + 1, !InformationSheetSelection.IsPlayer());
+                addNote(note, this, scrollView, scrollView.children.length + 1, !selection.IsPlayer());
                 noteInput.value = "";
             }
         });
     }
 
-    update() {
+    public override update() {
+        const selection = InformationSheetSelection;
+        if (selection === null) return;
+
         this.scrollView.innerHTML = "";
-        const notesList: Readonly<Note[]> = InformationSheetSelection.IsPlayer() ?
+        const notesList: Readonly<Note[]> = selection.IsPlayer() ?
             (modStorage.notes?.list ?? [])
-            : (InformationSheetSelection.LITTLISH_CLUB?.notes?.list ?? []);
+            : (selection.LITTLISH_CLUB?.notes?.list ?? []);
         notesList.forEach((note, i) => {
             addNote(note, this, this.scrollView, i + 1);
         });
     }
 
-    exit() {
+    public override exit() {
         super.exit();
         syncStorage();
         this.setSubscreen(new MainMenu());

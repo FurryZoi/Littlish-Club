@@ -1,39 +1,39 @@
 import { messagesManager } from "zois-core/messaging";
 import { isRuleActive, isRuleStrict, RuleId, rulesList, StorageRule } from "./rules";
 import { modStorage, Note, syncStorage } from "./storage";
-import { getNickname } from "zois-core";
+import { getNickname, getPlayer } from "zois-core";
 import { addLog } from "./logs";
 import { MAX_NOTE_SIZE_IN_KBYTES } from "@/constants";
-import { StorageCyberDiaper, CyberDiaperChangePermission, updateDiaperItem } from "./cyberDiaper";
+import { StorageCyberDiaper, CyberDiaperChangePermission, updateDiaperItem, CyberDiaperModel } from "./cyberDiaper";
 
 
 function validateRuleConditions(r: StorageRule, data: Partial<StorageRule>): void {
     if (data.conditions) {
         if (!r.conditions) r.conditions = {};
-        if (["any", "all"].includes(data.conditions.type)) r.conditions.type = data.conditions.type;
+        if (data.conditions.type && ["any", "all"].includes(data.conditions.type)) r.conditions.type = data.conditions.type;
         else r.conditions.type = "any";
         if (data.conditions.whenInRoomWithRole) {
-            // @ts-ignore
+            // @ts-expect-error
             if (!r.conditions.whenInRoomWithRole) r.conditions.whenInRoomWithRole = {};
             if (typeof data.conditions.whenInRoomWithRole?.inRoom === "boolean") {
-                r.conditions.whenInRoomWithRole.inRoom = data.conditions.whenInRoomWithRole.inRoom;
+                r.conditions.whenInRoomWithRole!.inRoom = data.conditions.whenInRoomWithRole.inRoom;
             }
             if (["mommy", "caregiver"].includes(data.conditions.whenInRoomWithRole?.role)) {
-                r.conditions.whenInRoomWithRole.role = data.conditions.whenInRoomWithRole.role;
+                r.conditions.whenInRoomWithRole!.role = data.conditions.whenInRoomWithRole.role;
             }
         } else delete r.conditions.whenInRoomWithRole;
         if (data.conditions.whenInRoomWhereAbdl) {
-            // @ts-ignore
+            // @ts-expect-error
             if (!r.conditions.whenInRoomWhereAbdl) r.conditions.whenInRoomWhereAbdl = {};
             if (typeof data.conditions.whenInRoomWhereAbdl?.blocked === "boolean") {
-                r.conditions.whenInRoomWhereAbdl.blocked = data.conditions.whenInRoomWhereAbdl.blocked;
+                r.conditions.whenInRoomWhereAbdl!.blocked = data.conditions.whenInRoomWhereAbdl.blocked;
             }
         } else delete r.conditions.whenInRoomWhereAbdl;
     }
 }
 
 function validateRuleData(r: StorageRule, data: Partial<StorageRule>): void {
-    const ruleParams = rulesList.find((g) => g.id === r.id).data ?? [];
+    const ruleParams = rulesList.find((g) => g.id === r.id)?.data ?? [];
     for (const param of ruleParams) {
         const p = data.data?.[param.name];
         if (param.type === "number" && typeof p !== "number") continue;
@@ -56,7 +56,7 @@ function validateRuleData(r: StorageRule, data: Partial<StorageRule>): void {
                 )
             ) continue;
         }
-        if (param.type === "extended" && !param.validate(p)) continue;
+        if (param.type === "extended" && !param.validate?.(p)) continue;
         if (!r.data) r.data = {};
         r.data[param.name] = p;
     }
@@ -87,7 +87,7 @@ export function isMommyOf(C1: Character, C2: Character): boolean {
 }
 
 export function isCaregiverOf(C1: Character, C2: Character): boolean {
-    return getCaregiversOf(C2)?.includes(C1.MemberNumber);
+    return getCaregiversOf(C2)?.includes(C1.MemberNumber ?? -1);
 }
 
 export function isRequestedByPlayer(C: Character): boolean {
@@ -161,8 +161,8 @@ export const caregiverAccessRightsList: CaregiverAccessRight[] = [
 
 
 export function isCaregiverAccessRightEnabled(C: Character, accessRightId: CaregiverAccessRightId): boolean {
-    if (C?.IsPlayer?.()) return modStorage.caregivers?.accessRights?.includes(String.fromCharCode(accessRightId));
-    return C?.LITTLISH_CLUB?.caregivers?.accessRights?.includes(String.fromCharCode(accessRightId));
+    if (C?.IsPlayer?.()) return modStorage.caregivers?.accessRights?.includes(String.fromCharCode(accessRightId)) ?? false;
+    return C?.LITTLISH_CLUB?.caregivers?.accessRights?.includes(String.fromCharCode(accessRightId)) ?? false;
 }
 
 export function turnCaregiverAccessRight(accessRightId: CaregiverAccessRightId): void {
@@ -192,7 +192,7 @@ export function hasAccessRightTo(C1: Character, C2: Character, accessRight: Acce
                 isMommyOf(C1, C2) ||
                 (
                     C1.MemberNumber === C2.MemberNumber &&
-                    c1ModStorage.caregivers?.canChangeList
+                    (c1ModStorage?.caregivers?.canChangeList ?? false)
                 )
             );
         case AccessRight.TURN_PREVENT_BABY_FROM_CHANGING_CAREGIVERS_LIST:
@@ -264,13 +264,16 @@ export function hasAccessRightTo(C1: Character, C2: Character, accessRight: Acce
 }
 
 export function loadAccess(): void {
-    messagesManager.onRequest("getLogs", (data, sender: Character) => {
-        if (!hasAccessRightTo(sender, Player, AccessRight.READ_LOGS)) return;
+    messagesManager.onRequest("getLogs", (_data, sender) => {
+        const senderC = typeof sender === "number" ? getPlayer(sender) : sender;
+        if (!senderC) return;
+        if (!hasAccessRightTo(senderC, Player, AccessRight.READ_LOGS)) return;
         return modStorage.logs?.list ?? [];
     });
 
     messagesManager.onPacket("addBaby", (data, sender) => {
         if (hasMommy(Player) || modStorage.requestReciviedFrom?.id === sender.MemberNumber) return;
+        if (sender.MemberNumber === undefined) return;
         modStorage.requestReciviedFrom = {
             name: CharacterNickname(sender),
             id: sender.MemberNumber
@@ -308,7 +311,7 @@ export function loadAccess(): void {
         if (!hasAccessRightTo(sender, Player, AccessRight.MANAGE_CAREGIVERS_ACCESS_RIGHTS)) return;
         if (!caregiverAccessRightsList.find((r) => r.id === data?.accessRightId)) return;
         turnCaregiverAccessRight(data.accessRightId);
-        const _message = `${getNickname(sender)} (${sender.MemberNumber}) turned ${isCaregiverAccessRightEnabled(Player, data.accessRightId) ? "on" : "off"} caregiver access right "${caregiverAccessRightsList.find((r) => r.id === data.accessRightId).name}"`;
+        const _message = `${getNickname(sender)} (${sender.MemberNumber}) turned ${isCaregiverAccessRightEnabled(Player, data.accessRightId) ? "on" : "off"} caregiver access right "${caregiverAccessRightsList.find((r) => r.id === data.accessRightId)!.name}"`;
         addLog(
             _message,
             false
@@ -334,21 +337,21 @@ export function loadAccess(): void {
             }
             validateRuleData(r, data);
             validateRuleConditions(r, data);
-            r.changedBy = sender.MemberNumber;
+            r.changedBy = sender.MemberNumber ?? -1;
             r.ts = Date.now();
         } else {
             let d = {
                 id: data.id,
                 state: typeof data.state === "boolean" ? data.state : false,
                 strict: typeof data.strict === "boolean" && hasAccessRightTo(sender, Player, AccessRight.TURN_RULE_STRICT_MODE) ? data.strict : false,
-                changedBy: sender.MemberNumber,
+                changedBy: sender.MemberNumber ?? -1,
                 ts: Date.now()
             };
             validateRuleData(d, data);
             validateRuleConditions(d, data);
             modStorage.rules.list.push(d);
         }
-        const _message = `${getNickname(sender)} (${sender.MemberNumber}) changed settings of "${rulesList.find((r) => r.id === data?.id).name}" rule`;
+        const _message = `${getNickname(sender)} (${sender.MemberNumber}) changed settings of "${rulesList.find((r) => r.id === data?.id)!.name}" rule`;
         addLog(
             _message,
             false
@@ -370,7 +373,7 @@ export function loadAccess(): void {
             text: data.text,
             author: {
                 name: CharacterNickname(sender),
-                id: sender.MemberNumber
+                id: sender.MemberNumber ?? -1
             },
             ts: Date.now()
         };
@@ -386,7 +389,7 @@ export function loadAccess(): void {
         const note = modStorage.notes?.list?.find((n, i) => i === data.key - 1);
         if (!note) return;
         if (note.author.id !== sender.MemberNumber && !hasAccessRightTo(sender, Player, AccessRight.DELETE_NOTES)) return;
-        modStorage.notes.list.splice(data.key - 1, 1);
+        modStorage.notes!.list!.splice(data.key - 1, 1);
         const _message = `${getNickname(sender)} (${sender.MemberNumber}) deleted note "${note.text}"`;
         addLog(_message, false);
         syncStorage();
@@ -400,8 +403,12 @@ export function loadAccess(): void {
             changePermission, property, typeRecord, drawingPriority
         } = data as StorageCyberDiaper;
         if (!modStorage.cyberDiaper) {
-            // @ts-ignore
-            modStorage.cyberDiaper = {};
+            if (
+                typeof name !== "string" ||
+                typeof description !== "string" ||
+                !Object.values(CyberDiaperModel).includes(model)
+            ) return;
+            modStorage.cyberDiaper = { name, description, model };
             messagesManager.sendLocal(`${getNickname(sender)} bought cyber diaper for you`);
         }
         if (typeof name === "string") modStorage.cyberDiaper.name = name;
@@ -410,7 +417,7 @@ export function loadAccess(): void {
         if (typeof locked === "boolean") modStorage.cyberDiaper.locked = locked;
         if (Array.isArray(color)) modStorage.cyberDiaper.color = color;
         if (
-            Object.values(CyberDiaperChangePermission).includes(changePermission)
+            changePermission && Object.values(CyberDiaperChangePermission).includes(changePermission)
         ) modStorage.cyberDiaper.changePermission = changePermission;
         if (typeof property === "string") modStorage.cyberDiaper.property = property;
         if (typeRecord) modStorage.cyberDiaper.typeRecord = typeRecord;
@@ -433,7 +440,7 @@ export function loadAccess(): void {
         if (!hasAccessRightTo(sender, Player, AccessRight.DELETE_LOGS)) return;
         if (typeof data.count !== "number") return;
         const _message = `${getNickname(sender)} (${sender.MemberNumber}) deleted log entries (${data.count})`;
-        modStorage.logs.list.splice(0, data.count);
+        modStorage.logs?.list?.splice(0, data.count);
         addLog(_message, false);
         messagesManager.sendLocal(_message);
         syncStorage()

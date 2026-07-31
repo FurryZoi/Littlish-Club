@@ -22,7 +22,7 @@ export class AboutWardrobeMenu extends BaseSubscreen {
         this.currentAppearance = currentAppearance;
     }
 
-    load() {
+    public override load() {
         super.load();
 
         this.createText({
@@ -44,7 +44,7 @@ export class AboutWardrobeMenu extends BaseSubscreen {
         }).style.textAlign = "center";
     }
 
-    exit() {
+    public override exit() {
         super.exit();
         this.setSubscreen(new WardrobeMenu(this.currentAppearance));
     }

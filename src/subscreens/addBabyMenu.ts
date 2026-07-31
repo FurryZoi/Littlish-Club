@@ -9,7 +9,7 @@ export class AddBabyMenu extends BaseSubscreen {
         return "Add baby";
     }
 
-    load() {
+    public override load() {
         super.load();
 
         const container = this.createContainer({

@@ -11,7 +11,7 @@ export class CaregiversPermissionsMenu extends BaseSubscreen {
         return "Family > Caregivers permissions";
     }
 
-    load() {
+    public override load() {
         super.load();
 
         caregiverAccessRightsList.forEach((p, i) => {
@@ -20,10 +20,10 @@ export class CaregiversPermissionsMenu extends BaseSubscreen {
                 width: 1200,
                 x: 200,
                 y: 250 + 90 * i,
-                isChecked: isCaregiverAccessRightEnabled(InformationSheetSelection, p.id),
-                isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_CAREGIVERS_ACCESS_RIGHTS),
+                isChecked: InformationSheetSelection !== null && isCaregiverAccessRightEnabled(InformationSheetSelection, p.id),
+                isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_CAREGIVERS_ACCESS_RIGHTS),
                 onChange: () => {
-                    if (InformationSheetSelection.IsPlayer()) {
+                    if (InformationSheetSelection?.IsPlayer()) {
                         turnCaregiverAccessRight(p.id);
                         addLog(
                             `${getNickname(Player)} (${Player.MemberNumber}) turned ${isCaregiverAccessRightEnabled(Player, p.id) ? "on" : "off"
@@ -34,7 +34,7 @@ export class CaregiversPermissionsMenu extends BaseSubscreen {
                     } else {
                         messagesManager.sendPacket<TurnCaregiversAccessRightMessageData>("turnCaregiversAccessRight", {
                             accessRightId: p.id
-                        }, InformationSheetSelection.MemberNumber);
+                        }, InformationSheetSelection?.MemberNumber);
                     }
                 }
             });

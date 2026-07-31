@@ -9,39 +9,46 @@ import { cloneDeep } from "lodash-es";
 import { addLog } from "@/modules/logs";
 import { getNickname } from "zois-core";
 import { ChangeCyberDiaperSettingsMessageData } from "@/types/messages";
+import { logger } from "zois-core/logging";
 
 export class CyberDiaperSettingsMenu extends BaseSubscreen {
-    private cyberDiaperSettings: StorageCyberDiaper;
-
     get name() {
         return "Cyber Diaper > Settings";
     }
 
-    constructor(cyberDiaperSettings?: StorageCyberDiaper) {
+    constructor(private cyberDiaperSettings?: StorageCyberDiaper) {
         super();
-        if (cyberDiaperSettings) this.cyberDiaperSettings = cyberDiaperSettings;
     }
 
-    load() {
+    public override load() {
         super.load();
+
+        if (InformationSheetSelection === null) {
+            logger.error("InformationSheetSelection is null at CyberDiaperSettingsMenu loading");
+            return;
+        }
+
         if (!this.cyberDiaperSettings) {
-            // @ts-ignore
             this.cyberDiaperSettings = cloneDeep(
                 (
                     InformationSheetSelection.IsPlayer() ? modStorage : InformationSheetSelection.LITTLISH_CLUB
-                )?.cyberDiaper ?? {}
+                )?.cyberDiaper
             );
+            if (!this.cyberDiaperSettings) return;
         }
 
         const nameInput = this.createInput({
             placeholder: "Name",
-            value: this.cyberDiaperSettings.name ?? "",
+            value: this.cyberDiaperSettings?.name ?? "",
             x: 130,
             y: 200,
             width: 800,
             padding: 2,
-            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
-            onChange: () => this.cyberDiaperSettings.name = nameInput.value
+            isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
+            onChange: () => {
+                if (!this.cyberDiaperSettings) return;
+                this.cyberDiaperSettings.name = nameInput.value;
+            }
         });
 
         const descriptionInput = this.createInput({
@@ -53,8 +60,9 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             height: 250,
             padding: 2,
             textArea: true,
-            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
+            isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
             onChange: () => {
+                if (!this.cyberDiaperSettings) return;
                 this.cyberDiaperSettings.description = descriptionInput.value;
             }
         });
@@ -66,6 +74,7 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             width: 800,
             height: 140,
             onClick: () => {
+                if (!this.cyberDiaperSettings) return;
                 this.setSubscreen(
                     new CyberDiaperChangeColorMenu(this.cyberDiaperSettings)
                 );
@@ -79,8 +88,9 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             width: 800,
             height: 140,
             variant: "filled",
-            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
+            isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
             onClick: () => {
+                if (!this.cyberDiaperSettings) return;
                 this.cyberDiaperSettings.locked = !this.cyberDiaperSettings.locked;
                 putOnOffBtn.textContent = `${this.cyberDiaperSettings.locked ? "Unlock it and take it off" : "Put it on and lock it"}`;
             }
@@ -103,8 +113,9 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             height: 80,
             items: Object.values(CyberDiaperModel)
                 .map((i) => [getCyberDiaperModelName(i), i]),
-            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
+            isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
             onChange: (model) => {
+                if (!this.cyberDiaperSettings) return;
                 this.cyberDiaperSettings.model = model;
                 delete this.cyberDiaperSettings.color;
             }
@@ -123,8 +134,9 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             y: 365,
             width: 900,
             height: 100,
-            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
+            isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
             onClick: () => {
+                if (!this.cyberDiaperSettings) return;
                 this.cyberDiaperSettings.changePermission = getNextCyberDiaperChangePermission(
                     this.cyberDiaperSettings.changePermission ?? CyberDiaperChangePermission.EVERYONE
                 );
@@ -147,7 +159,7 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             y: 560,
             width: 900,
             padding: 2,
-            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER)
+            isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER)
         });
 
         this.createButton({
@@ -156,9 +168,10 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             width: 900,
             padding: 2,
             text: "Import Settings From Craft",
-            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
+            isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
             onClick: () => {
-                const data: CraftingItem = JSON.parse(LZString.decompressFromBase64(craftImport.value));
+                if (!this.cyberDiaperSettings) return;
+                const data: CraftingItem = JSON.parse(LZString.decompressFromBase64(craftImport.value) ?? "{}");
                 if (typeof data?.Name === "string") {
                     this.cyberDiaperSettings.name = data.Name;
                     nameInput.value = data.Name;
@@ -174,8 +187,8 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
                 }
                 if (typeof data?.Color === "string") {
                     this.cyberDiaperSettings.color = data.Color === "Default" ?
-                        [...AssetGet(Player.AssetFamily, "ItemPelvis", data.Item).DefaultColor]
-                        : data.Color.split(",");
+                        [...AssetGet(Player.AssetFamily, "ItemPelvis", data.Item)!.DefaultColor]
+                        : data.Color.split(",") as ItemColor;
                 }
                 if (data?.TypeRecord) {
                     this.cyberDiaperSettings.typeRecord = data.TypeRecord;
@@ -195,8 +208,9 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
             y: 790,
             width: 360,
             height: 140,
-            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
+            isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
             onClick: () => {
+                if (InformationSheetSelection === null) return;
                 if (InformationSheetSelection.IsPlayer()) {
                     modStorage.cyberDiaper = this.cyberDiaperSettings;
                     updateDiaperItem();
@@ -215,7 +229,7 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
         saveChangesBtn.style.fontWeight = "bold";
     }
 
-    exit() {
+    public override exit() {
         super.exit();
         this.setSubscreen(new MainMenu());
     }

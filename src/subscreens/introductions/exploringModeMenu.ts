@@ -5,7 +5,7 @@ export class ExploringModeMenu extends BaseSubscreen {
         return "Exploring Mode";
     }
 
-    load() {
+    public override load() {
         super.load();
 
         this.createText({

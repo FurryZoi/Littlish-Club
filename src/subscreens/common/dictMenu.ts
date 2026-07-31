@@ -41,6 +41,10 @@ function addItemToDict(subscreen: DictMenu, view: HTMLDivElement, item: [string 
 }
 
 export class DictMenu extends BaseSubscreen {
+    public override get name(): string {
+        return this.screenName;
+    }
+
     private screenName: DictMenuData["screenName"];
     private keyName: DictMenuData["keyName"];
     private valueName: DictMenuData["valueName"];
@@ -49,7 +53,6 @@ export class DictMenu extends BaseSubscreen {
     public items: DictMenuData["items"];
     private onExit: DictMenuData["onExit"];
     private onSave: DictMenuData["onSave"];
-    private scrollView: HTMLDivElement;
 
     constructor({
         screenName,
@@ -72,14 +75,14 @@ export class DictMenu extends BaseSubscreen {
         this.onSave = onSave;
     }
 
-    load() {
+    public override load() {
         super.load();
-        this.createText({
-            text: this.screenName,
-            x: 100,
-            y: 60,
-            fontSize: 10
-        });
+        // this.createText({
+        //     text: this.screenName,
+        //     x: 100,
+        //     y: 60,
+        //     fontSize: 10
+        // });
 
         this.createText({
             text: this.keyName,
@@ -102,7 +105,6 @@ export class DictMenu extends BaseSubscreen {
             width: 1800,
             height: 480
         });
-        this.scrollView = view;
 
         Object.keys(this.items).forEach((key) => {
             addItemToDict(this, view, [key, this.items[key]]);
@@ -154,7 +156,7 @@ export class DictMenu extends BaseSubscreen {
         });
     }
 
-    exit() {
+    public override exit() {
         super.exit();
         this.onExit();
     }

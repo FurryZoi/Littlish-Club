@@ -13,7 +13,7 @@ export class SummoningRattleMenu extends BaseSubscreen {
         return "Summoning Rattle (BETA)";
     }
 
-    async load() {
+    public override async load() {
         super.load();
 
         this.createText({
@@ -79,6 +79,13 @@ export class SummoningRattleMenu extends BaseSubscreen {
                 padding: 1,
                 parent: line,
                 onClick: async () => {
+                    if (!ServerPlayerIsInChatRoom()) {
+                        toastsManager.warn({
+                            message: `You should be in chat room to summon ${f.MemberName}`,
+                            duration: 5000
+                        });
+                        return;
+                    }
                     const spinnerId = toastsManager.spinner({
                         message: "Shaking the rattle..."
                     });
@@ -87,7 +94,7 @@ export class SummoningRattleMenu extends BaseSubscreen {
                     }>({
                         message: "summon",
                         data: {
-                            roomName: ChatRoomData.Name
+                            roomName: ChatRoomData!.Name
                         },
                         target: f.MemberNumber,
                         type: "beep"

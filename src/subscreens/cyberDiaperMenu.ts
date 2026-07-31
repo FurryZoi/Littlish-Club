@@ -14,7 +14,7 @@ export class CyberDiaperMenu extends BaseSubscreen {
         return `Icons/Diaper.png`;
     }
 
-    load() {
+    public override load() {
         super.load();
 
         this.createText({
@@ -40,7 +40,7 @@ export class CyberDiaperMenu extends BaseSubscreen {
             width: 1000,
             padding: 2,
             fontSize: 8,
-            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
+            isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.MANAGE_DIAPER),
             onClick: () => {
                 if (Player.Money < 499) return toastsManager.error({ message: "Not enough money.", duration: 3000 });
                 CharacterChangeMoney(Player, -499);

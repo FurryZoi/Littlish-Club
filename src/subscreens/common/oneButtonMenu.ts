@@ -1,6 +1,10 @@
 import { BaseSubscreen } from "zois-core/ui";
 
 export class OneButtonMenu extends BaseSubscreen {
+    public override get name(): string {
+        return this.screenName;
+    }
+
     private screenName: string;
     private content: string;
     private buttonText: string;
@@ -24,14 +28,14 @@ export class OneButtonMenu extends BaseSubscreen {
         this.onClick = onClick;
     }
 
-    load() {
+    public override load() {
         super.load();
-        this.createText({
-            text: this.screenName,
-            x: 100,
-            y: 60,
-            fontSize: 10
-        });
+        // this.createText({
+        //     text: this.screenName,
+        //     x: 100,
+        //     y: 60,
+        //     fontSize: 10
+        // });
 
         this.createText({
             text: this.content,

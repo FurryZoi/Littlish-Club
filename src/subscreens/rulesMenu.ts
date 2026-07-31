@@ -11,7 +11,7 @@ let scrollTop: number | null = null;
 
 
 export class RulesMenu extends BaseSubscreen {
-    private rulesBlock: HTMLDivElement;
+    private rulesBlock!: HTMLDivElement;
 
     get name() {
         return "Rules";
@@ -21,7 +21,7 @@ export class RulesMenu extends BaseSubscreen {
         return `Icons/Management.png`;
     }
 
-    load() {
+    public override load() {
         super.load();
 
         const rulesMarkingBtn = this.createButton({
@@ -61,7 +61,9 @@ export class RulesMenu extends BaseSubscreen {
         if (scrollTop) this.rulesBlock.scrollBy({ top: scrollTop });
     }
 
-    refreshRules(searchFilter?: string) {
+    private refreshRules(searchFilter?: string) {
+        if (InformationSheetSelection === null) return;
+        const selection = InformationSheetSelection;
         this.rulesBlock.innerHTML = "";
         rulesList.forEach((rule) => {
             if (searchFilter && !rule.name.toLowerCase().includes(searchFilter.toLowerCase())) return;
@@ -69,11 +71,11 @@ export class RulesMenu extends BaseSubscreen {
                 text: rule.name,
                 padding: 2,
                 parent: this.rulesBlock,
-                icon: isRuleStrict(InformationSheetSelection, rule.id) ? "Icons/Management.png" : undefined,
+                icon: isRuleStrict(selection, rule.id) ? "Icons/Management.png" : undefined,
                 iconAbsolutePosition: false,
                 modules: {
                     base: [
-                        ...(isRuleEnabled(InformationSheetSelection, rule.id) ? [new DynamicClassModule({
+                        ...(isRuleEnabled(selection, rule.id) ? [new DynamicClassModule({
                             base: {
                                 background: "#cbffc0 !important",
                                 borderColor: "#6bbd18 !important",
@@ -87,7 +89,7 @@ export class RulesMenu extends BaseSubscreen {
                     ]
                 }
             });
-            if (isRuleEnabled(InformationSheetSelection, rule.id) && !isRuleActive(InformationSheetSelection, rule.id)) {
+            if (isRuleEnabled(selection, rule.id) && !isRuleActive(selection, rule.id)) {
                 ruleBtn.style.color = "red";
             }
             ruleBtn.style.fontWeight = "bold";
@@ -100,12 +102,12 @@ export class RulesMenu extends BaseSubscreen {
         });
     }
 
-    update() {
+    public override update() {
         this.refreshRules();
         if (scrollTop) this.rulesBlock.scrollBy({ top: scrollTop });
     }
 
-    exit() {
+    public override exit() {
         super.exit();
         scrollTop = null;
         this.setSubscreen(new MainMenu());

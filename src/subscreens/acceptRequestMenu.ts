@@ -7,11 +7,11 @@ export class AcceptRequestMenu extends BaseSubscreen {
         return "Request to become your mommy";
     }
 
-    load() {
+    public override load() {
         super.load();
 
         this.createText({
-            text: `${modStorage.requestReciviedFrom.name} (${modStorage.requestReciviedFrom.id}) wants to become your mommy :3`,
+            text: `${modStorage.requestReciviedFrom!.name} (${modStorage.requestReciviedFrom!.id}) wants to become your mommy :3`,
             x: 200,
             y: 240,
             width: 1600,
@@ -26,8 +26,8 @@ export class AcceptRequestMenu extends BaseSubscreen {
             padding: 2,
             onClick: () => {
                 modStorage.mommy = {
-                    name: modStorage.requestReciviedFrom.name,
-                    id: modStorage.requestReciviedFrom.id
+                    name: modStorage.requestReciviedFrom!.name,
+                    id: modStorage.requestReciviedFrom!.id
                 }
                 delete modStorage.requestReciviedFrom;
                 this.exit();
@@ -47,7 +47,7 @@ export class AcceptRequestMenu extends BaseSubscreen {
         });
     }
 
-    exit() {
+    public override exit() {
         super.exit();
         syncStorage();
         this.setSubscreen(new MainMenu());

@@ -7,10 +7,11 @@ import { addLog, Log } from "@/modules/logs";
 import { AccessRight, hasAccessRightTo } from "@/modules/access";
 import { getNickname } from "zois-core";
 import { DeleteLogsMessageData } from "@/types/messages";
+import { logger } from "zois-core/logging";
 
 
 export class LogsMenu extends BaseSubscreen {
-    private scrollView: HTMLDivElement;
+    private scrollView: HTMLDivElement | null = null;
 
     get name() {
         return "Logs";
@@ -20,8 +21,13 @@ export class LogsMenu extends BaseSubscreen {
         return `Icons/Title.png`;
     }
 
-    async load() {
+    public override async load() {
         super.load();
+
+        if (InformationSheetSelection === null) {
+            logger.error("InformationSheetSelection is null at LogsMenu loading");
+            return;
+        }
 
         if (!hasAccessRightTo(Player, InformationSheetSelection, AccessRight.READ_LOGS)) {
             return this.createText({
@@ -49,9 +55,9 @@ export class LogsMenu extends BaseSubscreen {
             const res = await messagesManager.sendRequest<Log[]>({
                 message: "getLogs",
                 type: "packet",
-                target: InformationSheetSelection.MemberNumber
+                target: InformationSheetSelection.MemberNumber ?? -1
             });
-            if (res.isError) return statusText.textContent = "Loading Error :(";
+            if (res.isError || !Array.isArray(res.data)) return statusText.textContent = "Loading Error :(";
             statusText.remove();
             logs = res.data;
         }
@@ -79,12 +85,12 @@ export class LogsMenu extends BaseSubscreen {
             y: 845,
             width: 840,
             padding: 2,
-            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_LOGS),
+            isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_LOGS),
             onInput: () => {
                 if (parseInt(deleteLogsInput.value) > scrollView.children.length) deleteLogsInput.value = String(scrollView.children.length);
                 if (parseInt(deleteLogsInput.value) < 0) deleteLogsInput.value = "0";
                 for (const c of [...scrollView.children]) {
-                    const style = c.getAttribute("style");
+                    const style = c.getAttribute("style") ?? "";
                     if (style.includes("border: 2px solid red;")) {
                         c.setAttribute("style", style.replaceAll("border: 2px solid red;", ""));
                     }
@@ -103,8 +109,9 @@ export class LogsMenu extends BaseSubscreen {
             y: 845,
             width: 840,
             padding: 2,
-            isDisabled: () => !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_LOGS),
+            isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_LOGS),
             onClick: () => {
+                if (InformationSheetSelection === null) return;
                 const count = parseInt(deleteLogsInput.value);
                 if (count === 0 || Number.isNaN(count)) return;
                 const children = [...scrollView.children];
@@ -113,7 +120,7 @@ export class LogsMenu extends BaseSubscreen {
                 if (InformationSheetSelection.IsPlayer()) {
                     const logObject = addLog(`${getNickname(Player)} (${Player.MemberNumber}) deleted log entries (${count})`, false);
                     this.createLogButton(logObject);
-                    modStorage.logs.list.splice(0, count);
+                    modStorage.logs!.list!.splice(0, count);
                     syncStorage();
                 } else {
                     messagesManager.sendPacket<DeleteLogsMessageData>("deleteLogs", {
@@ -128,7 +135,8 @@ export class LogsMenu extends BaseSubscreen {
         });
     }
 
-    createLogButton(log: Log) {
+    private createLogButton(log: Log) {
+        if (!this.scrollView) return;
         const btn = this.createButton({
             text: `${log.message} at (${new Date(log.ts).toUTCString()})`,
             parent: this.scrollView,
@@ -139,7 +147,7 @@ export class LogsMenu extends BaseSubscreen {
         this.scrollView.scrollTo(0, this.scrollView.scrollHeight);
     }
 
-    exit() {
+    public override exit() {
         super.exit();
         this.setSubscreen(new MainMenu());
     }

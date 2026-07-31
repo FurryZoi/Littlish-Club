@@ -22,7 +22,7 @@ export class NoteSettingsMenu extends BaseSubscreen {
         this.key = key;
     }
 
-    load() {
+    public override load() {
         super.load();
 
         const text = this.createText({
@@ -50,12 +50,13 @@ export class NoteSettingsMenu extends BaseSubscreen {
             width: 360,
             padding: 2,
             isDisabled: () => (
-                !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_NOTES) &&
+                InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.DELETE_NOTES) &&
                 this.note.author.id !== Player.MemberNumber
             ),
             onClick: () => {
+                if (InformationSheetSelection === null) return;
                 if (InformationSheetSelection.IsPlayer()) {
-                    const [note] = modStorage.notes.list.splice(this.key - 1, 1);
+                    const [note] = modStorage.notes!.list!.splice(this.key - 1, 1);
                     addLog(`${getNickname(Player)} (${Player.MemberNumber}) deleted note: "${note.text}"`, false);
                     this.exit();
                 } else {
@@ -68,7 +69,7 @@ export class NoteSettingsMenu extends BaseSubscreen {
         });
     }
 
-    exit() {
+    public override exit() {
         super.exit();
         syncStorage();
     }
