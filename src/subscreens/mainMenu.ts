@@ -20,10 +20,32 @@ import { importAppearance, serverAppearanceBundleToAppearance } from "zois-core/
 import { AttributionsMenu } from "./attributionsMenu";
 import { SummoningRattleMenu } from "./summoningRattleMenu";
 import { findModByName } from "zois-core/mod-sdk";
+import { StyleModule } from "zois-core/shard-modules";
+import { showChangelogModal } from "zois-core/changelogs";
 
 export class MainMenu extends BaseSubscreen {
     private canvasCharacter!: Character;
     private circleColor!: string;
+
+    private static characters: Character[] = [];
+
+    public static createCharacters() {
+        MainMenu.characters = [];
+        for (const outfit of CANVAS_BABIES_APPEARANCES) {
+            const canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
+            const babyBundle = LZString.decompressFromBase64(outfit.bundle);
+            if (!babyBundle) continue;
+            const babyAppearance = serverAppearanceBundleToAppearance(Player.AssetFamily, JSON.parse(babyBundle));
+
+            const myAppearanceBundle = LZString.decompressFromBase64(MY_APPEARANCE_BUNDLE);
+            if (!myAppearanceBundle) continue;
+            ServerAppearanceLoadFromBundle(canvasCharacter, canvasCharacter.AssetFamily, JSON.parse(myAppearanceBundle));
+            importAppearance(canvasCharacter, babyAppearance);
+            PoseSetActive(canvasCharacter, "Kneel");
+            CharacterRefresh(canvasCharacter);
+            MainMenu.characters.push(canvasCharacter);
+        }
+    }
 
     get name() {
         return "";
@@ -43,35 +65,7 @@ export class MainMenu extends BaseSubscreen {
         const selection = InformationSheetSelection;
         if (selection === null) return;
 
-        this.canvasCharacter = CharacterCreate(Player.AssetFamily, CharacterType.NPC, "LC_CanvasCharacter");
-        const babyBundle = LZString.decompressFromBase64(
-            CANVAS_BABIES_APPEARANCES[getRandomNumber(0, CANVAS_BABIES_APPEARANCES.length - 1)].bundle
-        );
-        if (!babyBundle) return;
-        const babyAppearance = serverAppearanceBundleToAppearance(selection.AssetFamily, JSON.parse(babyBundle));
-
-        const myAppearanceBundle = LZString.decompressFromBase64(MY_APPEARANCE_BUNDLE);
-        if (!myAppearanceBundle) return;
-        ServerAppearanceLoadFromBundle(this.canvasCharacter, this.canvasCharacter.AssetFamily, JSON.parse(myAppearanceBundle));
-        importAppearance(this.canvasCharacter, babyAppearance);
-        PoseSetActive(this.canvasCharacter, "Kneel");
-        CharacterRefresh(this.canvasCharacter);
-
-        this.circleColor = cssVar("--tmd-text", "black");
-
-        let cloudText = `Littlish Club v${version}\nThanks for installing the mod!`;
-        let cloudHtml = `Littlish Club <b>v${version}</b><br>Thanks for installing the mod!`;
-        if (this.canvasCharacter.IsGagged()) cloudHtml = `${SpeechTransformBabyTalk(cloudText)}<br><br>(${cloudHtml})`;
-        const cloudBtn = this.createButton({
-            x: 900,
-            y: 300,
-            width: 550,
-            height: 500
-        });
-        cloudBtn.innerHTML = cloudHtml;
-        cloudBtn.style.pointerEvents = "none";
-        cloudBtn.style.borderRadius = "4vw";
-        cloudBtn.style.display = "block";
+        this.createCharacter();
 
         if (selection.IsPlayer()) {
             const addBabyBtn = this.createButton({
@@ -94,7 +88,14 @@ export class MainMenu extends BaseSubscreen {
             height: 90,
             x: 1815,
             y: 235,
-            onClick: () => open(DISCORD_SERVER_INVITE_LINK)
+            href: DISCORD_SERVER_INVITE_LINK,
+            modules: {
+                base: [
+                    new StyleModule({
+                        zIndex: "10"
+                    })
+                ]
+            }
         });
 
         this.createButton({
@@ -117,6 +118,17 @@ export class MainMenu extends BaseSubscreen {
             onClick: () => {
                 this.setSubscreen(new AttributionsMenu());
             }
+        });
+
+        this.createButton({
+            icon: "Icons/Changelog.png",
+            width: 90,
+            height: 90,
+            x: 95,
+            y: 60,
+            anchor: "bottom-right",
+            variant: "filled",
+            onClick: showChangelogModal
         });
 
         if (selection.IsPlayer()) {
@@ -184,7 +196,28 @@ export class MainMenu extends BaseSubscreen {
         });
     }
 
-    click() {
+    private createCharacter() {
+        const selection = InformationSheetSelection;
+        if (selection === null) return;
+        this.canvasCharacter = MainMenu.characters[getRandomNumber(0, MainMenu.characters.length - 1)];
+        this.circleColor = cssVar("--tmd-text", "black");
+
+        let cloudText = `Littlish Club v${version}\nThanks for installing the mod!`;
+        let cloudHtml = `Littlish Club <b>v${version}</b><br>Thanks for installing the mod!`;
+        if (this.canvasCharacter.IsGagged()) cloudHtml = `${SpeechTransformBabyTalk(cloudText)}<br><br>(${cloudHtml})`;
+        const cloudBtn = this.createButton({
+            x: 900,
+            y: 300,
+            width: 550,
+            height: 500
+        });
+        cloudBtn.innerHTML = cloudHtml;
+        cloudBtn.style.pointerEvents = "none";
+        cloudBtn.style.borderRadius = "4vw";
+        cloudBtn.style.display = "block";
+    }
+
+    public override click() {
         if (MouseIn(1580, 500, 150, 180)) {
             CharacterSetFacialExpression(this.canvasCharacter, "Blush", "Medium");
             CharacterSetFacialExpression(this.canvasCharacter, "Eyes", "Daydream");

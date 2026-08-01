@@ -12,6 +12,7 @@ import { loadUI } from "./modules/ui";
 import { loadAccess } from "./modules/access";
 import { messagesManager } from "zois-core/messaging";
 import { logger } from "zois-core/logging";
+import { MainMenu } from "./subscreens/mainMenu";
 
 
 bootstrap({
@@ -31,12 +32,22 @@ bootstrap({
         loadUI();
         loadAccess();
 
+        try {
+            MainMenu.createCharacters();
+            logger.log("Created MainMenu preview characters");
+        } catch (e) {
+            logger.error("Failed to create MainMenu preview characters", e);
+        }
+
         logger.log(`v${version} loaded`);
-        toastsManager.success({
-            title: "Littlish Club loaded",
-            message: `v${version}`,
-            duration: 4000
-        });
+
+        setTimeout(() => {
+            toastsManager.success({
+                title: "Littlish Club loaded",
+                message: `v${version}`,
+                duration: 4000
+            });
+        }, 1000);
 
         if (isVersionNewer(version, modStorage.version)) {
             waitFor(() => !!document.getElementById("InputChat")).then(() => {
