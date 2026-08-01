@@ -54,9 +54,11 @@ export let modStorage: ModStorage;
 export function initStorage(): void {
     if (typeof Player.ExtensionSettings.LITTLISH_CLUB === "string") {
         modStorage = JSON.parse(LZString.decompressFromBase64(Player.ExtensionSettings.LITTLISH_CLUB) ?? "{}") ?? { version };
-    } else modStorage = { version }
+    } else modStorage = { version };
 
-    modStorage.version = version
+    if (modStorage.version === undefined) {
+        modStorage.version = version;
+    }
 
     migrateModStorage();
 

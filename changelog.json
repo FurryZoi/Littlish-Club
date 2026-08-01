@@ -1,0 +1,82 @@
+{
+  "generated_at": "2026-08-01T09:53:07.043Z",
+  "changes": [
+    {
+      "message": "Switch to manual workflow trigger",
+      "sha": "2b567de610932280af0dafcb6054581b3d5f0bd5",
+      "author": {
+        "name": "FurryZoi",
+        "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4"
+      },
+      "date": "2026-08-01T08:34:34Z",
+      "tags": ["chore"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/2b567de610932280af0dafcb6054581b3d5f0bd5"
+    },
+    {
+      "message": "Optimize and improve main subscreen",
+      "sha": "ade55a72fd5c6c11b2136098c473594c27396278",
+      "author": {
+        "name": "FurryZoi",
+        "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4"
+      },
+      "date": "2026-08-01T08:29:26Z",
+      "tags": ["fix", "feature"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/ade55a72fd5c6c11b2136098c473594c27396278"
+    },
+    {
+      "message": "Adapt BC's DOMified checkboxes to the 'Pacifier-checkboxes' rule",
+      "sha": "29dc90e2e8c28b8f68148f57535298a6ba32b87e",
+      "author": {
+        "name": "FurryZoi",
+        "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4"
+      },
+      "date": "2026-07-31T21:22:21Z",
+      "tags": ["fix"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/29dc90e2e8c28b8f68148f57535298a6ba32b87e"
+    },
+    {
+      "message": "Fix pick title screen",
+      "sha": "3a89b687bdb6d90e8ce11f31934bd94e2c04b7bf",
+      "author": {
+        "name": "FurryZoi",
+        "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4"
+      },
+      "date": "2026-07-31T20:53:16Z",
+      "tags": ["fix"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/3a89b687bdb6d90e8ce11f31934bd94e2c04b7bf"
+    },
+    {
+      "message": "Add \"Bad girl in predicament\" outfit",
+      "sha": "8658514b24a10341d16b293bbdd2d35aa756888f",
+      "author": {
+        "name": "FurryZoi",
+        "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4"
+      },
+      "date": "2026-07-31T18:20:18Z",
+      "tags": ["feature"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/8658514b24a10341d16b293bbdd2d35aa756888f"
+    },
+    {
+      "message": "Refactoring and fixing types",
+      "sha": "2a145fe7f6d35cba3f48a291df655b93bedc6478",
+      "author": {
+        "name": "FurryZoi",
+        "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4"
+      },
+      "date": "2026-07-31T18:09:08Z",
+      "tags": ["chore", "fix"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/2a145fe7f6d35cba3f48a291df655b93bedc6478"
+    },
+    {
+      "message": "Migrate to zois-core v2",
+      "sha": "d9e18b4f3610cb525df4eacf89fd57383d3a7f55",
+      "author": {
+        "name": "FurryZoi",
+        "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4"
+      },
+      "date": "2026-07-30T12:33:41Z",
+      "tags": ["chore"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/d9e18b4f3610cb525df4eacf89fd57383d3a7f55"
+    }
+  ]
+}

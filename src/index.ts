@@ -5,7 +5,7 @@ import { initStorage, modStorage, syncStorage } from "./modules/storage";
 import { loadRules } from "./modules/rules";
 import { createApi } from "./modules/api";
 import { loadCyberDiaper } from "./modules/cyberDiaper";
-import { waitFor, bootstrap, isVersionNewer, getRandomNumber, injectStyles } from "zois-core";
+import { waitFor, bootstrap, isVersionNewer, getRandomNumber, injectStyles, ModData } from "zois-core";
 import { toastsManager } from "zois-core/toasts";
 import { version } from "../package.json";
 import { loadUI } from "./modules/ui";
@@ -13,6 +13,8 @@ import { loadAccess } from "./modules/access";
 import { messagesManager } from "zois-core/messaging";
 import { logger } from "zois-core/logging";
 import { MainMenu } from "./subscreens/mainMenu";
+import changelog from "../changelog.json";
+import { showChangelogModal } from "zois-core/changelogs";
 
 
 bootstrap({
@@ -22,6 +24,9 @@ bootstrap({
     version,
     repository: REPO_URL,
     fontFamily: "Emilys Candy",
+    changelog: {
+        data: changelog as NonNullable<ModData["changelog"]>["data"]
+    },
     onReady: () => {
         injectStyles(styles);
 
@@ -53,7 +58,9 @@ bootstrap({
             waitFor(() => !!document.getElementById("InputChat")).then(() => {
                 modStorage.version = version;
                 syncStorage();
-                const text = `<div class="lcChangelog"><b>Littlish Club</b> v${version}<br><br>Changes: <ul><li>Adapt to R124</li></ul></div>`;
+                const text = document.createElement("p");
+                text.textContent = "Littlish Club was updated, click here to read changelog"
+                text.onclick = showChangelogModal;
                 messagesManager.sendLocal(text);
             });
         }
