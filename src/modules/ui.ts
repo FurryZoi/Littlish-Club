@@ -62,4 +62,11 @@ export function loadUI(): void {
         }
         next(args);
     });
+
+    hookFunction("InformationSheetResize", HookPriority.OBSERVE, (args, next) => {
+        if (window.LITTLISH_CLUB.inModSubscreen()) {
+            return getCurrentSubscreen()?.resize();
+        }
+        next(args);
+    });
 }
