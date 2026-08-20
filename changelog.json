@@ -1,16 +1,49 @@
 {
-  "generated_at": "2026-08-05T08:43:47.029Z",
+  "generated_at": "2026-08-20T17:00:24.888Z",
   "changes": [
     {
-      "message": "Add missing resize handler and fix scrolling issues",
-      "sha": "97c0924c6aaffbd8aba4296355b976bdd73e7649",
+      "message": "Prevent player from adding himself to caregivers in exploring mode",
+      "sha": "c7a3c9bd39838965aa0638d8a9f0515b40dbae54",
       "author": {
-        "name": "Zoi",
+        "name": "FurryZoi",
         "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4"
       },
-      "date": "2026-08-05T08:42:02Z",
-      "tags": [],
-      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/97c0924c6aaffbd8aba4296355b976bdd73e7649"
+      "date": "2026-08-20T16:58:28Z",
+      "tags": ["fix"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/c7a3c9bd39838965aa0638d8a9f0515b40dbae54"
+    },
+    {
+      "message": "Add new littlish wardrobe outfits: Dragon Diaper Suit, Beach Baby",
+      "sha": "e2100334f2ebf82dad1b01a151daf526b5392fba",
+      "author": {
+        "name": "FurryZoi",
+        "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4"
+      },
+      "date": "2026-08-20T16:46:32Z",
+      "tags": ["feature"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/e2100334f2ebf82dad1b01a151daf526b5392fba"
+    },
+    {
+      "message": "Make all my mods follow \"pacifier checkboxes\" rule using zois-core api",
+      "sha": "87a4c498ce3552b4108b1f56a707b262cdd0b9ce",
+      "author": {
+        "name": "FurryZoi",
+        "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4"
+      },
+      "date": "2026-08-20T16:40:27Z",
+      "tags": ["feature"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/87a4c498ce3552b4108b1f56a707b262cdd0b9ce"
+    },
+    {
+      "message": "Delete global reset styles",
+      "sha": "c985bf3e4d556b4a1dc664f31921f1e44a3927e3",
+      "author": {
+        "name": "FurryZoi",
+        "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4"
+      },
+      "date": "2026-08-20T16:33:42Z",
+      "tags": ["fix"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/c985bf3e4d556b4a1dc664f31921f1e44a3927e3"
     }
   ]
 }
