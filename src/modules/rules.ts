@@ -5,13 +5,15 @@ import { extendedABDLItemNames, MOD_NAME } from "@/constants";
 import { getRandomNumber } from "zois-core";
 import { getNickname, getPlayer } from "zois-core";
 import paciferImage from "@/images/pacifier.png";
-import { setSubscreen } from "zois-core/ui";
+import { addDynamicClass, setSubscreen } from "zois-core/ui";
 import { ItemListMenu } from "@/subscreens/common/itemListMenu";
 import { RuleSettingsMenu } from "@/subscreens/ruleSettingsMenu";
 import { toastsManager } from "zois-core/toasts";
 import { AccessRight, getCaregiversOf, getMommyOf, hasAccessRightTo } from "./access";
 import { DictMenu } from "@/subscreens/common/dictMenu";
 import { logger } from "zois-core/logging";
+import { eventBus } from "zois-core/events";
+import { CheckboxShard } from "zois-core/shards";
 
 
 const dialogMenuButtonClickHooks = new Map<string, ((C: Character) => void)[]>();
@@ -1083,4 +1085,31 @@ export function loadRules(): void {
         }
         return next(args);
     });
+
+    eventBus?.on("shardMounted", ({ shard }) => {
+        if (!isRuleActive(Player, RuleId.PACIFIER_CHECKBOXES)) return;
+        if (shard.constructor.name === "CheckboxShard") {
+            const checkbox = (shard as CheckboxShard).body?.checkbox;
+            const checkboxContainer = checkbox?.parentElement;
+            if (checkbox && checkboxContainer) {
+                const paci = document.createElement("img");
+                paci.src = "https://raw.githubusercontent.com/FurryZoi/Littlish-Club/refs/heads/main/src/images/pacifier.png";
+                addDynamicClass(checkboxContainer, {
+                    "> img": {
+                        position: "absolute",
+                        width: "75%",
+                        pointerEvents: "none",
+                        display: "none"
+                    },
+                    "> input:checked ~ img": {
+                        display: "block"
+                    },
+                    "> svg": {
+                        display: "none !important"
+                    }
+                });
+                checkbox.parentElement?.append(paci);
+            }
+        }
+    })
 }
