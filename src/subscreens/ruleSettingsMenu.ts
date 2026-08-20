@@ -8,6 +8,7 @@ import { getNickname } from "zois-core";
 import { ChangeRuleSettingsMessageData } from "@/types/messages";
 import { AboutRulesSettingsMenu } from "./introductions/aboutRulesSettingsMenu";
 import { RulesMenu } from "./rulesMenu";
+import { StyleModule } from "zois-core/shard-modules";
 
 
 export class RuleSettingsMenu extends BaseSubscreen {
@@ -95,7 +96,14 @@ export class RuleSettingsMenu extends BaseSubscreen {
                 const paramText = this.createText({
                     text: param.text + ":",
                     fontSize: 4,
-                    parent: paramBlock
+                    parent: paramBlock,
+                    modules: {
+                        base: [
+                            new StyleModule({
+                                flexShrink: "0"
+                            })
+                        ]
+                    }
                 });
                 paramText.style.whiteSpace = "nowrap";
             }

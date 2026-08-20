@@ -1,27 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Emilys+Candy&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 .paciCheckbox::before {
 	background-image: url("https://raw.githubusercontent.com/FurryZoi/Littlish-Club/refs/heads/main/src/images/pacifier.png") !important;
 	background-size: cover !important;
     clip-path: none !important;
     background-color: unset !important;
-}
-
-.lcChangelog {
-    font-family: Comfortaa, sans-serif;
-    padding: 0.25em;
-}
-
-.lcChangelog ul {
-    padding-left: 1em;
-}
-
-.lcChangelog ul li {
-    padding: 0.5em 0;
 }
