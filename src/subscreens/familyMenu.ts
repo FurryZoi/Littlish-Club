@@ -41,7 +41,11 @@ export class FamilyMenu extends BaseSubscreen {
             height: 600,
             numbersOnly: true,
             isDisabled: () => InformationSheetSelection !== null && !hasAccessRightTo(Player, InformationSheetSelection, AccessRight.CHANGE_CAREGIVERS_LIST),
-            onChange: (value) => this.caregiversInputValue = value as number[]
+            onChange: (value) => {
+                let _value = value as number[];
+                _value = _value.filter((a) => a !== InformationSheetSelection?.MemberNumber);
+                this.caregiversInputValue = _value;
+            }
         });
 
         const caregiversPermissionsBtn = this.createButton({

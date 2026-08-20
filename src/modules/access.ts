@@ -87,6 +87,7 @@ export function isMommyOf(C1: Character, C2: Character): boolean {
 }
 
 export function isCaregiverOf(C1: Character, C2: Character): boolean {
+    if (C1.MemberNumber === C2.MemberNumber) return false;
     return getCaregiversOf(C2)?.includes(C1.MemberNumber ?? -1);
 }
 
