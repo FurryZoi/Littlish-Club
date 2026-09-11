@@ -324,6 +324,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
       name: "Beach Baby",
       creator: "Lills",
       bundle: "NobwRA4gTg9grgBzALjAYQDYwC4AsAyMA7gKZRgA0YAcgIYC2JKYASnAGbsYkAmAsgEsAdgIDOAawFRsldDCzlkwMAGIAYhs2yVAER0B2AAwbtafQDZ9AUQAsYALpUdAzgIDGcDNgCeKQ1QAFWAQyHxRwAHkEWjcBMKV/AEYKRMcwAGU3Wm4ADT8AOgBOKkzskgBNAoAOKgAVKFohUQxabAEYITzkfzB6xubW9qFK5ABacwBfCYpwaHgkVAAhBrcSbhkqOkZmfBiSRcaeUVk0eRhFZRVFgFYq64AmfW0NM2untOdXDy9fbsDg0K/SIANzIUAEPBIQXa4Pi4F2qxQ90K0wyWVyKGSaLKI3uVF23jIpQxyHAByER0xqIJZD6TRabQ6IzJh2O3VRdIGjOGKHGAGYpjNILBEMwIFhQaIAPqACm8ZYBpsPwcAAXgJZFsmKhxTBJWo4OQqKcFChLlU3Pc+XzEtoqjZzHz7mgHE4XOx3J54j0gjAQtIgWAojE4r9gEk0jSoMSSF1wGpaAAjcFuTFUPWKRL5RLU2iEyPoirhMBplAC/E52kNemDDoxov6vwcytcoYjUZ3KgRUFQcGQ6HnYNIlHTWYihZgAAStCkAEE3KtRKJzt5rZsGJrIAJGthFsQV3JjUpVIU7oZp4tnWBPm7vp7/j7AYWI5yGS3Hx0AOa8xL3VGdsEQqFwX7eJzDxbESUMfIbBKfMRkg6CwCfJsXxrN8hE/ZBEiqVEWBwashExIchTmUVUEnGc5xIBclz5dU12YQBFxMAPR1AEXlQBDZROM4LlUKwqlAtQdAvK93R+Pw719OFEPLKBcOwfDC2Y9jMWwupkPwrowOffCRgFYdhXmZhMBwAhiDIWUFSVVU6O2VB0lwc5sACEghFiDB0kkaROIPS4bESDQdGuITXRE28wG9CT/SjOD8j5GCyg01T+hQnkxluDtoliT18nMDsux7QCYQHZBrkSqtuS6UZrkFEcDNQIy8EIUgoHMiyVQEe5rPXOyHKclyBDcjyNn3c4TVUXz/MCj5gpvX4vQBP1C1k+TMKqHotPKzEEPW19UrAqKChK8DoyRdKgyy65fMSCwbCMW4qgta5YoDPKAL7WFfnuSY9JIscAi3AQqM65hnFoX1RDsQ0uNGlR9DQG6qidJwSHYWgPVkHRkdRrxtGnNBp1uQSpq+D1ZvEh9SV6bwQhYEg3HOHhCx8EIGfZUrmyZFB9Fy/9eyA97C2gWgeABoQZGQGxfwyorgGSWWUjSfbMLLXNFZHIWRbFyDJmVol81rQXhecsWMwl6r9NIsBlloIGlgESQRD3I0RsPFRzBsPlp30DqievEmxLC+a4SmewgA="
+    },
+    {
+      name: "Padded Princess",
+      creator: "Sweet Candi",
+      bundle: "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"
     }
   ];
   var extendedABDLItemNames = [
@@ -360,17 +365,20 @@ One of mods you are using is using an old version of SDK. It will work for now b
 }`;
 
   // package.json
-  var version = "1.2.2";
+  var version = "1.2.3";
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/styles.css
-  var styles_default2 = ".zcInput {\n  background: var(--tmd-element, white);\n  color: var(--tmd-text, black);\n  padding: 2vw;\n  border: 2px solid var(--tmd-accent, black);\n  border-radius: 4px;\n}\n.zcInput::placeholder {\n  color: var(--tmd-text, black);\n}\n.zcTabs {\n  display: flex;\n}\n.zcTabs button {\n  cursor: pointer;\n  width: 100%;\n  color: var(--tmd-text, black);\n  background: none;\n  border: none;\n  border-bottom: 2px solid var(--tmd-element, rgb(214, 214, 214));\n  padding: 0.25em;\n}\n.zcTabs button[data-opened=true] {\n  font-weight: bold;\n  border-bottom: 2px solid var(--tmd-accent, rgb(81, 81, 231)) !important;\n}\n.zcTabs button:hover {\n  background: var(--tmd-element, rgb(235, 235, 235));\n  border-bottom: 2px solid var(--tmd-element-hover, rgb(149, 149, 149));\n}\n.zcCard {\n  border: 2px solid var(--tmd-accent, rgb(195, 195, 195));\n  border-radius: 0.4em;\n  background: var(--tmd-element, white);\n  color: var(--tmd-text, black);\n  padding: 0.4em 2.5em 0.4em 0.4em;\n  box-sizing: border-box;\n}\n.zcCard:hover {\n  border: 2px solid var(--tmd-accent-hover, rgb(170, 170, 170));\n}\n.zcCard_name {\n  font-size: 0.5em;\n  color: var(--tmd-text, rgb(100, 100, 100));\n  margin: 0;\n}\n.zcCard_value {\n  color: var(--tmd-text, black);\n  margin: 0;\n  margin-top: 0.4em;\n  font-weight: bold;\n}\n.zcToastsContainer {\n  display: flex;\n  flex-direction: column;\n  gap: 0.15vw;\n  cursor: pointer;\n  position: fixed;\n  z-index: 30;\n}\n@keyframes zcToast-progress {\n  0% {\n    width: 0;\n  }\n  100% {\n    width: 100%;\n  }\n}\n@keyframes zcSlideInFromLeft {\n  from {\n    transform: translateX(-100%);\n    opacity: 0;\n  }\n  to {\n    transform: translateX(0);\n    opacity: 1;\n  }\n}\n@keyframes zcSlideInFromRight {\n  from {\n    transform: translateX(100%);\n    opacity: 0;\n  }\n  to {\n    transform: translateX(0);\n    opacity: 1;\n  }\n}\n@keyframes zcSlideOutToLeft {\n  from {\n    transform: translateX(0);\n    opacity: 1;\n  }\n  to {\n    transform: translateX(-100%);\n    opacity: 0;\n  }\n}\n@keyframes zcSlideOutToRight {\n  from {\n    transform: translateX(0);\n    opacity: 1;\n  }\n  to {\n    transform: translateX(100%);\n    opacity: 0;\n  }\n}\n@keyframes pop {\n  0% {\n    transform: scale(0.9);\n  }\n  50% {\n    transform: scale(1.1);\n  }\n  100% {\n    transform: scale(1);\n  }\n}\n.zcToast {\n  display: flex;\n  column-gap: 0.6em;\n  align-items: center;\n  max-width: 25vw;\n  border-radius: 0.15em;\n  position: relative;\n}\n.zcToast p {\n  color: white;\n  margin: 0;\n}\n.zcToast > svg {\n  flex-shrink: 0;\n}\n.zcDialog {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  background: rgb(57, 64, 77);\n  margin: auto;\n  position: absolute;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  right: 0;\n  border: none;\n  border-radius: 4px;\n  min-width: 200px;\n  max-width: 450px;\n  width: 90%;\n  height: fit-content;\n  z-index: 100;\n  pointer-events: all !important;\n  box-shadow: 0px 0px 6px 1px #0000006e;\n}\n.zcDialog > p {\n  padding: 0.85em 0px;\n  margin: 0;\n  user-select: none;\n  width: 90%;\n  color: white;\n}\n.zcDialog > input:focus {\n  outline: 2px solid rgb(0, 238, 255);\n}\n.zcDialog > div > button {\n  cursor: pointer;\n  padding: 6px 14px;\n  border: none;\n  border-radius: 4px;\n  font-weight: bold;\n}\n.zcDialog > div > button:first-child {\n  background: rgba(73, 82, 99, 1);\n  color: white;\n}\n.zcDialog > div > button:first-child:hover {\n  background: rgb(86, 94, 108);\n}\n.zcDialog > div > button:last-child {\n  background: #00eeffff;\n}\n.zcDialog > div > button:last-child:hover {\n  background: rgb(4, 203, 217);\n}\n@keyframes zcSpin {\n  from {\n    transform: rotate(0deg);\n  }\n  to {\n    transform: rotate(360deg);\n  }\n}\n@keyframes zcCursorBlink {\n  from {\n    border-right-color: transparent;\n  }\n  to {\n    border-right-color: rgb(42, 42, 42);\n  }\n}\n.zcCursor {\n  border-right: 2px solid var(--tmd-text, rgb(42, 42, 42));\n  width: fit-content;\n}\n.zcDisabled {\n  pointer-events: none;\n  opacity: 0.6;\n}\n";
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/styles.css
+  var styles_default2 = ".zcInput {\n  background: var(--tmd-element, white);\n  color: var(--tmd-text, black);\n  padding: 2vw;\n  border: 2px solid var(--tmd-accent, black);\n  border-radius: 4px;\n}\n.zcInput::placeholder {\n  color: var(--tmd-text, black);\n}\n.zcTabs {\n  display: flex;\n}\n.zcTabs button {\n  cursor: pointer;\n  width: 100%;\n  color: var(--tmd-text, black);\n  background: none;\n  border: none;\n  border-bottom: 2px solid var(--tmd-element, rgb(214, 214, 214));\n  padding: 0.25em;\n}\n.zcTabs button[data-opened=true] {\n  font-weight: bold;\n  border-bottom: 2px solid var(--tmd-accent, rgb(81, 81, 231)) !important;\n}\n.zcTabs button:hover {\n  background: var(--tmd-element, rgb(235, 235, 235));\n  border-bottom: 2px solid var(--tmd-element-hover, rgb(149, 149, 149));\n}\n.zcCard {\n  border: 2px solid var(--tmd-accent, rgb(195, 195, 195));\n  border-radius: 0.4em;\n  background: var(--tmd-element, white);\n  color: var(--tmd-text, black);\n  padding: 0.4em 2.5em 0.4em 0.4em;\n  box-sizing: border-box;\n}\n.zcCard:hover {\n  border: 2px solid var(--tmd-accent-hover, rgb(170, 170, 170));\n}\n.zcCard_name {\n  font-size: 0.5em;\n  color: var(--tmd-text, rgb(100, 100, 100));\n  margin: 0;\n}\n.zcCard_value {\n  color: var(--tmd-text, black);\n  margin: 0;\n  margin-top: 0.4em;\n  font-weight: bold;\n}\n.zcToastsContainer {\n  display: flex;\n  flex-direction: column;\n  gap: 0.15vw;\n  cursor: pointer;\n  position: fixed;\n  z-index: 30;\n}\n@keyframes zcToast-progress {\n  0% {\n    width: 0;\n  }\n  100% {\n    width: 100%;\n  }\n}\n@keyframes zcSlideInFromLeft {\n  from {\n    transform: translateX(-100%);\n    opacity: 0;\n  }\n  to {\n    transform: translateX(0);\n    opacity: 1;\n  }\n}\n@keyframes zcSlideInFromRight {\n  from {\n    transform: translateX(100%);\n    opacity: 0;\n  }\n  to {\n    transform: translateX(0);\n    opacity: 1;\n  }\n}\n@keyframes zcSlideOutToLeft {\n  from {\n    transform: translateX(0);\n    opacity: 1;\n  }\n  to {\n    transform: translateX(-100%);\n    opacity: 0;\n  }\n}\n@keyframes zcSlideOutToRight {\n  from {\n    transform: translateX(0);\n    opacity: 1;\n  }\n  to {\n    transform: translateX(100%);\n    opacity: 0;\n  }\n}\n@keyframes pop {\n  0% {\n    transform: scale(0.9);\n  }\n  50% {\n    transform: scale(1.1);\n  }\n  100% {\n    transform: scale(1);\n  }\n}\n.zcToast {\n  display: flex;\n  column-gap: 0.6em;\n  align-items: center;\n  max-width: 25vw;\n  border-radius: 0.15em;\n  position: relative;\n}\n.zcToast p {\n  color: white;\n  margin: 0;\n}\n.zcToast > svg {\n  flex-shrink: 0;\n}\n.zcDialog {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  background: rgb(57, 64, 77);\n  margin: auto;\n  position: absolute;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  right: 0;\n  border: none;\n  border-radius: 4px;\n  min-width: 200px;\n  max-width: 450px;\n  width: 90%;\n  height: fit-content;\n  z-index: 100;\n  pointer-events: all !important;\n  box-shadow: 0px 0px 6px 1px #0000006e;\n}\n.zcDialog > p {\n  padding: 0.85em 0px;\n  margin: 0;\n  user-select: none;\n  width: 90%;\n  color: white;\n}\n.zcDialog > input:focus {\n  outline: 2px solid rgb(0, 238, 255);\n}\n.zcDialog > div > button {\n  cursor: pointer;\n  padding: 6px 14px;\n  border: none;\n  border-radius: 4px;\n  font-weight: bold;\n}\n.zcDialog > div > button:first-child {\n  background: rgba(73, 82, 99, 1);\n  color: white;\n}\n.zcDialog > div > button:first-child:hover {\n  background: rgb(86, 94, 108);\n}\n.zcDialog > div > button:last-child {\n  background: #00eeffff;\n}\n.zcDialog > div > button:last-child:hover {\n  background: rgb(4, 203, 217);\n}\n@keyframes zcSpin {\n  from {\n    transform: rotate(0deg);\n  }\n  to {\n    transform: rotate(360deg);\n  }\n}\n@keyframes zcCursorBlink {\n  from {\n    border-right-color: transparent;\n  }\n  to {\n    border-right-color: rgb(42, 42, 42);\n  }\n}\n@keyframes zcStrokeUD {\n  0%, 100% {\n    transform: translateY(0) rotate(-25deg);\n  }\n  50% {\n    transform: translateY(15px) rotate(-45deg);\n  }\n}\n@keyframes zcFloatHeart {\n  0% {\n    transform: translateY(0) scale(0.5);\n    opacity: 0;\n  }\n  15% {\n    opacity: 1;\n  }\n  100% {\n    transform: translateY(-70px) scale(1.1);\n    opacity: 0;\n  }\n}\n.zcCursor {\n  border-right: 2px solid var(--tmd-text, rgb(42, 42, 42));\n  width: fit-content;\n}\n.zcDisabled {\n  pointer-events: none;\n  opacity: 0.6;\n}\n";
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/modSdk.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/modSdk.js
   var import_bondage_club_mod_sdk = __toESM(require_bcmodsdk());
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/logging.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/logging.js
   var logs = [];
   var Logger = class {
+    /**
+    * Returns the list of all recorded log entries.
+    */
     get logs() {
       return logs;
     }
@@ -382,22 +390,38 @@ One of mods you are using is using an old version of SDK. It will work for now b
       });
       console[level](`%c${MOD_DATA.key}:`, "color: #00ffe7;", ...message);
     }
+    /**
+    * Logs a debug-level message.
+    * @param message - The message arguments to log.
+    */
     debug(...message) {
       this.pushLog("debug", message);
     }
+    /**
+    * Logs a standard-level message.
+    * @param message - The message arguments to log.
+    */
     log(...message) {
       this.pushLog("log", message);
     }
+    /**
+    * Logs a warning-level message.
+    * @param message - The message arguments to log.
+    */
     warn(...message) {
       this.pushLog("warn", message);
     }
+    /**
+    * Logs an error-level message.
+    * @param message - The message arguments to log.
+    */
     error(...message) {
       this.pushLog("error", message);
     }
   };
   var logger = new Logger();
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/modSdk.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/modSdk.js
   var HookPriority = /* @__PURE__ */ ((HookPriority2) => {
     HookPriority2[HookPriority2["OBSERVE"] = 0] = "OBSERVE";
     HookPriority2[HookPriority2["ADD_BEHAVIOR"] = 1] = "ADD_BEHAVIOR";
@@ -429,7 +453,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     return !!import_bondage_club_mod_sdk.default.getModsInfo().find((m) => m.name === name);
   }
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shard-modules/shardModule.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shard-modules/shardModule.js
   var ShardModule = class {
     overrideContext(context, target) {
       return context;
@@ -440,7 +464,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shard-modules/styleModule.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shard-modules/styleModule.js
   var StyleModule = class extends ShardModule {
     constructor(style) {
       super();
@@ -458,7 +482,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shard-modules/dynamicClassModule.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shard-modules/dynamicClassModule.js
   var DynamicClassModule = class extends ShardModule {
     constructor(style) {
       super();
@@ -470,7 +494,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/events.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/events.js
   var listeners = /* @__PURE__ */ new Map();
   var onceListeners = /* @__PURE__ */ new Map();
   function parseEventSpec(spec) {
@@ -580,7 +604,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   }
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shards/shard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shards/shard.js
   var Shard = class {
     constructor(context) {
       this.context = context;
@@ -666,7 +690,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shards/backNextButtonShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shards/backNextButtonShard.js
   var BackNextButtonShard = class extends Shard {
     get dynamicClassContainer() {
       return {
@@ -833,11 +857,32 @@ One of mods you are using is using an old version of SDK. It will work for now b
     ["path", { d: "m9 9 6 6" }]
   ];
 
+  // node_modules/.pnpm/lucide@1.33.0/node_modules/lucide/dist/esm/icons/crown.mjs
+  var Crown = [
+    [
+      "path",
+      {
+        d: "M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"
+      }
+    ],
+    ["path", { d: "M5 21h14" }]
+  ];
+
   // node_modules/.pnpm/lucide@1.33.0/node_modules/lucide/dist/esm/icons/external-link.mjs
   var ExternalLink = [
     ["path", { d: "M15 3h6v6" }],
     ["path", { d: "M10 14 21 3" }],
     ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" }]
+  ];
+
+  // node_modules/.pnpm/lucide@1.33.0/node_modules/lucide/dist/esm/icons/heart.mjs
+  var Heart = [
+    [
+      "path",
+      {
+        d: "M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"
+      }
+    ]
   ];
 
   // node_modules/.pnpm/lucide@1.33.0/node_modules/lucide/dist/esm/icons/info.mjs
@@ -868,7 +913,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     ["path", { d: "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" }]
   ];
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shards/buttonShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shards/buttonShard.js
   var ButtonShard = class extends Shard {
     get dynamicClassButton() {
       return {
@@ -1020,7 +1065,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shards/cardShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shards/cardShard.js
   var CardShard = class extends Shard {
     generateBody() {
       const { name, value, icon } = this.context;
@@ -1051,7 +1096,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shards/checkboxShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shards/checkboxShard.js
   var CheckboxShard = class extends Shard {
     get dynamicClassInput() {
       return {
@@ -1215,7 +1260,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shards/containerShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shards/containerShard.js
   var ContainerShard = class extends Shard {
     get dynamicClassContainer() {
       return {
@@ -1345,7 +1390,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shards/imageShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shards/imageShard.js
   var ImageShard = class extends Shard {
     modal = null;
     generateBody() {
@@ -1441,7 +1486,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shards/inputListShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shards/inputListShard.js
   var InputListShard = class extends Shard {
     get dynamicClassContainer() {
       return {
@@ -1558,7 +1603,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         items.splice(0, items.length);
         itemsElement.append(input);
         value?.forEach((v) => addItem(String(v)));
-        if (typeof onChange === "function") onChange(numbersOnly ? items.map((i) => parseInt(i)) : items);
+        if (typeof onChange === "function") onChange(numbersOnly ? items.map((i) => parseInt(i, 10)) : items);
       });
       addButton(createElement(Trash2), () => {
         if (typeof isDisabled === "function" && isDisabled()) return div.classList.add("zcDisabled");
@@ -1568,7 +1613,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
             c.remove();
           }
         }
-        if (typeof onChange === "function") onChange(numbersOnly ? items.map((i) => parseInt(i)) : items);
+        if (typeof onChange === "function") onChange(numbersOnly ? items.map((i) => parseInt(i, 10)) : items);
       });
       if (typeof isDisabled === "function" && isDisabled()) div.classList.add("zcDisabled");
       input.addEventListener("keypress", (e) => {
@@ -1580,7 +1625,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
               if (typeof isDisabled === "function" && isDisabled()) return div.classList.add("zcDisabled");
               addItem(input.value);
               input.value = "";
-              if (typeof onChange === "function") onChange(numbersOnly ? items.map((i) => parseInt(i)) : items);
+              if (typeof onChange === "function") onChange(numbersOnly ? items.map((i) => parseInt(i, 10)) : items);
               break;
           }
         }
@@ -1599,7 +1644,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shards/inputShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shards/inputShard.js
   var InputShard = class extends Shard {
     generateBody() {
       const { textArea, placeholder, value, isDisabled, onChange, onInput } = this.context;
@@ -1628,7 +1673,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shards/selectShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shards/selectShard.js
   var SelectShard = class extends Shard {
     get dynamicClassContainer() {
       return {
@@ -1754,7 +1799,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shards/svgShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shards/svgShard.js
   var SvgShard = class extends Shard {
     generateBody() {
       const { dataurl, size, fill = "var(--tmd-accent, black)", stroke = "var(--tmd-accent-hover, black)", strokeWidth = "2px" } = this.context;
@@ -1780,7 +1825,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shards/tabsShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shards/tabsShard.js
   var TabsShard = class extends Shard {
     tabHandlers = {};
     clearDrawProcessHook = null;
@@ -1835,7 +1880,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         tabEl.addEventListener("click", switchTab);
         tabsEl.append(tabEl);
       });
-      window.addEventListener("zois-core:subscreenunloaded", () => this.clearDrawProcessHook?.(), { once: true });
+      eventBus?.once("subscreenUnloaded", () => this.clearDrawProcessHook?.());
       return {
         base: tabsEl
       };
@@ -1846,7 +1891,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/shards/textShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/shards/textShard.js
   var TextShard = class extends Shard {
     get defaultColor() {
       return "var(--tmd-text, black)";
@@ -1872,10 +1917,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/assets/icons/exit.svg
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/assets/icons/exit.svg
   var exit_default = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" %0A     width="86" height="86" %0A     viewBox="0 0 86 86" %0A     fill="none">%0A  <g transform="translate(0.000000,86.000000) scale(0.100000,-0.100000)"%0A     fill="currentColor" stroke="none">%0A    <path d="M120 507 l0 -305 151 -81 c83 -45 160 -81 170 -81 18 0 19 12 19 281%0A            0 163 -4 288 -10 299 -11 20 -44 40 -212 129 l-118 62 0 -304z"/>%0A    <path d="M260 787 c31 -19 52 -23 180 -27 l145 -5 3 -72 3 -73 29 0 30 0 0 81%0A            c0 126 14 119 -223 119 l-202 0 35 -23z"/>%0A    <path d="M690 590 c0 -19 -7 -20 -90 -20 l-90 0 0 -60 0 -60 90 0 c83 0 90 -1%0A            90 -20 0 -11 3 -20 7 -20 14 0 93 84 93 99 0 16 -78 101 -92 101 -4 0 -8 -9%0A            -8 -20z"/>%0A    <path d="M590 336 l0 -76 -40 0 c-38 0 -40 -2 -40 -30 0 -29 1 -30 50 -30 77 0%0A            92 20 88 123 -3 81 -3 82 -30 85 l-28 3 0 -75z"/>%0A  </g>%0A</svg>';
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/ui.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/ui.js
   function hexToRgb(hex) {
     hex = hex.replace("#", "");
     const r = parseInt(hex.substring(0, 2), 16);
@@ -2067,16 +2112,80 @@ One of mods you are using is using an old version of SDK. It will work for now b
   }
   var BaseSubscreen = class {
     setSubscreen = setSubscreen;
+    setPreviousSubscreen = setPreviousSubscreen;
     get currentSubscreen() {
       return getCurrentSubscreen();
     }
     get previousSubscreen() {
       return getPreviousSubscreen();
     }
+    /**
+     * Called each frame.
+     * 
+     * You probably want to override {@link onRun}, **do not** override `run` if you don't understand what you're doing.
+     */
     run() {
+      this.onRun?.();
     }
+    /**
+     * Called once after `setSubscreen()`.
+     * Responsible for how the subscreen will load.
+     * 
+     * You probably want to override {@link onLoad}, **do not** override `load` if you don't understand what you're doing.
+     * 
+     * Override {@link onLoad} for creating UI elements.
+     */
     load() {
       setSizeUnitVariable();
+      this.createExitButton();
+      if (this.name) this.createSubscreenTitle();
+      this.onLoad?.();
+      eventBus?.emit("subscreenLoaded", {
+        subscreen: this
+      });
+    }
+    /**
+     * Called once when subscreen is being unloaded.
+     * 
+     * You probably want to override {@link onUnload}, **do not** override `unload` if you don't understand what you're doing.
+     */
+    unload() {
+      this.onUnload?.();
+      eventBus?.emit("subscreenUnloaded", {
+        subscreen: this
+      });
+    }
+    /**
+     * Called after user clicks.
+     * 
+     * You probably want to override {@link onClick}, **do not** override `click` if you don't understand what you're doing.
+     */
+    click() {
+      this.onClick?.();
+    }
+    /**
+     * Called after user presses `Esc` or clicks on exit button.
+     * 
+     * Not called after subscreen unloading with `setSubscreen()`
+     * 
+     * You probably want to override {@link onExit}, **do not** override `exit` if you don't understand what you're doing.
+     */
+    exit() {
+      this.onExit?.();
+      setPreviousSubscreen();
+    }
+    update() {
+    }
+    /**
+     * Called after screen size change.
+     * 
+     * You probably want to override {@link onResize}, **do not** override `resize` if you don't understand what you're doing.
+     */
+    resize() {
+      setSizeUnitVariable();
+      this.onResize?.();
+    }
+    createExitButton() {
       this.createButton({
         x: 1815,
         y: 75,
@@ -2093,37 +2202,17 @@ One of mods you are using is using an old version of SDK. It will work for now b
               zIndex: "10"
             })
           ]
-        }
-      }).addEventListener("click", () => this.exit());
-      if (this.name) {
-        this.createText({
-          text: this.name,
-          x: 100,
-          y: 60,
-          fontSize: 8
-        }).style.cssText += "max-width: 85%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0.1em;";
-      }
-      eventBus?.emit("subscreenLoaded", {
-        subscreen: this
+        },
+        onClick: () => this.exit()
       });
     }
-    unload() {
-      eventBus?.emit("subscreenUnloaded", {
-        subscreen: this
-      });
-    }
-    click() {
-    }
-    exit() {
-      setPreviousSubscreen();
-    }
-    update() {
-    }
-    resize() {
-      setSizeUnitVariable();
-    }
-    setPreviousSubscreen() {
-      setPreviousSubscreen();
+    createSubscreenTitle() {
+      this.createText({
+        text: this.name,
+        x: 100,
+        y: 60,
+        fontSize: 8
+      }).style.cssText += "max-width: 85%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0.1em;";
     }
     create(shard) {
       const htmlElement = shard.mount();
@@ -2219,7 +2308,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/core-subscreen/shards/coreButtonShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/core-subscreen/shards/coreButtonShard.js
   var CoreButtonShard = class extends ButtonShard {
     get dynamicClassButton() {
       return {
@@ -2247,14 +2336,14 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/core-subscreen/shards/coreTextShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/core-subscreen/shards/coreTextShard.js
   var CoreTextShard = class extends TextShard {
     get defaultColor() {
       return "rgb(162, 255, 19)";
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/core-subscreen/shards/coreSelectShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/core-subscreen/shards/coreSelectShard.js
   var CoreSelectShard = class extends SelectShard {
     get dynamicClassContainer() {
       return {
@@ -2269,7 +2358,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/core-subscreen/shards/coreCheckboxShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/core-subscreen/shards/coreCheckboxShard.js
   var CoreCheckboxShard = class extends CheckboxShard {
     get dynamicClassInput() {
       return {
@@ -2300,7 +2389,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/core-subscreen/shards/coreInputListShard.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/core-subscreen/shards/coreInputListShard.js
   var CoreInputListShard = class extends InputListShard {
     get dynamicClassContainer() {
       return {
@@ -2336,7 +2425,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/core-subscreen/coreSubscreen.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/core-subscreen/coreSubscreen.js
   var CoreSubscreen = class extends BaseSubscreen {
     g = 40;
     h = 0.05;
@@ -2412,7 +2501,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/core-subscreen/generalSubscreen.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/core-subscreen/generalSubscreen.js
   var GeneralSubscreen = class extends CoreSubscreen {
     get name() {
       return "General";
@@ -2432,7 +2521,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/toasts.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/toasts.js
   function createToastsContainer() {
     const container = document.createElement("div");
     container.classList.add("zcToastsContainer");
@@ -2579,32 +2668,58 @@ One of mods you are using is using an old version of SDK. It will work for now b
         });
       }
     }
+    /**
+    * Displays informational toast.
+    * @param options - Title, message and duration of toast.
+    */
     info({ title, message, duration }) {
       const id = this.generateToastId();
       const theme = MOD_DATA.singleToastsTheme;
       this.process({ title, message, duration, type: "info", id, theme });
     }
+    /**
+    * Displays success toast.
+    * @param options - Title, message and duration of toast.
+    */
     success({ title, message, duration }) {
       const id = this.generateToastId();
       const theme = MOD_DATA.singleToastsTheme;
       this.process({ title, message, duration, type: "success", id, theme });
     }
+    /**
+    * Displays warning toast.
+    * @param options - Title, message and duration of toast.
+    */
     warn({ title, message, duration }) {
       const id = this.generateToastId();
       const theme = MOD_DATA.singleToastsTheme;
       this.process({ title, message, duration, type: "warning", id, theme });
     }
+    /**
+    * Displays error toast.
+    * @param options - Title, message and duration of toast.
+    */
     error({ title, message, duration }) {
       const id = this.generateToastId();
       const theme = MOD_DATA.singleToastsTheme;
       this.process({ title, message, duration, type: "error", id, theme });
     }
+    /**
+    * Displays a long-running spinner toast and returns its ID.
+    * Toast can be deleted manually with `toastsManager.removeSpinner(ID)` or by the user by clicking.
+    * @param options - Title and message of toast.
+    * @returns The unique ID of the created spinner toast.
+    */
     spinner({ title, message }) {
       const id = this.generateToastId();
       const theme = MOD_DATA.singleToastsTheme;
       this.process({ title, message, duration: 1e6, type: "spinner", id, theme });
       return id;
     }
+    /**
+    * Removes a spinner toast by its ID.
+    * @param id - Unique ID of the spinner toast to remove.
+    */
     removeSpinner(id) {
       const toast = document.querySelector(`div[data-zc-toast-id="${id}"]`);
       if (!toast) return;
@@ -2615,7 +2730,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   };
   var toastsManager = new ToastsManager();
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/core-subscreen/toastsSubscreen.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/core-subscreen/toastsSubscreen.js
   var ToastsSubscreen = class extends CoreSubscreen {
     get name() {
       return "Toasts";
@@ -2722,7 +2837,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/core-subscreen/developmentSubscreen.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/core-subscreen/developmentSubscreen.js
   var DevelopmentSubscreen = class extends CoreSubscreen {
     get name() {
       return "Development";
@@ -2742,7 +2857,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/core-subscreen/mainSubscreen.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/core-subscreen/mainSubscreen.js
   var MainSubscreen = class extends CoreSubscreen {
     get name() {
       return "Zoi's Modding Core";
@@ -2793,7 +2908,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/dialogs.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/dialogs.js
   function createDialog(dialog) {
     return new Promise((resolve, reject) => {
       let inputOrSelectElement = null;
@@ -2901,7 +3016,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   };
   var dialogsManager = new DialogsManager();
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/core.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/core.js
   var coreSettings = {};
   var coreEventBus = null;
   function syncSettings() {
@@ -3079,7 +3194,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     });
   }
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/localization.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/localization.js
   var translations = {};
   async function loadLocalization() {
     if (MOD_DATA.localization === void 0) {
@@ -3113,10 +3228,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
     translations[locale] = data;
   }
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/package.json
-  var version2 = "2.1.0";
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/package.json
+  var version2 = "2.2.1";
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/index.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/index.js
   var MOD_DATA;
   function bootstrap(modData) {
     MOD_DATA = modData;
@@ -4835,7 +4950,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   }
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/validation.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/validation.js
   async function validateData(data, dtoClass) {
     try {
       const dtoInstance = plainToInstance(dtoClass, data);
@@ -4861,7 +4976,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   }
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/messaging.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/messaging.js
   function isZoiChatRoomMessage(m) {
     return m.Content === MOD_DATA.key;
   }
@@ -4869,6 +4984,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
     return typeof c === "function" && c.prototype?.constructor == c;
   }
   var MessagesManager = class {
+    /**
+     * Sends beep message to a specific player.
+     * @param data - The data to send in the beep.
+     * @param targetId - The member number of the target player.
+     */
     sendBeep(data, targetId) {
       const beep = {
         IsSecret: true,
@@ -4880,6 +5000,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
       };
       ServerSend("AccountBeep", beep);
     }
+    /**
+     * Sends hidden packet message to the chat room or a specific player.
+     * @param msg - The message identifier.
+     * @param _data - Optional data payload to include.
+     * @param targetNumber - Optional target player member number.
+     */
     sendPacket(msg, _data, targetNumber) {
       const data = {
         Content: MOD_DATA.key,
@@ -4892,6 +5018,14 @@ One of mods you are using is using an old version of SDK. It will work for now b
       if (targetNumber) data.Target = targetNumber;
       ServerSend("ChatRoomChat", data);
     }
+    /**
+     * Sends a custom action message to the chat room with automatic pronoun replacement.
+     * 
+     * Replaces placeholders such as `<Possessive>`, `<Intensive>`, `<SelfIntensive>`, and `<Pronoun>`.
+     * @param msg - The action message text.
+     * @param target - Optional target player member number.
+     * @param dictionary - Optional additional dictionary entries.
+     */
     sendAction(msg, target = void 0, dictionary = []) {
       if (!msg || !ServerPlayerIsInChatRoom()) return;
       const isFemale = CharacterPronounDescription(Player) === "She/Her";
@@ -4901,20 +5035,42 @@ One of mods you are using is using an old version of SDK. It will work for now b
       const capPronoun = isFemale ? "She" : "He";
       msg = msg.replaceAll("<Possessive>", capPossessive).replaceAll("<possessive>", capPossessive.toLocaleLowerCase()).replaceAll("<Intensive>", capIntensive).replaceAll("<intensive>", capIntensive.toLocaleLowerCase()).replaceAll("<SelfIntensive>", capSelfIntensive).replaceAll("<selfIntensive>", capSelfIntensive.toLocaleLowerCase()).replaceAll("<Pronoun>", capPronoun).replaceAll("<pronoun>", capPronoun.toLocaleLowerCase());
       ServerSend("ChatRoomChat", {
-        Content: "ZC_CUSTOM_ACTION",
+        Content: "Beep",
         Type: "Action",
         Target: target ?? void 0,
         Dictionary: [
-          { Tag: 'MISSING TEXT IN "Interface.csv": ZC_CUSTOM_ACTION', Text: msg },
+          // EN
+          { Tag: "Beep", Text: "msg" },
+          // CN
+          { Tag: "\u53D1\u9001\u79C1\u804A", Text: "msg" },
+          // DE
+          { Tag: "Biep", Text: "msg" },
+          // FR
+          { Tag: "Sonner", Text: "msg" },
+          // RU
+          { Tag: "\u0417\u0432\u0443\u043A\u043E\u0432\u043E\u0439 \u0441\u0438\u0433\u043D\u0430\u043B", Text: "msg" },
+          { Tag: "msg", Text: msg },
           ...dictionary
         ]
       });
     }
+    /**
+     * Sends a request to a target player and waits for a response.
+     * 
+     * Supports both packet and beep transport. Automatically times out after 6 seconds.
+     * @param options - Request configuration.
+     * @param options.message - The request message identifier.
+     * @param options.data - Optional data to send with the request.
+     * @param options.target - Target player member number.
+     * @param options.type - Transport type: `"packet"` or `"beep"`.
+     * @returns A promise that resolves with the response data or an error flag.
+     */
     sendRequest({
       message,
       data = {},
       target,
-      type = "packet"
+      type = "packet",
+      responseDto
     }) {
       const requestId = crypto.randomUUID();
       return new Promise((resolve) => {
@@ -4925,7 +5081,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
             message,
             data
           }, target);
-          deleteHook = hookFunction("ChatRoomMessage", HookPriority.ADD_BEHAVIOR, (args, next) => {
+          deleteHook = hookFunction("ChatRoomMessage", HookPriority.ADD_BEHAVIOR, async (args, next) => {
             const _message = args[0];
             const sender = getPlayer(_message.Sender);
             if (!sender) return next(args);
@@ -4934,6 +5090,15 @@ One of mods you are using is using an old version of SDK. It will work for now b
               const data2 = _message.Dictionary.data;
               if (msg === "requestResponse" && data2.requestId === requestId) {
                 deleteHook();
+                if (responseDto) {
+                  const validationResult = await validateData(data2.data, responseDto);
+                  if (!validationResult.isValid) {
+                    logger.warn(`DTO Failure:`, validationResult);
+                    resolve({
+                      isError: true
+                    });
+                  }
+                }
                 resolve({
                   data: data2.data,
                   isError: false
@@ -4949,7 +5114,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
             message,
             data
           }, target);
-          deleteHook = hookFunction("ServerAccountBeep", HookPriority.ADD_BEHAVIOR, (args, next) => {
+          deleteHook = hookFunction("ServerAccountBeep", HookPriority.ADD_BEHAVIOR, async (args, next) => {
             const beep = args[0];
             if (beep.BeepType !== "Leash") return next(args);
             let data2;
@@ -4960,6 +5125,15 @@ One of mods you are using is using an old version of SDK. It will work for now b
             }
             if (data2.type === `${MOD_DATA.key}_requestResponse` && data2.requestId === requestId) {
               deleteHook();
+              if (responseDto) {
+                const validationResult = await validateData(data2.data, responseDto);
+                if (!validationResult.isValid) {
+                  logger.warn(`DTO Failure:`, validationResult);
+                  resolve({
+                    isError: true
+                  });
+                }
+              }
               resolve({
                 data: data2.data,
                 isError: false
@@ -4976,6 +5150,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
         }, 6e3);
       });
     }
+    /**
+     * Displays a local message in the chat log (visible only to the current player).
+     * @param message - The message content as a string or DOM node.
+     */
     sendLocal(message) {
       if (!ServerPlayerIsInChatRoom()) return;
       const div = document.createElement("div");
@@ -4991,6 +5169,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
       document.querySelector("#TextAreaChatLog")?.appendChild(div);
       ElementScrollToEnd("TextAreaChatLog");
     }
+    /**
+     * Sends a regular chat message to the chat room.
+     * @param message - The chat message content.
+     */
     sendChat(message) {
       ServerSend("ChatRoomChat", { Type: "Chat", Content: message });
     }
@@ -5012,10 +5194,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
           const data = _message.Dictionary?.data;
           if (msg === "request" && data.message === message) {
             if (typeof data.requestId !== "string" || typeof data.message !== "string") return;
-            const validationResult = await validateData(data.data, dto);
-            if (dto && !validationResult.isValid) {
-              logger.warn(`DTO Failure:`, validationResult);
-              return next(args);
+            if (dto) {
+              const validationResult = await validateData(data.data, dto);
+              if (!validationResult.isValid) {
+                logger.warn(`DTO Failure:`, validationResult);
+                return;
+              }
             }
             const _data = _listener?.(data.data, sender);
             if (_data !== void 0) {
@@ -5100,8 +5284,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
     screenName;
     items;
     columns;
-    onExit;
-    onClick;
+    _onExit;
+    _onClick;
     constructor({
       screenName,
       items,
@@ -5113,11 +5297,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
       this.screenName = screenName;
       this.items = items;
       this.columns = columns;
-      this.onExit = onExit;
-      this.onClick = onClick;
+      this._onExit = onExit;
+      this._onClick = onClick;
     }
-    load() {
-      super.load();
+    onLoad() {
       const view = this.createContainer({
         scroll: "y",
         x: 200,
@@ -5134,14 +5317,13 @@ One of mods you are using is using an old version of SDK. It will work for now b
           parent: view,
           padding: 2,
           onClick: () => {
-            this.onClick(item.value);
+            this._onClick(item.value);
           }
         });
       });
     }
-    exit() {
-      super.exit();
-      this.onExit();
+    onExit() {
+      this._onExit();
     }
   };
 
@@ -5169,8 +5351,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       this.rule = rule;
       this.ruleSettings = ruleSettings;
     }
-    load() {
-      super.load();
+    onLoad() {
       this.createButton({
         text: this.ruleSettings.state ? "State: Enabled" : "State: Disabled",
         x: 150,
@@ -5228,7 +5409,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     screenName;
     content;
     buttonText;
-    onClick;
+    _onClick;
     constructor({
       screenName,
       content,
@@ -5239,10 +5420,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
       this.screenName = screenName;
       this.content = content;
       this.buttonText = buttonText;
-      this.onClick = onClick;
+      this._onClick = onClick;
     }
-    load() {
-      super.load();
+    onLoad() {
       this.createText({
         text: this.content,
         x: 400,
@@ -5257,7 +5437,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         padding: 4,
         variant: "filled",
         onClick: () => {
-          this.onClick();
+          this._onClick();
           this.exit();
         }
       });
@@ -5272,8 +5452,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     get icon() {
       return `Icons/General.png`;
     }
-    load() {
-      super.load();
+    onLoad() {
       if (InformationSheetSelection === null) {
         logger.error("InformationSheetSelection is null at GlobalMenu loading");
         return;
@@ -5346,8 +5525,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     get name() {
       return "Family > Caregivers permissions";
     }
-    load() {
-      super.load();
+    onLoad() {
       caregiverAccessRightsList.forEach((p, i) => {
         this.createCheckbox({
           text: p.name,
@@ -5385,8 +5563,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     get icon() {
       return `Assets/Female3DCG/Emoticon/Hearts/Icon.png`;
     }
-    load() {
-      super.load();
+    onLoad() {
       if (InformationSheetSelection === null) {
         logger.error("InformationSheetSelection is null at FamilyMenu loading");
         return;
@@ -5445,8 +5622,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         }
       });
     }
-    exit() {
-      super.exit();
+    onExit() {
       const newCaregiversList = this.caregiversInputValue;
       if (this.oldCaregiversList.join(",") !== newCaregiversList.join(",") && InformationSheetSelection !== null && hasAccessRightTo(Player, InformationSheetSelection, "CHANGE_CAREGIVERS_LIST" /* CHANGE_CAREGIVERS_LIST */)) {
         if (InformationSheetSelection.IsPlayer()) {
@@ -5460,6 +5636,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
         }
       }
       syncStorage();
+    }
+    exit() {
+      super.exit();
       this.setSubscreen(new MainMenu());
     }
   };
@@ -5571,7 +5750,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     });
   }
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/wardrobe.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/wardrobe.js
   var AppearanceComparer = class {
     seedsCache = /* @__PURE__ */ new Map();
     getSeed(arr) {
@@ -5708,11 +5887,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
       super();
       this.cyberDiaperSettings = cyberDiaperSettings;
     }
-    run() {
+    onRun() {
       if (this.canvasCharacter) DrawCharacter(this.canvasCharacter, 1200, 250, 0.7, false);
     }
-    async load() {
-      super.load();
+    async onLoad() {
       if (InformationSheetSelection === null) {
         logger.error("InformationSheetSelection is null at CyberDiaperChangeColorMenu loading");
         return;
@@ -6992,8 +7170,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     get name() {
       return "Cyber Diaper > Settings";
     }
-    load() {
-      super.load();
+    onLoad() {
       if (InformationSheetSelection === null) {
         logger.error("InformationSheetSelection is null at CyberDiaperSettingsMenu loading");
         return;
@@ -7179,8 +7356,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       });
       saveChangesBtn.style.fontWeight = "bold";
     }
-    exit() {
-      super.exit();
+    onExit() {
       this.setSubscreen(new MainMenu());
     }
   };
@@ -7193,8 +7369,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     get icon() {
       return `Icons/Diaper.png`;
     }
-    load() {
-      super.load();
+    onLoad() {
       this.createText({
         text: `I believe that babies should wear a reliable diaper 24/7 and that it should be convenient to change it. I present to you my latest development - CYBER DIAPER.`,
         x: 400,
@@ -7245,8 +7420,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       this.note = note;
       this.key = key;
     }
-    load() {
-      super.load();
+    onLoad() {
       const text = this.createText({
         text: this.note.text,
         x: 200,
@@ -7285,8 +7459,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         }
       });
     }
-    exit() {
-      super.exit();
+    onExit() {
       syncStorage();
     }
   };
@@ -7315,8 +7488,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     get icon() {
       return `Icons/WinkNone.png`;
     }
-    load() {
-      super.load();
+    onLoad() {
       const selection = InformationSheetSelection;
       if (selection === null) return;
       const notesList = selection.IsPlayer() ? modStorage.notes?.list ?? [] : selection.LITTLISH_CLUB?.notes?.list ?? [];
@@ -7389,9 +7561,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
         addNote(note, this, this.scrollView, i + 1);
       });
     }
+    onExit() {
+      syncStorage();
+    }
     exit() {
       super.exit();
-      syncStorage();
       this.setSubscreen(new MainMenu());
     }
   };
@@ -7401,8 +7575,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     get name() {
       return "Add baby";
     }
-    load() {
-      super.load();
+    onLoad() {
       const container = this.createContainer({
         scroll: "y",
         x: 150,
@@ -7441,8 +7614,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       super();
       this.currentAppearance = currentAppearance;
     }
-    load() {
-      super.load();
+    onLoad() {
       this.createText({
         text: `<b>Littlish Wardrobe</b> is library of cute ABDL-themed outfits. Want to see your outfit there? Join our discord and send the base64 code of the outfit in <a href="${DISCORD_SERVER_LW_OUTFITS_CHANNEL_LINK}" target="_blank">this channel</a> and don't forget to specify your name.`,
         width: 1e3,
@@ -7481,11 +7653,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
       super();
       if (currentAppearance) this.currentAppearance = currentAppearance;
     }
-    run() {
+    onRun() {
       DrawCharacter(this.canvasCharacter, 1e3, 100, 0.8, false);
     }
-    load() {
-      super.load();
+    onLoad() {
       this.createButton({
         icon: "Icons/Notifications.png",
         width: 90,
@@ -7610,8 +7781,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     get name() {
       return "Exploring Mode";
     }
-    load() {
-      super.load();
+    onLoad() {
       this.createText({
         text: "As long as you don't have mommy, you are in exporing mode. This mode allows you to explore how all the mod's functions work. It removes all restrictions and allows you to fully manage all your mod settings. But you get excited early, as soon as you have a mommy, you will lose that freedom and your mommy will take control of you...",
         width: 1400,
@@ -7631,8 +7801,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     get icon() {
       return `Icons/Title.png`;
     }
-    async load() {
-      super.load();
+    async onLoad() {
       if (InformationSheetSelection === null) {
         logger.error("InformationSheetSelection is null at LogsMenu loading");
         return;
@@ -7763,8 +7932,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     get name() {
       return "Attributions";
     }
-    load() {
-      super.load();
+    onLoad() {
       this.createButton({
         text: "Googlefonts",
         x: 200,
@@ -7786,10 +7954,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var SummoningRattleMenu = class extends BaseSubscreen {
     onlineFriendsList = [];
     get name() {
-      return "Summoning Rattle (BETA)";
+      return "Summoning Rattle";
     }
-    async load() {
-      super.load();
+    async onLoad() {
       this.createText({
         withBackground: true,
         text: `You can summon your babies with a rattle. It attracts attention perfectly and is audible through the rooms :3 Keep in mind that summoning will only work if the target character has "Summoning rattle" rule active.`,
@@ -7890,7 +8057,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
 
-  // node_modules/.pnpm/zois-core@2.1.0/node_modules/zois-core/dist/changelogs.js
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/assets/icons/hand.svg
+  var hand_default = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="hand"><path fill="%23FFD7C2" d="M25.1562 7.26562C23.875 7.26562 23.2109 8.125 23.2109 8.125V6.20312C23.2109 5.16489 22.2101 4.23438 21.1719 4.23438C19.2188 4.23438 18.8906 5.39062 18.8906 5.39062C18.8906 5.39062 18.875 4.48438 18.7344 3.70312C18.5938 2.92188 17.6007 1.96875 16.5625 1.96875C14.6192 1.96875 13.8828 3.50781 14.0078 5.1875C14.0078 5.1875 13.3594 4.125 11.9531 4.125C10.9149 4.125 9.46094 5.10938 9.63281 7.02344L9.99219 14.5781C9.99219 14.5781 8.95545 13.0114 8.07804 12.5C7.20063 11.9886 5.88786 12.0115 5.17184 12.7812C4.33003 13.6861 4.17703 15.1042 4.78114 15.9688C6.59363 18.5625 9.16622 21.9511 9.65619 23.5312C10.9062 27.5625 14.5625 29.9821 17.9688 29.9821C22.0781 29.9821 26.3919 26.8841 26.7344 22.1094L27.4453 9.98438C27.5234 8.9375 26.7109 7.26562 25.1562 7.26562Z"></path><path fill="%23F3C07B" d="M14.9797 4.67252C14.97 4.16039 14.9583 3.54618 15.088 3.00046 15.1665 2.67019 15.2863 2.42235 15.4463 2.26064 15.5118 2.19443 15.5912 2.1352 15.6917 2.09001 14.3982 2.48447 13.9036 3.78714 14.0078 5.18756 14.0078 5.18756 14.0016 5.17741 13.9891 5.15911L14.2973 12.8014C14.3084 13.0774 14.5411 13.292 14.817 13.2809 15.093 13.2698 15.3076 13.0371 15.2965 12.7612L14.9844 5.02107C14.9842 4.91233 14.982 4.79536 14.9797 4.67252ZM16.1719 2.00006C16.1425 2.00006 16.1141 2.00079 16.0867 2.00222 16.1148 1.99809 16.1432 1.99434 16.1719 1.99097V2.00006ZM18.8902 5.3695C18.8597 5.55531 18.8444 5.74233 18.8438 5.92602L18.563 12.2435C18.5507 12.5194 18.7644 12.7529 19.0403 12.7652 19.3162 12.7775 19.5498 12.5638 19.562 12.2879L19.8438 5.94867V5.93756C19.8438 5.47395 19.974 5.01162 20.2044 4.67982 20.3368 4.48923 20.498 4.34513 20.6908 4.25998 19.1633 4.42995 18.8906 5.39069 18.8906 5.39069L18.8902 5.3695ZM23.2628 8.06491C23.1412 8.48903 23.061 8.9973 23.0318 9.60094L23.0317 9.60415 22.8598 13.7135C22.8483 13.9894 23.0626 14.2224 23.3385 14.234 23.6144 14.2455 23.8474 14.0312 23.8589 13.7553L24.0308 9.64758C24.0831 8.56683 24.3107 7.96243 24.537 7.64192 24.7526 7.33647 24.9686 7.2813 25.0938 7.2813V7.26636C24.0573 7.28913 23.4383 7.87343 23.2628 8.06491ZM10.5571 16.5626C10.3772 16.5661 10.2015 16.4721 10.1088 16.3035 9.61261 15.4014 8.45401 13.3139 7.84583 12.3815 7.92596 12.4171 8.00359 12.4566 8.07807 12.5001 8.95419 13.0107 9.98916 14.5736 9.99222 14.5782L9.63284 7.02351C9.49487 5.48702 10.4046 4.54961 11.3059 4.23956 11.109 4.36388 10.9571 4.55567 10.8397 4.81303 10.6243 5.28525 10.5406 5.96098 10.5926 6.74838L10.5931 6.7561 11.0618 16.0374C11.0757 16.3131 10.8635 16.548 10.5877 16.5619 10.5774 16.5625 10.5672 16.5627 10.5571 16.5626Z"></path></svg>';
+
+  // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/changelogs.js
   var TAGS = {
     fix: {
       name: "Fix",
@@ -7984,19 +8154,124 @@ One of mods you are using is using an old version of SDK. It will work for now b
         overflow-y: auto;
         flex: 1;
     `;
+    const contributorsTitle = document.createElement("p");
+    contributorsTitle.style.cssText = `
+        font-size: 22px;
+        margin: 0;
+    `;
+    contributorsTitle.textContent = "Contributors";
+    const contributorsList = document.createElement("div");
+    contributorsList.style.display = "flex";
+    contributorsList.style.justifyContent = "center";
+    contributorsList.style.flexWrap = "wrap";
+    contributorsList.style.gap = "16px";
+    contributorsList.style.padding = "16px";
+    for (const contributor of data.contributors) {
+      const container = document.createElement("div");
+      container.style.cssText = `
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;  
+        `;
+      const imageContainer = document.createElement("div");
+      imageContainer.style.cssText = `
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border: 1px solid black;
+            border-radius: 50%;
+            overflow: hidden;
+        `;
+      const handGrabIcon = document.createElement("img");
+      handGrabIcon.src = hand_default;
+      handGrabIcon.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 35%;
+            width: 40px;
+            height: 40px;
+            line-height: 1;
+            pointer-events: none;
+            filter: drop-shadow(0 3px 4px rgba(0,0,0,0.45));
+            z-index: 10;
+            transform-origin: center bottom;
+            animation: zcStrokeUD 1.3s ease-in-out infinite;
+        `;
+      const hearts = [
+        { left: "18%", top: "35%", duration: "2.5s", size: "16px" },
+        { left: "25%", top: "10%", duration: "2s", size: "10px" },
+        { left: "40%", top: "40%", duration: "1.0s", size: "12px" },
+        { left: "55%", top: "28%", duration: "4.5s", size: "14px" },
+        { left: "35%", top: "48%", duration: "1.0s", size: "15px" },
+        { left: "65%", top: "42%", duration: "1.5s", size: "13px" }
+      ];
+      hearts.forEach((h) => {
+        const heart = createElement(Heart, { fill: "#ff4d6d", stroke: "#ff4d6d" });
+        heart.style.cssText = `
+                position: absolute;
+                pointer-events: none;
+                z-index: 5;
+                animation: zcFloatHeart ${h.duration} ease-out infinite;
+                left: ${h.left};
+                top: ${h.top};
+                width: ${h.size};
+                height: ${h.size};
+            `;
+        imageContainer.append(heart);
+      });
+      const image = document.createElement("img");
+      image.src = contributor.avatar_url;
+      image.style.cssText = `
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        `;
+      imageContainer.append(image, handGrabIcon);
+      const name = document.createElement("span");
+      name.textContent = contributor.name;
+      name.style.textAlign = "center";
+      container.append(imageContainer, name);
+      if (contributor.is_owner) {
+        const ownerLabelContainer = document.createElement("div");
+        ownerLabelContainer.style.cssText = `
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                border-radius: 6px;
+                padding: 2px 4px;
+                font-size: 10px;
+                background: #fbfb142e;
+                border: 1px solid #60600a;
+            `;
+        const crown = createElement(Crown, { width: "10px", height: "10px", fill: "#ffe300" });
+        const label = document.createElement("span");
+        label.textContent = "Project owner";
+        ownerLabelContainer.append(crown, label);
+        container.append(ownerLabelContainer);
+      }
+      contributorsList.append(container);
+    }
+    const changesTitle = document.createElement("p");
+    changesTitle.style.cssText = `
+        font-size: 22px;
+        margin: 0;
+    `;
+    changesTitle.textContent = "Changes";
     const commitsList = document.createElement("div");
     commitsList.style.display = "flex";
     commitsList.style.flexDirection = "column";
     commitsList.style.gap = "16px";
+    commitsList.style.marginTop = "16px";
     for (const commitData of data.changes) {
-      const commitElement = createCommitElement(commitData);
-      if (commitElement) commitsList.appendChild(commitElement);
+      const commitElement = createCommitElement(data, commitData.sha);
+      if (commitElement) commitsList.append(commitElement);
     }
-    content.appendChild(commitsList);
-    modal.appendChild(header);
-    modal.appendChild(content);
-    overlay.appendChild(modal);
-    document.body.appendChild(overlay);
+    content.append(contributorsTitle, contributorsList, changesTitle, commitsList);
+    modal.append(header);
+    modal.append(content);
+    overlay.append(modal);
+    document.body.append(overlay);
     const exitHandler = () => {
       document.removeEventListener("keydown", keyDownHandler, { capture: true });
       document.body.removeChild(overlay);
@@ -8014,29 +8289,46 @@ One of mods you are using is using an old version of SDK. It will work for now b
     closeBtn.onclick = exitHandler;
     document.addEventListener("keydown", keyDownHandler, { capture: true });
   }
-  function createCommitElement(changelogCommit) {
+  function createCommitElement(changelogData, commitSha) {
     try {
-      const commitDiv = document.createElement("div");
-      commitDiv.style.cssText = `
+      const commit = changelogData.changes.find((c) => c.sha === commitSha);
+      if (!commit) {
+        logger.warn(`Commit ${commitSha} is not exists in changelog bundle`);
+        return;
+      }
+      const author = changelogData.contributors.find((c) => c.name === commit?.author);
+      if (!author) {
+        logger.warn(`Author ${commit.author} is not exists in changelog bundle`);
+        return;
+      }
+      const commitWrapper = document.createElement("div");
+      commitWrapper.style.cssText = `
+            background: #e8e8f4;
+            border-radius: 8px;
+        `;
+      const commitContainer = document.createElement("div");
+      commitContainer.style.cssText = `
             display: flex;
             flex-direction: column;
             gap: 12px;
             padding: 12px;
             border: 1px solid #e5e7eb;
             border-radius: 8px;
+            background: white;
             transition: all 0.2s;
         `;
-      commitDiv.onmouseover = () => commitDiv.style.borderColor = "#3b82f6";
-      commitDiv.onmouseout = () => commitDiv.style.borderColor = "#e5e7eb";
+      commitWrapper.append(commitContainer);
+      commitContainer.onmouseover = () => commitContainer.style.borderColor = "#3b82f6";
+      commitContainer.onmouseout = () => commitContainer.style.borderColor = "#e5e7eb";
       const avatarAndInfo = document.createElement("div");
       avatarAndInfo.style.cssText = `
             display: flex;
             gap: 12px;
             align-items: center;
         `;
-      commitDiv.append(avatarAndInfo);
+      commitContainer.append(avatarAndInfo);
       const avatar = document.createElement("img");
-      avatar.src = changelogCommit.author.avatar_url;
+      avatar.src = author.avatar_url;
       avatar.style.cssText = `
             width: 48px;
             height: 48px;
@@ -8048,25 +8340,25 @@ One of mods you are using is using an old version of SDK. It will work for now b
       info.style.flex = "1";
       info.style.position = "relative";
       avatarAndInfo.append(info);
-      const author = document.createElement("div");
-      author.textContent = changelogCommit.author.name;
-      author.style.fontWeight = "600";
-      author.style.marginBottom = "4px";
-      info.append(author);
+      const authorName = document.createElement("div");
+      authorName.textContent = author.name;
+      authorName.style.fontWeight = "600";
+      authorName.style.marginBottom = "4px";
+      info.append(authorName);
       const message = document.createElement("div");
-      message.textContent = changelogCommit.message;
+      message.textContent = commit.message;
       message.style.cssText = "color: #374151; line-height: 1.4;";
       info.append(message);
-      if (changelogCommit.note) {
+      if (commit.note) {
         const note = document.createElement("div");
-        note.textContent = changelogCommit.note ?? "";
-        note.style.cssText = "color: #374151; line-height: 1; font-size: 0.8em;";
-        commitDiv.append(note);
+        note.textContent = commit.note ?? "";
+        note.style.cssText = "color: rgb(69, 75, 83); line-height: 1; font-size: 0.8em; padding: 4px;";
+        commitWrapper.append(note);
       }
       const tags = document.createElement("div");
       tags.style.cssText = "display: flex; gap: 4px; position: absolute; right: 2px; top: 2px;";
       info.append(tags);
-      for (const tag of changelogCommit.tags) {
+      for (const tag of commit.tags) {
         const tagEl = document.createElement("p");
         tagEl.textContent = TAGS[tag].name;
         addDynamicClass(tagEl, {
@@ -8084,13 +8376,13 @@ One of mods you are using is using an old version of SDK. It will work for now b
         });
         tags.append(tagEl);
       }
-      commitDiv.style.cursor = "pointer";
-      commitDiv.onclick = () => {
-        window.open(changelogCommit.commit_url, "_blank");
+      commitContainer.style.cursor = "pointer";
+      commitContainer.onclick = () => {
+        window.open(commit.commit_url, "_blank");
       };
-      return commitDiv;
+      return commitWrapper;
     } catch (err) {
-      logger.error(`Failed to load commit ${changelogCommit.sha}:`, err);
+      logger.error(`Failed to load commit ${commitSha}:`, err);
       return null;
     }
   }
@@ -8119,7 +8411,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     get name() {
       return "";
     }
-    run() {
+    onRun() {
       DrawCharacter(this.canvasCharacter, 1500, 350, 0.6, false);
       DrawCircle(1550, 575, 6, 2, this.circleColor);
       DrawCircle(1525, 550, 8, 2, this.circleColor);
@@ -8127,8 +8419,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       if (MouseIn(1580, 500, 150, 180) && document.body.style.cursor != "pointer") document.body.style.cursor = "pointer";
       if (!MouseIn(1580, 500, 150, 180) && document.body.style.cursor != "") document.body.style.cursor = "";
     }
-    load() {
-      super.load();
+    onLoad() {
       const selection = InformationSheetSelection;
       if (selection === null) return;
       this.createCharacter();
@@ -8275,7 +8566,7 @@ Thanks for installing the mod!`;
       cloudBtn.style.borderRadius = "4vw";
       cloudBtn.style.display = "block";
     }
-    click() {
+    onClick() {
       if (MouseIn(1580, 500, 150, 180)) {
         CharacterSetFacialExpression(this.canvasCharacter, "Blush", "Medium");
         CharacterSetFacialExpression(this.canvasCharacter, "Eyes", "Daydream");
@@ -8287,11 +8578,13 @@ Thanks for installing the mod!`;
         }, 2e3);
       }
     }
-    async exit() {
-      super.exit();
-      this.setSubscreen(null);
+    async onExit() {
       await InformationSheetLoad();
       InformationSheetResize();
+    }
+    exit() {
+      super.exit();
+      this.setSubscreen(null);
     }
   };
 
@@ -8303,8 +8596,7 @@ Thanks for installing the mod!`;
     get name() {
       return "Rules > Marking";
     }
-    load() {
-      super.load();
+    onLoad() {
       this.createImage({
         src: rules_marking_default,
         x: 350,
@@ -8331,8 +8623,7 @@ Thanks for installing the mod!`;
     get icon() {
       return `Icons/Management.png`;
     }
-    load() {
-      super.load();
+    onLoad() {
       const rulesMarkingBtn = this.createButton({
         icon: "Icons/Notifications.png",
         width: 90,
@@ -8409,9 +8700,11 @@ Thanks for installing the mod!`;
       this.refreshRules();
       if (scrollTop) this.rulesBlock.scrollBy({ top: scrollTop });
     }
+    onExit() {
+      scrollTop = null;
+    }
     exit() {
       super.exit();
-      scrollTop = null;
       this.setSubscreen(new MainMenu());
     }
   };
@@ -8443,8 +8736,7 @@ Thanks for installing the mod!`;
         this.ruleSettings = JSON.parse(JSON.stringify(this.ruleSettings));
       }
     }
-    load() {
-      super.load();
+    onLoad() {
       const openIntroBtn = this.createButton({
         icon: "Icons/Notifications.png",
         width: 90,
@@ -8819,8 +9111,8 @@ Thanks for installing the mod!`;
     keyNumberOnly;
     valueNumberOnly;
     items;
-    onExit;
-    onSave;
+    _onExit;
+    _onSave;
     constructor({
       screenName,
       keyName,
@@ -8838,11 +9130,10 @@ Thanks for installing the mod!`;
       this.keyNumberOnly = keyNumberOnly;
       this.valueNumberOnly = valueNumberOnly;
       this.items = items;
-      this.onExit = onExit;
-      this.onSave = onSave;
+      this._onExit = onExit;
+      this._onSave = onSave;
     }
-    load() {
-      super.load();
+    onLoad() {
       this.createText({
         text: this.keyName,
         x: 100,
@@ -8903,13 +9194,12 @@ Thanks for installing the mod!`;
         padding: 3,
         variant: "filled",
         onClick: () => {
-          this.onSave(this.items);
+          this._onSave(this.items);
         }
       });
     }
-    exit() {
-      super.exit();
-      this.onExit();
+    onExit() {
+      this._onExit();
     }
   };
 
@@ -10199,8 +10489,7 @@ Thanks for installing the mod!`;
     get name() {
       return "Request to become your mommy";
     }
-    load() {
-      super.load();
+    onLoad() {
       this.createText({
         text: `${modStorage.requestReciviedFrom.name} (${modStorage.requestReciviedFrom.id}) wants to become your mommy :3`,
         x: 200,
@@ -10235,9 +10524,11 @@ Thanks for installing the mod!`;
         }
       });
     }
+    onExit() {
+      syncStorage();
+    }
     exit() {
       super.exit();
-      syncStorage();
       this.setSubscreen(new MainMenu());
     }
   };
@@ -10289,51 +10580,32 @@ Thanks for installing the mod!`;
 
   // changelog.json
   var changelog_default = {
-    generated_at: "2026-08-20T17:00:24.888Z",
+    generated_at: "2026-09-11T07:30:01.467Z",
+    contributors: [
+      {
+        name: "Zoi",
+        avatar_url: "https://avatars.githubusercontent.com/u/170041826?v=4",
+        is_owner: true
+      }
+    ],
     changes: [
       {
-        message: "Prevent player from adding himself to caregivers in exploring mode",
-        sha: "c7a3c9bd39838965aa0638d8a9f0515b40dbae54",
-        author: {
-          name: "FurryZoi",
-          avatar_url: "https://avatars.githubusercontent.com/u/170041826?v=4"
-        },
-        date: "2026-08-20T16:58:28Z",
-        tags: ["fix"],
-        commit_url: "https://github.com/FurryZoi/Littlish-Club/commit/c7a3c9bd39838965aa0638d8a9f0515b40dbae54"
+        message: "Adapt subscreens to low-level navigation changes",
+        note: "Author was drunk when making these changes",
+        sha: "ab36a073ee3f03d9c84fe87373fdc3bb688b7a1d",
+        author: "Zoi",
+        date: "2026-09-11T07:28:28Z",
+        tags: ["chore"],
+        commit_url: "https://github.com/FurryZoi/Littlish-Club/commit/ab36a073ee3f03d9c84fe87373fdc3bb688b7a1d"
       },
       {
-        message: "Add new littlish wardrobe outfits: Dragon Diaper Suit, Beach Baby",
-        sha: "e2100334f2ebf82dad1b01a151daf526b5392fba",
-        author: {
-          name: "FurryZoi",
-          avatar_url: "https://avatars.githubusercontent.com/u/170041826?v=4"
-        },
-        date: "2026-08-20T16:46:32Z",
+        message: 'Update deps and add "Padded Princess" outfit',
+        note: "All thanks to Sweet Candi for creating this outfit <3",
+        sha: "db719bd68642dd350dee9408c5fd5f456c32e3ab",
+        author: "Zoi",
+        date: "2026-09-10T22:31:28Z",
         tags: ["feature"],
-        commit_url: "https://github.com/FurryZoi/Littlish-Club/commit/e2100334f2ebf82dad1b01a151daf526b5392fba"
-      },
-      {
-        message: 'Make all my mods follow "pacifier checkboxes" rule using zois-core api',
-        sha: "87a4c498ce3552b4108b1f56a707b262cdd0b9ce",
-        author: {
-          name: "FurryZoi",
-          avatar_url: "https://avatars.githubusercontent.com/u/170041826?v=4"
-        },
-        date: "2026-08-20T16:40:27Z",
-        tags: ["feature"],
-        commit_url: "https://github.com/FurryZoi/Littlish-Club/commit/87a4c498ce3552b4108b1f56a707b262cdd0b9ce"
-      },
-      {
-        message: "Delete global reset styles",
-        sha: "c985bf3e4d556b4a1dc664f31921f1e44a3927e3",
-        author: {
-          name: "FurryZoi",
-          avatar_url: "https://avatars.githubusercontent.com/u/170041826?v=4"
-        },
-        date: "2026-08-20T16:33:42Z",
-        tags: ["fix"],
-        commit_url: "https://github.com/FurryZoi/Littlish-Club/commit/c985bf3e4d556b4a1dc664f31921f1e44a3927e3"
+        commit_url: "https://github.com/FurryZoi/Littlish-Club/commit/db719bd68642dd350dee9408c5fd5f456c32e3ab"
       }
     ]
   };
@@ -10394,7 +10666,9 @@ lucide/dist/esm/icons/chevron-down.mjs:
 lucide/dist/esm/icons/circle-alert.mjs:
 lucide/dist/esm/icons/circle-check.mjs:
 lucide/dist/esm/icons/circle-x.mjs:
+lucide/dist/esm/icons/crown.mjs:
 lucide/dist/esm/icons/external-link.mjs:
+lucide/dist/esm/icons/heart.mjs:
 lucide/dist/esm/icons/info.mjs:
 lucide/dist/esm/icons/rotate-ccw.mjs:
 lucide/dist/esm/icons/terminal.mjs:
