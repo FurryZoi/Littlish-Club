@@ -1,49 +1,30 @@
 {
-  "generated_at": "2026-08-20T17:00:24.888Z",
+  "generated_at": "2026-09-11T07:30:01.467Z",
+  "contributors": [
+    {
+      "name": "Zoi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4",
+      "is_owner": true
+    }
+  ],
   "changes": [
     {
-      "message": "Prevent player from adding himself to caregivers in exploring mode",
-      "sha": "c7a3c9bd39838965aa0638d8a9f0515b40dbae54",
-      "author": {
-        "name": "FurryZoi",
-        "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4"
-      },
-      "date": "2026-08-20T16:58:28Z",
-      "tags": ["fix"],
-      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/c7a3c9bd39838965aa0638d8a9f0515b40dbae54"
+      "message": "Adapt subscreens to low-level navigation changes",
+      "note": "Author was drunk when making these changes",
+      "sha": "ab36a073ee3f03d9c84fe87373fdc3bb688b7a1d",
+      "author": "Zoi",
+      "date": "2026-09-11T07:28:28Z",
+      "tags": ["chore"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/ab36a073ee3f03d9c84fe87373fdc3bb688b7a1d"
     },
     {
-      "message": "Add new littlish wardrobe outfits: Dragon Diaper Suit, Beach Baby",
-      "sha": "e2100334f2ebf82dad1b01a151daf526b5392fba",
-      "author": {
-        "name": "FurryZoi",
-        "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4"
-      },
-      "date": "2026-08-20T16:46:32Z",
+      "message": "Update deps and add \"Padded Princess\" outfit",
+      "note": "All thanks to Sweet Candi for creating this outfit <3",
+      "sha": "db719bd68642dd350dee9408c5fd5f456c32e3ab",
+      "author": "Zoi",
+      "date": "2026-09-10T22:31:28Z",
       "tags": ["feature"],
-      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/e2100334f2ebf82dad1b01a151daf526b5392fba"
-    },
-    {
-      "message": "Make all my mods follow \"pacifier checkboxes\" rule using zois-core api",
-      "sha": "87a4c498ce3552b4108b1f56a707b262cdd0b9ce",
-      "author": {
-        "name": "FurryZoi",
-        "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4"
-      },
-      "date": "2026-08-20T16:40:27Z",
-      "tags": ["feature"],
-      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/87a4c498ce3552b4108b1f56a707b262cdd0b9ce"
-    },
-    {
-      "message": "Delete global reset styles",
-      "sha": "c985bf3e4d556b4a1dc664f31921f1e44a3927e3",
-      "author": {
-        "name": "FurryZoi",
-        "avatar_url": "https://avatars.githubusercontent.com/u/170041826?v=4"
-      },
-      "date": "2026-08-20T16:33:42Z",
-      "tags": ["fix"],
-      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/c985bf3e4d556b4a1dc664f31921f1e44a3927e3"
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/db719bd68642dd350dee9408c5fd5f456c32e3ab"
     }
   ]
 }
