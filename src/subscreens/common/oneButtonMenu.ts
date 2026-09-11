@@ -8,7 +8,7 @@ export class OneButtonMenu extends BaseSubscreen {
     private screenName: string;
     private content: string;
     private buttonText: string;
-    private onClick: () => void;
+    private _onClick: () => void;
 
     constructor({
         screenName,
@@ -25,11 +25,10 @@ export class OneButtonMenu extends BaseSubscreen {
         this.screenName = screenName;
         this.content = content;
         this.buttonText = buttonText;
-        this.onClick = onClick;
+        this._onClick = onClick;
     }
 
-    public override load() {
-        super.load();
+    public override onLoad() {
         // this.createText({
         //     text: this.screenName,
         //     x: 100,
@@ -52,7 +51,7 @@ export class OneButtonMenu extends BaseSubscreen {
             padding: 4,
             variant: "filled",
             onClick: () => {
-                this.onClick();
+                this._onClick();
                 this.exit();
             }
         });

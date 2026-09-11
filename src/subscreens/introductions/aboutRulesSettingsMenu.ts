@@ -16,9 +16,7 @@ export class AboutRulesSettingsMenu extends BaseSubscreen {
         this.ruleSettings = ruleSettings;
     }
 
-    public override load() {
-        super.load();
-
+    public override onLoad() {
         this.createButton({
             text: this.ruleSettings.state ? "State: Enabled" : "State: Disabled",
             x: 150,
@@ -70,7 +68,7 @@ export class AboutRulesSettingsMenu extends BaseSubscreen {
         });
     }
 
-    public override exit() {
+    public exit(): void {
         super.exit();
         this.setSubscreen(new RuleSettingsMenu(this.rule, this.ruleSettings));
     }

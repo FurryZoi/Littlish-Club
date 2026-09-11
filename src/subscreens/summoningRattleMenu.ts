@@ -10,12 +10,10 @@ export class SummoningRattleMenu extends BaseSubscreen {
     private onlineFriendsList: ServerFriendInfo[] = [];
 
     get name() {
-        return "Summoning Rattle (BETA)";
+        return "Summoning Rattle";
     }
 
-    public override async load() {
-        super.load();
-
+    public override async onLoad() {
         this.createText({
             withBackground: true,
             text: `You can summon your babies with a rattle. It attracts attention perfectly and is audible through the rooms :3 Keep in mind that summoning will only work if the target character has "Summoning rattle" rule active.`,
@@ -121,7 +119,7 @@ export class SummoningRattleMenu extends BaseSubscreen {
         });
     }
 
-    exit(): void {
+    public exit(): void {
         super.exit();
         this.setSubscreen(new MainMenu());
     }

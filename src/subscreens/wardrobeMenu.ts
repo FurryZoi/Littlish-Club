@@ -29,13 +29,11 @@ export class WardrobeMenu extends BaseSubscreen {
         if (currentAppearance) this.currentAppearance = currentAppearance;
     }
 
-    public override run() {
+    public override onRun() {
         DrawCharacter(this.canvasCharacter, 1000, 100, 0.8, false);
     }
 
-    public override load() {
-        super.load();
-
+    public override onLoad() {
         this.createButton({
             icon: "Icons/Notifications.png",
             width: 90,
@@ -169,7 +167,7 @@ export class WardrobeMenu extends BaseSubscreen {
         this.loadRequiredModsWarning();
     }
 
-    public override exit() {
+    public exit(): void {
         super.exit();
         this.setSubscreen(new MainMenu());
     }

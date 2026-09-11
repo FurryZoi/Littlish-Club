@@ -20,13 +20,11 @@ export class CyberDiaperChangeColorMenu extends BaseSubscreen {
         this.cyberDiaperSettings = cyberDiaperSettings;
     }
 
-    public override run() {
+    public override onRun() {
         if (this.canvasCharacter) DrawCharacter(this.canvasCharacter, 1200, 250, 0.7, false);
     }
 
-    public override async load() {
-        super.load();
-
+    public override async onLoad() {
         if (InformationSheetSelection === null) {
             logger.error("InformationSheetSelection is null at CyberDiaperChangeColorMenu loading");
             return;
@@ -125,7 +123,7 @@ export class CyberDiaperChangeColorMenu extends BaseSubscreen {
         });
     }
 
-    public override exit() {
+    public exit(): void {
         super.exit();
         this.setSubscreen(new CyberDiaperSettingsMenu(this.cyberDiaperSettings));
     }

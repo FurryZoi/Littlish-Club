@@ -21,9 +21,7 @@ export class LogsMenu extends BaseSubscreen {
         return `Icons/Title.png`;
     }
 
-    public override async load() {
-        super.load();
-
+    public override async onLoad() {
         if (InformationSheetSelection === null) {
             logger.error("InformationSheetSelection is null at LogsMenu loading");
             return;
@@ -147,7 +145,7 @@ export class LogsMenu extends BaseSubscreen {
         this.scrollView.scrollTo(0, this.scrollView.scrollHeight);
     }
 
-    public override exit() {
+    public exit(): void {
         super.exit();
         this.setSubscreen(new MainMenu());
     }

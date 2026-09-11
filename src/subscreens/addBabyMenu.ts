@@ -9,9 +9,7 @@ export class AddBabyMenu extends BaseSubscreen {
         return "Add baby";
     }
 
-    public override load() {
-        super.load();
-
+    public override onLoad() {
         const container = this.createContainer({
             scroll: "y",
             x: 150,

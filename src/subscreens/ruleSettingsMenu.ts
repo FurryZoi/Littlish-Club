@@ -50,9 +50,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
         }
     }
 
-    public override load() {
-        super.load();
-
+    public override onLoad() {
         const openIntroBtn = this.createButton({
             icon: "Icons/Notifications.png",
             width: 90,
@@ -407,7 +405,7 @@ export class RuleSettingsMenu extends BaseSubscreen {
         saveChangesBtn.style.fontWeight = "bold";
     }
 
-    public override exit() {
+    public exit(): void {
         super.exit();
         this.setSubscreen(new RulesMenu());
     }

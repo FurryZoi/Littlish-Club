@@ -5,9 +5,7 @@ export class AttributionsMenu extends BaseSubscreen {
         return "Attributions";
     }
 
-    public override load() {
-        super.load();
-        
+    public override onLoad() {
         this.createButton({
             text: "Googlefonts",
             x: 200,

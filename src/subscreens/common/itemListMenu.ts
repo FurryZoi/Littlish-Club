@@ -20,8 +20,8 @@ export class ItemListMenu extends BaseSubscreen {
     private screenName: ItemListMenuData["screenName"];
     private items: ItemListMenuData["items"];
     private columns: ItemListMenuData["columns"];
-    private onExit: ItemListMenuData["onExit"];
-    private onClick: ItemListMenuData["onClick"];
+    private _onExit: ItemListMenuData["onExit"];
+    private _onClick: ItemListMenuData["onClick"];
 
     constructor({
         screenName,
@@ -34,12 +34,11 @@ export class ItemListMenu extends BaseSubscreen {
         this.screenName = screenName;
         this.items = items;
         this.columns = columns;
-        this.onExit = onExit;
-        this.onClick = onClick;
+        this._onExit = onExit;
+        this._onClick = onClick;
     }
 
-    public override load() {
-        super.load();
+    public override onLoad() {
         // this.createText({
         //     text: this.screenName,
         //     x: 100,
@@ -72,14 +71,13 @@ export class ItemListMenu extends BaseSubscreen {
                 parent: view,
                 padding: 2,
                 onClick: () => {
-                    this.onClick(item.value);
+                    this._onClick(item.value);
                 }
             });
         });
     }
 
-    public override exit() {
-        super.exit();
-        this.onExit();
+    public override onExit() {
+        this._onExit();
     }
 }

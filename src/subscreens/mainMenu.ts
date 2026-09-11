@@ -51,7 +51,7 @@ export class MainMenu extends BaseSubscreen {
         return "";
     }
 
-    public override run() {
+    public override onRun() {
         DrawCharacter(this.canvasCharacter, 1500, 350, 0.6, false);
         DrawCircle(1550, 575, 6, 2, this.circleColor);
         DrawCircle(1525, 550, 8, 2, this.circleColor);
@@ -60,8 +60,7 @@ export class MainMenu extends BaseSubscreen {
         if (!MouseIn(1580, 500, 150, 180) && document.body.style.cursor != "") document.body.style.cursor = "";
     }
 
-    public override load() {
-        super.load();
+    public override onLoad() {
         const selection = InformationSheetSelection;
         if (selection === null) return;
 
@@ -217,7 +216,7 @@ export class MainMenu extends BaseSubscreen {
         cloudBtn.style.display = "block";
     }
 
-    public override click() {
+    public override onClick() {
         if (MouseIn(1580, 500, 150, 180)) {
             CharacterSetFacialExpression(this.canvasCharacter, "Blush", "Medium");
             CharacterSetFacialExpression(this.canvasCharacter, "Eyes", "Daydream");
@@ -230,10 +229,13 @@ export class MainMenu extends BaseSubscreen {
         }
     }
 
-    public override async exit() {
-        super.exit();
-        this.setSubscreen(null);
+    public override async onExit() {
         await InformationSheetLoad();
         InformationSheetResize();
+    }
+
+    public exit(): void {
+        super.exit();
+        this.setSubscreen(null);
     }
 }

@@ -22,15 +22,13 @@ export class AboutWardrobeMenu extends BaseSubscreen {
         this.currentAppearance = currentAppearance;
     }
 
-    public override load() {
-        super.load();
-
+    public override onLoad() {
         this.createText({
             text: `<b>Littlish Wardrobe</b> is library of cute ABDL-themed outfits. Want to see your outfit there? Join our discord and send the base64 code of the outfit in <a href="${DISCORD_SERVER_LW_OUTFITS_CHANNEL_LINK}" target="_blank">this channel</a> and don't forget to specify your name.`,
             width: 1000,
             x: 500,
             y: 220,
-            fontSize:  6,
+            fontSize: 6,
         }).style.textAlign = "center";
 
         this.createText({
@@ -44,7 +42,7 @@ export class AboutWardrobeMenu extends BaseSubscreen {
         }).style.textAlign = "center";
     }
 
-    public override exit() {
+    public exit(): void {
         super.exit();
         this.setSubscreen(new WardrobeMenu(this.currentAppearance));
     }

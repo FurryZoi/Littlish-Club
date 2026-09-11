@@ -14,9 +14,7 @@ export class CyberDiaperMenu extends BaseSubscreen {
         return `Icons/Diaper.png`;
     }
 
-    public override load() {
-        super.load();
-
+    public override onLoad() {
         this.createText({
             text: `I believe that babies should wear a reliable diaper 24/7 and that it should be convenient to change it. I present to you my latest development - CYBER DIAPER.`,
             x: 400,

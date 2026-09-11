@@ -21,9 +21,7 @@ export class RulesMenu extends BaseSubscreen {
         return `Icons/Management.png`;
     }
 
-    public override load() {
-        super.load();
-
+    public override onLoad() {
         const rulesMarkingBtn = this.createButton({
             icon: "Icons/Notifications.png",
             width: 90,
@@ -107,9 +105,12 @@ export class RulesMenu extends BaseSubscreen {
         if (scrollTop) this.rulesBlock.scrollBy({ top: scrollTop });
     }
 
-    public override exit() {
-        super.exit();
+    public override onExit() {
         scrollTop = null;
+    }
+
+    public exit(): void {
+        super.exit();
         this.setSubscreen(new MainMenu());
     }
 }

@@ -18,9 +18,7 @@ export class GlobalMenu extends BaseSubscreen {
         return `Icons/General.png`;
     }
 
-    public override load() {
-        super.load();
-
+    public override onLoad() {
         if (InformationSheetSelection === null) {
             logger.error("InformationSheetSelection is null at GlobalMenu loading");
             return;
@@ -91,7 +89,7 @@ export class GlobalMenu extends BaseSubscreen {
         });
     }
 
-    public override exit() {
+    public exit(): void {
         super.exit();
         this.setSubscreen(new MainMenu());
     }

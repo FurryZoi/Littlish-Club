@@ -22,9 +22,7 @@ export class NoteSettingsMenu extends BaseSubscreen {
         this.key = key;
     }
 
-    public override load() {
-        super.load();
-
+    public override onLoad() {
         const text = this.createText({
             text: this.note.text,
             x: 200,
@@ -69,8 +67,7 @@ export class NoteSettingsMenu extends BaseSubscreen {
         });
     }
 
-    public override exit() {
-        super.exit();
+    public override onExit() {
         syncStorage();
     }
 }

@@ -20,9 +20,7 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
         super();
     }
 
-    public override load() {
-        super.load();
-
+    public override onLoad() {
         if (InformationSheetSelection === null) {
             logger.error("InformationSheetSelection is null at CyberDiaperSettingsMenu loading");
             return;
@@ -229,8 +227,7 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
         saveChangesBtn.style.fontWeight = "bold";
     }
 
-    public override exit() {
-        super.exit();
+    public override onExit() {
         this.setSubscreen(new MainMenu());
     }
 }

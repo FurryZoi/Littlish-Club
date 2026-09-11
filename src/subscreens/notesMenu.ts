@@ -37,8 +37,7 @@ export class NotesMenu extends BaseSubscreen {
         return `Icons/WinkNone.png`;
     }
 
-    public override load() {
-        super.load();
+    public override onLoad() {
         const selection = InformationSheetSelection;
         if (selection === null) return;
 
@@ -122,9 +121,12 @@ export class NotesMenu extends BaseSubscreen {
         });
     }
 
-    public override exit() {
-        super.exit();
+    public override onExit() {
         syncStorage();
+    }
+
+    public exit(): void {
+        super.exit();
         this.setSubscreen(new MainMenu());
     }
 }

@@ -11,9 +11,7 @@ export class CaregiversPermissionsMenu extends BaseSubscreen {
         return "Family > Caregivers permissions";
     }
 
-    public override load() {
-        super.load();
-
+    public override onLoad() {
         caregiverAccessRightsList.forEach((p, i) => {
             this.createCheckbox({
                 text: p.name,

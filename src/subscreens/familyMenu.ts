@@ -21,9 +21,7 @@ export class FamilyMenu extends BaseSubscreen {
         return `Assets/Female3DCG/Emoticon/Hearts/Icon.png`;
     }
 
-    public override load() {
-        super.load();
-        
+    public override onLoad() {
         if (InformationSheetSelection === null) {
             logger.error("InformationSheetSelection is null at FamilyMenu loading");
             return;
@@ -91,8 +89,7 @@ export class FamilyMenu extends BaseSubscreen {
         });
     }
 
-    public override exit() {
-        super.exit();
+    public override onExit() {
         const newCaregiversList = this.caregiversInputValue;
         if (
             this.oldCaregiversList.join(",") !== newCaregiversList.join(",") &&
@@ -110,6 +107,10 @@ export class FamilyMenu extends BaseSubscreen {
             }
         }
         syncStorage();
+    }
+
+    public exit(): void {
+        super.exit();
         this.setSubscreen(new MainMenu());
     }
 }

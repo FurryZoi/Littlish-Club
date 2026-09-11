@@ -51,8 +51,8 @@ export class DictMenu extends BaseSubscreen {
     private keyNumberOnly: DictMenuData["keyNumberOnly"];
     private valueNumberOnly: DictMenuData["valueNumberOnly"];
     public items: DictMenuData["items"];
-    private onExit: DictMenuData["onExit"];
-    private onSave: DictMenuData["onSave"];
+    private _onExit: DictMenuData["onExit"];
+    private _onSave: DictMenuData["onSave"];
 
     constructor({
         screenName,
@@ -71,12 +71,11 @@ export class DictMenu extends BaseSubscreen {
         this.keyNumberOnly = keyNumberOnly;
         this.valueNumberOnly = valueNumberOnly;
         this.items = items;
-        this.onExit = onExit;
-        this.onSave = onSave;
+        this._onExit = onExit;
+        this._onSave = onSave;
     }
 
-    public override load() {
-        super.load();
+    public override onLoad() {
         // this.createText({
         //     text: this.screenName,
         //     x: 100,
@@ -151,13 +150,12 @@ export class DictMenu extends BaseSubscreen {
             padding: 3,
             variant: "filled",
             onClick: () => {
-                this.onSave(this.items);
+                this._onSave(this.items);
             }
         });
     }
 
-    public override exit() {
-        super.exit();
-        this.onExit();
+    public override onExit() {
+        this._onExit();
     }
 }
