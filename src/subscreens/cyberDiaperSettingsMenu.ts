@@ -227,7 +227,8 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
         saveChangesBtn.style.fontWeight = "bold";
     }
 
-    public override onExit() {
+    public override exit() {
+        super.exit();
         this.setSubscreen(new MainMenu());
     }
 }
