@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T07:30:01.467Z",
+  "generated_at": "2026-09-13T20:32:26.571Z",
   "contributors": [
     {
       "name": "Zoi",
@@ -9,22 +9,12 @@
   ],
   "changes": [
     {
-      "message": "Adapt subscreens to low-level navigation changes",
-      "note": "Author was drunk when making these changes",
-      "sha": "ab36a073ee3f03d9c84fe87373fdc3bb688b7a1d",
+      "message": "Fix cyber diaper settings screen's exit handler",
+      "sha": "fe3bcc724dc24a0d159f89e44fb0200b06c54089",
       "author": "Zoi",
-      "date": "2026-09-11T07:28:28Z",
-      "tags": ["chore"],
-      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/ab36a073ee3f03d9c84fe87373fdc3bb688b7a1d"
-    },
-    {
-      "message": "Update deps and add \"Padded Princess\" outfit",
-      "note": "All thanks to Sweet Candi for creating this outfit <3",
-      "sha": "db719bd68642dd350dee9408c5fd5f456c32e3ab",
-      "author": "Zoi",
-      "date": "2026-09-10T22:31:28Z",
-      "tags": ["feature"],
-      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/db719bd68642dd350dee9408c5fd5f456c32e3ab"
+      "date": "2026-09-13T19:19:51Z",
+      "tags": ["fix"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/fe3bcc724dc24a0d159f89e44fb0200b06c54089"
     }
   ]
 }
