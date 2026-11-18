@@ -1,3 +1,4 @@
+import { StyleModule } from "zois-core/shard-modules";
 import { BaseSubscreen } from "zois-core/ui";
 
 export class OneButtonMenu extends BaseSubscreen {
@@ -46,10 +47,17 @@ export class OneButtonMenu extends BaseSubscreen {
 
         this.createButton({
             text: this.buttonText,
-            x: 100,
+            x: 1000,
             y: 800,
             padding: 4,
             variant: "filled",
+            modules: {
+                base: [
+                    new StyleModule({
+                        transform: "translateX(-50%)"
+                    })
+                ]
+            },
             onClick: () => {
                 this._onClick();
                 this.exit();
