@@ -539,9 +539,9 @@ export function loadRules(): void {
                 ChatRoomLeave();
                 CommonSetScreen("Online", "ChatSearch");
             }
-            ChatSearchLastQueryJoinTime = CommonTime();
+            ChatSearchLastQueryJoinTime = CommonTime() - 5000;
             ChatSearchLastQueryJoin = data.roomName;
-            ServerSend("ChatRoomJoin", { Name: data.roomName });
+            ChatSearchJoin(data.roomName);
         }, (getRuleParameter<number>(Player, RuleId.SUMMONING_RATTLE, "timeout") ?? 5) * 1000);
         return {
             success: true
