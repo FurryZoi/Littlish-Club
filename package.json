@@ -3,8 +3,9 @@
   "version": "1.2.4",
   "main": "index.js",
   "scripts": {
-    "dev": "esbuild src/index.ts --bundle --sourcemap --watch --outfile=dist/bundle.js --loader:.ts=ts --loader:.css=text --loader:.png=dataurl --loader:.svg=dataurl",
-    "build": "esbuild src/index.ts --bundle --sourcemap --outfile=dist/bundle.js --loader:.ts=ts --loader:.css=text --loader:.png=dataurl --loader:.svg=dataurl",
+    "dev": "node ./scripts/dev.mjs",
+    "build": "node ./scripts/build.mjs",
+    "build:dev": "node ./scripts/build.mjs --dev",
     "generate-changelog": "zois-core generate-changelog --owner=FurryZoi --repo=Littlish-Club"
   },
   "keywords": [],
@@ -13,8 +14,10 @@
   "description": "",
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
-    "bc-stubs": "130.0.0",
+    "bc-stubs": "134.0.0",
+    "chalk": "^6.0.1",
     "esbuild": "^0.28.1",
+    "open": "^11.0.4",
     "typescript": "^7.0.2"
   },
   "dependencies": {

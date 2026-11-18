@@ -9,64 +9,56 @@ import { AcceptRequestMenu } from "@/subscreens/acceptRequestMenu";
 
 export function loadUI(): void {
     hookFunction("InformationSheetRun", HookPriority.TOP, (args, next) => {
-        if (
-            (
-                InformationSheetSelection?.IsPlayer() ||
-                InformationSheetSelection?.LITTLISH_CLUB
-            ) &&
-            !(window.bcx?.inBcxSubscreen && window.bcx.inBcxSubscreen()) &&
-            !window.LSCG_REMOTE_WINDOW_OPEN &&
-            !window.LITTLISH_CLUB.inModSubscreen() &&
-            !window.MPA?.menuLoaded
-        ) {
-            DrawButton(
-                ...MOD_BUTTON_POSITION, "",
-                "White", milkBottle,
-                MOD_NAME
-            );
-        }
         if (window.LITTLISH_CLUB.inModSubscreen()) {
             return getCurrentSubscreen()?.run();
         }
-        next(args);
+        return next(args);
     });
 
     hookFunction("InformationSheetClick", HookPriority.OBSERVE, (args, next) => {
-        if (
-            (
-                InformationSheetSelection?.IsPlayer() ||
-                InformationSheetSelection?.LITTLISH_CLUB
-            ) &&
-            !(window.bcx?.inBcxSubscreen && window.bcx.inBcxSubscreen()) &&
-            !window.LSCG_REMOTE_WINDOW_OPEN &&
-            !window.LITTLISH_CLUB.inModSubscreen() &&
-            !window.MPA?.menuLoaded &&
-            MouseIn(...MOD_BUTTON_POSITION)
-        ) {
-            InformationSheetUnload();
-            if (typeof modStorage.requestReciviedFrom?.id === "number") {
-                setSubscreen(new AcceptRequestMenu());
-            } else {
-                setSubscreen(new MainMenu());
-            }
-        }
         if (window.LITTLISH_CLUB.inModSubscreen()) {
             return getCurrentSubscreen()?.click();
         }
-        next(args);
+        return next(args);
     });
 
     hookFunction("InformationSheetExit", HookPriority.OBSERVE, (args, next) => {
         if (window.LITTLISH_CLUB.inModSubscreen()) {
             return getCurrentSubscreen()?.exit();
         }
-        next(args);
+        return next(args);
     });
 
     hookFunction("InformationSheetResize", HookPriority.OBSERVE, (args, next) => {
         if (window.LITTLISH_CLUB.inModSubscreen()) {
             return getCurrentSubscreen()?.resize();
         }
-        next(args);
+        return next(args);
+    });
+
+    hookFunction("InformationSheetLoad", HookPriority.OBSERVE, async (args, next) => {
+        const result = await next(args);
+        if (
+            !InformationSheetSelection?.IsPlayer() &&
+            !InformationSheetSelection?.LITTLISH_CLUB
+        ) return result;
+        const button = ElementButton.Create(
+            "lc-open-settings-screen-button",
+            () => {
+                InformationSheetUnload();
+                if (typeof modStorage.requestReciviedFrom?.id === "number") {
+                    setSubscreen(new AcceptRequestMenu());
+                } else {
+                    setSubscreen(new MainMenu());
+                }
+            },
+            {
+                image: milkBottle,
+                tooltip: MOD_NAME,
+            }
+        );
+        const container = ElementWrap(`${InformationSheetIDs.screen}-menu`);
+        if (container) container.append(button);
+        return result;
     });
 }
