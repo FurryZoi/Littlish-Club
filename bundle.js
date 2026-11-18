@@ -1,3 +1,8 @@
+// LC: Littlish Club
+if (typeof window.ImportBondageCollege !== "function") {
+  alert("Club not detected! Please only use this while you have Club open!");
+  throw "Dependency not met";
+}
 "use strict";
 (() => {
   var __create = Object.create;
@@ -33,6 +38,7 @@
   // node_modules/.pnpm/bondage-club-mod-sdk@1.2.0/node_modules/bondage-club-mod-sdk/dist/bcmodsdk.js
   var require_bcmodsdk = __commonJS({
     "node_modules/.pnpm/bondage-club-mod-sdk@1.2.0/node_modules/bondage-club-mod-sdk/dist/bcmodsdk.js"(exports2) {
+      "use strict";
       var bcModSdk2 = (function() {
         "use strict";
         const o = "1.2.0";
@@ -268,11 +274,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
       bundle: "NobwRAcghgtgpmAXGAEgBgJxrWANGAcQCcB7AVwAclU4BLAcwAsAXPMAYRIBsSilgAugF9c4aPGoBlGFC5c2xclWQAhEgBMAngFUKFOH3ycefRMDABiABwARAOwBRR2AH4ACqX1FmmpOAAqmvoASnAAxrzqfmA++lGIaEJJopCwCMgKpJTUAIJEMADOADJwAGasRty81DZlUGRcrCJiadSZSrn5BcEMLGzG1ci1pfWNYM2pEhn4itnIKFAAdurFZRUcVaZgw6NNKeLpYO1zqEsrPUzrA1s7DXstU2DSsvIzWcpgalpFJADuBv1NvxLLY7GC7C4JgdqAtaEQAGKkRbMACMdgARscPrCEUirkCzJYVAA2FQAZisDkh+1a8ygcJUUDCAGsUQBWTFvDp0hlM5mAkw1Op3cY0x4OTRwdGkX4FCFck4SqUygoCwbmCxsnJstA66kPQ5KgoorHUI1qm7CsZQ2lgI0mhUfI0AJgtQpGIptj3hDVehHe1AAsuRmIw3YTbmN8JHWK4wB4SF4fNFAiFwpFovIEvhWAkRNtaKVSrQwndfNnPjwWfw4w4i+Fc4J8ChaOp0k3UK24ABJZhwGA1/A5OR/HJhZi0AButGTZjjOWYzCItHRZD7NeSBuoEFoei4cAKrsd293FH3qsqgqGVvuk0ObjIBQKmgd/u58cfz/D2xvoq3yEkRg4BQAFj2QBNFnIRYLw2K8fw9KN408AxZ3AOtSgbYESigAow2EL1DhjU15jgKAokvQZ4N2P872oFQuEfMMwMrRjvyIgjqHhBjWxg2YPi4sgeLY38OOQBwYBICcIkWYi7QkqSSBkijLQQ29oSGWgoC8AoABZZLcJYJwPcMNQwBwzLMtgLAcHJHHhPT8Gsik2RsdgXHcZDvHLAIgjgUIIiIeJwFiOB4jJJJRMILgZz7Qw3xOdgeFDMcwgPApeF8ZTgQseFcryqy8vyuMEyTbywFTPz00C6IQviDB8wqmpJIKNRQ3GSKcnUO5GXRTQbCINLXz46hEskpjYPVSw7B0qxiQcHBHKsOwMBRFQbDYIjhDFQ5GWWI94uxKB8SvDUchUM6zv1WjkAITTkTUX4hoDHkiBStKMrJEzLBsNAfp+q71LAAB1KB8gIHhJ2M5jwZISGYOubLiTQJGkasmwcnR9H3KQxMULKir/IzRBgt8+JEnwAB5SGiGXNsPFoXgZzKwN6RkvNN2uu193oQyQNB5gIHCZkuCZBBmMFlkRdSr6csK+ECrlgHbTcWgkskQT1mGgCNZlqw2TsewrCs2aTeJY3iVN83LcWi3bexkq8ZTXzCeq4mYlJpBEg5wGVCIKAMFk32oF11ziXhNklceIpRd2lZA791L92OyaLHOtOcgKsOs8jw5ACN0wALhMAMM1AE7tFEAH0ijIAAvWhZKVQCyL+GXbKsFEw5z6gDORTRGBIAo4Ce99JBIFl4YJDU5flrb/0+EhmsHk5AJIKGJtMU7nRyNBN6suw2Qwff5cc+EbGP3LIQEIA"
     },
     {
-      name: "Hooded Onesie",
-      creator: "Amy",
-      bundle: "NobwRAcghgtgpmAXGAEgezQEwJYIDRgDiATmgK4AOSYAwgDZoAuAFmATWg8UsGAMQBRAGzCAYgEE2/YWMkFBIoRKkLZKmUrnTFygLoEACqQpxijAJ5JwAFXMmASnADGaYpithWiAAwE6SbwBfAgARbAAzcOwnMjoLAIIAIQYnAGsefTABSOdGDIIUbEwERGBMwuKASUY4GHywcToGAHdxJ0ZsADdseNLM8UZGYmwAIzIa+oB5TtNh4qNsVx7LRHB0LBC0ZoA7a2G6xABmAEYCjExNncSoNKQAdjONre2AWSKkE4IAGRu4AGcPqdUOcAKoUN7uI7HQIwvDgaDwaiJUZSEjkKjIehMZhtJz/P6uSzsTiuHj8KBQAAc3mpKjuAE4GYkAKxSEJwcJQWJ5eT0w580QAJjAmSMaBMZhWNjscEcLjcHgxQIAHkhoaEIlEYnEVr4wMk0Lc+gRsuFcvUKiUygUinBqrV6o0Wm0Ot1etaGoNhmMJsawNY4Mq8sgXmgYDBzACCAGg8LkF9sHQAAQ0ca4KSTCg3ZZqgjTWa2hZLXqHILBeGwEr6hhkP5wY6o0iUagAZTIPSkHC4ZNUmhF5cgleoAGkehZEsQoA2CGjm8gJ1BOyTuKVtGpdAOEVWwlAJX9Do30dQDFBth1/kvu6u+OJvLfEkIRYZjKZeuB88Q5nAi8NesdmbCFaIsgLaGqkfyPjOTYYmAoFpFGtDLmS7KctybIclycRPmAYoSm+YAfl+P45qsYCiMMTRIIK0KAYOwGwWBfwtkM2AmJg05ENBraMfY2AAObMDyiFXrwfD0oK4kCHc6GoVhG5wnRVZweBzHDGxHGzjByl/F8HJCV2pLXuI4jUsZMmYXk8lAVW1zbOxh5zqgUD6Uh153KI7mJIk/YKVu1AoFA2DEKILSmBpXHIAFQW4vihIHsSIn8JSiTJSErKii+koeJm2Z/rRfnILxIwjGg2x/AALA5MFRcQMV/ASxDmBxBkrqJIQSaI7UqIk4g9QIIQ+dZ/nePS3jeFV/lwPxgmXoZZSbkOyAABo/MQfH4JxR7zlg5hghKs0rmAADqzA9BtuGvlK/oynKriQuAFhsQEMILfRE3IOIxAwDpekHdQKEWWAr1Vu9DRfX8vECS5V5gADaHA9QoMBXZP3hNDhmwxh8O+YtYBI6emAQ9N6OHXDWEI8tq3raDiQ7V8WymH9yBk3kFNOUF5GlYw9IjPjHOkGeTNtb1lJmVZin+YFxDXGkhyQZtjk1TL6QJXN/AhCLYtswI5hwCMpDNH8wpQVtWS6/rWwIS1yFY1hoS25Zz7ipdHi2A4zh3R4AI+AQGJ6iuQQapE0TcrqSQpOkfqmuafqWhatr2gcHpOlsLpdCRydeqM4xWhu2u638rIm45OsXqrh18IchwUhSQM4/RpeF6DjfG8JGOV9XNd10NhVwHxsRQNwxcwaG4ysOXNuyUJLPYRdWWkW7soewqpH+D7YDBoHsOaiHOoJNWYH1NH7Tx8Up92jUSf9E0qftOn7r9FnPq5/luMQKxFB0P8readQ78UJ/MubdSYO27hLZABhax/CaqDSB9UiTAP+qAtmLZmBwBQIzYex4BbkDKkzTGU8wEFQIYDLBkU4BQHcBPZmyD642ToLWceCsYLJEYfgmebMQrtkJqDLhRQrauRIdjHuWQYBMGiKVZuYiOguG2Ow0BTs8JXWPsGeagRdBAA=="
-    },
-    {
       name: "Sunflower Bab",
       creator: "Dawn",
       bundle: "NobwRAcghgtgpmAXGAClAxgSwGabgJwHEoBzMAGjEPwHsBXAByTAEkAXOGAWXrYAsKYAMI0ANjXxJgYAMQBOOQA4AjAGYArGAC6AX3Lho8ZgEEAJnVFsAQlABGATwAi+OAGdXqwdXpNkQ8fyCIuKSiNIyjnJWjuoAYoKOcNhQFmyCMopyAOwxAEzaegawCMgAyjToANauACxetIzM5VWuQWISUrJWAKLG6urKBfqQxcyEmFAAdtY0AO6DlN6NyAASUJj4xujobq4S9p6UwR1hsjFWqjX5usOGJWArAAxKj/U+zCtwmCR8aUftoTAiWSqTAhRGRmQABkoPgSAhFg1fGArDRTPYAKoMBgENohZgAdT4mA4ghQtBx+DY9iQ4AAKvYcQAlODoCSmWlgak4jmIR46AW3UbICASGBQURvZYotH2KFzXH/fHIIkkhDgu4fdb4WK0aZyKXItYbXU0aZ4k7hLJWABscnUrxuRUhD21osmCKoSK1GxsVQtgOBKUsYKFLu69jcCy972QEbcAc6MgGclUQhtQ2d93jrmjS2ROfySstshTaYzToh9xZJAssMNzB4dECxcDSWDf1QFII1M5DOZrPZnMlfMoaT5eiBOFw6FSNNHKPE/rCWko3Ww2FZ4+Aq4emFMJR3lBW+7g7E4Ul3xlE4lmWzYmAAbiT50ewMY2Gx8JhbM3D7oNWFSBMGxUQowbEUQIYMDWlbZgg1BQCXSsUQ6FcAREVjRc0Iw4QAXg9tELDe5YlQ/dYJjaVSLocjE2QBCQyQ7MYBoB82UmCCwG6Fi2LNOigUIxjiOYeNbFoWZc040TxIo442xBISswIhTO3zD44CgDk4PowS0iY5gUBoGhsCcCZKU4tBpjwWT8NOGRjGMORlBqA1KHsxznNc2QHKclz0h8zztEockaEpXtEHpRk4BZNl8F5cBuTgXl+UFJTkE44x8BgVwoSSTs5OUjtQzSsAMqy1wmW+X5+IYvThPSzDpTWSZTByvKat04qq2YTjmtayqfny2yBJUrrNWQFA0Ncew829CapppbSRqK/Syj4OBPkkRrkRCyZ6EmGzlWWoiSqZGhXDgIRxI47atSG5VwliWJuhqRRjHSc5LmuHQtCAA"
@@ -329,6 +330,16 @@ One of mods you are using is using an old version of SDK. It will work for now b
       name: "Padded Princess",
       creator: "Sweet Candi",
       bundle: "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"
+    },
+    {
+      name: "Hooded Onesie",
+      creator: "Amy",
+      bundle: "NobwRA4gTg9grgBzALjACQKYEsDmALAFzABowA5AQwFsMV0AGATnvrAF9jxp4lUAhGABMAngGUCwgDa1SlGnQCiAYzwwAagCZ2nSLER0BIgKoIEGKCXLVaqADIUoOWhy57eYAIJQqAZ1sYAMyJZazptVx46L18AJVxCSzkbMHDdSNQ0CgA7QT9A4Kt5VFTufQzs3Lj8AqSwlzSysENhWxgAd3NE0LsHJxK3RWEMACNYNp8uorAFIdH2nwBGfvTpoYmQqZmMHwBmSwBhGEkYC1QAYgAOADY+egUAMWXGrZ8tDeSXvdJD49OwS5ud0e9VK7gAsvACHhJskYhgcHBJA4DkcTihgP8PFcAKwaXGWAAigQoiKIAF0QQNUGQsKZpOtCskaXTtlpKSsAApwHw+YQwuhcnnCJbsxoc2BZeBZBm1VCiPAYTAWUXuTAUQT8uVUCiSSQKBwTFUGSTc6HvY2mp7ue4mrC5TVgG1wO2GnSgxRUGAELBKGBZB0KT3e33+o2oQC5GYA0TUA1XGADayAPq2OAALywDrjgHnFHb0JRUK10fbHKEOtAwIRYGRgH5o84KK51+4eSzimBmKASFDgADyADdzFA7RhxVgTlgO8hwKWhAT2lkACoDvPIHYLUhTwQztpZPgUJQAaxQAHY12WN7OwXaUCvSPYlNsr6v0KeTBeNcuFhwwHPhGY4b6oG+4DQsg9CkJIKAfmwYZVkWeAeEod48icfLmvwWDDCivzov8FAUBc9D4ZYZyHowJF8NihLEqSRGMDstH3FoZKkC2bbjt2fZQAOghDgOo7jtmpBdggu5jnyyCPt+v4YP+gFgLwj4AB4QZ+c4YApRCoBCVBUMIDKqepWh2FgkgAAT7HA3rONBojOjU3RNMc3IYEs3yon8Zx1g2TbQXwUAUA6ADSY4SL5FAuVWbl0B59ZXI2+ZyjA+4yvZoiJXuPhXM2sCsWJ7H9oOw58bljoDrqKAaJB1lpT4VQJKhYCpUl4gDmYgjhdWpwYmcjAaD1CiHpRAQkpI5JVUl/hBA6jXpc1tIYG1mE1l1HgePhK2DcNo1ulS6AUHZUw7jk7WRech73GdfB8PFu1YFA8GIT4yFfIydCZLdNrtOYx1YecFx8H9BIUcx2XmGxYBCSJ46QdtKxvXdCHbI9UDCg6cTDMMfo+AALItnX/ASvX3ATRF8B4pMKASYAUjDjRw/cEr7ckdMM4wuNRQSZMXOt0Fwzu+4lhQt183uCxAxFP345z3M0+4HLZJZyVTASWAUG2uxs8gy30B49B8JlpBnFcWNXDs2IDRSZJAA="
+    },
+    {
+      name: "Hooded Onesie with Skirt",
+      creator: "Amy",
+      bundle: "NobwRA4gTg9grgBzALjACQKYEsDmALAFzABowA5AQwFsMV0AGATnvrAF9jxp4lUAhGABMAngGUCwgDa1SlGnQCiAYzwwAagCZ2nSLER0BIgKoIEGKCXLVaqADIUoOWhy57eYAIJQqAZ1sYAMyJZazptVx46L18AJVxCSzkbMHDdSNQ0CgA7QT9A4Kt5VFTufQzs3Lj8AqSwlzSysENhWxgAd3NE0LsHJxK3RWEMACNYNp8uorAFIdH2nwBGfvTpoYmQqZmMHwBmSwBhGEkYC1QAYgAOADY+egUAMWXGrZ8tDeSXvdJD49OwS5ud0e9VK7gAsvACHhJskYhgcHBJA4DkcTihgP8PFcAKwaXGWAAigQoiKIAF0QQNUGQsKZpOtCskaXTtlpKSsAApwHw+YQwuhcnnCJbsxoc2BZeBZBm1VCiPAYTAWUXuTAUQT8uVUCiSSQKBwTFUGSTc6HvY2mp7ue4mrC5TVgG1wO2GnSgxRUGAELBKGBZB0KT3e33+o2oQC5GYA0TUA1XGADayAPq2OAALywDrjgHnFHb0JRUK10fbHKEOtAwIRYGRgH5o84KK51+4eSzimBmKASFDgADyADdzFA7RhxVgTlgO8hwKWhAT2lkACoDvPIHYLUhTwQztpZPgUJQAaxQAHY12WN7OwXaUCvSPYlNsr6v0KeTBeNcuFhwwHPhGY4b6oG+4DQsg9CkJIKAfmwYZVkWeAeEod48icfLmvwWDDCivzov8FAUBc9D4ZYZyHowJF8NihLEqSRGMDstH3FoZKkC2bbjt2fZQAOghDgOo7jtmpBdggu5jnyyCPt+v4YP+gFgLwj4AB4QZ+c4YApRCoBCVBUMIDKqepWh2FgkgAAT7HA3rONBojOjU3RNMc3IYEs3yon8Zx1g2TbMbArFiex/aDsOfH+SkyB4lB0F8FAFAOgA0mOEjRRQLlVm5dAefWVyNvmcowPuMr2aI+V7j4VzNr55hsWAvaBdxwUDtV9wDrqKAaJB1klT4VQJKhYDFQV4gDmYgipdWpwYmcjAaNNCiHpRAQkpI5KdQV/hBA6A2lUNtIYKNmE1pNHgePhx0LUtK1ulS6AUHZUw7jkY3pech73K9fB8LlN1YFA8GIT4yFfIydCZD9NrtOYT1YecFx8LDBIUT5rZVaFQkieOkFXSsoO/Qh2wA1AwoOnEwzDH6PgACwHRN/wEjN9x00RfAeMzCgEmAFJY40OPNX6d3JDzEoEIw1MZQSLMXGd0E4zu+4lhQP2y3uCyI2l0O0xLUtc+4hZengrQdBYfUeKIMRwKT5iiHuP0FONGUnSd+wKF9HLZJZhVTEYWQEDFWBZOYPhzngfui8gk2CFcgQBAERGHnwcdx0RFwLKRHjzaQZwUxc+F8CLGcXPcBcF0Rx0eBTFPO0xYAsSjnY1cJSiieiq4t8Qq6gQsFJsGSQA==="
     }
   ];
   var extendedABDLItemNames = [
@@ -365,7 +376,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
 }`;
 
   // package.json
-  var version = "1.2.4";
+  var version = "1.2.5";
 
   // node_modules/.pnpm/zois-core@2.2.1/node_modules/zois-core/dist/styles.css
   var styles_default2 = ".zcInput {\n  background: var(--tmd-element, white);\n  color: var(--tmd-text, black);\n  padding: 2vw;\n  border: 2px solid var(--tmd-accent, black);\n  border-radius: 4px;\n}\n.zcInput::placeholder {\n  color: var(--tmd-text, black);\n}\n.zcTabs {\n  display: flex;\n}\n.zcTabs button {\n  cursor: pointer;\n  width: 100%;\n  color: var(--tmd-text, black);\n  background: none;\n  border: none;\n  border-bottom: 2px solid var(--tmd-element, rgb(214, 214, 214));\n  padding: 0.25em;\n}\n.zcTabs button[data-opened=true] {\n  font-weight: bold;\n  border-bottom: 2px solid var(--tmd-accent, rgb(81, 81, 231)) !important;\n}\n.zcTabs button:hover {\n  background: var(--tmd-element, rgb(235, 235, 235));\n  border-bottom: 2px solid var(--tmd-element-hover, rgb(149, 149, 149));\n}\n.zcCard {\n  border: 2px solid var(--tmd-accent, rgb(195, 195, 195));\n  border-radius: 0.4em;\n  background: var(--tmd-element, white);\n  color: var(--tmd-text, black);\n  padding: 0.4em 2.5em 0.4em 0.4em;\n  box-sizing: border-box;\n}\n.zcCard:hover {\n  border: 2px solid var(--tmd-accent-hover, rgb(170, 170, 170));\n}\n.zcCard_name {\n  font-size: 0.5em;\n  color: var(--tmd-text, rgb(100, 100, 100));\n  margin: 0;\n}\n.zcCard_value {\n  color: var(--tmd-text, black);\n  margin: 0;\n  margin-top: 0.4em;\n  font-weight: bold;\n}\n.zcToastsContainer {\n  display: flex;\n  flex-direction: column;\n  gap: 0.15vw;\n  cursor: pointer;\n  position: fixed;\n  z-index: 30;\n}\n@keyframes zcToast-progress {\n  0% {\n    width: 0;\n  }\n  100% {\n    width: 100%;\n  }\n}\n@keyframes zcSlideInFromLeft {\n  from {\n    transform: translateX(-100%);\n    opacity: 0;\n  }\n  to {\n    transform: translateX(0);\n    opacity: 1;\n  }\n}\n@keyframes zcSlideInFromRight {\n  from {\n    transform: translateX(100%);\n    opacity: 0;\n  }\n  to {\n    transform: translateX(0);\n    opacity: 1;\n  }\n}\n@keyframes zcSlideOutToLeft {\n  from {\n    transform: translateX(0);\n    opacity: 1;\n  }\n  to {\n    transform: translateX(-100%);\n    opacity: 0;\n  }\n}\n@keyframes zcSlideOutToRight {\n  from {\n    transform: translateX(0);\n    opacity: 1;\n  }\n  to {\n    transform: translateX(100%);\n    opacity: 0;\n  }\n}\n@keyframes pop {\n  0% {\n    transform: scale(0.9);\n  }\n  50% {\n    transform: scale(1.1);\n  }\n  100% {\n    transform: scale(1);\n  }\n}\n.zcToast {\n  display: flex;\n  column-gap: 0.6em;\n  align-items: center;\n  max-width: 25vw;\n  border-radius: 0.15em;\n  position: relative;\n}\n.zcToast p {\n  color: white;\n  margin: 0;\n}\n.zcToast > svg {\n  flex-shrink: 0;\n}\n.zcDialog {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  background: rgb(57, 64, 77);\n  margin: auto;\n  position: absolute;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  right: 0;\n  border: none;\n  border-radius: 4px;\n  min-width: 200px;\n  max-width: 450px;\n  width: 90%;\n  height: fit-content;\n  z-index: 100;\n  pointer-events: all !important;\n  box-shadow: 0px 0px 6px 1px #0000006e;\n}\n.zcDialog > p {\n  padding: 0.85em 0px;\n  margin: 0;\n  user-select: none;\n  width: 90%;\n  color: white;\n}\n.zcDialog > input:focus {\n  outline: 2px solid rgb(0, 238, 255);\n}\n.zcDialog > div > button {\n  cursor: pointer;\n  padding: 6px 14px;\n  border: none;\n  border-radius: 4px;\n  font-weight: bold;\n}\n.zcDialog > div > button:first-child {\n  background: rgba(73, 82, 99, 1);\n  color: white;\n}\n.zcDialog > div > button:first-child:hover {\n  background: rgb(86, 94, 108);\n}\n.zcDialog > div > button:last-child {\n  background: #00eeffff;\n}\n.zcDialog > div > button:last-child:hover {\n  background: rgb(4, 203, 217);\n}\n@keyframes zcSpin {\n  from {\n    transform: rotate(0deg);\n  }\n  to {\n    transform: rotate(360deg);\n  }\n}\n@keyframes zcCursorBlink {\n  from {\n    border-right-color: transparent;\n  }\n  to {\n    border-right-color: rgb(42, 42, 42);\n  }\n}\n@keyframes zcStrokeUD {\n  0%, 100% {\n    transform: translateY(0) rotate(-25deg);\n  }\n  50% {\n    transform: translateY(15px) rotate(-45deg);\n  }\n}\n@keyframes zcFloatHeart {\n  0% {\n    transform: translateY(0) scale(0.5);\n    opacity: 0;\n  }\n  15% {\n    opacity: 1;\n  }\n  100% {\n    transform: translateY(-70px) scale(1.1);\n    opacity: 0;\n  }\n}\n.zcCursor {\n  border-right: 2px solid var(--tmd-text, rgb(42, 42, 42));\n  width: fit-content;\n}\n.zcDisabled {\n  pointer-events: none;\n  opacity: 0.6;\n}\n";
@@ -5432,10 +5443,17 @@ One of mods you are using is using an old version of SDK. It will work for now b
       }).style.textAlign = "center";
       this.createButton({
         text: this.buttonText,
-        x: 100,
+        x: 1e3,
         y: 800,
         padding: 4,
         variant: "filled",
+        modules: {
+          base: [
+            new StyleModule({
+              transform: "translateX(-50%)"
+            })
+          ]
+        },
         onClick: () => {
           this._onClick();
           this.exit();
@@ -5561,7 +5579,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       return "Family";
     }
     get icon() {
-      return `Assets/Female3DCG/Emoticon/Hearts/Icon.png`;
+      return "Icons/Expressions/Emoticon/Hearts.png";
     }
     onLoad() {
       if (InformationSheetSelection === null) {
@@ -5699,25 +5717,33 @@ One of mods you are using is using an old version of SDK. It will work for now b
       logger.error("Diaper asset not found");
       return;
     }
+    if (!Array.isArray(cyberDiaper.color) || asset.ColorableLayerCount !== cyberDiaper.color.length) {
+      cyberDiaper.color = structuredClone(asset.DefaultColor);
+      syncStorage();
+    }
     const color = cyberDiaper.color ?? asset.DefaultColor;
-    const colorString = Array.isArray(color) ? color.join(",") : color;
-    InventoryWear(Player, getCyberDiaperAssetName(cyberDiaper.model), "ItemPelvis", cyberDiaper.color, 10, 0, {
+    const craft = {
       Name: cyberDiaper.name ?? "[No Name]",
       Description: cyberDiaper.description ?? "[No Description]",
       MemberName: "Littlish Club Production",
       MemberNumber: 133997,
-      Property: cyberDiaper.property ?? "Comfy",
-      Color: colorString,
-      Lock: "",
-      Effects: {},
-      Item: getCyberDiaperAssetName(cyberDiaper.model),
-      Private: true,
-      TypeRecord: cyberDiaper.typeRecord ?? null,
-      ItemProperty: cyberDiaper.drawingPriority ? {
+      Partial: true,
+      Effects: { Comfy: 1 },
+      Private: true
+    };
+    const craftingValidationResult = CraftingValidate(craft, asset, true, false, true);
+    const currentItem = AppearanceItem.fromAsset(asset, {
+      color,
+      property: {
+        TypeRecord: cyberDiaper.typeRecord,
         OverridePriority: cyberDiaper.drawingPriority
-      } : null
+      },
+      craft: craftingValidationResult > CraftingStatusType.CRITICAL_ERROR ? craft : void 0,
+      difficulty: 10
     });
-    ChatRoomCharacterItemUpdate(Player, "ItemPelvis");
+    ExtendedItemInit(Player, currentItem, false, false);
+    Player.Appearance.push(currentItem);
+    ChatRoomCharacterUpdate(Player);
   }
   function takeCyberDiaperOff() {
     InventoryRemove(Player, "ItemPelvis");
@@ -5732,8 +5758,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
     const cyberDiaperItem = InventoryGet(Player, "ItemPelvis");
     if (!cyberDiaperStorage?.locked) return;
     const asset = AssetGet(Player.AssetFamily, "ItemPelvis", getCyberDiaperAssetName(cyberDiaperStorage.model));
-    if (!cyberDiaperItem || cyberDiaperItem.Asset?.Name !== getCyberDiaperAssetName(cyberDiaperStorage.model) || //@ts-expect-error
-    !colorsEqual(cyberDiaperStorage.color ?? asset.DefaultColor, cyberDiaperItem.Color ?? asset.DefaultColor)) putCyberDiaperOn();
+    if (!asset) return;
+    if (!cyberDiaperItem || cyberDiaperItem.Asset?.Name !== getCyberDiaperAssetName(cyberDiaperStorage.model) || !colorsEqual(cyberDiaperStorage.color ?? asset.DefaultColor, cyberDiaperItem?.Color ?? asset.DefaultColor)) putCyberDiaperOn();
   }
   function loadCyberDiaper() {
     hookFunction("ChatRoomCharacterItemUpdate", HookPriority.OBSERVE, (args, next) => {
@@ -5905,7 +5931,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         return;
       }
       if (!ItemColorLayerNames) {
-        ItemColorLayerNames = new TextCache(`Assets/${Player.AssetFamily}/LayerNames.csv`);
+        ItemColorLayerNames = new TextCache(`Assets/LayerNames.csv`);
         const loadingText = this.createText({
           text: "Loading LayerNames.csv...",
           x: 400,
@@ -5941,7 +5967,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
             if (this.canvasCharacter) {
               const item = InventoryGet(this.canvasCharacter, asset.Group.Name);
               if (item) {
-                item.Color ??= defaultColor;
                 item.Color[n] = defaultColor[n];
                 CharacterRefresh(this.canvasCharacter);
               }
@@ -9622,9 +9647,9 @@ Thanks for installing the mod!`;
           ChatRoomLeave();
           CommonSetScreen("Online", "ChatSearch");
         }
-        ChatSearchLastQueryJoinTime = CommonTime();
+        ChatSearchLastQueryJoinTime = CommonTime() - 5e3;
         ChatSearchLastQueryJoin = data.roomName;
-        ServerSend("ChatRoomJoin", { Name: data.roomName });
+        ChatSearchJoin(data.roomName);
       }, (getRuleParameter2(Player, 1020 /* SUMMONING_RATTLE */, "timeout") ?? 5) * 1e3);
       return {
         success: true
@@ -10537,51 +10562,56 @@ Thanks for installing the mod!`;
   // src/modules/ui.ts
   function loadUI() {
     hookFunction("InformationSheetRun", HookPriority.TOP, (args, next) => {
-      if ((InformationSheetSelection?.IsPlayer() || InformationSheetSelection?.LITTLISH_CLUB) && !(window.bcx?.inBcxSubscreen && window.bcx.inBcxSubscreen()) && !window.LSCG_REMOTE_WINDOW_OPEN && !window.LITTLISH_CLUB.inModSubscreen() && !window.MPA?.menuLoaded) {
-        DrawButton(
-          ...MOD_BUTTON_POSITION,
-          "",
-          "White",
-          milk_bottle_default,
-          MOD_NAME
-        );
-      }
       if (window.LITTLISH_CLUB.inModSubscreen()) {
         return getCurrentSubscreen()?.run();
       }
-      next(args);
+      return next(args);
     });
     hookFunction("InformationSheetClick", HookPriority.OBSERVE, (args, next) => {
-      if ((InformationSheetSelection?.IsPlayer() || InformationSheetSelection?.LITTLISH_CLUB) && !(window.bcx?.inBcxSubscreen && window.bcx.inBcxSubscreen()) && !window.LSCG_REMOTE_WINDOW_OPEN && !window.LITTLISH_CLUB.inModSubscreen() && !window.MPA?.menuLoaded && MouseIn(...MOD_BUTTON_POSITION)) {
-        InformationSheetUnload();
-        if (typeof modStorage.requestReciviedFrom?.id === "number") {
-          setSubscreen(new AcceptRequestMenu());
-        } else {
-          setSubscreen(new MainMenu());
-        }
-      }
       if (window.LITTLISH_CLUB.inModSubscreen()) {
         return getCurrentSubscreen()?.click();
       }
-      next(args);
+      return next(args);
     });
     hookFunction("InformationSheetExit", HookPriority.OBSERVE, (args, next) => {
       if (window.LITTLISH_CLUB.inModSubscreen()) {
         return getCurrentSubscreen()?.exit();
       }
-      next(args);
+      return next(args);
     });
     hookFunction("InformationSheetResize", HookPriority.OBSERVE, (args, next) => {
       if (window.LITTLISH_CLUB.inModSubscreen()) {
         return getCurrentSubscreen()?.resize();
       }
-      next(args);
+      return next(args);
+    });
+    hookFunction("InformationSheetLoad", HookPriority.OBSERVE, async (args, next) => {
+      const result = await next(args);
+      if (!InformationSheetSelection?.IsPlayer() && !InformationSheetSelection?.LITTLISH_CLUB) return result;
+      const button = ElementButton.Create(
+        "lc-open-settings-screen-button",
+        () => {
+          InformationSheetUnload();
+          if (typeof modStorage.requestReciviedFrom?.id === "number") {
+            setSubscreen(new AcceptRequestMenu());
+          } else {
+            setSubscreen(new MainMenu());
+          }
+        },
+        {
+          image: milk_bottle_default,
+          tooltip: MOD_NAME
+        }
+      );
+      const container = ElementWrap(`${InformationSheetIDs.screen}-menu`);
+      if (container) container.append(button);
+      return result;
     });
   }
 
   // changelog.json
   var changelog_default = {
-    generated_at: "2026-09-13T20:32:26.571Z",
+    generated_at: "2026-11-18T18:43:15.152Z",
     contributors: [
       {
         name: "Zoi",
@@ -10591,12 +10621,52 @@ Thanks for installing the mod!`;
     ],
     changes: [
       {
-        message: "Fix cyber diaper settings screen's exit handler",
-        sha: "fe3bcc724dc24a0d159f89e44fb0200b06c54089",
+        message: 'Update outfits wardrobe: add "Hooded Onesie with Skirt" and update "Hooded Onesie"',
+        sha: "72a7b74219e1f59e40ed71547bd6615c55d42e1d",
         author: "Zoi",
-        date: "2026-09-13T19:19:51Z",
+        date: "2026-11-18T18:41:36Z",
+        tags: [],
+        commit_url: "https://github.com/FurryZoi/Littlish-Club/commit/72a7b74219e1f59e40ed71547bd6615c55d42e1d"
+      },
+      {
+        message: "Fix cyber diaper so it no longer triggers rate limits",
+        sha: "1536fa8b7616d785d3ddbf7149390eb634e103ee",
+        author: "Zoi",
+        date: "2026-11-18T18:31:32Z",
         tags: ["fix"],
-        commit_url: "https://github.com/FurryZoi/Littlish-Club/commit/fe3bcc724dc24a0d159f89e44fb0200b06c54089"
+        commit_url: "https://github.com/FurryZoi/Littlish-Club/commit/1536fa8b7616d785d3ddbf7149390eb634e103ee"
+      },
+      {
+        message: "Fix wrong hearts icon url",
+        sha: "b7d902be2320e4d6f5114cd3d508150cb1af8e7a",
+        author: "Zoi",
+        date: "2026-11-18T16:56:01Z",
+        tags: ["fix"],
+        commit_url: "https://github.com/FurryZoi/Littlish-Club/commit/b7d902be2320e4d6f5114cd3d508150cb1af8e7a"
+      },
+      {
+        message: "Properly join room on summon",
+        sha: "eef414904abf70d2f49b3494d7e0185fcadce116",
+        author: "Zoi",
+        date: "2026-11-18T16:42:08Z",
+        tags: ["fix"],
+        commit_url: "https://github.com/FurryZoi/Littlish-Club/commit/eef414904abf70d2f49b3494d7e0185fcadce116"
+      },
+      {
+        message: "Center button in reset settings subscreen",
+        sha: "34046ad05016b721f93eabe4233118ac87d4bd36",
+        author: "Zoi",
+        date: "2026-11-18T16:16:14Z",
+        tags: ["fix"],
+        commit_url: "https://github.com/FurryZoi/Littlish-Club/commit/34046ad05016b721f93eabe4233118ac87d4bd36"
+      },
+      {
+        message: "Update environment and adapt for R134 InformationSheet changes",
+        sha: "4c184e6e4fafde6079f8f8cb449d8be3b8fae84d",
+        author: "Zoi",
+        date: "2026-11-18T16:09:22Z",
+        tags: ["chore", "fix"],
+        commit_url: "https://github.com/FurryZoi/Littlish-Club/commit/4c184e6e4fafde6079f8f8cb449d8be3b8fae84d"
       }
     ]
   };
