@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-13T20:32:26.571Z",
+  "generated_at": "2026-11-18T18:43:15.152Z",
   "contributors": [
     {
       "name": "Zoi",
@@ -9,12 +9,52 @@
   ],
   "changes": [
     {
-      "message": "Fix cyber diaper settings screen's exit handler",
-      "sha": "fe3bcc724dc24a0d159f89e44fb0200b06c54089",
+      "message": "Update outfits wardrobe: add \"Hooded Onesie with Skirt\" and update \"Hooded Onesie\"",
+      "sha": "72a7b74219e1f59e40ed71547bd6615c55d42e1d",
       "author": "Zoi",
-      "date": "2026-09-13T19:19:51Z",
+      "date": "2026-11-18T18:41:36Z",
+      "tags": [],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/72a7b74219e1f59e40ed71547bd6615c55d42e1d"
+    },
+    {
+      "message": "Fix cyber diaper so it no longer triggers rate limits",
+      "sha": "1536fa8b7616d785d3ddbf7149390eb634e103ee",
+      "author": "Zoi",
+      "date": "2026-11-18T18:31:32Z",
       "tags": ["fix"],
-      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/fe3bcc724dc24a0d159f89e44fb0200b06c54089"
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/1536fa8b7616d785d3ddbf7149390eb634e103ee"
+    },
+    {
+      "message": "Fix wrong hearts icon url",
+      "sha": "b7d902be2320e4d6f5114cd3d508150cb1af8e7a",
+      "author": "Zoi",
+      "date": "2026-11-18T16:56:01Z",
+      "tags": ["fix"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/b7d902be2320e4d6f5114cd3d508150cb1af8e7a"
+    },
+    {
+      "message": "Properly join room on summon",
+      "sha": "eef414904abf70d2f49b3494d7e0185fcadce116",
+      "author": "Zoi",
+      "date": "2026-11-18T16:42:08Z",
+      "tags": ["fix"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/eef414904abf70d2f49b3494d7e0185fcadce116"
+    },
+    {
+      "message": "Center button in reset settings subscreen",
+      "sha": "34046ad05016b721f93eabe4233118ac87d4bd36",
+      "author": "Zoi",
+      "date": "2026-11-18T16:16:14Z",
+      "tags": ["fix"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/34046ad05016b721f93eabe4233118ac87d4bd36"
+    },
+    {
+      "message": "Update environment and adapt for R134 InformationSheet changes",
+      "sha": "4c184e6e4fafde6079f8f8cb449d8be3b8fae84d",
+      "author": "Zoi",
+      "date": "2026-11-18T16:09:22Z",
+      "tags": ["chore", "fix"],
+      "commit_url": "https://github.com/FurryZoi/Littlish-Club/commit/4c184e6e4fafde6079f8f8cb449d8be3b8fae84d"
     }
   ]
 }
