@@ -18,7 +18,7 @@ export class FamilyMenu extends BaseSubscreen {
     }
 
     get icon(): string {
-        return `Assets/Female3DCG/Emoticon/Hearts/Icon.png`;
+        return "Icons/Expressions/Emoticon/Hearts.png";
     }
 
     public override onLoad() {
