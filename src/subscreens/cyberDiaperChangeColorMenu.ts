@@ -42,7 +42,7 @@ export class CyberDiaperChangeColorMenu extends BaseSubscreen {
         }
 
         if (!ItemColorLayerNames) {
-            ItemColorLayerNames = new TextCache(`Assets/${Player.AssetFamily}/LayerNames.csv`);
+            ItemColorLayerNames = new TextCache(`Assets/LayerNames.csv`);
             const loadingText = this.createText({
                 text: "Loading LayerNames.csv...",
                 x: 400,
@@ -64,7 +64,7 @@ export class CyberDiaperChangeColorMenu extends BaseSubscreen {
         InventoryWear(this.canvasCharacter, asset.Name, asset.Group.Name, this.cyberDiaperSettings.color);
         CharacterRefresh(this.canvasCharacter);
 
-        const defaultColor: BCColor = JSON.parse(JSON.stringify(asset.DefaultColor));
+        const defaultColor: BCColor[] = JSON.parse(JSON.stringify(asset.DefaultColor));
 
         let layerN = 0;
         asset.Layer.forEach((l) => {
@@ -82,14 +82,11 @@ export class CyberDiaperChangeColorMenu extends BaseSubscreen {
                     if (this.canvasCharacter) {
                         const item = InventoryGet(this.canvasCharacter, asset.Group.Name);
                         if (item) {
-                            item.Color ??= defaultColor;
-                            //@ts-expect-error
                             item.Color[n] = defaultColor[n];
                             CharacterRefresh(this.canvasCharacter);
                         }
                     }
                     this.cyberDiaperSettings.color ??= [];
-                    //@ts-expect-error
                     this.cyberDiaperSettings.color[n] = defaultColor[n];
                     layerColor.value = asset.DefaultColor[n];
                 }

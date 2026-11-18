@@ -186,7 +186,7 @@ export class CyberDiaperSettingsMenu extends BaseSubscreen {
                 if (typeof data?.Color === "string") {
                     this.cyberDiaperSettings.color = data.Color === "Default" ?
                         [...AssetGet(Player.AssetFamily, "ItemPelvis", data.Item)!.DefaultColor]
-                        : data.Color.split(",") as ItemColor;
+                        : data.Color.split(",") as BCColor[];
                 }
                 if (data?.TypeRecord) {
                     this.cyberDiaperSettings.typeRecord = data.TypeRecord;

@@ -1,6 +1,6 @@
 import { colorsEqual } from "zois-core";
 import { hookFunction, HookPriority } from "zois-core/mod-sdk";
-import { modStorage } from "./storage";
+import { modStorage, syncStorage } from "./storage";
 import { logger } from "zois-core/logging";
 
 export interface StorageCyberDiaper {
@@ -8,7 +8,7 @@ export interface StorageCyberDiaper {
     description: string
     model: CyberDiaperModel
     locked?: boolean
-    color?: ItemColor | null
+    color?: BCColor[] | null
     typeRecord?: TypeRecord
     property?: CraftingPropertyType
     drawingPriority?: AssetLayerOverridePriority
@@ -74,27 +74,33 @@ export function putCyberDiaperOn(): void {
         logger.error("Diaper asset not found");
         return;
     }
+    if (!Array.isArray(cyberDiaper.color) || asset.ColorableLayerCount !== cyberDiaper.color.length) {
+        cyberDiaper.color = structuredClone(asset.DefaultColor) as BCColor[];
+        syncStorage();
+    }
     const color = cyberDiaper.color ?? asset.DefaultColor;
-    const colorString = Array.isArray(color)
-        ? (color as BCColor[]).join(",")
-        : color as string;
-    InventoryWear(Player, getCyberDiaperAssetName(cyberDiaper.model), "ItemPelvis", cyberDiaper.color, 10, 0, {
+    const craft: CraftingPartialItem = {
         Name: cyberDiaper.name ?? "[No Name]",
         Description: cyberDiaper.description ?? "[No Description]",
         MemberName: "Littlish Club Production",
         MemberNumber: 133997,
-        Property: cyberDiaper.property ?? "Comfy",
-        Color: colorString,
-        Lock: "",
-        Effects: {},
-        Item: getCyberDiaperAssetName(cyberDiaper.model),
-        Private: true,
-        TypeRecord: cyberDiaper.typeRecord ?? null,
-        ItemProperty: cyberDiaper.drawingPriority ? {
+        Partial: true,
+        Effects: { Comfy: 1 },
+        Private: true
+    };
+    const craftingValidationResult = CraftingValidate(craft, asset, true, false, true);
+    const currentItem = AppearanceItem.fromAsset(asset, {
+        color,
+        property: {
+            TypeRecord: cyberDiaper.typeRecord,
             OverridePriority: cyberDiaper.drawingPriority
-        } : null
+        },
+        craft: craftingValidationResult > CraftingStatusType.CRITICAL_ERROR ? craft : undefined,
+        difficulty: 10,
     });
-    ChatRoomCharacterItemUpdate(Player, "ItemPelvis");
+    ExtendedItemInit(Player, currentItem, false, false);
+    Player.Appearance.push(currentItem);
+    ChatRoomCharacterUpdate(Player);
 }
 
 export function takeCyberDiaperOff(): void {
@@ -112,11 +118,11 @@ export function checkCyberDiaper(): void {
     const cyberDiaperItem = InventoryGet(Player, "ItemPelvis");
     if (!cyberDiaperStorage?.locked) return;
     const asset = AssetGet(Player.AssetFamily, "ItemPelvis", getCyberDiaperAssetName(cyberDiaperStorage.model));
+    if (!asset) return;
     if (
         !cyberDiaperItem ||
         cyberDiaperItem.Asset?.Name !== getCyberDiaperAssetName(cyberDiaperStorage.model) ||
-        //@ts-expect-error
-        !colorsEqual(cyberDiaperStorage.color ?? asset.DefaultColor, cyberDiaperItem.Color ?? asset.DefaultColor)
+        !colorsEqual(cyberDiaperStorage.color ?? asset.DefaultColor as BCColor[], cyberDiaperItem?.Color as BCColor[] ?? asset.DefaultColor)
     ) putCyberDiaperOn();
 }
 
